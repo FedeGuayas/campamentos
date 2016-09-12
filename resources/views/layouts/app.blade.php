@@ -25,8 +25,6 @@
         }
     </style>
 </head>
-
-
 <body id="app-layout">
     <nav class="navbar navbar-default navbar-static-top">
         <div class="container">
@@ -38,7 +36,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
-e                </button>
+                </button>
 
                 <!-- Branding Image -->
                 <a class="navbar-brand" href="{{ url('/') }}">
