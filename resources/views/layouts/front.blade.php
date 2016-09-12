@@ -1,127 +1,198 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
+
 <head>
+
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>FDGuayas | Guayaco Runner 2016</title>
-    <!-- Tell the browser to be responsive to screen width -->
-    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <!-- Bootstrap 3.3.5 -->
-    <link rel="stylesheet" href="{{asset('bootstrap/css/bootstrap.min.css')}}">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+    <title>Campamentos Deportivos</title>
+
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="{{asset('bootstrap/css/font-awesome.css')}}">
-    <!-- Theme style -->
-    <link rel="stylesheet" href="{{asset('dist/css/AdminLTE.min.css')}}">
-    <!-- AdminLTE Skins. Choose a skin from the css/skins
-    folder instead of downloading all of them to reduce the load. -->
-    <link rel="stylesheet" href="{{asset('dist/css/skins/_all-skins.min.css')}}">
-    <link rel="apple-touch-icon" href="{{asset('img/apple-touch-icon.png')}}">
-    <link rel="shortcut icon" href="{{asset('img/favicon.ico')}}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
-    <!-- Ionicons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
+    {!! Html::style('css/font-awesome.min.css') !!}
+    {{--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.0/css/font-awesome.min.css">--}}
+
+
+    <!-- Bootstrap core CSS -->
+    {!! Html::style('css/bootstrap.min.css') !!}
+    {{--<link href="css/bootstrap.min.css" rel="stylesheet">--}}
+
+    <!-- Material Design Bootstrap -->
+    {!! Html::style('css/mdb.min.css') !!}
+    {{--<link href="css/mdb.min.css" rel="stylesheet">--}}
+
+    <!-- Your custom styles (optional) -->
+    {!! Html::style('css/style.css') !!}
+    {{--<link href="css/style.css" rel="stylesheet">--}}
+
 </head>
-<body class="hold-transition skin-blue sidebar-mini">
-<div class="wrapper">
-    <header class="main-header">
-        @include('layouts.header')
-    </header>
-   <!-- Left side column. contains the logo and sidebar -->
-    <aside class="main-sidebar">
-        <!-- sidebar: style can be found in sidebar.less -->
-        <section class="sidebar">
-       <!-- search form -->
-            {{--<form action="#" method="get" class="sidebar-form">--}}
-                {{--<div class="input-group">--}}
-                    {{--<input type="text" name="buscar" class="form-control" placeholder="Buscar...">--}}
-              {{--<span class="input-group-btn">--}}
-                {{--<button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i>--}}
-                {{--</button>--}}
-              {{--</span>--}}
-                {{--</div>--}}
-            {{--</form>--}}
-            {{--<!-- /.search form -->--}}
-            <!-- sidebar menu: : style can be found in sidebar.less -->
-            <ul class="sidebar-menu">
-                <li class="header"></li>
-                {{--<li class="treeview">--}}
-                    {{--<a href="{{ url('/home') }}">--}}
-                        {{--<i class="fa fa-home"></i>--}}
-                        {{--<span>Home</span>--}}
-                        {{--<i class="fa "></i>--}}
-                    {{--</a>--}}
-                <li class="treeview">
-                    <a href="#">
-                        <i class="fa fa-files-o"></i>
-                        <span>Reportes</span>
-                        <i class="fa fa-angle-left pull-right"></i>
-                    </a>
-                    <ul class="treeview-menu">
-                        {{--<li><a href="{{ url('/runner/reportes/inscritos') }}"><i class="fa fa-circle-o"></i> Total--}}
-                                {{--Inscritos</a></li>--}}
-                    </ul>
-                </li>
-                <li>
-                    <a href="#">
-                        <i class="fa fa-plus-square"></i> <span>Ayuda</span>
-                        <small class="label pull-right bg-red">PDF</small>
-                    </a>
-                </li>
-                <li>
-                    <a href="#">
-                        <i class="fa fa-info-circle"></i> <span>Acerca De...</span>
-                        <small class="label pull-right bg-yellow">FDG</small>
-                    </a>
-                </li>
-            </ul>
-        </section>
-        <!-- /.sidebar -->
-    </aside>
-    <!--Contenido-->
-    <!-- Content Wrapper. Contains page content -->
-    <div class="content-wrapper">
-        <!-- Main content -->
-        <section class="content">
+
+<body class="fixed-sn blue-skin">
+
+@include('layouts.header')
+
+{{--<div style="height: 100vh">--}}
+    {{--<div class="flex-center">--}}
+        {{--<h1 class="animated fadeIn">Material Design for Bootstrap</h1>--}}
+    {{--</div>--}}
+{{--</div>--}}
+
+<!--Main layout-->
+<main>
+        <!--container centra el contenido, container-fluid al ancho de la pantalla-->
+        <div class="container">
+            <!--First row-->
             <div class="row">
-                <div class="col-md-12">
-                    <div class="box">
-                        <div class="box-header with-border">
-                            <h3 class="box-title">Bienvenidos a Guayaco Runner 2016</h3>
-                            <div class="box-tools pull-right">
-                                <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
-                                </button>
-                                <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i>
-                                </button>
-                            </div>
-                        </div><!-- /.box-header -->
-                        <div class="box-body">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <!--Contenido-->
-                                    @yield('contenido')
-                                            <!--Fin Contenido-->
-                                </div>
-                            </div>
-                        </div><!-- /.box-body -->
-                    </div><!-- /.box -->
-                </div><!-- /.col -->
-            </div><!-- /.row -->
-        </section>
-    </div><!-- /.content-wrapper -->
-    <!--Fin-Contenido-->
-    <footer class="main-footer">
-        <div class="pull-right hidden-xs">
-            <b>Version</b> 1.0
+                <div class="col-md-7">
+                    <!--adicionando efectos a la imagen -->
+                    <div class="view overlay hm-white-light z-depth-1-half">
+                        <!--img-fluid hace k se ajuste la imagen al tamaño de pantalla -->
+                        <img src="http://mdbootstrap.com/images/proffesions/slides/socialmedia/img%20(2).jpg" class="img-fluid " alt="">
+                        <div class="mask">
+                        </div>
+                    </div>
+                    <br>
+                </div>
+
+                <!--Main information-->
+                <div class="col-md-5">
+                    {{-- h2-responsive .... el texto del titulo se ajuasta al tamaño de la pantalla del dispositivo--}}
+                    <h2 class="h2-responsive">Campamentos Deportivos</h2>
+                    <hr>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Blanditiis pariatur quod ipsum atque quam dolorem voluptate officia sunt placeat consectetur alias fugit cum praesentium ratione sint mollitia, perferendis natus quaerat!</p>
+                    <a href="" class="btn btn-primary">Entrar!</a>
+                </div>
+            </div>
+            <!--/.First row-->
+
+            <hr class="extra-margins">
+
+            <!--Second row-->
+            <div class="row">
+                <!--First columnn-->
+                <div class="col-md-4">
+                    <!--Card-->  <!--los Cards son recuadros para presentar contenido-->
+                    <div class="card">
+
+                        <!--Card image-->
+                        <div class="view overlay hm-white-slight">
+                            <img src="http://mdbootstrap.com/images/regular/city/img%20(2).jpg" class="img-fluid" alt="">
+                            <a href="#">
+                                <div class="mask"></div>
+                            </a>
+                        </div>
+                        <!--/.Card image-->
+
+                        <!--Card content-->
+                        <div class="card-block">
+                            <!--Title-->
+                            <h4 class="card-title">Boxeo</h4>
+                            <!--Text-->
+                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                            <a href="#" class="btn btn-primary">Leer más</a>
+                        </div>
+                        <!--/.Card content-->
+
+                    </div>
+                    <!--/.Card-->
+                </div>
+                <!--First columnn-->
+
+                <!--Second columnn-->
+                <div class="col-md-4">
+                    <!--Card-->
+                    <div class="card">
+
+                        <!--Card image-->
+                        <div class="view overlay hm-white-slight">
+                            <img src="http://mdbootstrap.com/images/regular/city/img%20(4).jpg" class="img-fluid" alt="">
+                            <a href="#">
+                                <div class="mask"></div>
+                            </a>
+                        </div>
+                        <!--/.Card image-->
+
+                        <!--Card content-->
+                        <div class="card-block">
+                            <!--Title-->
+                            <h4 class="card-title">Atletismo</h4>
+                            <!--Text-->
+                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                            <a href="#" class="btn btn-primary">Leer más</a>
+                        </div>
+                        <!--/.Card content-->
+
+                    </div>
+                    <!--/.Card-->
+                </div>
+                <!--Second columnn-->
+
+                <!--Third columnn-->
+                <div class="col-md-4">
+                    <!--Card-->
+                    <div class="card">
+
+                        <!--Card image-->
+                        <div class="view overlay hm-white-slight">
+                            <img src="http://mdbootstrap.com/images/regular/city/img%20(8).jpg" class="img-fluid" alt="">
+                            <a href="#">
+                                <div class="mask"></div>
+                            </a>
+                        </div>
+                        <!--/.Card image-->
+
+                        <!--Card content-->
+                        <div class="card-block">
+                            <!--Title-->
+                            <h4 class="card-title">Natación</h4>
+                            <!--Text-->
+                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                            <a href="#" class="btn btn-primary">Leer más</a>
+                        </div>
+                        <!--/.Card content-->
+
+                    </div>
+                    <!--/.Card-->
+                </div>
+                <!--Third columnn-->
+            </div>
+            <!--/.Second row-->
         </div>
-        <strong>Copyright &copy; 2016-2020 <a href="#">FDG</a>.</strong> All rights reserved.
-        {{--<strong>Copyright &copy; 2016-2020 <a href="http://www.fedeguayas.com.ec">FDG</a>.</strong> All rights reserved.--}}
-    </footer>
-    <!-- jQuery 2.1.4 -->
-    <script src="{{asset('plugins/jQuery/jquery-2.2.3.min.js')}}"></script>
-    <!-- Bootstrap 3.3.5 -->
-    <script src="{{asset('bootstrap/js/bootstrap.min.js')}}"></script>
-    <!-- AdminLTE App -->
-    <script src="{{asset('dist/js/app.min.js')}}"></script>
-</div>
+        <!--/.Main layout-->
+</main>
+
+    @include('layouts.footer')
+
+
+<!-- SCRIPTS -->
+
+<!-- JQuery -->
+{!! Html::script('js/jquery-3.1.0.min.js') !!}
+{{--<script type="text/javascript" src="js/jquery-2.2.3.min.js"></script>--}}
+
+<!-- Bootstrap tooltips -->
+{!! Html::script('js/tether.min.js') !!}
+{{--<script type="text/javascript" src="js/tether.min.js"></script>--}}
+
+<!-- Bootstrap core JavaScript -->
+{!! Html::script('js/bootstrap.min.js') !!}
+{{--<script type="text/javascript" src="js/bootstrap.min.js"></script>--}}
+
+<!-- MDB core JavaScript -->
+{!! Html::script('js/mdb.min.js') !!}
+{{--<script type="text/javascript" src="js/mdb.min.js"></script>--}}
+
+
+<script>
+    // SideNav init
+    $(".button-collapse").sideNav();
+
+    // Custom scrollbar init
+    var el = document.querySelector('.custom-scrollbar');
+    Ps.initialize(el);
+</script>
+
 </body>
+
 </html>

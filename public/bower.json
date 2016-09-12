@@ -1,0 +1,20 @@
+{
+  "name": "campamentos",
+  "homepage": "https://github.com/halain/campamentos",
+  "description": "Paquetes frontend para campamentos deportivos",
+  "main": "",
+  "authors": [
+    "Hector Alvarez"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+
+  }
+}

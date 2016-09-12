@@ -19,3 +19,8 @@ Route::auth();
 
 Route::get('/home', 'HomeController@index');
 
+Route::get('front', function () {
+    return view('layouts/front');
+});
+
+

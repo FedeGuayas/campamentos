@@ -24,7 +24,7 @@
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
     <header class="main-header">
-       @include('layouts.header')
+       @include('layouts.headeoldr')
     </header>
     <!-- Left side column. contains the logo and sidebar -->
     <aside class="main-sidebar">

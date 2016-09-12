@@ -1,0 +1,15 @@
+/* YOUR CUSTOM STYLES */
+
+/*para que en el hr el margen superior y el inferior sean iguales al separar filas row*/
+.extra-margins {
+    margin-top: 1rem;
+    margin-bottom: 2.5rem;
+}
+
+
+/*adicionar padding al nav bar y al footer dar una separacion desde el contenido a los mismos*/
+main {
+    padding-top: 3rem;
+    padding-bottom: 2rem;
+}
+
