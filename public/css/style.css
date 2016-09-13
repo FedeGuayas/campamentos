@@ -1,15 +1,53 @@
 /* YOUR CUSTOM STYLES */
 
-/*para que en el hr el margen superior y el inferior sean iguales al separar filas row*/
-.extra-margins {
-    margin-top: 1rem;
-    margin-bottom: 2.5rem;
+html,
+body,
+/*k la imagen cubra el 100% de la pantalla*/
+.view {
+    height: 100%;
+}
+ /*cargar una imagen de fondo, y las propiedades para que sirva en todos los navegadores*/
+.view {
+    background: url("/img/camp/camp_background.jpg")no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
 }
 
-
-/*adicionar padding al nav bar y al footer dar una separacion desde el contenido a los mismos*/
-main {
-    padding-top: 3rem;
-    padding-bottom: 2rem;
+/*dandole color al texto sobre la imagen */
+.flex-center {
+    color: #fff;
 }
 
+/*agregar estilo a la seccion de contactos */
+#contact .fa {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+/*estilos para la bar nav*/
+
+.navbar {
+    background-color: transparent;
+}
+
+.navbar-dark .navbar-nav .nav-link {
+    color: #fff;
+}
+.scrolling-navbar {
+    -webkit-transition: background .5s ease-in-out, padding .5s ease-in-out;
+    -moz-transition: background .5s ease-in-out, padding .5s ease-in-out;
+    transition: background .5s ease-in-out, padding .5s ease-in-out;
+}
+
+.top-nav-collapse {
+    background-color: #1C2331;
+}
+
+/*para k la navbar no sea transparente en moviles*/
+@media only screen and (max-width: 768px) {
+    .navbar {
+        background-color: #1C2331;
+    }
+}
