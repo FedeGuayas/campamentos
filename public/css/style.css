@@ -2,11 +2,12 @@
 
 html,
 body,
-/*k la imagen cubra el 100% de la pantalla*/
 .view {
     height: 100%;
 }
- /*cargar una imagen de fondo, y las propiedades para que sirva en todos los navegadores*/
+
+/*Intro*/
+
 .view {
     background: url("/img/camp/camp_background.jpg")no-repeat center center fixed;
     -webkit-background-size: cover;
@@ -15,39 +16,69 @@ body,
     background-size: cover;
 }
 
-/*dandole color al texto sobre la imagen */
-.flex-center {
-    color: #fff;
+@media (max-width: 768px) {
+    .full-bg-img,
+    .view {
+        height: auto;
+        position: relative;
+    }
 }
 
-/*agregar estilo a la seccion de contactos */
-#contact .fa {
-    font-size: 2.5rem;
-    margin-bottom: 1rem;
-}
-
-/*estilos para la bar nav*/
+/* Navigation*/
 
 .navbar {
     background-color: transparent;
-}
-
-.navbar-dark .navbar-nav .nav-link {
-    color: #fff;
-}
-.scrolling-navbar {
-    -webkit-transition: background .5s ease-in-out, padding .5s ease-in-out;
-    -moz-transition: background .5s ease-in-out, padding .5s ease-in-out;
-    transition: background .5s ease-in-out, padding .5s ease-in-out;
 }
 
 .top-nav-collapse {
     background-color: #1C2331;
 }
 
-/*para k la navbar no sea transparente en moviles*/
 @media only screen and (max-width: 768px) {
     .navbar {
         background-color: #1C2331;
     }
+}
+
+.description {
+    padding-top: 25%;
+    padding-bottom: 3rem;
+    color: #fff
+}
+
+@media (max-width: 992px) {
+    .description {
+        padding-top: 7rem;
+        text-align: center;
+    }
+}
+
+.fa-check {
+    color: green;
+}
+
+
+
+.btn-ptc {
+    background-color: #45526E !important;
+}
+
+.btn-ptc:hover {
+    background-color: #59698d !important;
+}
+
+.btn-ptc:focus {
+    background-color: #59698d !important;
+}
+
+
+footer.page-footer {
+    background-color: #1C2331;
+}
+
+.carousel-multi-item .carousel-indicators li {
+    background-color: #1C2331;
+}
+.carousel-multi-item .carousel-indicators .active {
+    background-color: #1C2331;
 }

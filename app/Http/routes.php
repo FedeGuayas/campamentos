@@ -23,4 +23,9 @@ Route::get('front', function () {
     return view('layouts/front');
 });
 
+Route::get('back', function () {
+    return view('layouts/back');
+});
+
+
 
