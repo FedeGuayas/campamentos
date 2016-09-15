@@ -73,7 +73,7 @@
 <script>
     function init_map() {
 
-        var var_location = new google.maps.LatLng(40.725118, -73.997699);
+        var var_location = new google.maps.LatLng(-2.190098, -79.892341);
 
         var var_mapoptions = {
             center: var_location,
@@ -84,7 +84,7 @@
         var var_marker = new google.maps.Marker({
             position: var_location,
             map: var_map,
-            title: "New York"
+            title: "FDGuayas"
         });
 
         var var_map = new google.maps.Map(document.getElementById("map-container"),

@@ -690,15 +690,17 @@
             <div class="col-md-4">
                 <ul class="text-xs-center">
                     <li class="wow fadeInUp" data-wow-delay="0.2s"><a class="btn-floating btn-mdb"><i class="fa fa-map-marker"></i></a>
-                        <p>New York, NY 10012, USA</p>
+                        <p>Guayaquil, José Mascote 1103, Ecuador</p>
                     </li>
 
                     <li class="wow fadeInUp" data-wow-delay="0.3s"><a class="btn-floating btn-mdb" data-toggle="modal" data-target="#contact-form"><i class="fa fa-phone"></i></a>
-                        <p>+ 01 234 567 89</p>
+                        <p>+593 42 531 488</p>
+                        <p>+593 42 364 906</p>
+                        <p>+593 42 530 012</p>
                     </li>
 
                     <li class="wow fadeInUp" data-wow-delay="0.4s"><a class="btn-floating btn-mdb" data-toggle="modal" data-target="#contact-form"><i class="fa fa-envelope"></i></a>
-                        <p>contact@mdbootstrap.com</p>
+                        <p>contact@fedeguayas.com.ec</p>
                     </li>
                 </ul>
             </div>

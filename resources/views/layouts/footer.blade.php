@@ -6,57 +6,31 @@
         <div class="row">
 
             <!--First column-->
-            <div class="col-md-3 offset-md-1">
+            <div class="col-md-6 offset-md-1">
                 <h5 class="title">Sobre FDGuayas</h5>
                 <p>La <strong>FEDERACIÓN DEPORTIVA DEL GUAYAS</strong> es una institución privada y autónoma. Es la
                     matriz de nuestra provincia en la formación deportiva amateur, ya que lidera, administra, fomenta y
                     desarrolla el deporte para mejorar la calidad de vida de la comunidad. </p>
-
-
             </div>
             <!--/.First column-->
 
             <hr class="hidden-md-up">
 
             <!--Second column-->
-            <div class="col-md-2 offset-md-1">
-                <h5 class="title">Primeros links</h5>
-                <ul>
-                    <li><a href="#!">Link 1</a></li>
-                    <li><a href="#!">Link 2</a></li>
-                    <li><a href="#!">Link 3</a></li>
-                    <li><a href="#!">Link 4</a></li>
-                </ul>
+            <div class="col-md-4 offset-md-1">
+                <!--Social-->
+                <div class="page-footer social-section">
+                    <ul>
+                        <li>
+                            <h5>Siguenos en:</h5></li>
+                        <li><a href="https://www.facebook.com/fedeguayasec/" target="_blank" class="btn btn-floating btn-social-icon btn-facebook"><i class="fa fa-facebook"></i></a></li>
+                        <li><a href="https://twitter.com/Fedeguayas2014" target="_blank" class="btn btn-floating btn-social-icon btn-twitter"><i class="fa fa-twitter"></i></a></li>
+                        <li><a href="" target="_blank" class="btn btn-floating btn-social-icon btn-google"><i class="fa fa-google-plus"></i></a></li>
+                    </ul>
+                </div>
+                <!--/.Social-->
             </div>
             <!--/.Second column-->
-
-            <hr class="hidden-md-up">
-
-            <!--Third column-->
-            <div class="col-md-2">
-                <h5 class="title">Segundos link</h5>
-                <ul>
-                    <li><a href="#!">Link 1</a></li>
-                    <li><a href="#!">Link 2</a></li>
-                    <li><a href="#!">Link 3</a></li>
-                    <li><a href="#!">Link 4</a></li>
-                </ul>
-            </div>
-            <!--/.Third column-->
-
-            <hr class="hidden-md-up">
-
-            <!--Fourth column-->
-            <div class="col-md-2">
-                <h5 class="title">Terceros link</h5>
-                <ul>
-                    <li><a href="#!">Link 1</a></li>
-                    <li><a href="#!">Link 2</a></li>
-                    <li><a href="#!">Link 3</a></li>
-                    <li><a href="#!">Link 4</a></li>
-                </ul>
-            </div>
-            <!--/.Fourth column-->
 
         </div>
     </div>
@@ -66,8 +40,9 @@
 
     <!--Call to action-->
     <div class="call-to-action">
-        <h4>FDGuayas --- La nueva era</h4>
+
         <ul>
+            <li><img class="img-responsive" src="{{asset('../img/camp/fdg-footer.png')}}" alt=""></li>
             <li>
                 <h5>Entre e inscribase en nuestros campamentos</h5></li>
             <li><a target="_blank" href="http://mdbootstrap.com/getting-started/" class="btn btn-danger">Entrar!</a>
