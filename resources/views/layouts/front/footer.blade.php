@@ -45,9 +45,9 @@
             <li><img class="img-responsive" src="{{asset('../img/camp/fdg-footer.png')}}" alt=""></li>
             <li>
                 <h5>Entre e inscribase en nuestros campamentos</h5></li>
-            <li><a target="_blank" href="http://mdbootstrap.com/getting-started/" class="btn btn-danger">Entrar!</a>
+            <li><a href="#home" class="btn btn-default">Entrar!</a>
             </li>
-            <li><a target="_blank" href="http://mdbootstrap.com/material-design-for-bootstrap/" class="btn btn-default">Leer
+            <li><a  href="#disciplinas" class="btn btn-danger">Leer
                     mas</a></li>
         </ul>
     </div>

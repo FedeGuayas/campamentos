@@ -35,19 +35,19 @@
 <body class="fixed-sn blue-skin">
 
 <!--Navbar-->
-@include('layouts.navbar')
+@include('layouts.front.navbar')
         <!--/.Navbar-->
 
 <!--Mask-->
-@include('layouts.mask')
+@include('layouts.front.mask')
         <!--/.Mask-->
 
 <!--Main container-->
-@include('layouts.main')
+@include('layouts.front.main')
         <!--/Main container-->
 
 <!--Footer-->
-@include('layouts.footer')
+@include('layouts.front.footer')
         <!--/.Footer-->
 
 <!-- SCRIPTS -->
