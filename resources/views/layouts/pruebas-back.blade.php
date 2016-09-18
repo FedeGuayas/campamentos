@@ -36,34 +36,60 @@
 
 <body>
 
-<div class="container-fluid">
+<div class="container">
 
     <header>
 
         <!-- Navbar goes here -->
 
-        <!-- Dropdown Structure -->
-        <ul id="dropdownUser" class="dropdown-content">
-            <li><a href="#!">Info</a></li>
-            <li><a href="#!">Datas</a></li>
-            <li class="divider"></li>
-            <li><a href="#!">Salir</a></li>
-        </ul>
-        <nav>
-            <div class="nav-wrapper">
 
-                <a href="" class="brand-logo center"><i class="material-icons">cloud</i> Logo</a>
-                <ul id="nav-mobile" class="right hide-on-med-and-down">
-                    <li><a href="">Messages<span class="new badge blue" data-badge-caption="Msg nuevo">12</span></a>
-                    </li>
-                    <li><a href=""><i class="material-icons left">contact_mail</i>Contacto</a></li>
-                    <li><a href="">New <span class="new badge red">4</span></a></li>
-                    <!-- Dropdown Trigger -->
-                    <li><a class="dropdown-button" href="#!" data-activates="dropdownUser">Usuario<i class="material-icons right">arrow_drop_down</i></a></li>
+            <nav>
+                <!-- Dropdown Structure -->
+                <ul id="dropdownUser" class="dropdown-content">
+                    <li><a href="#!" class="waves-effect waves-red" >Info</a></li>
+                    <li><a href="#!" class="waves-effect waves-red">Datas</a></li>
+                    <li class="divider" class="waves-effect waves-red"></li>
+                    <li><a href="#!" class="waves-effect waves-red">Salir</a></li>
                 </ul>
-            </div>
+                <div class="nav-wrapper">
+                    <a href="" class="brand-logo"><i class="material-icons">cloud</i> Logo</a>
+                    {{--Button hamburger in moviles--}}
+                    <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
+                    <ul class="right hide-on-med-and-down">
+                        <a href="#" data-activates="slide-out" class="button-collapse"><i class="material-icons">menu</i></a>
+                        <li class="active"><a href="#!" class="waves-effect waves-light"><i class="material-icons left">home</i>Home</a></li>
+                        <li><a href="#!" class="waves-effect waves-light"><i class="material-icons left">contact_mail</i>Contacto</a></li>
+                        <li><a href="#!" class="waves-effect waves-light"><i class="material-icons left">file_download</i>Descargar<span class="new badge red">4</span></a></li>
+                        <!-- Dropdown Trigger -->
+                        <li><a class="waves-effect waves-light dropdown-button" href="#!" data-activates="dropdownUser">Usuario<i class="material-icons right">arrow_drop_down</i><i class="material-icons left">person</i></a></li>
+                    </ul>
 
-        </nav>
+                    <ul id="mobile-demo" class="side-nav">
+                        <li class="active"><a href="#!" class="waves-effect waves-red"><i class="material-icons left">home</i></a></li>
+                        <li><a href="#!" class="waves-effect waves-red"><i class="material-icons left">contact_mail</i></a></li>
+                        <li><a href="#!" class="waves-effect waves-red"><i class="material-icons left">file_download</i><span class="new badge red">4</span></a></li>
+                        {{--<!-- Dropdown Trigger -->--}}
+                        <li><a class="dropdown-button waves-red" href="#!" data-activates="dropdownUser">Usuario<i class="material-icons right">arrow_drop_down</i></a></li>
+                    </ul>
+                </div>
+            </nav>
+
+
+
+        <ul  id="slide-out" class="side-nav">
+            <li><div class="userView">
+                    <img class="background" src="images/office.jpg">
+                    <a href="#!user"><img class="circle" src="images/yuna.jpg"></a>
+                    <a href="#!name"><span class="white-text name">John Doe</span></a>
+                    <a href="#!email"><span class="white-text email">jdandturk@gmail.com</span></a>
+                </div></li>
+            <li><a href="#!"><i class="material-icons">cloud</i>First Link With Icon</a></li>
+            <li><a href="#!">Second Link</a></li>
+            <li><div class="divider"></div></li>
+            <li><a class="subheader">Subheader</a></li>
+            <li><a class="waves-effect" href="#!">Third Link With Waves</a></li>
+        </ul>
+
 
     </header>
 
@@ -73,8 +99,7 @@
         <!-- Page Layout here -->
         <div class="row">
 
-            <div class="col s12 m4 l2 green" style="height: 100px"><span class="flow-text center-align">s12 m4 con un texto demasiado largoooooooo</span>
-            </div>
+            <div class="col s12 m4 l2 green truncate"><span class="flow-text">s12 m4 con un texto demasiado largoooooooo</span></div>
             <div class="col s12 m4 l8 cyan"><span class="flow-text">s12 m4</span></div>
             <div class="col s12 m4 l2 grey"><span class="flow-text">s12 m4
             <ul id="dropdown2" class="dropdown-content">
@@ -82,9 +107,8 @@
                 <li><a href="#!">two<span class="new badge">1</span></a></li>
                 <li><a href="#!">three</a></li>
             </ul>
-  <a class="btn dropdown-button" href="#!" data-activates="dropdown2">Dropdown<i
-              class="mdi-navigation-arrow-drop-down right"></i></a>
-            </span></div>
+            <a class="btn dropdown-button" href="#!" data-activates="dropdown2">Bnt Downd<i class="mdi-navigation-arrow-drop-down right"></i></a></span>
+            </div>
 
         </div>
 
@@ -340,8 +364,8 @@
     </footer>
 </div>
 
-</body>
-</html>
+</div>
+{{--/.Container--}}
 
 
 <!-- SCRIPTS -->
@@ -411,6 +435,9 @@
     $(document).ready(function() {
         $('select').material_select();
     });
+
+    $('.button-collapse').sideNav();
+
 </script>
 
 </body>

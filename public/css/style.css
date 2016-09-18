@@ -674,44 +674,44 @@ form p:last-child {
 
 /***************************************Your******************************************/
 
-.card-up {
-    height: 120px;
-    overflow: hidden;
-    overflow-x: hidden;
-    overflow-y: hidden;
-    -webkit-box-sizing: inherit;
-    box-sizing: inherit;
+/*.card-up {*/
+    /*height: 120px;*/
+    /*overflow: hidden;*/
+    /*overflow-x: hidden;*/
+    /*overflow-y: hidden;*/
+    /*-webkit-box-sizing: inherit;*/
+    /*box-sizing: inherit;*/
 
-}
+/*}*/
 
-.logo-ico{
-    position: relative;
+/*.logo-ico{*/
+    /*position: relative;*/
 
-    cursor: pointer;
-    display: inline-block;
-    font-size: 50px;
-    color: rgb(255, 255, 255);
-    height: 60px;
-    width: 60px;
-    line-height: 60px;
-    border-radius: 20%;
-    text-align: center;
-}
+    /*cursor: pointer;*/
+    /*display: inline-block;*/
+    /*font-size: 50px;*/
+    /*color: rgb(255, 255, 255);*/
+    /*height: 60px;*/
+    /*width: 60px;*/
+    /*line-height: 60px;*/
+    /*border-radius: 20%;*/
+    /*text-align: center;*/
+/*}*/
 
-.shadow-light-blue{
-    text-shadow: rgb(48, 117, 165) 0px 0px 0px, rgb(49, 120, 168) 1px 1px 0px, rgb(50, 122, 172) 2px 2px 0px, rgb(51, 125, 176) 3px 3px 0px, rgb(52, 127, 179) 4px 4px 0px, rgb(53, 130, 183) 5px 5px 0px, rgb(54, 133, 187) 6px 6px 0px, rgb(55, 135, 190) 7px 7px 0px, rgb(56, 138, 194) 8px 8px 0px, rgb(57, 141, 198) 9px 9px 0px, rgb(58, 143, 202) 10px 10px 0px;
-    background-color: rgb(68, 167, 235);
-}
+/*.shadow-light-blue{*/
+    /*text-shadow: rgb(48, 117, 165) 0px 0px 0px, rgb(49, 120, 168) 1px 1px 0px, rgb(50, 122, 172) 2px 2px 0px, rgb(51, 125, 176) 3px 3px 0px, rgb(52, 127, 179) 4px 4px 0px, rgb(53, 130, 183) 5px 5px 0px, rgb(54, 133, 187) 6px 6px 0px, rgb(55, 135, 190) 7px 7px 0px, rgb(56, 138, 194) 8px 8px 0px, rgb(57, 141, 198) 9px 9px 0px, rgb(58, 143, 202) 10px 10px 0px;*/
+    /*background-color: rgb(68, 167, 235);*/
+/*}*/
 
-.shadow-soft-blue{
-    text-shadow: rgb(18, 75, 141) 0px 0px 0px, rgb(18, 77, 144) 1px 1px 0px, rgb(18, 78, 147) 2px 2px 0px, rgb(19, 80, 150) 3px 3px 0px, rgb(19, 82, 153) 4px 4px 0px, rgb(19, 83, 157) 5px 5px 0px, rgb(20, 85, 160) 6px 6px 0px, rgb(20, 87, 163) 7px 7px 0px, rgb(21, 88, 166) 8px 8px 0px, rgb(21, 90, 169) 9px 9px 0px, rgb(21, 92, 172) 10px 10px 0px;
-    background-color: rgb(25, 107, 201);
-}
+/*.shadow-soft-blue{*/
+    /*text-shadow: rgb(18, 75, 141) 0px 0px 0px, rgb(18, 77, 144) 1px 1px 0px, rgb(18, 78, 147) 2px 2px 0px, rgb(19, 80, 150) 3px 3px 0px, rgb(19, 82, 153) 4px 4px 0px, rgb(19, 83, 157) 5px 5px 0px, rgb(20, 85, 160) 6px 6px 0px, rgb(20, 87, 163) 7px 7px 0px, rgb(21, 88, 166) 8px 8px 0px, rgb(21, 90, 169) 9px 9px 0px, rgb(21, 92, 172) 10px 10px 0px;*/
+    /*background-color: rgb(25, 107, 201);*/
+/*}*/
 
-.shadow-dark-blue{
-    text-shadow: rgb(11, 50, 93) 0px 0px 0px, rgb(12, 51, 96) 1px 1px 0px, rgb(12, 53, 98) 2px 2px 0px, rgb(12, 54, 101) 3px 3px 0px, rgb(12, 55, 104) 4px 4px 0px, rgb(13, 57, 106) 5px 5px 0px, rgb(13, 58, 109) 6px 6px 0px, rgb(13, 60, 112) 7px 7px 0px, rgb(14, 61, 114) 8px 8px 0px, rgb(14, 62, 117) 9px 9px 0px, rgb(14, 64, 120) 10px 10px 0px;
-    background-color: rgb(16, 71, 133);
-}
+/*.shadow-dark-blue{*/
+    /*text-shadow: rgb(11, 50, 93) 0px 0px 0px, rgb(12, 51, 96) 1px 1px 0px, rgb(12, 53, 98) 2px 2px 0px, rgb(12, 54, 101) 3px 3px 0px, rgb(12, 55, 104) 4px 4px 0px, rgb(13, 57, 106) 5px 5px 0px, rgb(13, 58, 109) 6px 6px 0px, rgb(13, 60, 112) 7px 7px 0px, rgb(14, 61, 114) 8px 8px 0px, rgb(14, 62, 117) 9px 9px 0px, rgb(14, 64, 120) 10px 10px 0px;*/
+    /*background-color: rgb(16, 71, 133);*/
+/*}*/
 
 
 

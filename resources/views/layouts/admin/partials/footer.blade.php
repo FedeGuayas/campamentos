@@ -1,5 +1,5 @@
 
-<footer class="page-footer center-on-small-only mdb-color darken-4">
+<footer class="page-footer center-on-small-only teal darken-4">
 
     <!--Footer Links-->
     <div class="container-fluid">

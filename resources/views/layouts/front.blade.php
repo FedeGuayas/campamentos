@@ -12,22 +12,20 @@
     <!-- Font Awesome -->
     {!! Html::style('css/font-awesome.min.css') !!}
 
-
             <!-- Bootstrap core CSS -->
-    {!! Html::style('css/bootstrap.min.css') !!}
+    {!! Html::style('css/bootstrap.css') !!}
 
-            <!-- Bootstrap core CSS -->
+            <!-- Bootstrap social core CSS -->
     {!! Html::style('css/bootstrap-social.css') !!}
 
-
             <!-- Material Design Bootstrap -->
-    {!! Html::style('css/mdb.min.css') !!}
+    {!! Html::style('css/mdb.css') !!}
 
             <!-- Material Design Bootstrap -->
 {{--        {!! Html::style('css/materialize.css') !!}--}}
 
             <!-- Your custom styles (optional) -->
-    {!! Html::style('css/style.css') !!}
+{{--    {!! Html::style('css/style.css') !!}--}}
 
 
 </head>

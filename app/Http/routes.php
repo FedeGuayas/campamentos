@@ -19,12 +19,23 @@ Route::auth();
 
 Route::get('/home', 'HomeController@index');
 
+
+/*Front end for register online */
 Route::get('front', function () {
     return view('layouts/front');
 });
 
-Route::get('back', function () {
-    return view('layouts/back');
+
+/*OK*/
+/*Route group admin, and login is forces by middeware auth*/
+//Route::group(['middleware' => 'auth', 'prefix' => 'admin'], function () {
+Route::group(['prefix' => 'admin'], function () {
+
+    Route::get('index', [
+        'as' => 'admin.index', function () {
+        return view('layouts.admin.index');
+    }]);
+
 });
 
 
