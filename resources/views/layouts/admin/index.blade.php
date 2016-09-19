@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
 
-    <title>Campamentos Deportivos</title>
+    <title>@yield('title','Default') | Panel administración</title>
 
     <!-- Font Awesome -->
     {!! Html::style('css/font-awesome.min.css') !!}
