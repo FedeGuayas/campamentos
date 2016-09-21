@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
+use Illuminate\Support\Facades\Hash;
 use Zizaco\Entrust\Traits\EntrustUserTrait;
 
 class User extends Authenticatable
@@ -16,7 +17,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'first_name','last_name', 'email', 'password',
+        'first_name', 'last_name', 'email', 'password',
     ];
 
     /**
@@ -28,9 +29,16 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
+    //setear el password, ya no es necesario encriptar pass en controlador
+    public function setPasswordAttribute($value){
+        if (!empty ($value)) {
+            $this->attributes['password'] = Hash::make($value);
+        }
+    }
+
     //con esta funcion retorno el nombre y los apellidos en el atributo name k utiliso en el app.blade.php
     function getNameAttribute(){
-        return $this->first_name. ' ' . $this->last_name;
+        return $this->first_name . ' ' . $this->last_name;
     }
 
     //establecemos las relaciones con el modelo Role, ya que un usuario puede tener varios roles
@@ -38,5 +46,4 @@ class User extends Authenticatable
     public function roles(){
         return $this->belongsToMany('App\Role');
     }
-
 }

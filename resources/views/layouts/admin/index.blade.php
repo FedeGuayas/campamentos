@@ -41,11 +41,15 @@
     {{--/.Header--}}
 
     {{--Main--}}
-    @include('layouts.admin.partials.main')
+    <main style="padding-top: 20px">
+        <div class="container" >
+            @yield('content')
+        </div>
+    </main>
     {{--/.Main--}}
 
     {{--Footer--}}
-   @include('layouts.admin.partials.footer')
+{{--   @include('layouts.admin.partials.footer')--}}
 
 
 

@@ -36,6 +36,7 @@ Route::group(['prefix' => 'admin'], function () {
         return view('layouts.admin.index');
     }]);
 
+    Route::resource('users', 'UsersController');
 });
 
 
