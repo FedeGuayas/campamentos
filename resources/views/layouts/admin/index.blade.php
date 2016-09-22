@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
 
-    <title>@yield('title','Default') | Panel administración</title>
+    <title>@yield('title','Default') | Panel Administración</title>
 
     <!-- Font Awesome -->
     {!! Html::style('css/font-awesome.min.css') !!}
@@ -81,13 +81,22 @@
          $(".dropdown-button").dropdown();
 
 
-        $('.button-collapse').sideNav({
+        $('.button-collapse').sideNav(
+                {
                     menuWidth: 240, // Default is 240
                     edge: 'left', // Choose the horizontal origin
                     closeOnClick: true // Closes side-nav on <a> clicks, useful for Angular/Meteor
                 }
         );
 
+
+        $('.fixed-action-btn').openFAB();
+        $('.fixed-action-btn').closeFAB();
+
+
+        $('.collapsible').collapsible({
+            accordion : false // A setting that changes the collapsible behavior to expandable instead of the default accordion style
+        });
 
 
     });

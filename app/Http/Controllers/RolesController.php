@@ -2,13 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\User;
-use Session;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
 
-class UsersController extends Controller
+class RolesController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,7 +15,7 @@ class UsersController extends Controller
      */
     public function index()
     {
-        return 'Mostrar todos los usuarios';
+        //
     }
 
     /**
@@ -27,7 +25,7 @@ class UsersController extends Controller
      */
     public function create()
     {
-        return view('campamentos.users.create');
+        return view('campamentos.roles.create');
     }
 
     /**
@@ -38,15 +36,7 @@ class UsersController extends Controller
      */
     public function store(Request $request)
     {
-        $user=new User;
-        $user->first_name=$request->get('first_name');
-        $user->last_name=$request->get('last_name');
-        $user->email=$request->get('email');
-        $user->password=$request->get('paswword');
-//        $user->save();
-//        dd($user);
-//        Session::flash('message', 'Inscripción y comprobante creados correctamente');
-        return 'ok desde store Users' ;
+        return 'ok store roles';    
     }
 
     /**

@@ -37,6 +37,8 @@ Route::group(['prefix' => 'admin'], function () {
     }]);
 
     Route::resource('users', 'UsersController');
+    Route::resource('roles', 'RolesController');
+    Route::resource('permissions', 'PermissionsController');
 });
 
 
