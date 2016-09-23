@@ -26,7 +26,6 @@
 
                     </div>
 
-
                     <div class="col l12 m8 s12">
 
                         <div class="input-field col l6 m4 s12">
@@ -41,7 +40,7 @@
                         </div>
 
                         <div class="input-field col l4 m4 s12">
-                            {!! Form::select('roles', ['L' => 'Large', 'S' => 'Small'],null, ['placeholder' => 'Seleccione roles...','multiple']) !!}
+                            {!! Form::select('roles', ['admin' => 'Administrador', 'guest' => 'Registrado'],null, ['placeholder' => 'Seleccione roles...','multiple']) !!}
                             {!! Form::label('roles', 'Roles:*') !!}
                         </div>
 
@@ -54,14 +53,6 @@
             </div><!--/.card panel-->
         </div><!--/.col s12-->
     </div><!--/.row-->
-
-        <script>
-
-            $(document).ready(function () {
-                $('select').material_select();
-            });
-
-        </script>
 
 @endsection
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\User;
+use Illuminate\Support\Facades\Redirect;
 use Session;
 use Illuminate\Http\Request;
 
@@ -15,9 +16,13 @@ class UsersController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return 'Mostrar todos los usuarios';
+        if ($request){
+            $usuarios=User::all();
+        }
+
+        return view('campamentos.users.index', compact('usuarios'));
     }
 
     /**
@@ -42,11 +47,11 @@ class UsersController extends Controller
         $user->first_name=$request->get('first_name');
         $user->last_name=$request->get('last_name');
         $user->email=$request->get('email');
-        $user->password=$request->get('paswword');
-//        $user->save();
-//        dd($user);
-//        Session::flash('message', 'Inscripción y comprobante creados correctamente');
-        return 'ok desde store Users' ;
+        $user->password=$request->get('password');
+        $user->save();
+
+        Session::flash('message', 'Usuario creado correctamente');
+        return Redirect::to('admin/users') ;
     }
 
     /**
@@ -57,7 +62,8 @@ class UsersController extends Controller
      */
     public function show($id)
     {
-        //
+        $user=User::findOrFail($id);
+        return 'Desde Show';
     }
 
     /**
@@ -68,7 +74,7 @@ class UsersController extends Controller
      */
     public function edit($id)
     {
-        //
+        return 'Desde Edit';
     }
 
     /**
@@ -91,6 +97,10 @@ class UsersController extends Controller
      */
     public function destroy($id)
     {
-        //
+
+
+        $user=User::findOrFail($id);
+        $user->delete;
+        return Redirect::to('camapamentos.users.index');
     }
 }

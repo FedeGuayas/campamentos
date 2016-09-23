@@ -12,6 +12,16 @@ main {
     flex: 1 0 auto;
 }
 
+/*ventana modal responsitive*/
+.modal {
+    max-height: 90%;
+    max-width:90%;
+    left:0;
+    right:0;
+    top:0;
+    bottom:0;
+    margin:auto;
+}
 
 /*Para cambiar los colores en los input, especificar los prefijos */
 

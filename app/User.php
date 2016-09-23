@@ -6,10 +6,28 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 use Illuminate\Support\Facades\Hash;
 use Zizaco\Entrust\Traits\EntrustUserTrait;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class User extends Authenticatable
 {
-    use EntrustUserTrait; // add this trait to your user model
+    use SoftDeletes; //borrado seguro
+   //Use el trai de entrust asi xk tiene conflicto con SofDeleted
+    use EntrustUserTrait {
+
+        SoftDeletes::restore as sfRestore;
+        EntrustUserTrait::restore as euRestore;
+
+    }
+
+    //Sobrescribiendo el metodo restor en SofDelete y en EntrustUserTrait para evitar los conflictos
+    public function restore() {
+        $this->sfRestore();
+        Cache::tags(Config::get('entrust.role_user_table'))->flush();
+    }
+
+
+    public $timestamps=true;
+
 
     /**
      * The attributes that are mass assignable.
@@ -28,6 +46,15 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
+    protected $dates = ['deleted_at'];
+
+
 
     //setear el password, ya no es necesario encriptar pass en controlador
     public function setPasswordAttribute($value){
