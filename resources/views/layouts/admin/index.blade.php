@@ -114,6 +114,9 @@
         $(".modal").width($(".modal").width());
         $(".modal").height($(".modal").height());
 
+        //tooltips
+        $('.tooltipped').tooltip({delay: 50});
+
     });
 
 

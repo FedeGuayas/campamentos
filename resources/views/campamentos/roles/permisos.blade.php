@@ -6,37 +6,35 @@
 
     <div class="row">
         <div class="col l8 m8 s">
-            <h5 class="header teal-text text-darken-2">Accesos de {{$user->getNameAttribute()}}</h5>
+            <h5 class="header teal-text text-darken-2">Permisos para "{{$rol->display_name}}"</h5>
         </div>
     </div>
 
     <div class="row">
         <div class="col l12 m12 s12">
-            {!! Form::open(['route'=>'admin.users.setpermisos', 'method'=>'POST']) !!}
-            {!! Form::hidden('user_id',$user->id) !!}
+            {!! Form::open(['route'=>'admin.roles.setpermisos', 'method'=>'POST']) !!}
+            {!! Form::hidden('rol_id',$rol->id) !!}
             <table class="table table-striped table-bordered table-condensed table-hover highlight responsive-table">
                 <thead>
                     <th>Id</th>
                     <th>Add/Rem</th>
-                    <th>Rol</th>
+                    <th>Permisos</th>
                     <th>Descripcion</th>
-                    <th>Permiso</th>
-                </thead>
-                @foreach ($roles as $rol)
-                    <tr>
-                        <td>{{ $rol->id }}</td>
-                        <td>{!! Form::checkbox('roles[]',$rol->id,null,['id'=>$rol->id]) !!}
-                            {!! Form::label($rol->id, $rol->name) !!}
-                        <td>{{ $rol->display_name }}</td>
-                        <td>{{ $rol->description }}</td>
-                        <td>{{ $rol->perms }}</td>
 
+                </thead>
+                @foreach ($permisos as $per)
+                    <tr>
+                        <td>{{ $per->id }}</td>
+                        <td>{!! Form::checkbox('permisos[]',$per->id,false,['id'=>$per->id]) !!}
+                            {!! Form::label($per->id, $per->name) !!}
+                        <td>{{ $per->display_name }}</td>
+                        <td>{{ $per->description }}</td>
                     </tr>
                 @endforeach
             </table><!--end table-responsive-->
             {!! Form::button('Otorgar<i class="fa fa-play right"></i>', ['class'=>'btn waves-effect waves-light','type' => 'submit']) !!}
             {!! Form::button('Cancelar<i class="fa fa-close right"></i>',['class'=>'btn waves-effect waves-light red darken-1','type' => 'reset']) !!}
-            <a href="{{ route('admin.users.index') }}">
+            <a href="{{ route('admin.roles.index') }}"  class="tooltipped" data-position="top" data-delay="50" data-tooltip="Regresar">
                 {!! Form::button('<i class="fa fa-undo"></i>',['class'=>'btn waves-effect waves-light darken-1']) !!}
             </a>
             {!! Form::open() !!}

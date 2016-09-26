@@ -67,7 +67,7 @@ class User extends Authenticatable
 
     //establecemos las relaciones con el modelo Role, ya que un usuario puede tener varios roles
     //y un rol lo pueden tener varios usuarios
-    public function roles(){
-        return $this->belongsToMany('App\Role');
-    }
+//    public function roles(){
+//        return $this->belongsToMany('App\Role');
+//    }
 }

@@ -24,6 +24,7 @@ class UsersController extends Controller
     {
         if ($request){
             $usuarios=User::all();
+
         }
 
         return view('campamentos.users.index', compact('usuarios'));
@@ -110,42 +111,48 @@ class UsersController extends Controller
     public function destroy($id)
     {
         $user=User::findOrFail($id);
-        $user->delete;
+        $user->delete();
 
         Session::flash('message','Usuario eliminado');
-        return Redirect::to('camapamentos.users.index');
+        return Redirect::to('admin/users');
     }
 
-    
-    public  function permisos($id)
+    /**
+     * Muestra la vista con los roles que se pueden aplicar al usuario.
+     *
+     * $id de usuario
+     * 
+     */
+    public  function roles($id)
     {
         $user=User::findOrFail($id);
 //        $roles= [''=>'Seleccione roles'] + Role::lists('display_name', 'id')->all();
         $roles=Role::all();
-        return view('campamentos.users.permisos',compact('user','roles'));
+        return view('campamentos.users.roles',compact('user','roles'));
     }
 
-    public  function setPermisos(Request $request)
+    /**
+     * Addiconar o kitar los roles del usuario.
+     *
+     * $id de usuario
+     *
+     */    
+    public  function setRoles(Request $request)
     {
         $user_id=$request->get('user_id');
         $user=User::findOrFail($user_id);
         $roles=$request->get('roles');
-
-//        $rol=Role::find($roles);
-
-//        dd($rolArray[0]->getKey());
-//        $user->attachRole($rolArray);
-
+        
         if ($roles) {
-            // El usuario marcó el checkbox
+            // El usuario marcó checkbox
             foreach ($roles as $rol){
                 $user->attachRole($rol);
             }
 
         } else {
-            // El usuario NO marcó el chechbox
-
-        }
+            // El usuario no marcó checkbox
+                $user->detachRole($roles);
+     }
         return Redirect::to('admin/users');
     }
     

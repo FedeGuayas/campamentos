@@ -29,7 +29,7 @@
                             <td>{{ $user->updated_at }}</td>
                             <td>{{ 'roles' }}</td>
                             <td>
-                                <a href="{{ route('admin.users.index') }}">
+                                <a href="{{ route('admin.users.index') }}" class="tooltipped" data-position="bottom" data-delay="50" data-tooltip="Regresar">
                                     {!! Form::button('<i class="fa fa-undo"></i>',['class'=>'btn waves-effect waves-light darken-1']) !!}
                                 </a>
                             </td>

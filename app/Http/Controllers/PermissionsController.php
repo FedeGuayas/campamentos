@@ -20,9 +20,9 @@ class PermissionsController extends Controller
      */
     public function index(Request $request)
     {
-        if ($request){
+//        if ($request){
             $permisos=Permission::all();
-        }
+//        }
 
         return view('campamentos.permissions.index', compact('permisos'));
     }

@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Permission;
 use App\Role;
 use Illuminate\Support\Facades\Redirect;
 use Session;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
+use Zizaco\Entrust\Traits\EntrustPermissionTrait;
+use Zizaco\Entrust\Traits\EntrustRoleTrait;
 
 
 class RolesController extends Controller
@@ -108,4 +111,39 @@ class RolesController extends Controller
         Session::flash('message','Rol eliminado');
         return Redirect::to('admin/roles');
     }
+
+    public  function permisos($id)
+    {
+        $rol=Role::findOrFail($id);
+
+//        $roles= [''=>'Seleccione roles'] + Role::lists('display_name', 'id')->all();
+        $permisos=Permission::all();
+
+        return view('campamentos.roles.permisos',compact('rol','permisos'));
+    }
+
+    public  function setPermisos(Request $request)
+    {
+
+        $rol_id=$request->get('rol_id');
+        $rol=Role::findOrFail($rol_id);
+        $permisos_id=$request->get('permisos');
+
+//        dd($permisos);
+        if ($permisos_id) {
+            // El usuario marcó checkbox
+            foreach ($permisos_id as $per) {
+                $permiso=Permission::findOrFail($per);
+                $rol->attachPermission($permiso);
+            }
+
+        }
+        else{
+
+            $rol->detachPermission($permisos_id);
+
+        }
+        return Redirect::to('admin/roles');
+    }
+    
 }

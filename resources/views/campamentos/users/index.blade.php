@@ -16,7 +16,7 @@
         <div class="col l12 m12 s12">
 
                 <a href="{{route('admin.users.create')}}">
-                    {!! Form::button('<i class="fa fa-user-plus" ></i>',['class'=>'btn waves-effect waves-light']) !!}
+                    {!! Form::button('<i class="fa fa-user-plus" ></i>',['class'=>'btn tooltipped waves-effect waves-light','data-position'=>'right', 'data-delay'=>'50', 'data-tooltip'=>'Crear usuario']) !!}
                 </a>
                 <table class="table table-striped table-bordered table-condensed table-hover highlight responsive-table">
                     <thead>
@@ -31,7 +31,11 @@
                             <td>{{ $user->id }}</td>
                             <td>{{ $user->getNameAttribute() }}</td>
                             <td>{{ $user->email }}</td>
-                            <td>{{ $user->roles }}</td>
+                            <td>@foreach ($user->roles as $role)
+                                    {{ $role->display_name }},
+
+                                @endforeach
+                            </td>
                             <td>
                                 {!! Form::button('<i class="fa fa-trash-o" ></i>',['class'=>'modal-trigger btn-floating waves-effect waves-light red darken-1','data-target'=>"modal-delete-$user->id"]) !!}
                                 <a href="{{ route('admin.users.edit', $user->id ) }}">
@@ -40,7 +44,7 @@
                                 <a href="{{ route('admin.users.show', $user->id ) }}">
                                     {!! Form::button('<i class="fa fa-eye"></i>',['class'=>'btn-floating waves-effect waves-light teal darken-1']) !!}
                                 </a>
-                                <a href="{{ route('admin.users.permisos', $user->id ) }}">
+                                <a href="{{ route('admin.users.roles', $user->id ) }}" class="tooltipped" data-position="top" data-delay="50" data-tooltip="Roles">
                                     {!! Form::button('<i class="fa fa-key"></i>',['class'=>'btn-floating waves-effect waves-light teal darken-1']) !!}
                                 </a>
                             </td>

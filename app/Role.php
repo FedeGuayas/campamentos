@@ -10,6 +10,7 @@ use Zizaco\Entrust\Traits\EntrustRoleTrait;
 class Role extends EntrustRole
 
 {
+   
     protected $fillable = [
         'name',
         'display_name',
@@ -18,7 +19,7 @@ class Role extends EntrustRole
 
     //establecemos las relacion de muchos a muchos con el modelo User, ya que un rol 
     //lo pueden tener varios usuarios y un usuario puede tener varios roles
-    public function users(){
-        return $this->belongsToMany('App\User');
-    }
+//    public function users(){
+//        return $this->belongsToMany('App\User');
+//    }
 }

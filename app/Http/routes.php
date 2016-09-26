@@ -35,9 +35,14 @@ Route::group(['prefix' => 'admin'], function () {
     Route::get('index', ['as' => 'admin.index', function () {
         return view('layouts.admin.index');
     }]);
-    
-    Route::get('user/{id}/permisos', ['as' => 'admin.users.permisos','uses'=>'UsersController@permisos' ]);
-    Route::POST('user/setpermisos', ['as' => 'admin.users.setpermisos','uses'=>'UsersController@setPermisos' ]);
+
+    //adicionar roles a los usuarios
+    Route::get('user/{id}/roles', ['as' => 'admin.users.roles','uses'=>'UsersController@roles' ]);
+    Route::POST('user/setroles', ['as' => 'admin.users.setroles','uses'=>'UsersController@setRoles' ]);
+
+    //adicionar permisos a los roles
+    Route::get('rol/{id}/permisos', ['as' => 'admin.roles.permisos','uses'=>'RolesController@permisos' ]);
+    Route::POST('rol/setpermisos', ['as' => 'admin.roles.setpermisos','uses'=>'RolesController@setPermisos' ]);
    
 
     Route::resource('users', 'UsersController');
