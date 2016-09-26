@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Role;
+use Illuminate\Support\Facades\Redirect;
+use Session;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
+
 
 class RolesController extends Controller
 {
@@ -13,9 +17,13 @@ class RolesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        if ($request){
+            $roles=Role::all();
+        }
+
+        return view('campamentos.roles.index', compact('roles'));
     }
 
     /**
@@ -36,7 +44,14 @@ class RolesController extends Controller
      */
     public function store(Request $request)
     {
-        return 'ok store roles';    
+        $rol=new Role;
+        $rol->name=$request->get('name');
+        $rol->display_name=$request->get('display_name');
+        $rol->description=$request->get('description');
+        $rol->save();
+
+        Session::flash('message', 'Rol creado correctamente');
+        return Redirect::to('admin/roles') ; 
     }
 
     /**
@@ -47,7 +62,8 @@ class RolesController extends Controller
      */
     public function show($id)
     {
-        //
+        $rol=Role::findOrFail($id);
+        return view('campamentos.roles.show',compact('rol'));
     }
 
     /**
@@ -58,7 +74,8 @@ class RolesController extends Controller
      */
     public function edit($id)
     {
-        //
+        $rol=Role::findOrFail($id);
+        return view('campamentos.roles.edit',compact('rol'));
     }
 
     /**
@@ -70,7 +87,11 @@ class RolesController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $rol=Role::findOrFail($id);
+        $rol->update($request->all());
+     
+        Session::flash('message','Rol actualizado');
+        return Redirect::to('admin/roles');
     }
 
     /**
@@ -81,6 +102,10 @@ class RolesController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $ro=Role::find($id);
+        $ro->delete;
+
+        Session::flash('message','Rol eliminado');
+        return Redirect::to('admin/roles');
     }
 }

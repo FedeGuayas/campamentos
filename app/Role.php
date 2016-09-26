@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 
 use Zizaco\Entrust\EntrustRole;
+use Zizaco\Entrust\Traits\EntrustRoleTrait;
 
 class Role extends EntrustRole
 
@@ -15,7 +16,7 @@ class Role extends EntrustRole
         'description'
     ];
 
-    //establecemos las relacion de muchos a muchos con el modelo User, ya que un rol
+    //establecemos las relacion de muchos a muchos con el modelo User, ya que un rol 
     //lo pueden tener varios usuarios y un usuario puede tener varios roles
     public function users(){
         return $this->belongsToMany('App\User');

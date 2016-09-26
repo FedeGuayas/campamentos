@@ -12,15 +12,15 @@
     <!-- Font Awesome -->
     {!! Html::style('css/font-awesome.min.css') !!}
 
-
-            <!-- Bootstrap core CSS -->
+         <!-- Bootstrap core CSS -->
     {!! Html::style('css/bootstrap.css') !!}
 
             <!-- Bootstrap core CSS -->
     {!! Html::style('css/bootstrap-social.css') !!}
 
             <!--Import Google Icon Font-->
-    <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    {{--<link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">--}}
+
 
     <!-- Material Design Bootstrap -->
     {{--    {!! Html::style('css/mdb.min.css') !!}--}}

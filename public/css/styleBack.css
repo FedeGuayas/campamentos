@@ -12,7 +12,7 @@ main {
     flex: 1 0 auto;
 }
 
-/*ventana modal responsitive*/
+/*!*ventana modal responsitive*!*/
 .modal {
     max-height: 90%;
     max-width:90%;

@@ -31,10 +31,14 @@ Route::get('front', function () {
 //Route::group(['middleware' => 'auth', 'prefix' => 'admin'], function () {
 Route::group(['prefix' => 'admin'], function () {
 
-    Route::get('index', [
-        'as' => 'admin.index', function () {
+    //borrar
+    Route::get('index', ['as' => 'admin.index', function () {
         return view('layouts.admin.index');
     }]);
+    
+    Route::get('user/{id}/permisos', ['as' => 'admin.users.permisos','uses'=>'UsersController@permisos' ]);
+    Route::POST('user/setpermisos', ['as' => 'admin.users.setpermisos','uses'=>'UsersController@setPermisos' ]);
+   
 
     Route::resource('users', 'UsersController');
     Route::resource('roles', 'RolesController');

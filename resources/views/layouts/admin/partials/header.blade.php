@@ -26,18 +26,17 @@
             <!-- Dropdown Ajustes -->
             <ul id="dropdownConfig" class="dropdown-content">
                 <li><a href="#!" class="waves-effect waves-teal">Representantes</a></li>
-                <li class="divider"></li>
                 <li><a href="#!" class="waves-effect waves-teal">Alumnos</a></li>
                 <li class="divider"></li>
                 <li><a href="#!" class="waves-effect waves-teal">Escenarios</a></li>
-                <li class="divider"></li>
                 <li><a href="#!" class="waves-effect waves-teal">Disciplinas</a></li>
-                <li class="divider"></li>
                 <li><a href="#!" class="waves-effect waves-teal">Horarios</a></li>
-                <li class="divider"></li>
                 <li><a href="#!" class="waves-effect waves-teal">Modulos</a></li>
-                <li class="divider"></li>
                 <li><a href="#!" class="waves-effect waves-teal">Cupos</a></li>
+                <li class="divider"></li>
+                <li><a href="{!! route('admin.users.index') !!}" class="waves-effect waves-teal">Usuarios</a></li>
+                <li><a href="{!! route('admin.roles.index') !!}" class="waves-effect waves-teal">Roles</a></li>
+                <li><a href="{!! route('admin.permissions.index') !!}" class="waves-effect waves-teal">Permisos</a></li>
 
             </ul>
             <!-- Dropdown Reportes-->
@@ -53,42 +52,41 @@
                 {{--Logo--}}
                 <img src="{{asset('img/camp/fdg-footer.png')}}" alt="logo" class="responsive-img right" style="height: 100%">
                 {{--Button hamburger in moviles--}}
-                <a href="#" data-activates="slide-out" class="button-collapse fixed"><i class="material-icons">menu</i></a>
+                <a href="#" data-activates="slide-out" class="button-collapse fixed"><i class="fa fa-navicon"></i></a>
 
                 <ul class="left hide-on-med-and-down">
 
-                    <li class="active"><a href="#!" class="waves-effect waves-light"><i class="material-icons left">home</i>Home</a></li>
-                    <li><a href="#!" class="waves-effect waves-light"><i class="material-icons left">contact_mail</i>Contacto</a></li>
-                    <li><a href="#!" class="waves-effect waves-light"><i class="material-icons left">add_alert</i>Alertas<span class="new badge red">4</span></a></li>
+                    <li class="active"><a href="#!" class="waves-effect waves-light"><i class="fa fa-1x fa-home left"></i>Home</a></li>
+                    <li><a href="#!" class="waves-effect waves-light"><i class="fa fa-envelope left"></i>Contacto</a></li>
+                    <li><a href="#!" class="waves-effect waves-light"><i class="fa fa-bell-o left"></i>Alertas<span class="new badge red">4</span></a></li>
 
                     {{--<li><a href="#" data-activates="slide-out" class="button-collapse"><i class="material-icons">repeat</i>Prueba</a></li>--}}
                     <!-- Dropdown Inscripciones -->
                     <li><a class="dropdown-button waves-effect waves-light" href="#!" data-beloworigin="true" data-hover="true" data-constrainwidth="false" data-activates="dropdownInsc">Inscripciones<i
-                                    class="material-icons left">mode_edit</i></a></li>
+                                    class="fa fa-pencil left"></i><i class="fa fa-sort-down right"></i></a></li>
                     <!-- Dropdown Reportes -->
                     <li><a class="dropdown-button waves-effect waves-light" href="#!" data-beloworigin="true" data-hover="true" data-constrainwidth="false" data-activates="dropdownReportes">Reportes<i
-                                    class="material-icons left">library_books</i></a></li>
+                                    class="fa fa-bar-chart-o left"></i><i class="fa fa-sort-down right"></i></a></li>
                     <!-- Dropdown Ajustes -->
                     <li><a class="dropdown-button waves-effect waves-light" href="#!" data-beloworigin="true" data-hover="true" data-constrainwidth="false" data-activates="dropdownConfig">Ajustes<i
-                                    class="material-icons left">settings</i></a></li>
+                                    class="fa fa-gears left"></i><i class="fa fa-sort-down right"></i></a></li>
                     <!-- Dropdown Usuarios -->
                     <li><a class="dropdown-button waves-effect waves-light" href="#!" data-beloworigin="true" data-hover="true" data-constrainwidth="false" data-activates="dropdownUser">Usuario<i
-                                    class="material-icons right">arrow_drop_down</i><i class="material-icons left">person</i></a>
-                    </li>
+                                    class="fa fa-user left"></i><i class="fa fa-sort-down right"></i></a></li>
 
                 </ul>
 
                 {{--Side Bar--}}
-                <ul id="slide-out" class="side-nav  teal lighten-1">
+                <ul id="slide-out" class="side-nav teal lighten-1">
 
-                    <li class="active"><a href="#!" class="waves-effect waves-red"><i class="material-icons left">home</i></a></li>
-                    <li><a href="#!" class="waves-effect waves-red"><i class="material-icons left">contact_mail</i></a></li>
-                    <li><a href="#!" class="waves-effect waves-red"><i class="material-icons left">add_alerts</i><span class="new badge red">4</span></a></li>
+                    <li class="active"><a href="#!" class="waves-effect waves-light"><i class="fa fa-2x fa-home"></i></a></li>
+                    <li><a href="#!" class="waves-effect waves-red"><i class="fa fa-2x fa-envelope"></i></a></li>
+                    <li><a href="#!" class="waves-effect waves-red"><i class="fa fa-2x fa-bell-o"></i><span class="new badge red">4</span></a></li>
                     <li class="no-padding">
                         <ul class="collapsible collapsible-accordion">
                             <li>
-                                <a class="collapsible-header waves-effect waves-red">Inscripciones<i class="material-icons right">arrow_drop_down</i>
-                                    <i class="material-icons left">mode_edit</i></a>
+                                <a class="collapsible-header waves-effect waves-red">Inscripciones
+                                    <i class="fa fa-pencil"></i></a>
                                 <div class="collapsible-body">
                                     <ul>
                                         <li><a href="#!" class="waves-effect waves-teal">Listar</a></li>
@@ -104,8 +102,8 @@
                                 </div>
                             </li>
                             <li>
-                                <a class="collapsible-header waves-effect waves-red">Usuarios<i class="material-icons right">arrow_drop_down</i>
-                                    <i class="material-icons left">person</i></a>
+                                <a class="collapsible-header waves-effect waves-red">Usuarios
+                                    <i class="fa fa-user"></i></a>
                                 <div class="collapsible-body">
                                     <ul>
                                         <li><a href="#!" class="waves-effect waves-teal">Perfil</a></li>
@@ -115,8 +113,8 @@
                                 </div>
                             </li>
                             <li>
-                                <a class="collapsible-header waves-effect waves-red">Ajustes<i class="material-icons right">arrow_drop_down</i>
-                                    <i class="material-icons left">settings</i></a>
+                                <a class="collapsible-header waves-effect waves-red">Ajustes
+                                    <i class="fa fa-gears"></i></a>
                                 <div class="collapsible-body">
                                     <ul>
                                         <li><a href="#!" class="waves-effect waves-teal">Representantes</a></li>
@@ -136,8 +134,8 @@
                                 </div>
                             </li>
                             <li>
-                                <a class="collapsible-header waves-effect waves-red">Reportes<i class="material-icons right">arrow_drop_down</i>
-                                    <i class="material-icons left">library_books</i></a>
+                                <a class="collapsible-header waves-effect waves-red">Reportes
+                                    <i class="fa fa-bar-chart-o"></i></a>
                                 <div class="collapsible-body">
                                     <ul>
                                         <li><a href="#!" class="waves-effect waves-teal">Facturacion</a></li>

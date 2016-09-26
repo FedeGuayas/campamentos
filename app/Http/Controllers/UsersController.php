@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Role;
 use App\User;
+use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Redirect;
 use Session;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
+
+
 
 class UsersController extends Controller
 {
@@ -32,7 +36,8 @@ class UsersController extends Controller
      */
     public function create()
     {
-        return view('campamentos.users.create');
+
+        return view('campamentos.users.create',compact('roles'));
     }
 
     /**
@@ -63,7 +68,7 @@ class UsersController extends Controller
     public function show($id)
     {
         $user=User::findOrFail($id);
-        return 'Desde Show';
+        return view('campamentos.users.show',compact('user'));
     }
 
     /**
@@ -74,7 +79,9 @@ class UsersController extends Controller
      */
     public function edit($id)
     {
-        return 'Desde Edit';
+        $user=User::findOrFail($id);
+//        $roles= [''=>'Seleccione roles'] + Role::lists('display_name', 'id')->all();
+        return view('campamentos.users.edit',compact('user','roles'));
     }
 
     /**
@@ -86,7 +93,12 @@ class UsersController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $user=User::findOrFail($id);
+        $user->update($request->all());
+        $nombre=User::findOrFail($id)->getNameAttribute();
+      
+        Session::flash('message','Se actualizo el usuario '.$nombre);
+        return Redirect::to('admin/users');
     }
 
     /**
@@ -97,10 +109,44 @@ class UsersController extends Controller
      */
     public function destroy($id)
     {
-
-
         $user=User::findOrFail($id);
         $user->delete;
+
+        Session::flash('message','Usuario eliminado');
         return Redirect::to('camapamentos.users.index');
     }
+
+    
+    public  function permisos($id)
+    {
+        $user=User::findOrFail($id);
+//        $roles= [''=>'Seleccione roles'] + Role::lists('display_name', 'id')->all();
+        $roles=Role::all();
+        return view('campamentos.users.permisos',compact('user','roles'));
+    }
+
+    public  function setPermisos(Request $request)
+    {
+        $user_id=$request->get('user_id');
+        $user=User::findOrFail($user_id);
+        $roles=$request->get('roles');
+
+//        $rol=Role::find($roles);
+
+//        dd($rolArray[0]->getKey());
+//        $user->attachRole($rolArray);
+
+        if ($roles) {
+            // El usuario marcó el checkbox
+            foreach ($roles as $rol){
+                $user->attachRole($rol);
+            }
+
+        } else {
+            // El usuario NO marcó el chechbox
+
+        }
+        return Redirect::to('admin/users');
+    }
+    
 }

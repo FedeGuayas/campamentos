@@ -3,8 +3,13 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Permission;
+use Illuminate\Support\Facades\Redirect;
+use Session;
 
 use App\Http\Requests;
+
+
 
 class PermissionsController extends Controller
 {
@@ -13,9 +18,13 @@ class PermissionsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        if ($request){
+            $permisos=Permission::all();
+        }
+
+        return view('campamentos.permissions.index', compact('permisos'));
     }
 
     /**
@@ -36,7 +45,14 @@ class PermissionsController extends Controller
      */
     public function store(Request $request)
     {
-        return 'ok desde store Permissions';
+        $permiso=new Permission;
+        $permiso->name=$request->get('name');
+        $permiso->display_name=$request->get('display_name');
+        $permiso->description=$request->get('description');
+        $permiso->save();
+
+        Session::flash('message', 'Permiso creado correctamente');
+        return Redirect::to('admin/permissions') ;
     }
 
     /**
@@ -47,7 +63,8 @@ class PermissionsController extends Controller
      */
     public function show($id)
     {
-        //
+        $per=Permission::findOrFail($id);
+        return view('campamentos.permissions.show',compact('per'));
     }
 
     /**
@@ -58,7 +75,8 @@ class PermissionsController extends Controller
      */
     public function edit($id)
     {
-        //
+        $permiso=Permission::findOrFail($id);
+        return view('campamentos.permissions.edit',compact('permiso'));
     }
 
     /**
@@ -70,7 +88,11 @@ class PermissionsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $permiso=Permission::findOrFail($id);
+        $permiso->update($request->all());
+
+        Session::flash('message','Permiso actualizado');
+        return Redirect::to('admin/permissions');
     }
 
     /**
@@ -81,6 +103,10 @@ class PermissionsController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $permiso=Permission::findOrFail($id);
+        $permiso->delete;
+
+        Session::flash('message','Permiso eliminado');
+        return Redirect::to('admin/permissions');
     }
 }

@@ -11,12 +11,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class User extends Authenticatable
 {
     use SoftDeletes; //borrado seguro
-   //Use el trai de entrust asi xk tiene conflicto con SofDeleted
+   
+    ///Use el trai de entrust asi xk tiene conflicto con SofDeleted
     use EntrustUserTrait {
-
         SoftDeletes::restore as sfRestore;
         EntrustUserTrait::restore as euRestore;
-
     }
 
     //Sobrescribiendo el metodo restor en SofDelete y en EntrustUserTrait para evitar los conflictos
@@ -53,8 +52,6 @@ class User extends Authenticatable
      * @var array
      */
     protected $dates = ['deleted_at'];
-
-
 
     //setear el password, ya no es necesario encriptar pass en controlador
     public function setPasswordAttribute($value){
