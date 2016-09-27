@@ -37,7 +37,9 @@
         <!--/.Navbar-->
 
 <!--Mask-->
+@unless (Auth::check())
 @include('layouts.front.mask')
+@endunless
         <!--/.Mask-->
 
 <!--Main container-->

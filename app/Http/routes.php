@@ -17,27 +17,27 @@ Route::get('/', function () {
 
 Route::auth();
 
-//Para manejar la respuesta cuando el ususrio de en el link de activar la cuenta
-Route::get('user/activation/{token}', 'Auth\AuthController@activateUser')->name('user.activate');
+
 
 Route::get('/home', 'HomeController@index');
-
+//Para manejar la respuesta cuando el usuario de en el link de activar la cuenta
+Route::get('user/activation/{token}', 'Auth\AuthController@activateUser')->name('user.activate');
 
 /*Front end for register online */
-Route::get('front', function () {
-    return view('layouts/front');
-});
+//Route::get('front', function () {
+//    return view('layouts/front');
+//});
 
 
 /*OK*/
 /*Route group admin, and login is forces by middeware auth*/
-//Route::group(['middleware' => 'auth', 'prefix' => 'admin'], function () {
-Route::group(['prefix' => 'admin'], function () {
+Route::group(['middleware' => 'auth', 'prefix' => 'admin'], function () {
+//Route::group(['prefix' => 'admin'], function () {
 
     //borrar
-    Route::get('index', ['as' => 'admin.index', function () {
-        return view('layouts.admin.index');
-    }]);
+//    Route::get('index', ['as' => 'admin.index', function () {
+//        return view('layouts.admin.index');
+//    }]);
 
     //adicionar roles a los usuarios
     Route::get('user/{id}/roles', ['as' => 'admin.users.roles','uses'=>'UsersController@roles' ]);

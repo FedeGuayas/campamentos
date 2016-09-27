@@ -1,77 +1,75 @@
 @extends('layouts.front')
 
-@section('contenido')
-<div class="container">
-    <div class="row">
-        <div class="col-md-8 col-md-offset-2">
-            <div class="panel panel-default">
-                {{--Mensaje de activacion por email--}}
-                @if (session('status'))
-                    <div class="alert alert-success">
-                        {{ session('status') }}
-                    </div>
-                @endif
-                @if (session('warning'))
-                    <div class="alert alert-warning">
-                        {{ session('warning') }}
-                    </div>
-                @endif
-                <div class="panel-heading">Login</div>
-                <div class="panel-body">
-                    <form class="form-horizontal" role="form" method="POST" action="{{ url('/login') }}">
-                        {{ csrf_field() }}
+@section('form_login')
 
-                        <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
-                            <label for="email" class="col-md-4 control-label">E-Mail Address</label>
+    <div class="card wow fadeInRight">
+        <div class="card-block">
+            <!--Header-->
+                {{-- Mensaje de activacion por email--}}
+            @if (session('status'))
+                <div class="alert alert-success">
+                    {{ session('status') }}
+                </div>
+            @endif
+            @if (session('warning'))
+                <div class="alert alert-warning">
+                    {{ session('warning') }}
+                </div>
+            @endif
 
-                            <div class="col-md-6">
-                                <input id="email" type="email" class="form-control" name="email" value="{{ old('email') }}">
+            <div class="text-xs-center">
+                <h3><i class="fa fa-user"></i> Registrarse con:</h3>
+                <a href="" class="btn btn-floating btn-social-icon btn-facebook"><i class="fa fa-facebook"></i></a>
+                <a href="" class="btn btn-floating btn-social-icon btn-twitter"><i class="fa fa-twitter"></i></a>
+                <a href="" class="btn btn-floating btn-social-icon btn-google"><i class="fa fa-google-plus"></i></a>
+                <hr>
+                <h3>o:</h3>
+            </div> <!--/. Header-->
 
-                                @if ($errors->has('email'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('email') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-                        </div>
+            <!--Body-->
+            {!! Form::open(['url'=>'/login','method'=>'POST','role'=>'form']) !!}
 
-                        <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
-                            <label for="password" class="col-md-4 control-label">Password</label>
-
-                            <div class="col-md-6">
-                                <input id="password" type="password" class="form-control" name="password">
-
-                                @if ($errors->has('password'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('password') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <div class="col-md-6 col-md-offset-4">
-                                <div class="checkbox">
-                                    <label>
-                                        <input type="checkbox" name="remember"> Remember Me
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <div class="col-md-6 col-md-offset-4">
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="fa fa-btn fa-sign-in"></i> Login
-                                </button>
-
-                                <a class="btn btn-link" href="{{ url('/password/reset') }}">Forgot Your Password?</a>
-                            </div>
-                        </div>
-                    </form>
+            <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
+                <div class="md-form">
+                    <i class="fa fa-envelope prefix"></i>
+                    {!! Form::email('email',null,['class'=>'form-control', 'id'=>'email', 'value'=>"{{ old('email')}}"]) !!}
+                    {!! Form::label('email','Correo:') !!}
+                    @if ($errors->has('email'))
+                        <span class="text-danger">
+                            <strong>{{ $errors->first('email') }}</strong>
+                        </span>
+                    @endif
                 </div>
             </div>
+
+            <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
+                <div class="md-form">
+                    <i class="fa fa-lock prefix"></i>
+                    {!! Form::password('password',['class'=>'form-control', 'id'=>'password']) !!}
+                    {!! Form::label('password','Contraseña:') !!}
+                    @if ($errors->has('password'))
+                        <span class="text-danger">
+                            <strong>{{ $errors->first('password') }}</strong>
+                        </span>
+                    @endif
+                </div>
+            </div>
+
+            <div class="text-xs-center">
+
+                {!! Form::button('Entrar<i class="fa fa-sign-in left"></i>', ['class'=>'btn btn-ptc btn-lg','type' => 'submit']) !!}
+                {{--<button class="btn btn-ptc btn-lg">Entrar</button>--}}
+                <hr>
+                <fieldset class="form-group">
+                    {!! Form::checkbox('remember',null,false,['id'=>'remember']) !!}
+                    {!! Form::label('remember','Recordarme') !!}
+                </fieldset>
+            </div>
+            {!! Form::close() !!}
+            <a  class="fa fa-external-link-square" href="{{ url('/password/reset') }}">Olvido su contraseña?</a>
+            <a  class="fa fa-external-link-square" href="{{ url('/register') }}">Registrarme</a>
+
         </div>
     </div>
-</div>
+
 @endsection

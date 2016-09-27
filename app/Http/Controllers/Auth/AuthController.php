@@ -81,7 +81,7 @@ class AuthController extends Controller
             'first_name' => $data['first_name'],
             'last_name' => $data['last_name'],
             'email' => $data['email'],
-            'password' => bcrypt($data['password']),
+            'password' => $data['password'],
         ]);
     }
 
@@ -108,7 +108,8 @@ class AuthController extends Controller
     }
 
     /**
-     * If method authenticated exists in the AuthController probar este metodo
+     * If method authenticated exists in the AuthController
+     * probar este metodo
      *  Para bloquear al usuario si no esta activo todavia, y si es necesario, reenviarle un correo.
      */
     public function authenticated(Request $request, $user)
