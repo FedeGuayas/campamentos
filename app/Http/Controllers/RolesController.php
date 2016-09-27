@@ -105,8 +105,8 @@ class RolesController extends Controller
      */
     public function destroy($id)
     {
-        $ro=Role::find($id);
-        $ro->delete;
+        $rol=Role::find($id);
+        $rol->delete;
 
         Session::flash('message','Rol eliminado');
         return Redirect::to('admin/roles');
