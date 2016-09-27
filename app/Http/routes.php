@@ -17,6 +17,9 @@ Route::get('/', function () {
 
 Route::auth();
 
+//Para manejar la respuesta cuando el ususrio de en el link de activar la cuenta
+Route::get('user/activation/{token}', 'Auth\AuthController@activateUser')->name('user.activate');
+
 Route::get('/home', 'HomeController@index');
 
 
@@ -49,6 +52,8 @@ Route::group(['prefix' => 'admin'], function () {
     Route::resource('roles', 'RolesController');
     Route::resource('permissions', 'PermissionsController');
 });
+
+
 
 
 
