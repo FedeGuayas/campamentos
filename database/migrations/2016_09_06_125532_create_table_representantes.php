@@ -15,7 +15,7 @@ class CreateTableRepresentantes extends Migration
         Schema::create('representantes', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('persona_id')->unsigned();
-            $table->integer('encuesta_id')->unsigned();
+            $table->integer('encuesta_id')->unsigned()->nullable();
             $table->string('email')->unique();
             $table->string('foto_ced')->nullable();
             $table->string('foto')->nullable();
@@ -23,7 +23,8 @@ class CreateTableRepresentantes extends Migration
 
             $table->softDeletes();
             $table->foreign('persona_id')->references('id')->on('personas');
-            $table->foreign('encuesta_id')->references('id')->on('encuestas');
+            $table->foreign('encuesta_id')->references('id')->on('encuestas')
+                ->onUpdate('cascade')->onDelete('set null');
         });
     }
 

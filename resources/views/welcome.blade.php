@@ -1,7 +1,8 @@
-@include('layouts.front')
+@include('layouts.front.landing')
 
-        <!--Main container-->
-@include('layouts.front.main')
-        <!--/Main container-->
+     @section('content')
+        <!--Mask-->
 
+    <!--/.Mask-->
+@endsection
 

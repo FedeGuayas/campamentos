@@ -55,7 +55,9 @@
                                 <li class="st-mdb"><a class="dropdown-item " href="#">Perfil</a></li>
                                 <li class="st-mdb"><a class="dropdown-item" href="#">Inscripciones</a></li>
                                 <li class="st-mdb"><a class="dropdown-item" href="#">Comentar</a></li>
+                                @if(Entrust::hasRole(['administrator','planner','signup','invited']) )
                                 <li class="st-mdb"><a class="dropdown-item" href="{{route('admin.index')}}">Administración</a></li>
+                                @endif
                                 <div class="dropdown-divider"></div>
                                 <li class="st-mdb"><a class="nav-link text-danger dropdown-item" href="{{ url('/logout') }}"><i class="fa fa-sign-out"></i>Salir</a></li>
                             </ul>

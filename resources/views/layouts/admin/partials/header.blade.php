@@ -25,14 +25,12 @@
             </ul>
             <!-- Dropdown Ajustes -->
             <ul id="dropdownConfig" class="dropdown-content">
-                <li><a href="#!" class="waves-effect waves-teal">Representantes</a></li>
-                <li><a href="#!" class="waves-effect waves-teal">Alumnos</a></li>
-                <li class="divider"></li>
                 <li><a href="#!" class="waves-effect waves-teal">Escenarios</a></li>
                 <li><a href="#!" class="waves-effect waves-teal">Disciplinas</a></li>
                 <li><a href="#!" class="waves-effect waves-teal">Horarios</a></li>
                 <li><a href="#!" class="waves-effect waves-teal">Modulos</a></li>
                 <li><a href="#!" class="waves-effect waves-teal">Cupos</a></li>
+                <li><a href="{!! route('admin.encuestas.index') !!}" class="waves-effect waves-teal">Encuestas</a></li>
                 <li class="divider"></li>
                 <li><a href="{!! route('admin.users.index') !!}" class="waves-effect waves-teal">Usuarios</a></li>
                 <li><a href="{!! route('admin.roles.index') !!}" class="waves-effect waves-teal">Roles</a></li>

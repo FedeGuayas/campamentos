@@ -41,7 +41,7 @@ class ActivationService
         $link = route('user.activate', $token);
         $message = sprintf('Activate account <a href="%s">%s</a>', $link, $link);
 
-        //cambiando raw por send se puede utilizar una plantilla hrml para el mail
+        //cambiando raw por send se puede utilizar una plantilla html para el mail
         $this->mailer->raw($message, function (Message $m) use ($user) {
             $m->to($user->email)->subject('Activation mail');
         });
@@ -61,7 +61,8 @@ class ActivationService
         $user = User::find($activation->user_id);
 
         $user->activated = true;
-
+        $role=Role::where('name', 'register')->first();
+        $user->attachRole($role);
         $user->save();
 
         $this->activationRepo->deleteActivation($token);
