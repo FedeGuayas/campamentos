@@ -35,9 +35,9 @@ Route::group(['middleware' => 'auth', 'prefix' => 'admin'], function () {
 //Route::group(['prefix' => 'admin'], function () {
 
     //borrar
-//    Route::get('index', ['as' => 'admin.index', function () {
-//        return view('layouts.admin.index');
-//    }]);
+    Route::get('index', ['as' => 'admin.index', function () {
+        return view('layouts.admin.index');
+    }]);
 
     //adicionar roles a los usuarios
     Route::get('user/{id}/roles', ['as' => 'admin.users.roles','uses'=>'UsersController@roles' ]);

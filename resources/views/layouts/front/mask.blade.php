@@ -5,6 +5,7 @@
             <div class="row" id="home">
 
                 <!--First column-->
+                @
                 <div class="col-lg-6">
                     <div class="description">
                         <h2 class="h2-responsive wow fadeInLeft">Campamentos Deportivos </h2>
@@ -21,7 +22,7 @@
                 <!--Second column-->
                 <div class="col-lg-6">
                     <!--Form Login-->
-                   @yield('form_login')
+                   @include('auth.login')
                     <!--/.Form Login-->
                 </div>
                 <!--/Second column-->

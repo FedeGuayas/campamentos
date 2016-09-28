@@ -36,10 +36,10 @@
                 </li>
 
                 <!-- Authentication Links -->
-                @if (Auth::guest())
-                    <li class="nav-item"><a class="nav-link" href="{{ url('/login') }}">Login</a></li>
+                @if (!Auth::guest())
+                    {{--<li class="nav-item"><a class="nav-link" href="{{ url('/login') }}">Login</a></li>--}}
                     {{--<li class="nav-item"><a class="nav-link" href="{{ url('/register') }}">Register</a></li>--}}
-                @else
+                {{--@else--}}
                     <li class="nav-item dropdown">
                         <!-- Split button -->
                         <div class="btn-group">
@@ -55,6 +55,7 @@
                                 <li class="st-mdb"><a class="dropdown-item " href="#">Perfil</a></li>
                                 <li class="st-mdb"><a class="dropdown-item" href="#">Inscripciones</a></li>
                                 <li class="st-mdb"><a class="dropdown-item" href="#">Comentar</a></li>
+                                <li class="st-mdb"><a class="dropdown-item" href="{{route('admin.index')}}">Administración</a></li>
                                 <div class="dropdown-divider"></div>
                                 <li class="st-mdb"><a class="nav-link text-danger dropdown-item" href="{{ url('/logout') }}"><i class="fa fa-sign-out"></i>Salir</a></li>
                             </ul>

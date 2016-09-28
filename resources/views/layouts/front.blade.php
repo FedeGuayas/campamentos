@@ -38,13 +38,11 @@
 
 <!--Mask-->
 @unless (Auth::check())
+
 @include('layouts.front.mask')
 @endunless
         <!--/.Mask-->
 
-<!--Main container-->
-@include('layouts.front.main')
-        <!--/Main container-->
 
 <!--Footer-->
 @include('layouts.front.footer')

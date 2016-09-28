@@ -8,7 +8,7 @@
             <ul id="dropdownUser" class="dropdown-content">
                 <li><a href="#!" class="waves-effect waves-teal">Perfil</a></li>
                 <li class="divider"></li>
-                <li><a href="#!" class="waves-effect waves-teal">Logout</a></li>
+                <li><a href="{{url('/logout')}}" class="waves-effect waves-teal">Logout</a></li>
             </ul>
 
             <!-- Dropdown Inscripciones -->
@@ -108,7 +108,7 @@
                                     <ul>
                                         <li><a href="#!" class="waves-effect waves-teal">Perfil</a></li>
                                         <li class="divider"></li>
-                                        <li><a href="#!" class="waves-effect waves-teal">Logout</a></li>
+                                        <li><a href="{{url('/logout')}}" class="waves-effect waves-teal">Logout</a></li>
                                     </ul>
                                 </div>
                             </li>

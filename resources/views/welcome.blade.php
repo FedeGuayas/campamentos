@@ -1,5 +1,7 @@
-{{--@extends('layouts.front')--}}
+@include('layouts.front')
 
-{{--@section('contenido')--}}
+        <!--Main container-->
+@include('layouts.front.main')
+        <!--/Main container-->
 
-{{--@endsection--}}
+

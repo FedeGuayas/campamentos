@@ -1,6 +1,3 @@
-@extends('layouts.front')
-
-@section('form_login')
 
     <div class="card wow fadeInRight">
         <div class="card-block">
@@ -72,4 +69,4 @@
         </div>
     </div>
 
-@endsection
+
