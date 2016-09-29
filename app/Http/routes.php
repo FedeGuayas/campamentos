@@ -46,13 +46,17 @@ Route::group(['middleware' => 'auth', 'prefix' => 'admin'], function () {
     //adicionar permisos a los roles
     Route::get('rol/{id}/permisos', ['as' => 'admin.roles.permisos','uses'=>'RolesController@permisos' ]);
     Route::POST('rol/setpermisos', ['as' => 'admin.roles.setpermisos','uses'=>'RolesController@setPermisos' ]);
-   
+
+    //perfil de usuario
+    Route::get('user/profile',['as' => 'admin.user.profile', 'uses'=>'UsersController@showProfile']);
 
     Route::resource('users', 'UsersController');
     Route::resource('roles', 'RolesController');
     Route::resource('permissions', 'PermissionsController');
     Route::resource('encuestas', 'EncuestasController');
     Route::resource('personas', 'PersonasController');
+    Route::resource('transportes', 'TransportesController');
+    Route::resource('escenarios', 'EscenariosController');
 });
 
 

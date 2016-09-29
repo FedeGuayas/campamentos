@@ -6,7 +6,7 @@
 
             <!-- Dropdown Usuarios -->
             <ul id="dropdownUser" class="dropdown-content">
-                <li><a href="#!" class="waves-effect waves-teal">Perfil</a></li>
+                <li><a href="{!! route('admin.user.profile') !!}" class="waves-effect waves-teal">Perfil</a></li>
                 <li class="divider"></li>
                 <li><a href="{{url('/logout')}}" class="waves-effect waves-teal">Logout</a></li>
             </ul>
@@ -33,8 +33,12 @@
                 <li><a href="{!! route('admin.encuestas.index') !!}" class="waves-effect waves-teal">Encuestas</a></li>
                 <li class="divider"></li>
                 <li><a href="{!! route('admin.users.index') !!}" class="waves-effect waves-teal">Usuarios</a></li>
+                <li><a href="{!! route('admin.personas.index') !!}" class="waves-effect waves-teal">Personas</a></li>
                 <li><a href="{!! route('admin.roles.index') !!}" class="waves-effect waves-teal">Roles</a></li>
                 <li><a href="{!! route('admin.permissions.index') !!}" class="waves-effect waves-teal">Permisos</a></li>
+                <li><a href="{!! route('admin.transportes.index') !!}" class="waves-effect waves-teal">Transportes</a></li>
+                <li><a href="{!! route('admin.escenarios.index') !!}" class="waves-effect waves-teal">Escenarios</a></li>
+
 
             </ul>
             <!-- Dropdown Reportes-->

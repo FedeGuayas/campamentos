@@ -18,6 +18,7 @@ class CreateTableEscenarioTransporte extends Migration
             $table->integer('transporte_id')->unsigned();
             $table->tinyInteger('precio')->nullable();
             $table->timestamps();
+            
         });
     }
 

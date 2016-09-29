@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Role;
 use App\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Redirect;
 use Session;
@@ -155,6 +156,16 @@ class UsersController extends Controller
                 $user->detachRole($roles);
      }
         return Redirect::to('admin/users');
+    }
+
+
+    /**
+     * Mostrar el perfi de usuario
+     */
+    public function showProfile()
+    {
+        $user=Auth::user();
+        return view('campamentos.users.profile', compact('user'));
     }
     
 }
