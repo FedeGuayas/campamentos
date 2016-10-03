@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Escenario;
 use App\Transporte;
 use Illuminate\Http\Request;
 
@@ -38,8 +39,10 @@ class TransportesController extends Controller
      */
     public function store(Request $request)
     {
-        
-        return dd('ok guardado');
+        $transporte=new Transporte;
+        $transporte->destino=$request->get('destino');
+        $transporte->save();
+        return redirect()->route('admin.transportes.index');
     }
 
     /**
@@ -86,4 +89,24 @@ class TransportesController extends Controller
     {
         //
     }
+
+    public function get_escenario(Request $request, $id)
+    {
+        
+        $transportes=Transporte::findOrFail($id);
+        $escenarios=[] + Escenario::lists('escenario', 'id')->all();
+        return view('campamentos.transportes.escenario_transporte', compact('transportes','escenarios'));
+    }
+
+    public function set_escenario(Request $request,$id)
+    {
+
+        $transporte=Transporte::findOrFail($id);
+        $escenarios=$request->get('escenario');
+        $precio=$request->get('precio');
+        dd($transporte);
+
+        return view('campamentos.transportes.escenario_transporte');
+    }
+    
 }

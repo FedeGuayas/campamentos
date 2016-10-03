@@ -30,4 +30,9 @@ class Escenario extends Model
     protected $fillable = [
         'escenario'
     ];
+
+    public function transportes()
+    {
+        return $this->belongsToMany('App\Transporte')->withPivot('precio');
+    }
 }

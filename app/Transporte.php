@@ -31,4 +31,9 @@ class Transporte extends Model
         'destino'
     ];
 
+    public function escenarios()
+    {
+        return $this->belongsToMany('App\Escenario')->withPivot('precio');
+    }
+
 }

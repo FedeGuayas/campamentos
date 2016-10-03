@@ -7,7 +7,7 @@
     <div class="row">
         <div class="col l8 m8 s">
             @include('alert.success')
-            <h4>Listado de Transportes</h4>
+            <h4>Listado de Transportes por Escenarios</h4>
             {{-- @include('runner.usuarios.search')--}}
         </div>
     </div>
@@ -30,22 +30,22 @@
                         <tr>
                             <td>{{ $transp->id }}</td>
                             <td>{{ $transp->destino }}</td>
-                            <td>{{ dd('origen desde escenario')}}</td>
+                            <td>{{'origen desde escenario'}}</td>
                             {{--<td>@foreach($rol->perms as $per)--}}
                                     {{--{{ $per->display_name }},--}}
                                 {{--@endforeach--}}
                             {{--</td>--}}
                             <td>
-                                {{ dd('precio')}}
+
                             </td>
                             <td>
                                 {!! Form::button('<i class="fa fa-trash-o" ></i>',['class'=>'modal-trigger btn-floating waves-effect waves-light red darken-1','data-target'=>"modal-delete-$transp->id"]) !!}
                                 <a href="{{ route('admin.transportes.edit', $transp->id ) }}">
                                     {!! Form::button('<i class="fa fa-pencil-square-o" ></i>',['class'=>'btn-floating waves-effect waves-light teal darken-1']) !!}
                                 </a>
-                                {{--<a href="{{ route('admin.roles.show', $rol->id ) }}">--}}
-                                    {{--{!! Form::button('<i class="fa fa-eye"></i>',['class'=>'btn-floating waves-effect waves-light teal darken-1']) !!}--}}
-                                {{--</a>--}}
+                                <a href="{{ route('admin.get_escenario',$transp->id) }}">
+                                    {!! Form::button('<i class="fa fa-link"></i>',['class'=>'btn-floating waves-effect waves-light teal darken-1']) !!}
+                                </a>
                                 {{--<a href="{{ route('admin.roles.permisos',$rol->id  ) }}" class="tooltipped" data-position="top" data-delay="50" data-tooltip="Permisos">--}}
                                     {{--{!! Form::button('<i class="fa fa-key"></i>',['class'=>'btn-floating waves-effect waves-light teal darken-1']) !!}--}}
                                 {{--</a>--}}
