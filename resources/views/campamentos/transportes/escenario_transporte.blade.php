@@ -11,7 +11,7 @@
                 <div class="card-content ">
 
                     {!! Form::open(['route'=>'admin.set_escenario', 'method'=>'POST'])  !!}
-                    {!! Form::hidden('transporte_id',$transportes->id) !!}
+                    {!! Form::hidden('transporte_id',$transporte->id) !!}
                     <div class="col s12">
 
                         <div class="input-field col l6 s12 ">
@@ -25,8 +25,9 @@
                         </div>
 
                         <div class="input-field col l6 s12 ">
+                            <i class="fa fa-usd prefix" aria-hidden="true"></i>
                             {!! Form::label('precio','Precio:') !!}
-                            {!! Form::number('precio',null,['class'=>'validate']) !!}
+                            {!! Form::number('precio','0.00',['step' => '0.01','min' => '0.01','class'=>'validate', 'required']) !!}
                         </div>
 
                         {{--<div class="input-field col s12 ">--}}

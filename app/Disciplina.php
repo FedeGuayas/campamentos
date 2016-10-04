@@ -4,15 +4,16 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Escenario extends Model
+class Disciplina extends Model
 {
+
     /**
      * The table associated with the model.
      *
      * @var string
      */
 
-    protected $table = 'escenarios';
+    protected $table = 'disciplinas';
 
     /**
      * Indicates if the model should be timestamped.
@@ -28,16 +29,11 @@ class Escenario extends Model
      * @var array
      */
     protected $fillable = [
-        'escenario'
+        'disciplina'
     ];
-
-    public function transportes()
+    
+    public function escenarios()
     {
-        return $this->belongsToMany('App\Transporte')->withPivot('precio');
-    }
-
-    public function disciplinas()
-    {
-        return $this->belongsToMany('App\Disciplina')->withPivot('horario_id','dia_id','modulo_id','mensualidad','matricula','descuento','cupos');
+        return $this->belongsToMany('App\Escenario')->withPivot('horario_id','dia_id','modulo_id','mensualidad','matricula','descuento','cupos');
     }
 }

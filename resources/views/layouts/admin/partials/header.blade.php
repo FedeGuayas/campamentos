@@ -25,7 +25,7 @@
             </ul>
             <!-- Dropdown Ajustes -->
             <ul id="dropdownConfig" class="dropdown-content">
-                <li><a href="#!" class="waves-effect waves-teal">Escenarios</a></li>
+                <li><a href="{!! route('admin.escenarios.index') !!}" class="waves-effect waves-teal">Escenarios</a></li>
                 <li><a href="#!" class="waves-effect waves-teal">Disciplinas</a></li>
                 <li><a href="#!" class="waves-effect waves-teal">Horarios</a></li>
                 <li><a href="#!" class="waves-effect waves-teal">Modulos</a></li>

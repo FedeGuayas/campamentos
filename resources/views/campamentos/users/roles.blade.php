@@ -30,7 +30,7 @@
                         <td>{{ $rol->display_name }}</td>
                         <td>{{ $rol->description }}</td>
                         <td>@foreach($rol->perms as $perm)
-                            {{ $perm->display_name }},
+                            {{ $perm->display_name }}<br>
                                 @endforeach
                         </td>
 

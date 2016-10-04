@@ -55,7 +55,7 @@ class UsersController extends Controller
         $user->last_name=$request->get('last_name');
         $user->email=$request->get('email');
         $user->password=$request->get('password');
-        $user->activation='1';
+        $user->activated='1';
         $user->save();
 
         Session::flash('message', 'Usuario creado correctamente');

@@ -13,11 +13,17 @@ class CreateTableEscenarioTransporte extends Migration
     public function up()
     {
         Schema::create('escenario_transporte', function (Blueprint $table) {
-            $table->increments('id');
             $table->integer('escenario_id')->unsigned();
             $table->integer('transporte_id')->unsigned();
-            $table->tinyInteger('precio')->nullable();
+            $table->float('precio')->nullable();
             $table->timestamps();
+
+            $table->foreign('escenario_id')->references('id')->on('escenarios')
+                ->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('transporte_id')->references('id')->on('transportes')
+                ->onUpdate('cascade')->onDelete('cascade');
+
+            $table->primary(['escenario_id', 'transporte_id']);
             
         });
     }

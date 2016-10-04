@@ -90,23 +90,24 @@ class TransportesController extends Controller
         //
     }
 
-    public function get_escenario(Request $request, $id)
+    public function get_escenario($id)
     {
         
-        $transportes=Transporte::findOrFail($id);
+        $transporte=Transporte::findOrFail($id);
         $escenarios=[] + Escenario::lists('escenario', 'id')->all();
-        return view('campamentos.transportes.escenario_transporte', compact('transportes','escenarios'));
+        return view('campamentos.transportes.escenario_transporte', compact('transporte','escenarios'));
     }
 
-    public function set_escenario(Request $request,$id)
+    public function set_escenario(Request $request)
     {
-
-        $transporte=Transporte::findOrFail($id);
-        $escenarios=$request->get('escenario');
+        $transporte_id=$request->get('transporte_id');
+        $transporte=Transporte::find($transporte_id);
+        $escenario=$request->get('escenario');
         $precio=$request->get('precio');
-        dd($transporte);
 
-        return view('campamentos.transportes.escenario_transporte');
+        $transporte->escenarios()->attach($escenario,['precio'=>$precio]);
+        
+        return redirect()->route('admin.transportes.index');
     }
     
 }

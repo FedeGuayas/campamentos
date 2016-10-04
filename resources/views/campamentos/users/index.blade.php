@@ -32,7 +32,7 @@
                             <td>{{ $user->getNameAttribute() }}</td>
                             <td>{{ $user->email }}</td>
                             <td>@foreach ($user->roles as $role)
-                                    {{ $role->display_name }},
+                                    {{ $role->display_name }}<br>
 
                                 @endforeach
                             </td>

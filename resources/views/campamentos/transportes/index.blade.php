@@ -30,13 +30,15 @@
                         <tr>
                             <td>{{ $transp->id }}</td>
                             <td>{{ $transp->destino }}</td>
-                            <td>{{'origen desde escenario'}}</td>
-                            {{--<td>@foreach($rol->perms as $per)--}}
-                                    {{--{{ $per->display_name }},--}}
-                                {{--@endforeach--}}
-                            {{--</td>--}}
                             <td>
-
+                                @foreach($transp->escenarios as $origen)
+                                    {{ $origen->escenario }}<br>
+                                @endforeach
+                            </td>
+                            <td>
+                                @foreach($transp->escenarios as $precio)
+                                    {{$precio->pivot->precio}}<br>
+                                @endforeach
                             </td>
                             <td>
                                 {!! Form::button('<i class="fa fa-trash-o" ></i>',['class'=>'modal-trigger btn-floating waves-effect waves-light red darken-1','data-target'=>"modal-delete-$transp->id"]) !!}
@@ -46,9 +48,6 @@
                                 <a href="{{ route('admin.get_escenario',$transp->id) }}">
                                     {!! Form::button('<i class="fa fa-link"></i>',['class'=>'btn-floating waves-effect waves-light teal darken-1']) !!}
                                 </a>
-                                {{--<a href="{{ route('admin.roles.permisos',$rol->id  ) }}" class="tooltipped" data-position="top" data-delay="50" data-tooltip="Permisos">--}}
-                                    {{--{!! Form::button('<i class="fa fa-key"></i>',['class'=>'btn-floating waves-effect waves-light teal darken-1']) !!}--}}
-                                {{--</a>--}}
 
                             </td>
                         </tr>
