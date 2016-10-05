@@ -14,7 +14,7 @@ class CreateDisciplinasTable extends Migration
     {
         Schema::create('disciplinas', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('disciplina',30);
+            $table->string('disciplina',30)->unique();
             $table->boolean('activated')->default(false);
         });
     }

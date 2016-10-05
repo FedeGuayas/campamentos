@@ -26,8 +26,9 @@
             <!-- Dropdown Ajustes -->
             <ul id="dropdownConfig" class="dropdown-content">
                 <li><a href="{!! route('admin.escenarios.index') !!}" class="waves-effect waves-teal">Escenarios</a></li>
-                <li><a href="#!" class="waves-effect waves-teal">Disciplinas</a></li>
-                <li><a href="#!" class="waves-effect waves-teal">Horarios</a></li>
+                <li><a href="{!! route('admin.disciplinas.index') !!}" class="waves-effect waves-teal">Disciplinas</a></li>
+                <li><a href="{!! route('admin.horarios.index') !!}" class="waves-effect waves-teal">Horarios</a></li>
+                <li><a href="{!! route('admin.dias.index') !!}" class="waves-effect waves-teal">Días</a></li>
                 <li><a href="#!" class="waves-effect waves-teal">Modulos</a></li>
                 <li><a href="#!" class="waves-effect waves-teal">Cupos</a></li>
                 <li><a href="{!! route('admin.encuestas.index') !!}" class="waves-effect waves-teal">Encuestas</a></li>
@@ -37,7 +38,7 @@
                 <li><a href="{!! route('admin.roles.index') !!}" class="waves-effect waves-teal">Roles</a></li>
                 <li><a href="{!! route('admin.permissions.index') !!}" class="waves-effect waves-teal">Permisos</a></li>
                 <li><a href="{!! route('admin.transportes.index') !!}" class="waves-effect waves-teal">Transportes</a></li>
-                <li><a href="{!! route('admin.escenarios.index') !!}" class="waves-effect waves-teal">Escenarios</a></li>
+
 
 
             </ul>

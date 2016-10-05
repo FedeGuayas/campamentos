@@ -28,6 +28,7 @@
             <!-- Material Design Bootstrap -->
     {!! Html::style('css/materialize.css') !!}
 
+    @yield('head')
             <!-- Your custom styles (optional) -->
         {!! Html::style('css/styleBack.css') !!}
 
@@ -69,6 +70,8 @@
 
         <!-- Materialize core JavaScript -->
 {!! Html::script('js/materialize.js') !!}
+
+@yield('scripts')
 
 
 <script>

@@ -61,6 +61,9 @@ Route::group(['middleware' => 'auth', 'prefix' => 'admin'], function () {
     Route::resource('personas', 'PersonasController');
     Route::resource('transportes', 'TransportesController');
     Route::resource('escenarios', 'EscenariosController');
+    Route::resource('disciplinas', 'DisciplinasController');
+    Route::resource('horarios', 'HorariosController');
+    Route::resource('dias', 'DiasController');
 });
 
 
