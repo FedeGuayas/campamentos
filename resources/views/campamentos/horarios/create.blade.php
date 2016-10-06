@@ -32,7 +32,7 @@
                     {!! Form::close() !!}
 
 
-                </div><!--/.card content-->
+                </div><!--/.card content-->.
             </div><!--/.card panel-->
         </div><!--/.col s12-->
     </div><!--/.row-->
