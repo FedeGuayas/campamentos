@@ -64,6 +64,11 @@ Route::group(['middleware' => 'auth', 'prefix' => 'admin'], function () {
     Route::resource('disciplinas', 'DisciplinasController');
     Route::resource('horarios', 'HorariosController');
     Route::resource('dias', 'DiasController');
+    Route::resource('modulos', 'ModulosController');
+
+    //enabled modulos
+    Route::get('modulos/{modulo}/enable',['as' => 'admin.modulos.enable', 'uses'=>'ModulosController@enable']);
+    Route::get('modulos/{modulo}/disable',['as' => 'admin.modulos.disable', 'uses'=>'ModulosController@disable']);
 });
 
 

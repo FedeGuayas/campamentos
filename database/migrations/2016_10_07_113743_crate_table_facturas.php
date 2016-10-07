@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateDiasTable extends Migration
+class CrateTableFacturas extends Migration
 {
     /**
      * Run the migrations.
@@ -12,11 +12,14 @@ class CreateDiasTable extends Migration
      */
     public function up()
     {
-        Schema::create('dias', function (Blueprint $table) {
+        Schema::create('facturas', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('dia',50);
             $table->timestamps();
-            
+            $table->integer('pago_id')->unsigned();
+            $table->integer('representante_id')->unsigned();
+            $table->string('num_fact');
+
+
         });
     }
 
@@ -27,6 +30,6 @@ class CreateDiasTable extends Migration
      */
     public function down()
     {
-        Schema::drop('dias');
+        Schema::drop('facturas');
     }
 }

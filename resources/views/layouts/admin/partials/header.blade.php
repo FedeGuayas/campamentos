@@ -29,7 +29,7 @@
                 <li><a href="{!! route('admin.disciplinas.index') !!}" class="waves-effect waves-teal">Disciplinas</a></li>
                 <li><a href="{!! route('admin.horarios.index') !!}" class="waves-effect waves-teal">Horarios</a></li>
                 <li><a href="{!! route('admin.dias.index') !!}" class="waves-effect waves-teal">Días</a></li>
-                <li><a href="#!" class="waves-effect waves-teal">Modulos</a></li>
+                <li><a href="{!! route('admin.modulos.index') !!}" class="waves-effect waves-teal">Modulos</a></li>
                 <li><a href="#!" class="waves-effect waves-teal">Cupos</a></li>
                 <li><a href="{!! route('admin.encuestas.index') !!}" class="waves-effect waves-teal">Encuestas</a></li>
                 <li class="divider"></li>
@@ -130,7 +130,7 @@
                                         <li class="divider"></li>
                                         <li><a href="#!" class="waves-effect waves-teal">Horarios</a></li>
                                         <li class="divider"></li>
-                                        <li><a href="#!" class="waves-effect waves-teal">Modulos</a></li>
+                                        <li><a href="{!! route('admin.modulos.index') !!}" class="waves-effect waves-teal">Modulos</a></li>
                                         <li class="divider"></li>
                                         <li><a href="#!" class="waves-effect waves-teal">Cupos</a></li>
                                     </ul>

@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Horario extends Model
+class Inscripcion extends Model
 {
     /**
      * The table associated with the model.
@@ -28,6 +28,6 @@ class Horario extends Model
      * @var array
      */
     protected $fillable = [
-        'start_time', 'end_time'
+        'disciplina_escenario_id','alumno_id','user_id'
     ];
 }

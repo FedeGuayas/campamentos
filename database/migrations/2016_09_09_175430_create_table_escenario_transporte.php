@@ -15,7 +15,7 @@ class CreateTableEscenarioTransporte extends Migration
         Schema::create('escenario_transporte', function (Blueprint $table) {
             $table->integer('escenario_id')->unsigned();
             $table->integer('transporte_id')->unsigned();
-            $table->float('precio')->nullable();
+            $table->double('precio',4,2);
             $table->timestamps();
 
             $table->foreign('escenario_id')->references('id')->on('escenarios')

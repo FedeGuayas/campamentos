@@ -129,11 +129,10 @@ class RolesController extends Controller
         $rol=Role::findOrFail($rol_id);
         $permisos_id=$request->get('permisos');
 
-//        dd($permisos);
         if ($permisos_id) {
             // El usuario marcó checkbox
-            foreach ($permisos_id as $per) {
-                $permiso=Permission::findOrFail($per);
+            foreach ($permisos_id as $per_id) {
+                $permiso=Permission::findOrFail($per_id);
                 $rol->attachPermission($permiso);
             }
 

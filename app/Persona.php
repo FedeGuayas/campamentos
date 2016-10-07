@@ -16,7 +16,7 @@ class Persona extends Model
      * @var array
      */
     protected $fillable = [
-        'nombres', 'apellidos', 'tipo_doc', 'num_doc','genero', 'fecha_nac','email','direccion','telefono'
+        'nombres', 'apellidos', 'tipo_doc', 'num_doc','genero', 'fecha_nac','email','direccion','telefono'        
     ];
 
     //con esta funcion retorno el nombre y los apellidos 

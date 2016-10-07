@@ -9,6 +9,8 @@
 
     <title>@yield('title','Default') | Panel Administración</title>
 
+
+
     <!-- Font Awesome -->
     {!! Html::style('css/font-awesome.min.css') !!}
 

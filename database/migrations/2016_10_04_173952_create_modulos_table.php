@@ -14,10 +14,11 @@ class CreateModulosTable extends Migration
     {
         Schema::create('modulos', function (Blueprint $table) {
             $table->increments('id');
+            $table->timestamps();
             $table->string('modulo',30);
             $table->date('inicio');
             $table->date('fin');
-            $table->boolean('activated')->default(false);
+            $table->boolean('activated')->default(true);
             
         });
     }

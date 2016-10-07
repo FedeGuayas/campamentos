@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateDiasTable extends Migration
+class CreateDescuentosTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,11 +12,11 @@ class CreateDiasTable extends Migration
      */
     public function up()
     {
-        Schema::create('dias', function (Blueprint $table) {
+        Schema::create('descuentos', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('dia',50);
             $table->timestamps();
-            
+            $table->string('tipo',30);
+            $table->double('valor',4,2);
         });
     }
 
@@ -27,6 +27,6 @@ class CreateDiasTable extends Migration
      */
     public function down()
     {
-        Schema::drop('dias');
+        Schema::drop('descuentos');
     }
 }

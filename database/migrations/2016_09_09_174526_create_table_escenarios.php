@@ -16,6 +16,7 @@ class CreateTableEscenarios extends Migration
             $table->increments('id');
             $table->string('escenario',20);
             $table->timestamps();
+            $table->boolean('activated')->default(true);
         });
     }
 

@@ -22,8 +22,10 @@ class CreateTableAlumnos extends Migration
             $table->timestamps();
             $table->softDeletes();
             
-            $table->foreign('persona_id')->references('id')->on('personas');
-            $table->foreign('representante_id')->references('id')->on('representantes');
+            $table->foreign('persona_id')->references('id')->on('personas')
+                ->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('representante_id')->references('id')->on('representantes')
+                ->onUpdate('restrict')->onDelete('restrict');
         });
     }
 

@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Horario extends Model
+class Descuento extends Model
 {
     /**
      * The table associated with the model.
@@ -12,7 +12,7 @@ class Horario extends Model
      * @var string
      */
 
-    protected $table = 'horarios';
+    protected $table = 'descuentos';
 
     /**
      * Indicates if the model should be timestamped.
@@ -28,6 +28,6 @@ class Horario extends Model
      * @var array
      */
     protected $fillable = [
-        'start_time', 'end_time'
+        'tipo','valor'
     ];
 }
