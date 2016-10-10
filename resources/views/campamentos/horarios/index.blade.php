@@ -23,27 +23,13 @@
                     <th>Id</th>
                     <th>Horario Inicio</th>
                     <th>Horario Fin</th>
-                    <th>Estado (Hab/Des)</th>
                     <th>Opciones</th>
                     </thead>
                     @foreach ($horarios as $hora)
                         <tr>
                             <td>{{ $hora->id }}</td>
-                            <td>{{ $hora->inicio }}</td>
-                            <td>{{ $hora->fin }}</td>
-                            <td>
-                                @if (($hora->activated)===1)
-                                    <span class="label label-success">Activo</span>
-                                    <a href="{{ route('admin.horarios.disable', $hora->id)}}">
-                                        {!! Form::button('<i class="fa fa-check" aria-hidden="true"></i>',['class'=>'btn-floating waves-effect waves-light red darken-1']) !!}
-                                    </a>
-                                @else
-                                    <span class="label label-danger">Inactivo</span>
-                                    <a href="{{ route('admin.horarios.enable', $hora->id)}}">
-                                        {!! Form::button('<i class="tiny fa fa-check" aria-hidden="true"></i>',['class'=>'btn-floating waves-effect waves-light teal darken-1']) !!}
-                                    </a>
-                                @endif
-                            </td>
+                            <td>{{ $hora->start_time }}</td>
+                            <td>{{ $hora->end_time }}</td>
                             <td>
                                 {!! Form::button('<i class="fa fa-trash-o" ></i>',['class'=>'modal-trigger btn-floating waves-effect waves-light red darken-1','data-target'=>"modal-delete-$hora->id"]) !!}
                                 <a href="{{ route('admin.horarios.edit', $hora->id ) }}">
@@ -51,7 +37,7 @@
                                 </a>
                             </td>
                         </tr>
-{{--                        @include ('campamentos.roles.modal')--}}
+                        @include ('campamentos.horarios.modal')
                     @endforeach
                 </table><!--end table-responsive-->
             </div><!-- end div ./table-responsive-->

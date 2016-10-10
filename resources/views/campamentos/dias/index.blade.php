@@ -23,26 +23,26 @@
                     <thead>
                     <th>Id</th>
                     <th>Dias Semana</th>
-                    <th>Estado (Hab/Des)</th>
+                    {{--<th>Estado (Hab/Des)</th>--}}
                     <th>Opciones</th>
                     </thead>
                     @foreach ($dias as $dia)
                         <tr>
                             <td>{{ $dia->id }}</td>
                             <td>{{ $dia->dia }}</td>
-                            <td>
-                                @if (($dia->activated)===1)
-                                    <span class="label label-success">Activo</span>
-                                    <a href="{{ route('admin.dias.disable', $dia->id)}}">
-                                        {!! Form::button('<i class="fa fa-check" aria-hidden="true"></i>',['class'=>'btn-floating waves-effect waves-light red darken-1']) !!}
-                                    </a>
-                                @else
-                                    <span class="label label-danger">Inactivo</span>
-                                    <a href="{{ route('admin.dias.enable', $dia->id)}}">
-                                        {!! Form::button('<i class="tiny fa fa-check" aria-hidden="true"></i>',['class'=>'btn-floating waves-effect waves-light teal darken-1']) !!}
-                                    </a>
-                                @endif
-                            </td>
+                            {{--<td>--}}
+                                {{--@if (($dia->activated)===1)--}}
+                                    {{--<span class="label label-success">Activo</span>--}}
+                                    {{--<a href="{{ route('admin.dias.disable', $dia->id)}}">--}}
+                                        {{--{!! Form::button('<i class="fa fa-check" aria-hidden="true"></i>',['class'=>'btn-floating waves-effect waves-light red darken-1']) !!}--}}
+                                    {{--</a>--}}
+                                {{--@else--}}
+                                    {{--<span class="label label-danger">Inactivo</span>--}}
+                                    {{--<a href="{{ route('admin.dias.enable', $dia->id)}}">--}}
+                                        {{--{!! Form::button('<i class="tiny fa fa-check" aria-hidden="true"></i>',['class'=>'btn-floating waves-effect waves-light teal darken-1']) !!}--}}
+                                    {{--</a>--}}
+                                {{--@endif--}}
+                            {{--</td>--}}
                             <td>
                                 {!! Form::button('<i class="fa fa-trash-o" ></i>',['class'=>'modal-trigger btn-floating waves-effect waves-light red darken-1','data-target'=>"modal-delete-$dia->id"]) !!}
                                 <a href="{{ route('admin.dias.edit', $dia->id ) }}">

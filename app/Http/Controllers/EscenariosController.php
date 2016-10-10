@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Escenario;
 use Illuminate\Http\Request;
-
+use Session;
 use App\Http\Requests;
 
 class EscenariosController extends Controller
@@ -63,7 +63,8 @@ class EscenariosController extends Controller
      */
     public function edit($id)
     {
-        //
+        $escenario=Escenario::findOrFail($id);
+        return view('campamentos.escenarios.edit',compact('escenario'));
     }
 
     /**
@@ -75,7 +76,11 @@ class EscenariosController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $escenario=Escenario::findOrFail($id);
+        $escenario->update($request->all());
+
+        Session::flash('message','Escenario actualizado correctamente');
+        return redirect()->route('admin.escenarios.index');
     }
 
     /**
@@ -86,6 +91,27 @@ class EscenariosController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $escenario=Escenario::findOrFail($id);
+        $escenario->delete();
+
+        Session::flash('message','Escenario eliminado correctamente');
+        return redirect()->route('admin.escenarios.index');
     }
+
+    public function disable($id)
+    {
+        $escenario=Escenario::findOrFail($id);
+        $escenario->activated=false;
+        $escenario->update();
+        return back();
+    }
+
+    public function enable($id)
+    {
+        $escenario=Escenario::findOrFail($id);
+        $escenario->activated=true;
+        $escenario->update();
+        return back();
+    }
+    
 }

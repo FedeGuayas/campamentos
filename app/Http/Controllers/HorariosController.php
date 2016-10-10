@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Horario;
 use Illuminate\Http\Request;
-
+use Session;
 use App\Http\Requests;
 
 class HorariosController extends Controller
@@ -39,11 +39,10 @@ class HorariosController extends Controller
     public function store(Request $request)
     {
         $horario=new Horario();
-//        $horario->horario=$request->get('modulo');
-//        $modulo->inicio=$request->get('inicio');
-//        $modulo->fin=$request->get('fin');
+        $horario->start_time=$request->get('start_time');
+        $horario->end_time=$request->get('end_time');
 
-//        $modulo->save();
+        $horario->save();
         Session::flash('message','Horario creado correctamente');
         return redirect()->route('admin.horarios.index');
     }
@@ -98,6 +97,7 @@ class HorariosController extends Controller
         $horario=Horario::findOrFail($id);
         $horario->delete();
 
+        Session::flash('message','Horario eliminado correctamente');
         return redirect()->route('admin.horarios.index');
     }
 

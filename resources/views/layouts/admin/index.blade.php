@@ -9,41 +9,29 @@
 
     <title>@yield('title','Default') | Panel Administración</title>
 
-    @yield('head')
-
-
-
-    <!-- Font Awesome -->
+        <!-- Font Awesome -->
     {!! Html::style('css/font-awesome.min.css') !!}
 
-         <!-- Bootstrap core CSS -->
+            <!-- Bootstrap core CSS -->
     {!! Html::style('css/bootstrap.css') !!}
-
-            <!-- Bootstrap theme CSS -->
-{{--    {!! Html::style('css/bootstrap-theme.css') !!}--}}
-
-            <!-- BootstrapDatePicker CSS-->
-    {!! Html::style('plugins/bootstrapdatepicker/css/bootstrap-datetimepicker.min.css') !!}
 
 
             <!-- Bootstrap core CSS -->
-{{--    {!! Html::style('css/bootstrap-social.css') !!}--}}
+    {!! Html::style('css/bootstrap-social.css') !!}
 
+            <!-- Bootstrap theme CSS -->
+    {!! Html::style('css/bootstrap-theme.css') !!}
 
-
-            <!--Import Google Icon Font-->
-    {{--<link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">--}}
-
-
-    <!-- Material Design Bootstrap -->
+            <!-- Material Design Bootstrap -->
     {{--    {!! Html::style('css/mdb.min.css') !!}--}}
 
             <!-- Material Design Bootstrap -->
     {!! Html::style('css/materialize.css') !!}
 
-
             <!-- Your custom styles (optional) -->
-        {!! Html::style('css/styleBack.css') !!}
+    {!! Html::style('css/styleBack.css') !!}
+
+    @yield('head')
 
 
 </head>
@@ -72,9 +60,6 @@
     <!-- JQuery -->
 {!! Html::script('js/jquery-3.1.0.min.js') !!}
 
-        <!-- Moments for BootstrapDatePicker -->
-    {!! Html::script('plugins/moments/moment.min.js') !!}
-
         <!-- Bootstrap tooltips -->
 {!! Html::script('js/tether.min.js') !!}
 
@@ -86,15 +71,6 @@
 
         <!-- Materialize core JavaScript -->
 {!! Html::script('js/materialize.js') !!}
-
-        <!-- BootstrapDatePicker -->
-    {!! Html::script('plugins/bootstrapdatepicker/js/bootstrap-datetimepicker.min.js') !!}
-
-
-
-
-
-
 
     @yield('scripts')
 <script>
@@ -144,7 +120,6 @@
         //tooltips
         $('.tooltipped').tooltip({delay: 50});
 
-
         //valida el datepicker k no este vacio
         function checkDate() {
             var flag=0;
@@ -170,19 +145,10 @@
             }
         });
 
-
         $('.datepicker').pickadate({
             selectMonths: true, // Creates a dropdown to control month
             selectYears: 50 // Creates a dropdown of 15 years to control year
 //            format: 'dd/mm/yyyy'
-        });
-
-
-
-        $(function () {
-            $('#datetimepicker3').datetimepicker({
-                format: 'LT'
-            });
         });
 
     });

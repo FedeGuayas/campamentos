@@ -43,7 +43,7 @@ class DisciplinasController extends Controller
         $disciplina->activated=true;
 
         $disciplina->save();
-        Session::flash('message','disciplina creada correctamente');
+        Session::flash('message','Disciplina creada correctamente');
         return redirect()->route('admin.disciplinas.index');
     }
 
@@ -66,7 +66,8 @@ class DisciplinasController extends Controller
      */
     public function edit($id)
     {
-        //
+        $disciplina=Disciplina::findOrFail($id);
+        return view('campamentos.disciplinas.edit',compact('disciplina'));
     }
 
     /**
@@ -78,7 +79,11 @@ class DisciplinasController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $disciplina=Disciplina::findOrFail($id);
+        $disciplina->update($request->all());
+
+        Session::flash('message','Disciplina actualizada correctamente');
+        return redirect()->route('admin.disciplinas.index');
     }
 
     /**
@@ -89,6 +94,27 @@ class DisciplinasController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $disciplina=Disciplina::findOrFail($id);
+        $disciplina->delete();
+
+        Session::flash('message','Disciplina eliminada correctamente');
+        return redirect()->route('admin.disciplinas.index');
     }
+
+    public function disable($id)
+    {
+        $disciplina=Disciplina::findOrFail($id);
+        $disciplina->activated=false;
+        $disciplina->update();
+        return back();
+    }
+
+    public function enable($id)
+    {
+        $disciplina=Disciplina::findOrFail($id);
+        $disciplina->activated=true;
+        $disciplina->update();
+        return back();
+    }
+    
 }

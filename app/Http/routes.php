@@ -77,6 +77,14 @@ Route::group(['middleware' => 'auth', 'prefix' => 'admin'], function () {
     //enabled, disabled horarios
     Route::get('horarios/{horario}/enable',['as' => 'admin.horarios.enable', 'uses'=>'HorariosController@enable']);
     Route::get('horarios/{horario}/disable',['as' => 'admin.horarios.disable', 'uses'=>'HorariosController@disable']);
+
+    //enabled, disabled escenarios
+    Route::get('escenarios/{escenario}/enable',['as' => 'admin.escenarios.enable', 'uses'=>'EscenariosController@enable']);
+    Route::get('escenarios/{escenario}/disable',['as' => 'admin.escenarios.disable', 'uses'=>'EscenariosController@disable']);
+
+    //enabled, disabled disciplinas
+    Route::get('disciplinas/{disciplina}/enable',['as' => 'admin.disciplinas.enable', 'uses'=>'DisciplinasController@enable']);
+    Route::get('disciplinas/{disciplina}/disable',['as' => 'admin.disciplinas.disable', 'uses'=>'DisciplinasController@disable']);
 });
 
 

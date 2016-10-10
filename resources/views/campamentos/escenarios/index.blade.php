@@ -22,6 +22,7 @@
                     <thead>
                     <th>Id</th>
                     <th>Escenario</th>
+                    <th>Estado (Hab/Des)</th>
                     <th>Opciones</th>
                     </thead>
                     @foreach ($escenarios as $esc)
@@ -29,20 +30,26 @@
                             <td>{{ $esc->id }}</td>
                             <td>{{ $esc->escenario }}</td>
                             <td>
+                                @if (($esc->activated)===1)
+                                    <span class="label label-success">Activo</span>
+                                    <a href="{{ route('admin.escenarios.disable', $esc->id)}}">
+                                        {!! Form::button('<i class="fa fa-check" aria-hidden="true"></i>',['class'=>'btn-floating waves-effect waves-light red darken-1']) !!}
+                                    </a>
+                                @else
+                                    <span class="label label-danger">Inactivo</span>
+                                    <a href="{{ route('admin.escenarios.enable', $esc->id)}}">
+                                        {!! Form::button('<i class="tiny fa fa-check" aria-hidden="true"></i>',['class'=>'btn-floating waves-effect waves-light teal darken-1']) !!}
+                                    </a>
+                                @endif
+                            </td>
+                            <td>
                                 {!! Form::button('<i class="fa fa-trash-o" ></i>',['class'=>'modal-trigger btn-floating waves-effect waves-light red darken-1','data-target'=>"modal-delete-$esc->id"]) !!}
                                 <a href="{{ route('admin.escenarios.edit', $esc->id ) }}">
                                     {!! Form::button('<i class="fa fa-pencil-square-o" ></i>',['class'=>'btn-floating waves-effect waves-light teal darken-1']) !!}
                                 </a>
-                                {{--<a href="{{ route('admin.roles.show', $rol->id ) }}">--}}
-                                    {{--{!! Form::button('<i class="fa fa-eye"></i>',['class'=>'btn-floating waves-effect waves-light teal darken-1']) !!}--}}
-                                {{--</a>--}}
-                                {{--<a href="{{ route('admin.roles.permisos',$rol->id  ) }}" class="tooltipped" data-position="top" data-delay="50" data-tooltip="Permisos">--}}
-                                    {{--{!! Form::button('<i class="fa fa-key"></i>',['class'=>'btn-floating waves-effect waves-light teal darken-1']) !!}--}}
-                                {{--</a>--}}
-
                             </td>
                         </tr>
-{{--                        @include ('campamentos.roles.modal')--}}
+                        @include ('campamentos.escenarios.modal')
                     @endforeach
                 </table><!--end table-responsive-->
             </div><!-- end div ./table-responsive-->

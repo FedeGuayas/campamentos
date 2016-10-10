@@ -1,6 +1,7 @@
 @extends('layouts.admin.index')
 
-@section('title', 'Crear Horario')
+@section('title', 'Editar Modulo')
+
 
 @section('head')
         <!-- ClockPicker Stylesheet -->
@@ -12,10 +13,10 @@
     <div class="row">
         <div class="col l8 m12 s12">
             <div class="card-panel">
-                <h5 class="header teal-text text-darken-2">Crear Horario</h5>
+                <h5 class="header teal-text text-darken-2">Editar Modulo</h5>
                 <div class="card-content ">
                     @include('alert.success')
-                    {!! Form::open(['route'=>'admin.horarios.store', 'method'=>'POST'])  !!}
+                    {!! Form::model($horario,['route'=>['admin.horarios.update',$horario->id], 'method'=>'PUT'])  !!}
                     <div class="col s12">
 
                         <div class="input-field col l4 m4 s12 ">
@@ -68,4 +69,3 @@
     </script>
 
 @endsection
-
