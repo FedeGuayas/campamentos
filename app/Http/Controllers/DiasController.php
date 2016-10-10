@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Dia;
 use Illuminate\Http\Request;
-
+use Session;
 use App\Http\Requests;
 
 class DiasController extends Controller
@@ -15,7 +16,8 @@ class DiasController extends Controller
      */
     public function index()
     {
-        //
+        $dias=Dia::all();
+        return view('campamentos.dias.index',compact('dias'));
     }
 
     /**
@@ -25,7 +27,7 @@ class DiasController extends Controller
      */
     public function create()
     {
-        //
+        return view('campamentos.dias.create');
     }
 
     /**
@@ -36,7 +38,12 @@ class DiasController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $dia=new Dia();
+        $dia->dia=$request->get('dia');
+        
+        $dia->save();
+        Session::flash('message','Dias creados correctamente');
+        return redirect()->route('admin.dias.index');
     }
 
     /**
@@ -47,7 +54,7 @@ class DiasController extends Controller
      */
     public function show($id)
     {
-        //
+
     }
 
     /**
@@ -58,7 +65,8 @@ class DiasController extends Controller
      */
     public function edit($id)
     {
-        //
+        $dia=Dia::findOrFail($id);
+        return view('campamentos.dias.edit',compact('dia'));
     }
 
     /**
@@ -70,7 +78,11 @@ class DiasController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $dia=Dia::findOrFail($id);
+        $dia->update($request->all());
+
+        Session::flash('message','Dias actualizados correctamente');
+        return redirect()->route('admin.dias.index');
     }
 
     /**
@@ -81,6 +93,25 @@ class DiasController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $dia=Dia::findOrFail($id);
+        $dia->delete();
+
+        return redirect()->route('admin.dias.index');
+    }
+
+    public function disable($id)
+    {
+        $dia=Dia::findOrFail($id);
+        $dia->activated=false;
+        $dia->update();
+        return back();
+    }
+
+    public function enable($id)
+    {
+        $dia=Dia::findOrFail($id);
+        $dia->activated=true;
+        $dia->update();
+        return back();
     }
 }

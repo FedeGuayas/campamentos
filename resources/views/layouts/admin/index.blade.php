@@ -9,6 +9,8 @@
 
     <title>@yield('title','Default') | Panel Administración</title>
 
+    @yield('head')
+
 
 
     <!-- Font Awesome -->
@@ -17,8 +19,17 @@
          <!-- Bootstrap core CSS -->
     {!! Html::style('css/bootstrap.css') !!}
 
+            <!-- Bootstrap theme CSS -->
+{{--    {!! Html::style('css/bootstrap-theme.css') !!}--}}
+
+            <!-- BootstrapDatePicker CSS-->
+    {!! Html::style('plugins/bootstrapdatepicker/css/bootstrap-datetimepicker.min.css') !!}
+
+
             <!-- Bootstrap core CSS -->
-    {!! Html::style('css/bootstrap-social.css') !!}
+{{--    {!! Html::style('css/bootstrap-social.css') !!}--}}
+
+
 
             <!--Import Google Icon Font-->
     {{--<link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">--}}
@@ -30,7 +41,7 @@
             <!-- Material Design Bootstrap -->
     {!! Html::style('css/materialize.css') !!}
 
-    @yield('head')
+
             <!-- Your custom styles (optional) -->
         {!! Html::style('css/styleBack.css') !!}
 
@@ -58,14 +69,17 @@
 
 <!-- SCRIPTS -->
 
-<!-- JQuery -->
+    <!-- JQuery -->
 {!! Html::script('js/jquery-3.1.0.min.js') !!}
+
+        <!-- Moments for BootstrapDatePicker -->
+    {!! Html::script('plugins/moments/moment.min.js') !!}
 
         <!-- Bootstrap tooltips -->
 {!! Html::script('js/tether.min.js') !!}
 
         <!-- Bootstrap core JavaScript -->
-{!! Html::script('js/bootstrap.js') !!}
+{!! Html::script('js/bootstrap.min.js') !!}
 
         <!-- MDB core JavaScript -->
 {{--{!! Html::script('js/mdb.min.js') !!}--}}
@@ -73,10 +87,18 @@
         <!-- Materialize core JavaScript -->
 {!! Html::script('js/materialize.js') !!}
 
-@yield('scripts')
+        <!-- BootstrapDatePicker -->
+    {!! Html::script('plugins/bootstrapdatepicker/js/bootstrap-datetimepicker.min.js') !!}
 
 
+
+
+
+
+
+    @yield('scripts')
 <script>
+
     $(document).ready(function() {
 
 //        combo
@@ -157,11 +179,13 @@
 
 
 
-
+        $(function () {
+            $('#datetimepicker3').datetimepicker({
+                format: 'LT'
+            });
+        });
 
     });
-
-
 
 </script>
 

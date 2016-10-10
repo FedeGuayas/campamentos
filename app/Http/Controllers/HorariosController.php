@@ -38,7 +38,14 @@ class HorariosController extends Controller
      */
     public function store(Request $request)
     {
-        return $request;
+        $horario=new Horario();
+//        $horario->horario=$request->get('modulo');
+//        $modulo->inicio=$request->get('inicio');
+//        $modulo->fin=$request->get('fin');
+
+//        $modulo->save();
+        Session::flash('message','Horario creado correctamente');
+        return redirect()->route('admin.horarios.index');
     }
 
     /**
@@ -49,7 +56,7 @@ class HorariosController extends Controller
      */
     public function show($id)
     {
-        //
+
     }
 
     /**
@@ -60,7 +67,8 @@ class HorariosController extends Controller
      */
     public function edit($id)
     {
-        //
+        $horario=Horario::findOrFail($id);
+        return view('campamentos.horarios.edit',compact('horario'));
     }
 
     /**
@@ -72,7 +80,11 @@ class HorariosController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $horario=Horario::findOrFail($id);
+        $horario->update($request->all());
+
+        Session::flash('message','Horario actualizado correctamente');
+        return redirect()->route('admin.horarios.index');
     }
 
     /**
@@ -83,6 +95,25 @@ class HorariosController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $horario=Horario::findOrFail($id);
+        $horario->delete();
+
+        return redirect()->route('admin.horarios.index');
+    }
+
+    public function disable($id)
+    {
+        $horario=Horario::findOrFail($id);
+        $horario->activated=false;
+        $horario->update();
+        return back();
+    }
+
+    public function enable($id)
+    {
+        $horario=Horario::findOrFail($id);
+        $horario->activated=true;
+        $horario->update();
+        return back();
     }
 }

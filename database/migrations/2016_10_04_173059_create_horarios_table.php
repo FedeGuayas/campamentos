@@ -16,6 +16,7 @@ class CreateHorariosTable extends Migration
             $table->increments('id');
             $table->time('start_time');
             $table->time('end_time');
+            $table->boolean('activated')->default(true);
             $table->timestamps();
           
         });

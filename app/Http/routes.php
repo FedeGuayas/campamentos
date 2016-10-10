@@ -66,9 +66,17 @@ Route::group(['middleware' => 'auth', 'prefix' => 'admin'], function () {
     Route::resource('dias', 'DiasController');
     Route::resource('modulos', 'ModulosController');
 
-    //enabled modulos
+    //enabled, disabled modulos
     Route::get('modulos/{modulo}/enable',['as' => 'admin.modulos.enable', 'uses'=>'ModulosController@enable']);
     Route::get('modulos/{modulo}/disable',['as' => 'admin.modulos.disable', 'uses'=>'ModulosController@disable']);
+
+    //enabled, disabled dias
+    Route::get('dias/{dia}/enable',['as' => 'admin.dias.enable', 'uses'=>'DiasController@enable']);
+    Route::get('dias/{dia}/disable',['as' => 'admin.dias.disable', 'uses'=>'DiasController@disable']);
+
+    //enabled, disabled horarios
+    Route::get('horarios/{horario}/enable',['as' => 'admin.horarios.enable', 'uses'=>'HorariosController@enable']);
+    Route::get('horarios/{horario}/disable',['as' => 'admin.horarios.disable', 'uses'=>'HorariosController@disable']);
 });
 
 
