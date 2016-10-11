@@ -65,6 +65,7 @@ Route::group(['middleware' => 'auth', 'prefix' => 'admin'], function () {
     Route::resource('horarios', 'HorariosController');
     Route::resource('dias', 'DiasController');
     Route::resource('modulos', 'ModulosController');
+    Route::resource('programs', 'ProgramsController');
 
     //enabled, disabled modulos
     Route::get('modulos/{modulo}/enable',['as' => 'admin.modulos.enable', 'uses'=>'ModulosController@enable']);
@@ -85,6 +86,10 @@ Route::group(['middleware' => 'auth', 'prefix' => 'admin'], function () {
     //enabled, disabled disciplinas
     Route::get('disciplinas/{disciplina}/enable',['as' => 'admin.disciplinas.enable', 'uses'=>'DisciplinasController@enable']);
     Route::get('disciplinas/{disciplina}/disable',['as' => 'admin.disciplinas.disable', 'uses'=>'DisciplinasController@disable']);
+
+    //enabled, disabled programs
+    Route::get('programs/{program}/enable',['as' => 'admin.programs.enable', 'uses'=>'ProgramsController@enable']);
+    Route::get('programs/{program}/disable',['as' => 'admin.programs.disable', 'uses'=>'ProgramsController@disable']);
 });
 
 

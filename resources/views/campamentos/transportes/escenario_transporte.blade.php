@@ -30,12 +30,6 @@
                             {!! Form::number('precio','0.00',['step' => '0.01','min' => '0.01','class'=>'validate', 'required']) !!}
                         </div>
 
-                        {{--<div class="input-field col s12 ">--}}
-                            {{--<i class="fa fa-usd prefix"></i>--}}
-                            {{--{!! Form::label('precio','Precio:') !!}--}}
-                            {{--{!! Form::number('precio',null,['class'=>'precio validate']) !!}--}}
-                        {{--</div>--}}
-
 
                     </div>
                     {!! Form::button('Crear<i class="fa fa-play right"></i>', ['class'=>'btn waves-effect waves-light','type' => 'submit']) !!}
