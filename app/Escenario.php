@@ -45,6 +45,6 @@ class Escenario extends Model
 
     public function disciplinas()
     {
-        return $this->belongsToMany('App\Disciplina')->withPivot('horario_id','dia_id','modulo_id','mensualidad','matricula','descuento','cupos');
+        return $this->belongsToMany('App\Disciplina')->withPivot('horario_id','dia_id','modulo_id','mensualidad','matricula','cupos');
     }
 }

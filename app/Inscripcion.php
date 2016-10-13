@@ -12,7 +12,7 @@ class Inscripcion extends Model
      * @var string
      */
 
-    protected $table = 'horarios';
+    protected $table = 'inscripcions';
 
     /**
      * Indicates if the model should be timestamped.

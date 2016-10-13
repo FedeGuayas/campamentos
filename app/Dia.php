@@ -28,7 +28,7 @@ class Dia extends Model
      * @var array
      */
     protected $fillable = [
-        'dia'
+        'dia','activated'
     ];
     
 }

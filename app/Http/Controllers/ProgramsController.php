@@ -7,6 +7,7 @@ use App\Disciplina;
 use App\Escenario;
 use App\Horario;
 use App\Modulo;
+use App\Program;
 use Illuminate\Http\Request;
 use DB;
 
@@ -44,9 +45,9 @@ class ProgramsController extends Controller
         $escenarios=[] + Escenario::where('activated','1')->lists('escenario', 'id')->all();
         $disciplinas=[] + Disciplina::lists('disciplina', 'id')->all();
         $dias=[] + Dia::lists('dia', 'id')->all();
-        $horarios=[] + Horario::select(DB::raw('CONCAT(start_time, " - ", end_time) AS horario'), 'id') ->lists('horario' , 'id')->all();
+        $horarios=[] + Horario::select(DB::raw('CONCAT(start_time, " - ", end_time) AS horario'), 'id')->orderBy('horario') ->lists('horario' , 'id')->all();
         $modulos=[] + Modulo::where('activated','1')->orderBy('modulo', 'desc')->lists('modulo', 'id')->all();
-        
+
         return view('campamentos.programs.create',compact('escenarios','disciplinas','dias','horarios','modulos'));
     }
 
@@ -110,7 +111,14 @@ class ProgramsController extends Controller
      */
     public function edit($id)
     {
-        //
+        $program=Program::findOrFail($id);
+        $escenarios=[] + Escenario::where('activated','1')->lists('escenario', 'id')->all();
+        $disciplinas=[] + Disciplina::lists('disciplina', 'id')->all();
+        $dias=[] + Dia::lists('dia', 'id')->all();
+        $horarios=[] + Horario::select(DB::raw('CONCAT(start_time, " - ", end_time) AS horario'), 'id')->orderBy('horario') ->lists('horario' , 'id')->all();
+        $modulos=[] + Modulo::where('activated','1')->orderBy('modulo', 'desc')->lists('modulo', 'id')->all();
+
+        return view('campamentos.programs.edit',compact('program','escenarios','disciplinas','dias','horarios','modulos'));
     }
 
     /**
@@ -122,7 +130,55 @@ class ProgramsController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $program=Program::find($id);
+        $escenario_id=$request->get('escenario_id');
+//        $escenario=Escenario::find($escenario_id);
+        $disciplina_id=$request->get('disciplina_id');
+//        $disciplina=Disciplina::find($disciplina_id);
+        $horario_id=$request->get('horario_id');
+//        $horario=Horario::findOrFail($horario_id);
+        $dia_id=$request->get('dia_id');
+//      $dia=Dia::findOrFail($dia_id);
+        $modulo_id=$request->get('modulo_id');
+//      $modulo=Modulo::findOrFail($modulo_id);
+        $mensualidad=$request->get('mensualidad');
+        $matricula=$request->get('matricula');
+        $cupos=$request->get('cupos');
+        $nivel=$request->get('nivel');
+        $program->escenario_id=$escenario_id;
+        $program->disciplina_id=$disciplina_id;
+        $program->horario_id=$horario_id;
+        $program->dia_id=$dia_id;
+        $program->modulo_id=$modulo_id;
+        $program->mensualidad=$mensualidad;
+        $program->matricula=$matricula;
+        $program->cupos=$cupos;
+        $program->nivel=$nivel;
+        $program->update();
+
+//        $escenario->disciplinas()->updateExistingPivot($disciplina_id, [
+//            'mensualidad' => $mensualidad,
+//            'matricula' => $matricula,
+//            'cupos' => $cupos,
+//            'nivel' => $nivel,
+//            'horario_id' => $horario_id,
+//            'dia_id' => $dia_id,
+//            'modulo_id' => $modulo_id,
+//        ]);
+
+//        $escenario->disciplinas()->attach($disciplina,[
+//            'horario_id' => $horario_id,
+//            'dia_id' => $dia_id,
+//            'modulo_id' => $modulo_id,
+//            'mensualidad' => $mensualidad,
+//            'matricula' => $matricula,
+//            'cupos' => $cupos,
+//            'nivel' => $nivel,
+//            'activated' => $activated,
+//            'contador' => $contador,
+//        ]);
         //$user->roles()->updateExistingPivot($roleId, $attributes);
+        return redirect()->route('admin.programs.index');
     }
 
     /**
@@ -133,32 +189,26 @@ class ProgramsController extends Controller
      */
     public function destroy($id)
     {
-//        $user->roles()->detach([1, 2, 3]);
+        $program=Program::findOrFail($id);
+        $escenario_id=$program->escenario_id;
+        $disciplina_id=$program->disciplina_id;
+        $escenario=Escenario::findOrFail($escenario_id);
+        $disciplina=Disciplina::findOrFail($disciplina_id);
+        $escenario->disciplinas()->detach($disciplina);
+        return back();
     }
 
     public function disable(Request $request,$id)
     {
-        $program=DB::table('disciplina_escenario as de')
-            ->where('de.id',$id);
-
-//        $escenario_id=$program->escenario_id;
-//        $escenario=Escenario::findOrFail($escenario_id);
-//        $disciplina_id=$request->get('disciplina_id');
-//        $disciplina=Disciplina::findOrFail($disciplina_id);
-//        $activated=false;
-        dd($program);
-//        $user->roles()->syncWithoutDetaching([1, 2, 3]);
-//        $user->roles()->updateExistingPivot($roleId, $attributes);
-
-//        $user->roles()->updateExistingPivot($roleId, $attributes);
-//        $program->update();
+        $program=Program::findOrFail($id);
+        $program->activated=false;
+        $program->update();
         return back();
     }
 
     public function enable($id)
     {
-        $program=DB::table('disciplina_escenario as de')
-            ->where('de.id',$id);
+        $program=Program::findOrFail($id);
         $program->activated=true;
         $program->update();
         return back();

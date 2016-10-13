@@ -64,17 +64,17 @@
                                 </a>
                             @endif
                         </td>
-                        {{--<td>--}}
-                            {{--{!! Form::button('<i class="fa fa-trash-o" ></i>',['class'=>'modal-trigger btn-floating waves-effect waves-light red darken-1','data-target'=>"modal-delete-$per->id"]) !!}--}}
-                            {{--<a href="{{ route('admin.programs.edit', $program->id ) }}">--}}
-                                {{--{!! Form::button('<i class="fa fa-pencil-square-o" ></i>',['class'=>'btn-floating waves-effect waves-light teal darken-1']) !!}--}}
-                            {{--</a>--}}
+                        <td>
+                            {!! Form::button('<i class="fa fa-trash-o" ></i>',['class'=>'modal-trigger btn-floating waves-effect waves-light red darken-1','data-target'=>"modal-delete-$program->id"]) !!}
+                            <a href="{{ route('admin.programs.edit', $program->id ) }}">
+                                {!! Form::button('<i class="fa fa-pencil-square-o" ></i>',['class'=>'btn-floating waves-effect waves-light teal darken-1']) !!}
+                            </a>
                             {{--<a href="{{ route('admin.programs.show', $program->id ) }}">--}}
                                 {{--{!! Form::button('<i class="fa fa-eye"></i>',['class'=>'btn-floating waves-effect waves-light teal darken-1']) !!}--}}
                             {{--</a>--}}
-                        {{--</td>--}}
+                        </td>
                     </tr>
-{{--                    @include ('campamentos.nas.modal')--}}
+                    @include ('campamentos.programs.modal')
                 @endforeach
             </table><!--end table-responsive-->
             {{--  {{ $usuarios->render() }}--}}

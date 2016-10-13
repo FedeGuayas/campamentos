@@ -28,6 +28,7 @@ class Horario extends Model
      * @var array
      */
     protected $fillable = [
-        'start_time', 'end_time'
+        'start_time', 'end_time','activated'
     ];
+    
 }

@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Descuento extends Model
+class Program extends Model
 {
     /**
      * The table associated with the model.
@@ -12,7 +12,7 @@ class Descuento extends Model
      * @var string
      */
 
-    protected $table = 'descuentos';
+    protected $table = 'disciplina_escenario';
 
     /**
      * Indicates if the model should be timestamped.
@@ -20,7 +20,8 @@ class Descuento extends Model
      * @var bool
      */
 
-    public $timestamps = true;
+    public $timestamps = false;
+
 
     /**
      * The attributes that are mass assignable.
@@ -28,6 +29,10 @@ class Descuento extends Model
      * @var array
      */
     protected $fillable = [
-        'descripcion','valor','inscripcion_id'
+        'escenario_id','disciplina_id','horario_id','dia_id','modulo_id','mensualidad','matricula','contador','cupos','nivel','activated'
     ];
+    
+//    public function horario(){
+//        $this->belongsTo('App\Horario');
+//    }
 }

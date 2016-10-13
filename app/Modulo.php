@@ -28,6 +28,6 @@ class Modulo extends Model
      * @var array
      */
     protected $fillable = [
-        'modulo', 'inicio','fin'
+        'modulo', 'inicio','fin','activated'
     ];
 }

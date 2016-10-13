@@ -40,6 +40,7 @@ class EscenariosController extends Controller
     {
         $escenario= new Escenario;
         $escenario->escenario=$request->get('escenario');
+
         $escenario->save();
         return redirect()->route('admin.escenarios.index');
     }

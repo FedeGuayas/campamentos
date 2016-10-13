@@ -29,7 +29,7 @@ class ProgramsStoreRequest extends Request
             'disciplina' => 'required',
             'hora' => 'required',
             'dia' => 'required',
-            'nivel' => 'required',
+            
         ];
     }
 }
