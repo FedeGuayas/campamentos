@@ -32,12 +32,12 @@
                             <td>
                                 @if (($esc->activated)===1)
                                     <span class="label label-success">Activo</span>
-                                    <a href="{{ route('admin.escenarios.disable', $esc->id)}}">
+                                    <a href="{{ route('admin.escenarios.disable', $esc->id)}}" onclick="Materialize.toast('Escenario deshabilitado', 4000,'rounded')">
                                         {!! Form::button('<i class="fa fa-check" aria-hidden="true"></i>',['class'=>'btn-floating waves-effect waves-light red darken-1']) !!}
                                     </a>
                                 @else
                                     <span class="label label-danger">Inactivo</span>
-                                    <a href="{{ route('admin.escenarios.enable', $esc->id)}}">
+                                    <a href="{{ route('admin.escenarios.enable', $esc->id)}}" onclick="Materialize.toast('Escenario habilitado', 4000,'rounded')">
                                         {!! Form::button('<i class="tiny fa fa-check" aria-hidden="true"></i>',['class'=>'btn-floating waves-effect waves-light teal darken-1']) !!}
                                     </a>
                                 @endif
@@ -57,3 +57,4 @@
     </div><!--end div ./row-->
 
 @endsection
+

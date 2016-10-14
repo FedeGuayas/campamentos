@@ -47,9 +47,10 @@ Route::group(['middleware' => 'auth', 'prefix' => 'admin'], function () {
     Route::get('rol/{id}/permisos', ['as' => 'admin.roles.permisos','uses'=>'RolesController@permisos' ]);
     Route::POST('rol/setpermisos', ['as' => 'admin.roles.setpermisos','uses'=>'RolesController@setPermisos' ]);
 
-    //escenario_TRANSPORTE
+    //escenario_TRANSPORTE Many to Many
     Route::get('transporte/{transporte}/escenarios', ['as' => 'admin.get_escenario','uses'=>'TransportesController@get_escenario' ]);
     Route::POST('transporte/escenarios', ['as' => 'admin.set_escenario','uses'=>'TransportesController@set_escenario' ]);
+    Route::DELETE('transporte/{transporte}/escenarios/{escenario}', ['as' => 'admin.transportes.destroyEscenario','uses'=>'TransportesController@destroyEscenario' ]);
 
     //perfil de usuario
     Route::get('user/profile',['as' => 'admin.user.profile', 'uses'=>'UsersController@showProfile']);

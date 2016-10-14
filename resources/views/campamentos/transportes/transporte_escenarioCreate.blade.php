@@ -7,7 +7,8 @@
     <div class="row">
         <div class="col l8 m12 s12">
             <div class="card-panel">
-                <h5 class="header teal-text text-darken-2">Origen del Transoporte</h5>
+                <h5 class="header teal-text text-darken-2">Transporte - Escenarios </h5>
+                @include('alert.request')
                 <div class="card-content ">
 
                     {!! Form::open(['route'=>'admin.set_escenario', 'method'=>'POST'])  !!}
@@ -20,7 +21,7 @@
                         </div>
 
                         <div class="input-field col l6 m6 s12">
-                        {!! Form::select('escenario',$escenarios,null, ['id'=>'escenario_id']) !!}
+                        {!! Form::select('escenario',$escenarios,null, ['id'=>'escenario_id', 'placeholde'=>'seleccione destino ...']) !!}
                         {!! Form::label('escenario', 'Escenarios origen:') !!}
                         </div>
 

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Escenario;
 use Illuminate\Http\Request;
 use Session;
+use App\Http\Requests\EscenariosStoreRequest;
 use App\Http\Requests;
 
 class EscenariosController extends Controller
@@ -36,12 +37,13 @@ class EscenariosController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(EscenariosStoreRequest $request)
     {
         $escenario= new Escenario;
         $escenario->escenario=$request->get('escenario');
-
         $escenario->save();
+
+        Session::flash('message','Escenario creado correctamente');
         return redirect()->route('admin.escenarios.index');
     }
 

@@ -6,7 +6,9 @@ use App\Escenario;
 use App\Transporte;
 use Illuminate\Http\Request;
 
+use Session;
 use App\Http\Requests;
+
 
 class TransportesController extends Controller
 {
@@ -42,6 +44,8 @@ class TransportesController extends Controller
         $transporte=new Transporte;
         $transporte->destino=$request->get('destino');
         $transporte->save();
+
+        Session::flash('message','Transporte creado correctamente');
         return redirect()->route('admin.transportes.index');
     }
 
@@ -53,7 +57,8 @@ class TransportesController extends Controller
      */
     public function show($id)
     {
-        //
+        $transporte=Transporte::findOrFail($id);
+        return view('campamentos.transportes.show',compact('transporte'));
     }
 
     /**
@@ -64,7 +69,8 @@ class TransportesController extends Controller
      */
     public function edit($id)
     {
-        //
+        $transporte=Transporte::findOrFail($id);
+        return view('campamentos.transportes.edit',compact('transporte'));
     }
 
     /**
@@ -76,7 +82,11 @@ class TransportesController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $trasnporte=Transporte::findOrFail($id);
+        $trasnporte->update($request->all());
+
+        Session::flash('message','Transporte actualizado correctamente');
+        return redirect()->route('admin.transportes.index');
     }
 
     /**
@@ -87,27 +97,59 @@ class TransportesController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $transporte=Transporte::findOrFail($id);
+        $transporte->delete();
+
+        Session::flash('message','Transporte eliminado correctamente');
+        return back();
     }
 
+    /**
+     * Muestra el formulario para asignar los precios y origenes a este destino
+     * @param $id identificador del dstino del transporte
+     * @return mixed
+     */
     public function get_escenario($id)
     {
-        
         $transporte=Transporte::findOrFail($id);
         $escenarios=[] + Escenario::lists('escenario', 'id')->all();
-        return view('campamentos.transportes.escenario_transporte', compact('transporte','escenarios'));
+        return view('campamentos.transportes.transporte_escenarioCreate', compact('transporte','escenarios'));
     }
 
+    /**
+     * Almacena la relacion Many to Many del escenario y el transporte con su precio
+     * @param Request $request
+     * @return mixed
+     */
     public function set_escenario(Request $request)
     {
         $transporte_id=$request->get('transporte_id');
         $transporte=Transporte::find($transporte_id);
-        $escenario=$request->get('escenario');
+        $escenario_id=$request->get('escenario');
+        $escenario=Escenario::findOrFail($escenario_id);
         $precio=$request->get('precio');
+        $transporte->escenarios()->attach($escenario_id,['precio'=>$precio]);
 
-        $transporte->escenarios()->attach($escenario,['precio'=>$precio]);
-        
+        Session::flash('message','Se agregó "'.$escenario->escenario.'" al "'.$transporte->destino.'", con un costo de $'.$precio.'');
         return redirect()->route('admin.transportes.index');
     }
+
+    /**
+     * Eliminar un origen (escenario_id) del destino (transporte_id)
+     * @param $transporte_id
+     * @param $escenario_id
+     * @return mixed
+     */
+    public function destroyEscenario($transporte_id,$escenario_id)
+    {
+        $transporte=Transporte::findOrFail($transporte_id);
+        $transporte->escenarios()->detach($escenario_id);
+
+        Session::flash('message','Origen eliminado correctamente');
+        return back();
+    }
+
+    
+
     
 }

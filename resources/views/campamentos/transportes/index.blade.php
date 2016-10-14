@@ -45,13 +45,16 @@
                                 <a href="{{ route('admin.transportes.edit', $transp->id ) }}">
                                     {!! Form::button('<i class="fa fa-pencil-square-o" ></i>',['class'=>'btn-floating waves-effect waves-light teal darken-1']) !!}
                                 </a>
+                                <a href="{{ route('admin.transportes.show',$transp->id) }}">
+                                    {!! Form::button('<i class="fa fa-eye"></i>',['class'=>'btn-floating waves-effect waves-light teal darken-1']) !!}
+                                </a>
                                 <a href="{{ route('admin.get_escenario',$transp->id) }}">
                                     {!! Form::button('<i class="fa fa-link"></i>',['class'=>'btn-floating waves-effect waves-light teal darken-1']) !!}
                                 </a>
 
                             </td>
                         </tr>
-{{--                        @include ('campamentos.roles.modal')--}}
+                        @include ('campamentos.transportes.modal')
                     @endforeach
                 </table><!--end table-responsive-->
             </div><!-- end div ./table-responsive-->
