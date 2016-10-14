@@ -23,19 +23,12 @@ class Escenario extends Model
     public $timestamps = false;
 
     /**
-     * All of the relationships to be touched.
-     *
-     * @var array
-     */
-    protected $touches = ['disciplinas'];
-
-    /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'escenario'
+        'escenario','activated'
     ];
 
     public function transportes()
@@ -43,8 +36,8 @@ class Escenario extends Model
         return $this->belongsToMany('App\Transporte')->withPivot('precio');
     }
 
-    public function disciplinas()
+     public function program()
     {
-        return $this->belongsToMany('App\Disciplina')->withPivot('horario_id','dia_id','modulo_id','mensualidad','matricula','cupos');
+        return $this->belongsTo('App\Program');
     }
 }

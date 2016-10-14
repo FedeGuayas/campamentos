@@ -5,7 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Inscripcion extends Model
+class Representante extends Model
 {
     use SoftDeletes;
 
@@ -15,15 +15,13 @@ class Inscripcion extends Model
      * @var array
      */
     protected $dates = ['deleted_at'];
-    
-    
+
     /**
      * The table associated with the model.
      *
      * @var string
      */
-
-    protected $table = 'inscripcions';
+    protected $table = 'representantes';
 
     /**
      * Indicates if the model should be timestamped.
@@ -31,7 +29,7 @@ class Inscripcion extends Model
      * @var bool
      */
 
-    public $timestamps = true;
+    public $timestamps = false;
 
     /**
      * The attributes that are mass assignable.
@@ -39,8 +37,7 @@ class Inscripcion extends Model
      * @var array
      */
     protected $fillable = [
-        'program_id','alumno_id','user_id','factura_id','matricula','mensualidad'
-
+        'persona_id','encuesta_id','foto_ced','foto'
     ];
 
     public function facturas()
@@ -48,18 +45,12 @@ class Inscripcion extends Model
         return $this->hasMany('App\Factura');
     }
 
-    public function programas()
-    {
-        $this->hasMany('App\Program');
+    public function persona(){
+        return $this->belongsTo('App\Persona');
     }
-
-    public function users()
-    {
-        return $this->hasMany('App\User');
-    }
-
+    
     public function alumnos()
     {
-        $this->hasMany('App\Alumno');
+        return $this->hasMany('App\Alumno');
     }
 }

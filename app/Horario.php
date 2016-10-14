@@ -30,5 +30,10 @@ class Horario extends Model
     protected $fillable = [
         'start_time', 'end_time','activated'
     ];
+
+    public function calendar()
+    {
+        return $this->belongsTo('App\Calendar');
+    }
     
 }

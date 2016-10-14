@@ -28,6 +28,12 @@ class Descuento extends Model
      * @var array
      */
     protected $fillable = [
-        'descripcion','valor','inscripcion_id'
+        'descripcion','valor','factura_id'
     ];
+
+    public function facturas()
+    {
+        return $this->hasMany('App\Factura');
+    }
+    
 }

@@ -17,8 +17,14 @@ class CrateTableFacturas extends Migration
             $table->timestamps();
             $table->integer('pago_id')->unsigned();
             $table->integer('representante_id')->unsigned();
-            $table->string('num_fact');
+            $table->string('num_fact')->unique();
+            $table->double('total',5,2);
+            $table->double('descuento',4,2)->nullable();
 
+            $table->softDeletes();
+            $table->foreign('pago_id')->references('id')->on('pagos');
+            $table->foreign('representante_id')->references('id')->on('representantes');
+                
 
         });
     }

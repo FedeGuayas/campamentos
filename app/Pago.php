@@ -30,4 +30,9 @@ class Pago extends Model
     protected $fillable = [
         'forma','descripcion'
     ];
+
+    public function factura()
+    {
+        return $this->belongsTo('App\Factura');
+    }
 }

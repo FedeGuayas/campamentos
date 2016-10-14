@@ -30,12 +30,16 @@ class Persona extends Model
     function getNombreAttribute(){
         return $this->nombres . ' ' . $this->apellidos;
     }
-    
-    public function alumnos(){
+
+    public function alumnos()
+    {
         return $this->hasMany('App\Alumno');
     }
 
-    public function representantes(){
+    public function representantes()
+    {
         return $this->hasMany('App\Representante');
     }
+
+   
 }

@@ -30,5 +30,9 @@ class Dia extends Model
     protected $fillable = [
         'dia','activated'
     ];
-    
+
+    public function calendar()
+    {
+        return $this->belongsTo('App\Calendar');
+    }
 }

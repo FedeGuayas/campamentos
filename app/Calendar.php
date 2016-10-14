@@ -4,16 +4,15 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Disciplina extends Model
+class Calendar extends Model
 {
-
     /**
      * The table associated with the model.
      *
      * @var string
      */
 
-    protected $table = 'disciplinas';
+    protected $table = 'calendars';
 
     /**
      * Indicates if the model should be timestamped.
@@ -29,11 +28,22 @@ class Disciplina extends Model
      * @var array
      */
     protected $fillable = [
-        'disciplina','activated'
+        'program_id','dia_id','horario_id','cupos','contador','mensualidad','nivel'
+        
     ];
-    
-    public function program()
+
+    public function programs()
     {
-        return $this->belongsTo('App\Program');
+        return $this->hasMany('App\Program');
+    }
+
+    public function horarios()
+    {
+        return $this->hasMany('App\Horario');
+    }
+
+    public function dias()
+    {
+        return $this->hasMany('App\Dia');
     }
 }

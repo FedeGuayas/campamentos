@@ -30,4 +30,9 @@ class Modulo extends Model
     protected $fillable = [
         'modulo', 'inicio','fin','activated'
     ];
+
+    public function program()
+    {
+        return $this->belongsTo('App\Program');
+    }
 }
