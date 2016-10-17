@@ -16,7 +16,7 @@ class DiasController extends Controller
      */
     public function index()
     {
-        $dias=Dia::all();
+        $dias=Dia::all()->sortBy('dia');
         return view('campamentos.dias.index',compact('dias'));
     }
 

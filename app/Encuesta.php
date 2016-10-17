@@ -10,4 +10,9 @@ class Encuesta extends Model
         'encuesta',
         'contador',
     ];
+    
+    public function representantes()
+    {
+        $this->hasMany('App\Representante');
+    }
 }

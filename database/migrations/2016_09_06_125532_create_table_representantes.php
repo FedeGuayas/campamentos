@@ -18,6 +18,7 @@ class CreateTableRepresentantes extends Migration
             $table->integer('encuesta_id')->unsigned()->nullable();
             $table->string('foto_ced')->nullable();
             $table->string('foto')->nullable();
+            $table->string('phone',15);
             $table->timestamps();
 
             $table->softDeletes();

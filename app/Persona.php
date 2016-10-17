@@ -26,9 +26,25 @@ class Persona extends Model
         'nombres', 'apellidos', 'tipo_doc', 'num_doc','genero', 'fecha_nac','email','direccion','telefono'        
     ];
 
-    //con esta funcion retorno el nombre y los apellidos 
+    /**
+     * con esta funcion retorno el nombre y los apellidos
+     * @return string
+     */ 
     function getNombreAttribute(){
         return $this->nombres . ' ' . $this->apellidos;
+    }
+
+    /**
+     * Calcular edad
+     * @param $fecha_nac
+     * @return mixed
+     */
+    
+    public function getEdad($fecha_nac) {
+        $date = explode('-', $this->$fecha_nac);
+        return Carbon::createFromDate($date[0],$date[1],$date[2])->diff(Carbon::now())->format('%y');
+        // return Carbon::createFromDate($date[0],$date[1],$date[2])->diff(Carbon::now())->format('%y years %m months %d days');
+//        return \Carbon\Carbon::parse($this->fecha_nac)->age;
     }
 
     public function alumnos()

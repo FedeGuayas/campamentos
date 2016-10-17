@@ -22,7 +22,7 @@ class CreateTablePersonas extends Migration
             $table->date('fecha_nac');
             $table->string('email',60)->nullable();
             $table->string('direccion')->nullable();
-            $table->string('telefono',30)->nullable();
+            $table->string('telefono',15)->nullable();
 
             $table->softDeletes();
             $table->timestamps();

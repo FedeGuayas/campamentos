@@ -59,7 +59,8 @@ Route::group(['middleware' => 'auth', 'prefix' => 'admin'], function () {
     Route::resource('roles', 'RolesController');
     Route::resource('permissions', 'PermissionsController');
     Route::resource('encuestas', 'EncuestasController');
-    Route::resource('personas', 'PersonasController');
+    Route::resource('representantes', 'RepresentantesController');
+    Route::resource('alumnos', 'AlumnosController');
     Route::resource('transportes', 'TransportesController');
     Route::resource('escenarios', 'EscenariosController');
     Route::resource('disciplinas', 'DisciplinasController');
@@ -91,6 +92,8 @@ Route::group(['middleware' => 'auth', 'prefix' => 'admin'], function () {
     //enabled, disabled programs
     Route::get('programs/{program}/enable',['as' => 'admin.programs.enable', 'uses'=>'ProgramsController@enable']);
     Route::get('programs/{program}/disable',['as' => 'admin.programs.disable', 'uses'=>'ProgramsController@disable']);
+
+    
 });
 
 

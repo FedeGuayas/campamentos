@@ -16,7 +16,7 @@ class HorariosController extends Controller
      */
     public function index()
     {
-        $horarios=Horario::all();
+        $horarios=Horario::all()->sortBy('start_time');
         return view('campamentos.horarios.index',compact('horarios'));
     }
 

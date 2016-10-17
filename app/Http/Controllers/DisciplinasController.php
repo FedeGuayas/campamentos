@@ -16,7 +16,7 @@ class DisciplinasController extends Controller
      */
     public function index()
     {
-        $disciplinas=Disciplina::all();
+        $disciplinas=Disciplina::all()->sortBy('disciplina');
         return view('campamentos.disciplinas.index',compact('disciplinas'));
     }
 

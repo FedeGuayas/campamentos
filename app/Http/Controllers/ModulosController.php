@@ -16,7 +16,7 @@ class ModulosController extends Controller
      */
     public function index()
     {
-        $modulos=Modulo::all();
+        $modulos=Modulo::all()->sortBy('inicio');
         return view('campamentos.modulos.index',compact('modulos'));
     }
 

@@ -13,32 +13,38 @@
 
             <!-- Dropdown Inscripciones -->
             <ul id="dropdownInsc" class="dropdown-content">
-                <li><a href="#!" class="waves-effect waves-teal">Listar</a></li>
+                <li><a href="#!" class="waves-effect waves-teal">Ver</a></li>
                 <li class="divider"></li>
                 <li><a href="#!" class="waves-effect waves-teal">Nueva</a></li>
                 <li class="divider"></li>
-                <li><a href="#!" class="waves-effect waves-teal">Editar</a></li>
+                <li><a href="{!! route('admin.alumnos.index') !!}" class="waves-effect waves-teal">Alumnos</a></li>
                 <li class="divider"></li>
-                <li><a href="#!" class="waves-effect waves-teal">Alumnos</a></li>
-                <li class="divider"></li>
-                <li><a href="#!" class="waves-effect waves-teal">Representantes</a></li>
+                <li><a href="{!! route('admin.representantes.index') !!}" class="waves-effect waves-teal">Representantes</a></li>
             </ul>
+
+            <!-- Dropdown Programacion -->
+            <ul id="dropdownProg" class="dropdown-content">
+                <li><a href="{!! route('admin.modulos.index') !!}" class="waves-effect waves-teal">Modulos</a></li>
+                <li class="divider"></li>
+                <li><a href="#!" class="waves-effect waves-teal">Cupos</a></li>
+                <li class="divider"></li>
+                <li><a href="{!! route('admin.programs.index') !!}" class="waves-effect waves-teal">Programa</a></li>
+                <li class="divider"></li>
+            </ul>
+
             <!-- Dropdown Ajustes -->
             <ul id="dropdownConfig" class="dropdown-content">
                 <li><a href="{!! route('admin.escenarios.index') !!}" class="waves-effect waves-teal">Escenarios</a></li>
                 <li><a href="{!! route('admin.disciplinas.index') !!}" class="waves-effect waves-teal">Disciplinas</a></li>
                 <li><a href="{!! route('admin.horarios.index') !!}" class="waves-effect waves-teal">Horarios</a></li>
                 <li><a href="{!! route('admin.dias.index') !!}" class="waves-effect waves-teal">Días</a></li>
-                <li><a href="{!! route('admin.modulos.index') !!}" class="waves-effect waves-teal">Modulos</a></li>
-                <li><a href="{!! route('admin.programs.index') !!}" class="waves-effect waves-teal">Programación</a></li>
-                <li><a href="#!" class="waves-effect waves-teal">Cupos</a></li>
                 <li><a href="{!! route('admin.encuestas.index') !!}" class="waves-effect waves-teal">Encuestas</a></li>
+                <li><a href="{!! route('admin.transportes.index') !!}" class="waves-effect waves-teal">Transportes</a></li>
                 <li class="divider"></li>
                 <li><a href="{!! route('admin.users.index') !!}" class="waves-effect waves-teal">Usuarios</a></li>
-                <li><a href="{!! route('admin.personas.index') !!}" class="waves-effect waves-teal">Personas</a></li>
+                <li><a href="{!! route('admin.representantes.index') !!}" class="waves-effect waves-teal">Personas</a></li>
                 <li><a href="{!! route('admin.roles.index') !!}" class="waves-effect waves-teal">Roles</a></li>
                 <li><a href="{!! route('admin.permissions.index') !!}" class="waves-effect waves-teal">Permisos</a></li>
-                <li><a href="{!! route('admin.transportes.index') !!}" class="waves-effect waves-teal">Transportes</a></li>
 
 
 
@@ -68,6 +74,9 @@
                     <!-- Dropdown Inscripciones -->
                     <li><a class="dropdown-button waves-effect waves-light" href="#!" data-beloworigin="true" data-hover="true" data-constrainwidth="false" data-activates="dropdownInsc">Inscripciones<i
                                     class="fa fa-pencil left"></i><i class="fa fa-sort-down right"></i></a></li>
+                    <!-- Dropdown Programacion -->
+                    <li><a class="dropdown-button waves-effect waves-light" href="#!" data-beloworigin="true" data-hover="true" data-constrainwidth="false" data-activates="dropdownProg">Programación<i
+                                    class="fa fa-calendar left"></i><i class="fa fa-sort-down right"></i></a></li>
                     <!-- Dropdown Reportes -->
                     <li><a class="dropdown-button waves-effect waves-light" href="#!" data-beloworigin="true" data-hover="true" data-constrainwidth="false" data-activates="dropdownReportes">Reportes<i
                                     class="fa fa-bar-chart-o left"></i><i class="fa fa-sort-down right"></i></a></li>
