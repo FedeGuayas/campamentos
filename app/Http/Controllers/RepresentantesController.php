@@ -47,6 +47,51 @@ class RepresentantesController extends Controller
         return view('campamentos.representantes.create',compact('encuestas'));
     }
 
+
+    /**
+     * Get a validator for an incoming registration request.
+     * @param  array  $data
+     * @return \Illuminate\Contracts\Validation\Validator
+     */
+    protected function validator(array $data)
+    {
+        //variable tipo arreglo en donde se haga el arreglo de validación final
+        $out = [];
+
+        $out['nombres'] = 'required | max:50';
+        $out['apellidos'] = 'required | max:50';
+        $out['genero'] = 'required';
+        $out['fecha_nac'] = 'required';
+        $out['email'] = 'email|required|unique:personas';
+        $out['direccion'] = 'max:255';
+        $out['telefono'] = 'max:15';
+        $out['tipo_doc'] = 'required';
+        $out['num_doc'] = 'required';
+//        $out['foto_ced'] = 'image|max:1000';
+//        $out['foto'] = 'image|max:150';
+
+        $out['foto_ced'] = 'mimetypes: image/jpeg';
+        $out['foto'] = 'mimetypes: image/jpeg';
+
+        $out['phone'] = 'required|max:15';
+
+        //Hacer validación condicional dependiendo del tipo de documento a utilizar.
+        switch($data['tipo_doc']){
+            case 'Cedula':
+                $out['num_doc'] = 'required|digits:10 | unique:personas';
+                break;
+            case 'Pasaporte':
+                $out['num_doc'] = 'required|alpha_num |max:8 |min:5| unique:personas';
+                break;
+            case 'NoDoc':
+                $out['num_doc'] = 'required|alpha_num |max:5 |min:3| unique:personas';
+                break;
+        }
+
+        //Retornar la variable $out auxiliar
+        return Validator::make($data, $out);
+    }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -55,12 +100,12 @@ class RepresentantesController extends Controller
      */
     public function store(Request $request)
     {
-        $validator = $this->validator($request->all());
-            if ($validator->fails()) {
-                $this->throwValidationException(
-                $request, $validator
-            );
-        }
+//        $validator = $this->validator($request->all());
+//            if ($validator->fails()) {
+//                $this->throwValidationException(
+//                $request, $validator
+//            );
+//        }
 
         try {
             DB::beginTransaction();
@@ -102,10 +147,11 @@ class RepresentantesController extends Controller
         $representante->phone=$request->get('phone');
         $representante->save();
 
+        DB::commit();
+
             if ($encuesta){
                 Event::fire(new EncuestaRespondida($encuesta));
             }
-        DB::commit();
 
         } catch (\Exception $e) {
             DB::rollback();
@@ -138,6 +184,43 @@ class RepresentantesController extends Controller
         $representante=Representante::findOrFail($id);
 
         return view('campamentos.representantes.edit',compact('representante'));
+    }
+
+
+
+    protected function validatorUpdate(array $data)
+    {
+        //variable tipo arreglo en donde se haga el arreglo de validación final
+        $out = [];
+
+        $out['nombres'] = 'required | max:50';
+        $out['apellidos'] = 'required | max:50';
+        $out['genero'] = 'required';
+        $out['fecha_nac'] = 'required';
+        $out['email'] = 'email';
+        $out['direccion'] = 'max:255';
+        $out['telefono'] = 'max:15';
+        $out['tipo_doc'] = 'required';
+        $out['num_doc'] = 'required';
+        $out['foto_ced'] = 'max:1000';
+        $out['foto'] = 'max:150';
+        $out['phone'] = 'required|max:15';
+
+        //Hacer validación condicional dependiendo del tipo de documento a utilizar.
+        switch($data['tipo_doc']){
+            case 'Cedula':
+                $out['num_doc'] = 'required|digits:10';
+                break;
+            case 'Pasaporte':
+                $out['num_doc'] = 'required|alpha_num |max:8 |min:5';
+                break;
+            case 'NoDoc':
+                $out['num_doc'] = 'required|alpha_num |max:5 |min:3';
+                break;
+        }
+
+        //Retornar la variable $out auxiliar
+        return Validator::make($data, $out);
     }
 
     /**
@@ -222,80 +305,22 @@ class RepresentantesController extends Controller
         return back();
     }
 
-    /**
-     * Get a validator for an incoming registration request.
-     * @param  array  $data
-     * @return \Illuminate\Contracts\Validation\Validator
-     */
-    protected function validator(array $data)
+
+    
+    public function search(Request $request, $search)
     {
-        //variable tipo arreglo en donde se haga el arreglo de validación final
-        $out = [];
+        if ($search){
+            $query=trim($search);
+            $representantes=Persona::searchPersona($query)->orderBy('created_at','DESC')->get();
 
-        $out['nombres'] = 'required | max:50';
-        $out['apellidos'] = 'required | max:50';
-        $out['genero'] = 'required';
-        $out['fecha_nac'] = 'required';
-        $out['email'] = 'email|required|unique:personas';
-        $out['direccion'] = 'max:255';
-        $out['telefono'] = 'max:15';
-        $out['tipo_doc'] = 'required';
-        $out['num_doc'] = 'required';
-        $out['foto_ced'] = 'image|max:1000';
-        $out['foto'] = 'image|max:150';
-        $out['phone'] = 'required|max:15';
-
-        //Hacer validación condicional dependiendo del tipo de documento a utilizar.
-        switch($data['tipo_doc']){
-            case 'Cedula':
-                $out['num_doc'] = 'required|digits:10 | unique:personas';
-                break;
-            case 'Pasaporte':
-                $out['num_doc'] = 'required|alpha_num |max:8 |min:5| unique:personas';
-                break;
-            case 'NoDoc':
-                $out['num_doc'] = 'required|alpha_num |max:5 |min:3| unique:personas';
-                break;
+            
+//            dd($representantes);
         }
 
-        //Retornar la variable $out auxiliar
-        return Validator::make($data, $out);
+
+        return view('campamentos.alumnos.listSearch',compact('representantes'));
     }
 
 
-    protected function validatorUpdate(array $data)
-    {
-        //variable tipo arreglo en donde se haga el arreglo de validación final
-        $out = [];
-        
-        $out['nombres'] = 'required | max:50';
-        $out['apellidos'] = 'required | max:50';
-        $out['genero'] = 'required';
-        $out['fecha_nac'] = 'required';
-        $out['email'] = 'email';
-        $out['direccion'] = 'max:255';
-        $out['telefono'] = 'max:15';
-        $out['tipo_doc'] = 'required';
-        $out['num_doc'] = 'required';
-        $out['foto_ced'] = 'max:1000';
-        $out['foto'] = 'max:150';
-        $out['phone'] = 'required|max:15';
-
-        //Hacer validación condicional dependiendo del tipo de documento a utilizar.
-        switch($data['tipo_doc']){
-            case 'Cedula':
-                $out['num_doc'] = 'required|digits:10';
-                break;
-            case 'Pasaporte':
-                $out['num_doc'] = 'required|alpha_num |max:8 |min:5';
-                break;
-            case 'NoDoc':
-                $out['num_doc'] = 'required|alpha_num |max:5 |min:3';
-                break;
-        }
-
-        //Retornar la variable $out auxiliar
-        return Validator::make($data, $out);
-    }
     
 }

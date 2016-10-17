@@ -13,6 +13,14 @@
                     {!! Form::open(['route'=>'admin.alumnos.store', 'method'=>'POST','files'=>'true'])  !!}
                     <div class="col s12">
 
+                        <div class="input-field col l8 m8 s10">
+                            {!! Form::text('representate_id',null,['class'=>'validate','required','placeholder'=>'Representante', 'disabled']) !!}
+                        </div>
+                        <div class="input-field col l2 m2 s1 offset-l1 ">
+                            {!! Form::button('<i class="fa fa-search" aria-hidden="true"></i>',['class'=>'btn waves-effect waves-light darken-1 modal-search' ,'data-target'=>'modal-search' ]) !!}
+                        </div>
+
+
                         <div class="input-field col l6 m6 s12 ">
                             <i class="fa fa-user prefix"></i>
                             {!! Form::label('nombres','Nombres:*') !!}
@@ -23,10 +31,9 @@
                             {!! Form::text('apellidos',null,['class'=>'validate','required']) !!}
                         </div>
 
-
                         <div class="input-field col l6 m6 s12">
                         {!! Form::select('tipo_doc', ['Cedula' => 'Cedula', 'Pasaporte' => 'Pasaporte', 'NoDoc' => 'NoDoc'],null, ['id'=>'tipo_doc']) !!}
-                        {!! Form::label('tipo_doc', 'Tipo doc:*') !!}
+                        {!! Form::label('tipo_doc', 'Tipo doc:') !!}
                         </div>
                         <div class="input-field col l6 m6 s12">
                             {!! Form::label('num_doc','Número del documento:*') !!}
@@ -42,28 +49,22 @@
                             {{  Form::date('fecha_nac',null,[ 'class'=>'validate','required']) }}
                         </div>
 
-                        <div class="input-field col l12 m6 s12">
-                            <i class="fa fa-envelope prefix"></i>
-                            {!! Form::label('email','Correo:*') !!}
-                            {!! Form::email('email',null,['class'=>'validate']) !!}
-
+                        <div class="input-field col l2 m6 s12 offset-l6">
+                            {!! Form::checkbox('discapacitado',null,false,['id'=>'discapacitado']) !!}
+                            {!! Form::label('discapacitado','Discapacitado') !!}
                         </div>
 
                         <div class="input-field  col l12 m6 s12">
                             <i class="fa fa-pencil prefix"></i>
-                            {!! Form::textarea('direccion',null,['class'=>'materialize-textarea validate','id'=>'direccion','length'=>'255']) !!}
+                            {!! Form::textarea('direccion',null,['class'=>'materialize-textarea validate','id'=>'direccion','length'=>'150']) !!}
                             {!! Form::label('direccion','Dirección:') !!}
                         </div>
 
-                        <div class="input-field  col l6 m6 s12">
-                            <i class="fa fa-phone prefix"></i>
-                            {!! Form::text('telefono',null,['class'=>'validate','id'=>'telefono']) !!}
-                            {!! Form::label('telefono','Teléfono1:*') !!}
-                        </div>
-                        <div class="input-field col l6 m6 s12">
-                            {!! Form::select('discapacitado', ['NO' => 'No','SI' => 'Si' ],null, ['id'=>'discapacitado','placeholder'=>'Seleccione ...']) !!}
-                            {!! Form::label('discapacitado','Discapacitado?:') !!}
-                        </div>
+
+                        {{--<div class="input-field col l6 m6 s12">--}}
+                            {{--{!! Form::select('discapacitado', ['NO' => 'No','SI' => 'Si' ],null, ['id'=>'discapacitado','placeholder'=>'Seleccione ...']) !!}--}}
+                            {{--{!! Form::label('discapacitado','Discapacitado?:') !!}--}}
+                        {{--</div>--}}
 
                         <div class="file-field input-field  col l6 m6 s12">
                             <div class="btn">
@@ -92,11 +93,30 @@
                         {!! Form::button('<i class="fa fa-undo"></i>',['class'=>'btn waves-effect waves-light darken-1']) !!}
                     </a>
                     {!! Form::close() !!}
-
+                @include('campamentos.alumnos.search')
                 </div><!--/.card content-->
             </div><!--/.card panel-->
         </div><!--/.col s12-->
     </div><!--/.row-->
 
 @endsection
+
+@section('scripts')
+    <script>
+         $(document).ready(function() {
+        // para ventana modal de eliminar
+        $('.modal-search').leanModal({
+                    dismissible: false, // Modal can be dismissed by clicking outside of the modal
+                    opacity: .5, // Opacity of modal background
+                    in_duration: 300, // Transition in duration
+                    out_duration: 200, // Transition out duration
+                    starting_top: '4%', // Starting top style attribute
+                    ending_top: '10%', // Ending top style attribute
+                }
+         );
+         });
+
+    </script>
+
+    @endsection
 

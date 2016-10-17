@@ -9,7 +9,7 @@ class Persona extends Model
 {
     use SoftDeletes;
 
-    public $timestamps=true;
+    public $timestamps = true;
     /**
      * The attributes that should be mutated to dates.
      *
@@ -23,14 +23,15 @@ class Persona extends Model
      * @var array
      */
     protected $fillable = [
-        'nombres', 'apellidos', 'tipo_doc', 'num_doc','genero', 'fecha_nac','email','direccion','telefono'        
+        'nombres', 'apellidos', 'tipo_doc', 'num_doc', 'genero', 'fecha_nac', 'email', 'direccion', 'telefono'
     ];
 
     /**
      * con esta funcion retorno el nombre y los apellidos
      * @return string
-     */ 
-    function getNombreAttribute(){
+     */
+    function getNombreAttribute()
+    {
         return $this->nombres . ' ' . $this->apellidos;
     }
 
@@ -39,13 +40,33 @@ class Persona extends Model
      * @param $fecha_nac
      * @return mixed
      */
-    
-    public function getEdad($fecha_nac) {
+
+    public function getEdad($fecha_nac)
+    {
         $date = explode('-', $this->$fecha_nac);
-        return Carbon::createFromDate($date[0],$date[1],$date[2])->diff(Carbon::now())->format('%y');
+        return Carbon::createFromDate($date[0], $date[1], $date[2])->diff(Carbon::now())->format('%y');
         // return Carbon::createFromDate($date[0],$date[1],$date[2])->diff(Carbon::now())->format('%y years %m months %d days');
 //        return \Carbon\Carbon::parse($this->fecha_nac)->age;
     }
+
+
+    public function scopeSearchPersona($query, $search)
+    {
+        try {
+            $query->where('num_doc', 'LIKE', '%' . $search . '%')
+                ->orWhere('nombres', 'LIKE', '%' . $search . '%')
+                ->orWhere('apellidos', 'LIKE', '%' . $search . '%');
+
+        } catch (\Exception $e) {
+            Session::flash('message', $e);
+        }
+
+
+        return $query;
+
+
+    }
+
 
     public function alumnos()
     {
@@ -57,5 +78,5 @@ class Persona extends Model
         return $this->hasMany('App\Representante');
     }
 
-   
+
 }

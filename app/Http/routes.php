@@ -92,6 +92,9 @@ Route::group(['middleware' => 'auth', 'prefix' => 'admin'], function () {
     //enabled, disabled programs
     Route::get('programs/{program}/enable',['as' => 'admin.programs.enable', 'uses'=>'ProgramsController@enable']);
     Route::get('programs/{program}/disable',['as' => 'admin.programs.disable', 'uses'=>'ProgramsController@disable']);
+    
+    //Buscar represenante
+    Route::get('representantes/search/{search}',['as' => 'admin.representantes.search', 'uses'=>'RepresentantesController@search']);
 
     
 });

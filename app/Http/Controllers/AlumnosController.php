@@ -34,6 +34,7 @@ class AlumnosController extends Controller
      */
     public function create()
     {
+
 //        $encuestas=[] + Encuesta::lists('encuesta', 'id')->all();
         return view('campamentos.alumnos.create');
     }
@@ -63,10 +64,10 @@ class AlumnosController extends Controller
             $persona->num_doc=$request->get('num_doc');
             $persona->genero=$request->get('genero');
             $persona->fecha_nac=$request->get('fecha_nac');
-            $persona->email=$request->get('email');
+//            $persona->email=$request->get('email');
             $persona->direccion=$request->get('direccion');
-            $persona->telefono=$request->get('telefono');
-//            $persona->save();
+//            $persona->telefono=$request->get('telefono');
+            $persona->save();
 
 //            $encuesta_id=$request->get('encuesta_id');
 //            $encuesta=Encuesta::find($encuesta_id);
@@ -90,13 +91,21 @@ class AlumnosController extends Controller
                 $alumno->foto=$name;//ahora se guarda  en el atributo foto_ced la imagen
             }
 
-            $alumno->discapacitado=$request->get('discapacitado');
-//            $alumno->save();
 
-            dd($alumno);
+            $discapacitado=$request->get('discapacitado');
+            if ($discapacitado){
+                $alumno->discapacitado='SI';
+            }else {
+                $alumno->discapacitado='NO';
+            }
+           
+            $alumno->save();
+
+//            dd($alumno);
             DB::commit();
 
         } catch (\Exception $e) {
+            dd($e);
             DB::rollback();
         }
 
@@ -231,7 +240,7 @@ class AlumnosController extends Controller
         $out['num_doc'] = 'required';
         $out['foto_ced'] = 'image|max:1000';
         $out['foto'] = 'image|max:150';
-        $out['discapacitado'] = 'required';
+//        $out['discapacitado'] = 'required';
 
         //Hacer validación condicional dependiendo del tipo de documento a utilizar.
         switch($data['tipo_doc']){
@@ -267,7 +276,7 @@ class AlumnosController extends Controller
         $out['num_doc'] = 'required';
         $out['foto_ced'] = 'max:1000';
         $out['foto'] = 'max:150';
-        $out['discapacitado'] = 'required';
+//        $out['discapacitado'] = 'required';
 
         //Hacer validación condicional dependiendo del tipo de documento a utilizar.
         switch($data['tipo_doc']){

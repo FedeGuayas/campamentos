@@ -46,6 +46,10 @@
                                 <a href="{{ route('admin.representantes.show', $rep->id ) }}">
                                     {!! Form::button('<i class="fa fa-eye"></i>',['class'=>'btn-floating waves-effect waves-light teal darken-1']) !!}
                                 </a>
+                                <a href="{{ route('admin.alumnos.create' ) }}">
+                                    {!! Form::button('<i class="fa fa-child" aria-hidden="true"></i>',['class'=>'btn-floating waves-effect waves-light teal darken-1']) !!}
+                                </a>
+
                             </td>
                         </tr>
                         @include ('campamentos.representantes.modal')
