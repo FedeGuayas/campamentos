@@ -103,18 +103,72 @@
 
 @section('scripts')
     <script>
-         $(document).ready(function() {
-        // para ventana modal de eliminar
-        $('.modal-search').leanModal({
-                    dismissible: false, // Modal can be dismissed by clicking outside of the modal
-                    opacity: .5, // Opacity of modal background
-                    in_duration: 300, // Transition in duration
-                    out_duration: 200, // Transition out duration
-                    starting_top: '4%', // Starting top style attribute
-                    ending_top: '10%', // Ending top style attribute
-                }
-         );
-         });
+        $(document).ready(function() {
+            // para ventana modal de eliminar
+            $('.modal-search').leanModal({
+                        dismissible: false, // Modal can be dismissed by clicking outside of the modal
+                        opacity: .5, // Opacity of modal background
+                        in_duration: 300, // Transition in duration
+                        out_duration: 200, // Transition out duration
+                        starting_top: '4%', // Starting top style attribute
+                        ending_top: '10%', // Ending top style attribute
+                    }
+            );
+
+
+
+        });
+
+
+            $("#Buscar").on('click',function (event) {
+                var name=$("#name").val();
+                var token=$("input[name=_token]").val();
+                var route= "{{route('admin.representantes.beforeSearch')}}";
+                var dataString="name="+name;
+
+                $.ajax({
+                    url: route,
+                    headers:{'X-CSRF-TOKEN':token},
+                    type: "POST",
+                    datatype: "JSON",
+                    data: dataString, //los paramerros pasados en el form
+                    success: function(data){//propiedad success para retornar una respuesta
+
+                    },
+                    error: function(data){
+                        console.log(data);
+                    }
+                });
+            });
+
+//             $("#btn-5").on("click",function(){
+//                 var nomb=$("#nombre").val();
+//                 var correo=$("#email").val();
+//                 var parametros= {nombre:nomb, email:correo};
+//                 var archivo="ajax.php"
+//
+//                 $.ajax({
+//                     type: "POST", //los datos se enviaran a travez del metodo POST
+//                     url: archivo, //archivo donde se guardaran los datos
+//                     data: parametros, //los paramerros pasados en el form
+//                     success: function(datos){//propiedad success para retornar una respuesta
+//                         $("#contenedor-6").html(datos);
+//                     }
+//                 });
+//             });
+
+             //Mostar Representantes filtrados
+             var listRepresentante=function () {
+                 $.ajax({
+                     type: "GET",
+                     url: '{{route('admin.representantes.listSearch')}}',
+                     success: function (data) {
+                         $("#search-result").empty().html(data);
+                     }
+                 });
+             }
+
+
 
     </script>
 

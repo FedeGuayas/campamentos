@@ -39,6 +39,11 @@ Route::group(['middleware' => 'auth', 'prefix' => 'admin'], function () {
         return view('layouts.admin.index');
     }]);
 
+    //Buscar represenante
+    Route::get('representantes/listSearch',['as' => 'admin.representantes.listSearch', 'uses'=>'RepresentantesController@listSearch']);
+    Route::POST('representantes/search',['as' => 'admin.representantes.beforeSearch', 'uses'=>'RepresentantesController@beforeSearch']);
+    Route::get('representantes/search/{search}',['as' => 'admin.representantes.search', 'uses'=>'RepresentantesController@search']);
+
     //adicionar roles a los usuarios
     Route::get('user/{id}/roles', ['as' => 'admin.users.roles','uses'=>'UsersController@roles' ]);
     Route::POST('user/setroles', ['as' => 'admin.users.setroles','uses'=>'UsersController@setRoles' ]);
@@ -93,8 +98,6 @@ Route::group(['middleware' => 'auth', 'prefix' => 'admin'], function () {
     Route::get('programs/{program}/enable',['as' => 'admin.programs.enable', 'uses'=>'ProgramsController@enable']);
     Route::get('programs/{program}/disable',['as' => 'admin.programs.disable', 'uses'=>'ProgramsController@disable']);
     
-    //Buscar represenante
-    Route::get('representantes/search/{search}',['as' => 'admin.representantes.search', 'uses'=>'RepresentantesController@search']);
 
     
 });

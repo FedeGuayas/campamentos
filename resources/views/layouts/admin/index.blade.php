@@ -75,7 +75,7 @@
     @yield('scripts')
 <script>
 
-    $(document).ready(function() {
+$(document).ready(function() {
 
 //        combo
         $('select').material_select();
@@ -151,7 +151,11 @@
 //            format: 'dd/mm/yyyy'
         });
 
-    });
+
+});
+
+
+
 
 </script>
 

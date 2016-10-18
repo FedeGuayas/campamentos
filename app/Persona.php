@@ -52,19 +52,11 @@ class Persona extends Model
 
     public function scopeSearchPersona($query, $search)
     {
-        try {
             $query->where('num_doc', 'LIKE', '%' . $search . '%')
                 ->orWhere('nombres', 'LIKE', '%' . $search . '%')
                 ->orWhere('apellidos', 'LIKE', '%' . $search . '%');
-
-        } catch (\Exception $e) {
-            Session::flash('message', $e);
-        }
-
-
+        
         return $query;
-
-
     }
 
 

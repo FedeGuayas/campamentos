@@ -169,7 +169,7 @@ class RepresentantesController extends Controller
      */
     public function show($id)
     {
-        $representante=Representante::findOrFail($id);
+        $representante=Representante::find($id);
         return view('campamentos.representantes.show',compact('representante'));
     }
 
@@ -305,20 +305,27 @@ class RepresentantesController extends Controller
         return back();
     }
 
-
-    
-    public function search(Request $request, $search)
+    public function beforeSearch(Request $request)
     {
-        if ($search){
-            $query=trim($search);
-            $representantes=Persona::searchPersona($query)->orderBy('created_at','DESC')->get();
-
-            
-//            dd($representantes);
+        $search=trim($request->get('search'));
+        if ($search!=""){
+            return redirect()->route('admin.representantes.search',$search);
+        }else {
+            return redirect()->back();
         }
 
+    }
+
+    public function search($search)
+    {
+        $representantes=Persona::searchPersona($search)->orderBy('created_at','DESC')->get();
 
         return view('campamentos.alumnos.listSearch',compact('representantes'));
+    }
+
+    public function listSearch()
+    {
+        return view('campamentos.alumnos.listSearch');
     }
 
 
