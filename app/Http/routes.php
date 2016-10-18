@@ -40,9 +40,11 @@ Route::group(['middleware' => 'auth', 'prefix' => 'admin'], function () {
     }]);
 
     //Buscar represenante
-    Route::get('representantes/listSearch',['as' => 'admin.representantes.listSearch', 'uses'=>'RepresentantesController@listSearch']);
     Route::POST('representantes/search',['as' => 'admin.representantes.beforeSearch', 'uses'=>'RepresentantesController@beforeSearch']);
     Route::get('representantes/search/{search}',['as' => 'admin.representantes.search', 'uses'=>'RepresentantesController@search']);
+    Route::get('representantes/listSearch/{d?}',['as' => 'admin.representantes.listSearch', 'uses'=>'RepresentantesController@listSearch']);
+
+
 
     //adicionar roles a los usuarios
     Route::get('user/{id}/roles', ['as' => 'admin.users.roles','uses'=>'UsersController@roles' ]);

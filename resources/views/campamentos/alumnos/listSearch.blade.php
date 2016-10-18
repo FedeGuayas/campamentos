@@ -13,12 +13,9 @@
             <td>{{ $per->num_doc }}</td>
             <td>{{ $per->genero }}</td>
             <td>
-                {!! Form::button('<i class="fa fa-trash-o" ></i>',['class'=>'modal-trigger btn-floating waves-effect waves-light red darken-1','data-target'=>"modal-delete-$al->id"]) !!}
-                <a href="{{ route('admin.alumnos.edit', $al->id ) }}">
-                {!! Form::button('<i class="fa fa-pencil-square-o" ></i>',['class'=>'btn-floating waves-effect waves-light teal darken-1']) !!}
-                </a>
-                <a href="{{ route('admin.alumnos.show', $al->id ) }}">
-                {!! Form::button('<i class="fa fa-eye"></i>',['class'=>'btn-floating waves-effect waves-light teal darken-1']) !!}
+                <a href="{{ route('admin.representantes.create', $per->id ) }}">
+                    {!! Form::checkbox('add_per-'.$per->id,$per->id,null,['id'=>$per->id]) !!}
+                    {!! Form::label($per->id, 'Add') !!}
                 </a>
             </td>
         </tr>

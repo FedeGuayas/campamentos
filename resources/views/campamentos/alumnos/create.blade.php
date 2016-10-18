@@ -10,7 +10,7 @@
                 <h5 class="header teal-text text-darken-2">Crear Alumno</h5>
                 <div class="card-content ">
                     @include('alert.request')
-                    {!! Form::open(['route'=>'admin.alumnos.store', 'method'=>'POST','files'=>'true'])  !!}
+                    {!! Form::open(['route'=>'admin.alumnos.store', 'method'=>'POST','files'=>'true', 'class'=>'form_noEnter'])  !!}
                     <div class="col s12">
 
                         <div class="input-field col l8 m8 s10">
@@ -32,8 +32,8 @@
                         </div>
 
                         <div class="input-field col l6 m6 s12">
-                        {!! Form::select('tipo_doc', ['Cedula' => 'Cedula', 'Pasaporte' => 'Pasaporte', 'NoDoc' => 'NoDoc'],null, ['id'=>'tipo_doc']) !!}
-                        {!! Form::label('tipo_doc', 'Tipo doc:') !!}
+                            {!! Form::select('tipo_doc', ['Cedula' => 'Cedula', 'Pasaporte' => 'Pasaporte', 'NoDoc' => 'NoDoc'],null, ['id'=>'tipo_doc']) !!}
+                            {!! Form::label('tipo_doc', 'Tipo doc:') !!}
                         </div>
                         <div class="input-field col l6 m6 s12">
                             {!! Form::label('num_doc','Número del documento:*') !!}
@@ -62,8 +62,8 @@
 
 
                         {{--<div class="input-field col l6 m6 s12">--}}
-                            {{--{!! Form::select('discapacitado', ['NO' => 'No','SI' => 'Si' ],null, ['id'=>'discapacitado','placeholder'=>'Seleccione ...']) !!}--}}
-                            {{--{!! Form::label('discapacitado','Discapacitado?:') !!}--}}
+                        {{--{!! Form::select('discapacitado', ['NO' => 'No','SI' => 'Si' ],null, ['id'=>'discapacitado','placeholder'=>'Seleccione ...']) !!}--}}
+                        {{--{!! Form::label('discapacitado','Discapacitado?:') !!}--}}
                         {{--</div>--}}
 
                         <div class="file-field input-field  col l6 m6 s12">
@@ -85,25 +85,26 @@
                             </div>
                         </div>
 
-                     </div>
+                    </div>
                 </div>
-                    {!! Form::button('Crear<i class="fa fa-play right"></i>', ['class'=>'btn waves-effect waves-light','type' => 'submit']) !!}
-                    {!! Form::button('Cancelar<i class="fa fa-close right"></i>',['class'=>'btn waves-effect waves-light red darken-1','type' => 'reset']) !!}
-                    <a href="{{ route('admin.alumnos.index') }}" class="tooltipped" data-position="top" data-delay="50" data-tooltip="Regresar">
-                        {!! Form::button('<i class="fa fa-undo"></i>',['class'=>'btn waves-effect waves-light darken-1']) !!}
-                    </a>
-                    {!! Form::close() !!}
+                {!! Form::button('Crear<i class="fa fa-play right"></i>', ['class'=>'btn waves-effect waves-light','type' => 'submit']) !!}
+                {!! Form::button('Cancelar<i class="fa fa-close right"></i>',['class'=>'btn waves-effect waves-light red darken-1','type' => 'reset']) !!}
+                <a href="{{ route('admin.alumnos.index') }}" class="tooltipped" data-position="top" data-delay="50"
+                   data-tooltip="Regresar">
+                    {!! Form::button('<i class="fa fa-undo"></i>',['class'=>'btn waves-effect waves-light darken-1']) !!}
+                </a>
+                {!! Form::close() !!}
                 @include('campamentos.alumnos.search')
-                </div><!--/.card content-->
-            </div><!--/.card panel-->
-        </div><!--/.col s12-->
+            </div><!--/.card content-->
+        </div><!--/.card panel-->
+    </div><!--/.col s12-->
     </div><!--/.row-->
 
 @endsection
 
 @section('scripts')
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             // para ventana modal de eliminar
             $('.modal-search').leanModal({
                         dismissible: false, // Modal can be dismissed by clicking outside of the modal
@@ -114,63 +115,41 @@
                         ending_top: '10%', // Ending top style attribute
                     }
             );
-
-
-
         });
 
+        $(".form_noEnter").keypress(function(e){
+            if(e.width == 13){
+                return false;
+            }
+        });
 
-            $("#Buscar").on('click',function (event) {
-                var name=$("#name").val();
-                var token=$("input[name=_token]").val();
-                var route= "{{route('admin.representantes.beforeSearch')}}";
-                var dataString="name="+name;
-
+        $("#Buscar").on('click', function (event) {
+            event.preventDefault();
+            var datos = $("#search").val();
+            var route = "{{route('admin.representantes.beforeSearch')}}";
+            var token = $("input[name=_token]").val();
+            if (datos == "")
+                alert("Error. Debe ingresar datos en el campo de busqueda!");
+            else {
                 $.ajax({
                     url: route,
-                    headers:{'X-CSRF-TOKEN':token},
                     type: "POST",
-                    datatype: "JSON",
-                    data: dataString, //los paramerros pasados en el form
-                    success: function(data){//propiedad success para retornar una respuesta
-
+                    headers: {'X-CSRF-TOKEN': token},
+                    contentType: 'application/x-www-form-urlencoded',
+                    data: {datos},
+                    success: function (resp) {
+                        $("#search-result").empty().html(resp);
                     },
-                    error: function(data){
-                        console.log(data);
+                    error: function (resp) {
+                        console.log(resp);
+                        $("#search-result").empty().html("Error en la busqueda");
                     }
                 });
-            });
-
-//             $("#btn-5").on("click",function(){
-//                 var nomb=$("#nombre").val();
-//                 var correo=$("#email").val();
-//                 var parametros= {nombre:nomb, email:correo};
-//                 var archivo="ajax.php"
-//
-//                 $.ajax({
-//                     type: "POST", //los datos se enviaran a travez del metodo POST
-//                     url: archivo, //archivo donde se guardaran los datos
-//                     data: parametros, //los paramerros pasados en el form
-//                     success: function(datos){//propiedad success para retornar una respuesta
-//                         $("#contenedor-6").html(datos);
-//                     }
-//                 });
-//             });
-
-             //Mostar Representantes filtrados
-             var listRepresentante=function () {
-                 $.ajax({
-                     type: "GET",
-                     url: '{{route('admin.representantes.listSearch')}}',
-                     success: function (data) {
-                         $("#search-result").empty().html(data);
-                     }
-                 });
-             }
-
+            }
+        });
 
 
     </script>
 
-    @endsection
+@endsection
 

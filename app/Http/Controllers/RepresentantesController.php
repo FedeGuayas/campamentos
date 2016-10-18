@@ -10,6 +10,8 @@ use App\Events\EncuestaRespondida;
 use App\Persona;
 use App\Representante;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Response;
 use Session;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
@@ -307,20 +309,25 @@ class RepresentantesController extends Controller
 
     public function beforeSearch(Request $request)
     {
-        $search=trim($request->get('search'));
-        if ($search!=""){
-            return redirect()->route('admin.representantes.search',$search);
+       $search=$request->get('datos');
+        if($request->ajax()) {
+            return  redirect()->route('admin.representantes.search', ['search' => $search]);
         }else {
-            return redirect()->back();
+//            return redirect()->back();
+            return ("ERROR de BUSQUEDA");
         }
 
     }
 
     public function search($search)
     {
-        $representantes=Persona::searchPersona($search)->orderBy('created_at','DESC')->get();
+        $query=trim($search);
+        if ($query!=""){
+            $representantes=Persona::searchPersona($search)->orderBy('created_at','DESC')->get();
+        }
 
         return view('campamentos.alumnos.listSearch',compact('representantes'));
+
     }
 
     public function listSearch()
