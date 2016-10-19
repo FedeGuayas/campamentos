@@ -1,6 +1,6 @@
 @extends('layouts.admin.index')
 
-@section('title','Programación')
+@section('title','Calendario')
 
 @section('head')
     {{--CSS--}}
@@ -11,7 +11,7 @@
     <div class="row">
         <div class="col l8 m12 s12">
             <div class="card-panel">
-                <h5 class="header teal-text text-darken-2">Programas</h5>
+                <h5 class="header teal-text text-darken-2">Calendario para el programa</h5>
                 <div class="card-content ">
                     @include('alert.request')
                     {!! Form::open(['route'=>'admin.programs.store', 'method'=>'POST'])  !!}

@@ -33,15 +33,15 @@ class Program extends Model
     ];
     
     public function escenarios(){
-        $this->hasMany('App\Escenario');
+       return $this->hasMany('App\Escenario');
     }
 
     public function disciplinas(){
-        $this->hasMany('App\Disciplina');
+        return $this->hasMany('App\Disciplina');
     }
 
     public function modulos(){
-        $this->hasMany('App\Modulo');
+        return $this->hasMany('App\Modulo');
     }
 
     public function calendar()

@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 
 class Modulo extends Model
 {
@@ -35,4 +36,17 @@ class Modulo extends Model
     {
         return $this->belongsTo('App\Program');
     }
+
+
+    //Buscar por mes
+    public function scopeSearchMonthBetwen($query, $search)
+    {
+        $query->whereBetween($search, ['inicio', 'fin'])->get();
+        return $query;
+    }
+
+
+
+
+
 }

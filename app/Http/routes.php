@@ -62,6 +62,8 @@ Route::group(['middleware' => 'auth', 'prefix' => 'admin'], function () {
     //perfil de usuario
     Route::get('user/profile',['as' => 'admin.user.profile', 'uses'=>'UsersController@showProfile']);
 
+
+
     Route::resource('users', 'UsersController');
     Route::resource('roles', 'RolesController');
     Route::resource('permissions', 'PermissionsController');
@@ -76,6 +78,7 @@ Route::group(['middleware' => 'auth', 'prefix' => 'admin'], function () {
     Route::resource('modulos', 'ModulosController');
     Route::resource('programs', 'ProgramsController');
     Route::resource('fpagos', 'PagosController');
+    Route::resource('calendars', 'CalendarsController');
 
     //enabled, disabled modulos
     Route::get('modulos/{modulo}/enable',['as' => 'admin.modulos.enable', 'uses'=>'ModulosController@enable']);
