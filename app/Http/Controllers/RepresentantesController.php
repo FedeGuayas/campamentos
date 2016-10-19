@@ -102,12 +102,12 @@ class RepresentantesController extends Controller
      */
     public function store(Request $request)
     {
-//        $validator = $this->validator($request->all());
-//            if ($validator->fails()) {
-//                $this->throwValidationException(
-//                $request, $validator
-//            );
-//        }
+        $validator = $this->validator($request->all());
+            if ($validator->fails()) {
+                $this->throwValidationException(
+                $request, $validator
+            );
+        }
 
         try {
             DB::beginTransaction();
@@ -309,7 +309,7 @@ class RepresentantesController extends Controller
 
     public function beforeSearch(Request $request)
     {
-       $search=$request->get('datos');
+       $search=trim($request->get('datos'));
         if($request->ajax()) {
             return  redirect()->route('admin.representantes.search', ['search' => $search]);
         }else {

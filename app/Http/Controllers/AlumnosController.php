@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Alumno;
 use App\Persona;
+use App\Representante;
 use Illuminate\Http\Request;
 use DB;
 use Session;
@@ -47,6 +48,7 @@ class AlumnosController extends Controller
      */
     public function store(Request $request)
     {
+
         $validator = $this->validator($request->all());
         if ($validator->fails()) {
             $this->throwValidationException(
@@ -69,12 +71,24 @@ class AlumnosController extends Controller
 //            $persona->telefono=$request->get('telefono');
             $persona->save();
 
-//            $encuesta_id=$request->get('encuesta_id');
-//            $encuesta=Encuesta::find($encuesta_id);
+
 
             $alumno=new Alumno;
+
+            $per=$request->get('persona_id');
+            $per=Persona::findOrFail($per);
+            $representante=$per->representantes()->first();
             $alumno->persona()->associate($persona);
-//            $representante->encuesta()->associate($encuesta);
+
+            $alumno->representante()->associate($representante);
+            $alumno->representante_id=$representante->id;
+
+            $discapacitado=$request->get('discapacitado');
+            if ($discapacitado){
+                $alumno->discapacitado='SI';
+            }else {
+                $alumno->discapacitado='NO';
+            }
 
             if ($request->hasFile('foto_ced')) {
                 $file = $request->file('foto_ced');
@@ -92,16 +106,9 @@ class AlumnosController extends Controller
             }
 
 
-            $discapacitado=$request->get('discapacitado');
-            if ($discapacitado){
-                $alumno->discapacitado='SI';
-            }else {
-                $alumno->discapacitado='NO';
-            }
-           
             $alumno->save();
 
-//            dd($alumno);
+
             DB::commit();
 
         } catch (\Exception $e) {
@@ -228,7 +235,7 @@ class AlumnosController extends Controller
     {
         //variable tipo arreglo en donde se haga el arreglo de validación final
         $out = [];
-
+        $out['persona_id'] = 'required';
         $out['nombres'] = 'required | max:50';
         $out['apellidos'] = 'required | max:50';
         $out['genero'] = 'required';
@@ -238,9 +245,9 @@ class AlumnosController extends Controller
         $out['telefono'] = 'max:15';
         $out['tipo_doc'] = 'required';
         $out['num_doc'] = 'required';
-        $out['foto_ced'] = 'image|max:1000';
-        $out['foto'] = 'image|max:150';
-//        $out['discapacitado'] = 'required';
+//      $out['foto_ced'] = 'mimetypes: image/jpeg';
+//      $out['foto'] = 'mimetypes: image/jpeg';
+
 
         //Hacer validación condicional dependiendo del tipo de documento a utilizar.
         switch($data['tipo_doc']){

@@ -1,5 +1,5 @@
     <div id="modal-search" class="modal modal-fixed-footer" >
-        {!! Form::open(['class'=>'form_noEnter']) !!}
+        {{--{!! Form::open(['class'=>'form_noEnter']) !!}--}}
         <div class="modal-content">
             <div class="row">
                 <div class="col s12">
@@ -31,9 +31,6 @@
 
                     </div>
                 </div>
-
-
-
             </div>
 
         </div>

@@ -10,11 +10,12 @@
                 <h5 class="header teal-text text-darken-2">Crear Alumno</h5>
                 <div class="card-content ">
                     @include('alert.request')
-                    {!! Form::open(['route'=>'admin.alumnos.store', 'method'=>'POST','files'=>'true', 'class'=>'form_noEnter'])  !!}
+                    {!! Form::open(['route'=>'admin.alumnos.store', 'method'=>'POST','files'=>'true'])  !!}
                     <div class="col s12">
 
                         <div class="input-field col l8 m8 s10">
-                            {!! Form::text('representate_id',null,['class'=>'validate','required','placeholder'=>'Representante', 'disabled']) !!}
+                            {!! Form::text('representate',null,['class'=>'validate','required','placeholder'=>'Representante', 'id'=>'representante','disabled']) !!}
+                            {!! Form::hidden('persona_id',null,['id'=>'persona_id','required']) !!}
                         </div>
                         <div class="input-field col l2 m2 s1 offset-l1 ">
                             {!! Form::button('<i class="fa fa-search" aria-hidden="true"></i>',['class'=>'btn waves-effect waves-light darken-1 modal-search' ,'data-target'=>'modal-search' ]) !!}
@@ -95,6 +96,9 @@
                 </a>
                 {!! Form::close() !!}
                 @include('campamentos.alumnos.search')
+
+                <div id="representantes_id"></div>
+
             </div><!--/.card content-->
         </div><!--/.card panel-->
     </div><!--/.col s12-->
@@ -104,8 +108,9 @@
 
 @section('scripts')
     <script>
+
         $(document).ready(function () {
-            // para ventana modal de eliminar
+            // para ventana modal de busqueda
             $('.modal-search').leanModal({
                         dismissible: false, // Modal can be dismissed by clicking outside of the modal
                         opacity: .5, // Opacity of modal background
@@ -113,41 +118,74 @@
                         out_duration: 200, // Transition out duration
                         starting_top: '4%', // Starting top style attribute
                         ending_top: '10%', // Ending top style attribute
-                    }
-            );
+            });
         });
 
-        $(".form_noEnter").keypress(function(e){
-            if(e.width == 13){
-                return false;
-            }
-        });
 
-        $("#Buscar").on('click', function (event) {
-            event.preventDefault();
-            var datos = $("#search").val();
-            var route = "{{route('admin.representantes.beforeSearch')}}";
-            var token = $("input[name=_token]").val();
-            if (datos == "")
-                alert("Error. Debe ingresar datos en el campo de busqueda!");
-            else {
-                $.ajax({
-                    url: route,
-                    type: "POST",
-                    headers: {'X-CSRF-TOKEN': token},
-                    contentType: 'application/x-www-form-urlencoded',
-                    data: {datos},
-                    success: function (resp) {
-                        $("#search-result").empty().html(resp);
-                    },
-                    error: function (resp) {
-                        console.log(resp);
-                        $("#search-result").empty().html("Error en la busqueda");
-                    }
-                });
-            }
-        });
 
+        $(function(){
+
+            $(".form_noEnter").keypress(function(e){
+                if(e.width == 13){
+                    return false;
+                }
+            });
+
+
+            $("#Buscar").on('click', function (event) {
+                event.preventDefault();
+                var datos = $("#search").val();
+                var route = "{{route('admin.representantes.beforeSearch')}}";
+                var token = $("input[name=_token]").val();
+                if (datos == "")
+                    alert("Error. Debe ingresar datos en el campo de busqueda!");
+                else {
+                    $.ajax({
+                        url: route,
+                        type: "POST",
+                        headers: {'X-CSRF-TOKEN': token},
+                        contentType: 'application/x-www-form-urlencoded',
+                        data: {datos},
+                        success: function (resp) {
+                            $("#search-result").empty().html(resp);
+
+                            // Comprobar cuando cambia un checkbox
+                            $("#table_search input[type=checkbox]").on('change', function() {
+
+                                // si se activa
+                                if ($(this).is(':checked') ) {
+                                    console.log("Checkbox " + $(this).prop("id") +  " (" + $(this).val() + ") => Seleccionado");
+                                    // buscar el td más cercano en el DOM hacia "arriba"
+                                    // luego encontrar los td adyacentes a este y obtener el nombre
+                                    var name=$(this).closest('td').siblings('td:eq(1)').text();
+                                    // poner el texto en el input
+                                    $("#representante").val(name);
+                                    // guardo el id para enviarlo al controlador
+                                    $("#persona_id").val($(this).val());
+                                    $("#representante").addClass("teal-text");
+                                } else {
+                                    console.log("Checkbox " + $(this).prop("id") +  " (" + $(this).val() + ") => Deseleccionado");
+                                    $("#representante").removeClass("teal-text");
+                                    $("#persona_id").val("");
+                                    $("#representante").val("");
+                                }
+                            });
+                        },
+                        error: function (resp) {
+                            console.log(resp);
+                            $("#search-result").empty().html("Error en la busqueda");
+                        }
+                    });
+                }
+            });
+
+            $("#ADD_REP").on('click',function () {
+//            $("#table_search input[type=checkbox]").each(function(index){
+                $("#modal-search").closeModal();
+
+            });
+
+        });
 
     </script>
 

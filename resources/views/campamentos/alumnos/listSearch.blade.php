@@ -1,4 +1,4 @@
-<table class="table table-striped table-bordered table-condensed table-hover highlight responsive-table">
+<table class="table table-striped table-bordered table-condensed table-hover highlight responsive-table" id="table_search">
     <thead>
         <th>Id</th>
         <th>Nombres y Apellidos</th>
@@ -13,10 +13,8 @@
             <td>{{ $per->num_doc }}</td>
             <td>{{ $per->genero }}</td>
             <td>
-                <a href="{{ route('admin.representantes.create', $per->id ) }}">
-                    {!! Form::checkbox('add_per-'.$per->id,$per->id,null,['id'=>$per->id]) !!}
-                    {!! Form::label($per->id, 'Add') !!}
-                </a>
+                {!! Form::checkbox($per->id,$per->id,null,['id'=>$per->id]) !!}
+                {!! Form::label($per->id, 'Add') !!}
             </td>
         </tr>
         @endforeach
