@@ -1,5 +1,4 @@
     <div id="modal-search" class="modal modal-fixed-footer" >
-        {{--{!! Form::open(['class'=>'form_noEnter']) !!}--}}
         <div class="modal-content">
             <div class="row">
                 <div class="col s12">
@@ -19,7 +18,6 @@
                     {!! Form::close() !!}
                 </div>
             </div>
-
             <div class="card-panel teal">
                 <div class="panel panel-success">
                     <div class="panel-heading">
@@ -32,13 +30,10 @@
                     </div>
                 </div>
             </div>
-
         </div>
         <div class="modal-footer teal">
-            {!! link_to('#','Aceptar',['class'=>'btn waves-effect waves-light', 'id'=>'ADD_REP']) !!}
-            {!! Form::button('Cancelar',['class'=>'modal-action modal-close waves-effect waves-ligh btn']) !!}
+            {!! Form::button('Cerrar',['class'=>'modal-action modal-close waves-effect waves-ligh btn']) !!}
         </div>
-        {{--{!! Form::close() !!}--}}
     </div>
 
 

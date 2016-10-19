@@ -66,12 +66,8 @@ class AlumnosController extends Controller
             $persona->num_doc=$request->get('num_doc');
             $persona->genero=$request->get('genero');
             $persona->fecha_nac=$request->get('fecha_nac');
-//            $persona->email=$request->get('email');
             $persona->direccion=$request->get('direccion');
-//            $persona->telefono=$request->get('telefono');
             $persona->save();
-
-
 
             $alumno=new Alumno;
 
@@ -79,7 +75,6 @@ class AlumnosController extends Controller
             $per=Persona::findOrFail($per);
             $representante=$per->representantes()->first();
             $alumno->persona()->associate($persona);
-
             $alumno->representante()->associate($representante);
             $alumno->representante_id=$representante->id;
 
@@ -174,11 +169,22 @@ class AlumnosController extends Controller
             $persona->num_doc=$request->get('num_doc');
             $persona->genero=$request->get('genero');
             $persona->fecha_nac=$request->get('fecha_nac');
-            $persona->email=$request->get('email');
             $persona->direccion=$request->get('direccion');
-            $persona->telefono=$request->get('telefono');
             $persona->update();
 
+            $per=$request->get('persona_id');
+            $per=Persona::findOrFail($per);
+            $representante=$per->representantes()->first();
+            $alumno->persona()->associate($persona);
+            $alumno->representante()->associate($representante);
+            $alumno->representante_id=$representante->id;
+
+            $discapacitado=$request->get('discapacitado');
+            if ($discapacitado){
+                $alumno->discapacitado='SI';
+            }else {
+                $alumno->discapacitado='NO';
+            }
 
             if ($request->hasFile('foto_ced')) {
                 $file = $request->file('foto_ced');
@@ -186,7 +192,6 @@ class AlumnosController extends Controller
                 $path=public_path().'/dist/img/alumnos/cedula/';//ruta donde se guardara
                 $file->move($path,$name);//lo copio a $path con el nombre $name
                 $alumno->foto_ced=$name;//ahora se guarda  en el atributo foto_ced la imagen
-
             }
             if ($request->hasFile('foto')) {
                 $file = $request->file('foto');
@@ -196,8 +201,9 @@ class AlumnosController extends Controller
                 $alumno->foto=$name;//ahora se guarda  en el atributo foto_ced la imagen
             }
 
-            $alumno->discapacitado=$request->get('discapacitado');
+
             $alumno->update();
+
 
             DB::commit();
 
@@ -245,8 +251,9 @@ class AlumnosController extends Controller
         $out['telefono'] = 'max:15';
         $out['tipo_doc'] = 'required';
         $out['num_doc'] = 'required';
-//      $out['foto_ced'] = 'mimetypes: image/jpeg';
-//      $out['foto'] = 'mimetypes: image/jpeg';
+        $out['foto_ced'] = 'image|max:1000';
+        $out['foto'] = 'image|max:150';
+
 
 
         //Hacer validación condicional dependiendo del tipo de documento a utilizar.
@@ -283,7 +290,7 @@ class AlumnosController extends Controller
         $out['num_doc'] = 'required';
         $out['foto_ced'] = 'max:1000';
         $out['foto'] = 'max:150';
-//        $out['discapacitado'] = 'required';
+
 
         //Hacer validación condicional dependiendo del tipo de documento a utilizar.
         switch($data['tipo_doc']){

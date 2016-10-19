@@ -69,12 +69,8 @@ class RepresentantesController extends Controller
         $out['telefono'] = 'max:15';
         $out['tipo_doc'] = 'required';
         $out['num_doc'] = 'required';
-//        $out['foto_ced'] = 'image|max:1000';
-//        $out['foto'] = 'image|max:150';
-
-        $out['foto_ced'] = 'mimetypes: image/jpeg';
-        $out['foto'] = 'mimetypes: image/jpeg';
-
+        $out['foto_ced'] = 'image|max:1000';
+        $out['foto'] = 'image|max:150';
         $out['phone'] = 'required|max:15';
 
         //Hacer validación condicional dependiendo del tipo de documento a utilizar.
@@ -313,8 +309,7 @@ class RepresentantesController extends Controller
         if($request->ajax()) {
             return  redirect()->route('admin.representantes.search', ['search' => $search]);
         }else {
-//            return redirect()->back();
-            return ("ERROR de BUSQUEDA");
+            return redirect()->back();
         }
 
     }

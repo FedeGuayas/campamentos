@@ -75,6 +75,7 @@ Route::group(['middleware' => 'auth', 'prefix' => 'admin'], function () {
     Route::resource('dias', 'DiasController');
     Route::resource('modulos', 'ModulosController');
     Route::resource('programs', 'ProgramsController');
+    Route::resource('fpagos', 'PagosController');
 
     //enabled, disabled modulos
     Route::get('modulos/{modulo}/enable',['as' => 'admin.modulos.enable', 'uses'=>'ModulosController@enable']);

@@ -21,7 +21,6 @@
                             {!! Form::button('<i class="fa fa-search" aria-hidden="true"></i>',['class'=>'btn waves-effect waves-light darken-1 modal-search' ,'data-target'=>'modal-search' ]) !!}
                         </div>
 
-
                         <div class="input-field col l6 m6 s12 ">
                             <i class="fa fa-user prefix"></i>
                             {!! Form::label('nombres','Nombres:*') !!}
@@ -61,12 +60,6 @@
                             {!! Form::label('direccion','Dirección:') !!}
                         </div>
 
-
-                        {{--<div class="input-field col l6 m6 s12">--}}
-                        {{--{!! Form::select('discapacitado', ['NO' => 'No','SI' => 'Si' ],null, ['id'=>'discapacitado','placeholder'=>'Seleccione ...']) !!}--}}
-                        {{--{!! Form::label('discapacitado','Discapacitado?:') !!}--}}
-                        {{--</div>--}}
-
                         <div class="file-field input-field  col l6 m6 s12">
                             <div class="btn">
                                 <span><i class="fa fa fa-file-image-o prefix" aria-hidden="true"></i></span>
@@ -96,9 +89,6 @@
                 </a>
                 {!! Form::close() !!}
                 @include('campamentos.alumnos.search')
-
-                <div id="representantes_id"></div>
-
             </div><!--/.card content-->
         </div><!--/.card panel-->
     </div><!--/.col s12-->
@@ -177,12 +167,6 @@
                         }
                     });
                 }
-            });
-
-            $("#ADD_REP").on('click',function () {
-//            $("#table_search input[type=checkbox]").each(function(index){
-                $("#modal-search").closeModal();
-
             });
 
         });
