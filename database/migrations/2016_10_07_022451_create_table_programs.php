@@ -18,7 +18,7 @@ class CreateTablePrograms extends Migration
             $table->integer('escenario_id')->unsigned();
             $table->integer('disciplina_id')->unsigned();
             $table->integer('modulo_id')->unsigned();
-            $table->double('matricula',4,2)->nullable();
+            $table->double('matricula',5,2)->nullable();
             $table->integer('cuposT');
             $table->boolean('activated')->default(true);
 

@@ -20,7 +20,7 @@ class CreateTableCalendars extends Migration
             $table->integer('horario_id')->unsigned();
             $table->integer('cupos');
             $table->integer('contador');
-            $table->double('mensualidad',4,2);
+            $table->double('mensualidad',5,2);
             $table->string('nivel',30)->nullable();
 
             $table->foreign('program_id')->references('id')->on('programs')

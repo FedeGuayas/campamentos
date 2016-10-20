@@ -15,7 +15,7 @@
             <ul id="dropdownInsc" class="dropdown-content">
                 <li><a href="#!" class="waves-effect waves-teal">Ver</a></li>
                 <li class="divider"></li>
-                <li><a href="#!" class="waves-effect waves-teal">Nueva</a></li>
+                <li><a href="{!! route('admin.inscripcions.create') !!}" class="waves-effect waves-teal">Nueva</a></li>
                 <li class="divider"></li>
                 <li><a href="{!! route('admin.alumnos.index') !!}" class="waves-effect waves-teal">Alumnos</a></li>
                 <li class="divider"></li>
@@ -29,6 +29,8 @@
                 <li><a href="#!" class="waves-effect waves-teal">Cupos</a></li>
                 <li class="divider"></li>
                 <li><a href="{!! route('admin.programs.index') !!}" class="waves-effect waves-teal">Programa</a></li>
+                <li class="divider"></li>
+                <li><a href="{!! route('admin.calendars.index') !!}" class="waves-effect waves-teal">Calendario</a></li>
                 <li class="divider"></li>
             </ul>
 

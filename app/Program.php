@@ -49,9 +49,4 @@ class Program extends Model
         return $this->belongsTo('App\Calendar');
     }
 
-    public function inscripcion()
-    {
-        return $this->belongsTo('App\Inscripcion');
-    }
-
 }

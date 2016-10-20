@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Calendar;
 use App\Dia;
 use App\Disciplina;
 use App\Escenario;
@@ -29,7 +30,8 @@ class ProgramsController extends Controller
             ->join('modulos as m','m.id','=','p.modulo_id')
             ->select('p.id','e.escenario','d.disciplina','m.modulo','matricula','cuposT','p.activated')
             ->where('p.activated',true)
-            ->orderBy('p.id')->get();
+            ->orderBy('e.escenario')->get();
+
        return view('campamentos.programs.index',compact('programs'));
     }
 
@@ -60,7 +62,7 @@ class ProgramsController extends Controller
         $program->disciplina_id=$request->get('disciplina');
         $program->modulo_id=$request->get('modulo');
         $program->matricula=$request->get('matricula');
-        $program->cuposT=$request->get('cupos');
+        $program->cuposT=$request->get('cuposT');
         $activated=true;
         $program->activated=$activated;
         $program->save();
@@ -76,7 +78,18 @@ class ProgramsController extends Controller
      */
     public function show($id)
     {
-        //
+        $program=Program::findOrFail($id);
+        $disciplina=Disciplina::findOrFail($program->disciplina_id);
+        $escenario=Escenario::findOrFail($program->escenario_id);
+        $modulo=Modulo::findOrFail($program->modulo_id);
+        $calendars=Calendar::
+            join('dias as d','d.id','=','cal.dia_id','as cal')
+            ->join('horarios as h','h.id','=','cal.horario_id')
+            ->select('d.dia','h.start_time','h.end_time','cupos','contador','mensualidad','cal.id')
+            ->where('program_id',$id)
+            ->get();
+        
+        return view('campamentos.programs.show',compact('program','disciplina','escenario','modulo','calendars'));
     }
 
     /**
@@ -91,6 +104,8 @@ class ProgramsController extends Controller
         $modulos=[] + Modulo::where('activated','1')->orderBy('modulo', 'desc')->lists('modulo', 'id')->all();
         $escenarios=[] + Escenario::where('activated','1')->lists('escenario', 'id')->all();
         $disciplinas=[] + Disciplina::lists('disciplina', 'id')->all();
+
+
         return view('campamentos.programs.edit',compact('program','escenarios','disciplinas','modulos'));
     }
 
@@ -104,11 +119,11 @@ class ProgramsController extends Controller
     public function update(Request $request, $id)
     {
         $program=Program::findOrFail($id);
-        $program->escenario_id=$request->get('escenario');
-        $program->disciplina_id=$request->get('disciplina');
-        $program->modulo_id=$request->get('modulo');
+        $program->escenario_id=$request->get('escenario_id');
+        $program->disciplina_id=$request->get('disciplina_id');
+        $program->modulo_id=$request->get('modulo_id');
         $program->matricula=$request->get('matricula');
-        $program->cuposT=$request->get('cupos');
+        $program->cuposT=$request->get('cuposT');
         $program->update();
         Session::flash('message','Programa acualizado');
         return redirect()->route('admin.programs.index');

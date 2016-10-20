@@ -46,4 +46,9 @@ class Calendar extends Model
     {
         return $this->hasMany('App\Dia');
     }
+
+    public function inscripcion()
+    {
+        return $this->belongsTo('App\Inscripcion');
+    }
 }

@@ -39,7 +39,7 @@ class Inscripcion extends Model
      * @var array
      */
     protected $fillable = [
-        'program_id','alumno_id','user_id','factura_id','matricula','mensualidad'
+        'calendar_id','alumno_id','user_id','factura_id','matricula','mensualidad'
 
     ];
 
@@ -48,7 +48,7 @@ class Inscripcion extends Model
         return $this->hasMany('App\Factura');
     }
 
-    public function programas()
+    public function calendars()
     {
         $this->hasMany('App\Program');
     }

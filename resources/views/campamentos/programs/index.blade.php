@@ -11,7 +11,10 @@
     <div class="row">
         <div class="col l8 m8 s">
             @include('alert.success')
-            <h4>Programación para inscripciones</h4>
+                <h4>Programación para inscripciones</h4>
+                <a href="{{route('admin.programs.create')}}">
+                    {!! Form::button('ADD <i class="fa fa-plus left" aria-hidden="true"></i>',['class'=>'btn tooltipped waves-effect waves-light','data-position'=>'right', 'data-delay'=>'50', 'data-tooltip'=>'Nuevo programa']) !!}
+                </a>
             {{-- @include('runner.usuarios.search')--}}
         </div>
     </div>
@@ -19,9 +22,6 @@
     <div class="row">
         <div class="col l12 m12 s12">
 
-            <a href="{{route('admin.programs.create')}}">
-                {!! Form::button('<i class="fa fa-user-plus" ></i>',['class'=>'btn tooltipped waves-effect waves-light','data-position'=>'right', 'data-delay'=>'50', 'data-tooltip'=>'Nuevo programa']) !!}
-            </a>
             <table class="table table-striped table-bordered table-condensed table-hover highlight responsive-table">
                 <thead>
                 <th>Id</th>
@@ -57,15 +57,19 @@
                             @endif
                         </td>
                         <td>
-                            {!! Form::button('<i class="fa fa-trash-o" ></i>',['class'=>'modal-trigger btn-floating waves-effect waves-light red darken-1','data-target'=>"modal-delete-$program->id"]) !!}
+                            {!! Form::button('<i class="fa fa-trash-o" ></i>',['class'=>'modal-trigger btn-floating waves-effect waves-light red darken-1 tooltipped',
+                             'data-position'=>'top', 'data-delay'=>'50', 'data-tooltip'=>'Eliminar','data-target'=>"modal-delete-$program->id"]) !!}
                             <a href="{{ route('admin.programs.edit', $program->id ) }}">
-                                {!! Form::button('<i class="fa fa-pencil-square-o" ></i>',['class'=>'btn-floating waves-effect waves-light teal darken-1']) !!}
+                                {!! Form::button('<i class="fa fa-pencil-square-o" ></i>',['class'=>'btn-floating waves-effect waves-light teal darken-1 tooltipped',
+                                'data-position'=>'top', 'data-delay'=>'50', 'data-tooltip'=>'Editar',]) !!}
                             </a>
-                            {{--<a href="{{ route('admin.programs.show', $program->id ) }}">--}}
-                                {{--{!! Form::button('<i class="fa fa-eye"></i>',['class'=>'btn-floating waves-effect waves-light teal darken-1']) !!}--}}
-                            {{--</a>--}}
+                            <a href="{{ route('admin.programs.show', $program->id ) }}">
+                                {!! Form::button('<i class="fa fa-eye"></i>',['class'=>'btn-floating waves-effect waves-light teal darken-1 tooltipped',
+                                'data-position'=>'top', 'data-delay'=>'50', 'data-tooltip'=>'Mostrar',]) !!}
+                            </a>
                             <a href="{{ route('admin.calendars.create',$program->id) }}">
-                            {!! Form::button('<i class="fa fa-calendar left"></i>',['class'=>'btn-floating waves-effect waves-light teal darken-1']) !!}
+                            {!! Form::button('<i class="fa fa-calendar-plus-o" aria-hidden="true"></i>',['class'=>'btn-floating waves-effect waves-light teal darken-1 tooltipped',
+                            'data-position'=>'top', 'data-delay'=>'50', 'data-tooltip'=>'Calendario',]) !!}
                             </a>
                         </td>
                     </tr>

@@ -37,7 +37,7 @@
                         <div class="input-field col l6 m6 s12 ">
                             <i class="fa fa-usd prefix" aria-hidden="true"></i>
                             {!! Form::label('matricula','Matricula:') !!}
-                            {!! Form::number('matricula',null,['step' => '0.01','min' => '1','class'=>'validate','placeholder'=>'0.00']) !!}
+                            {!! Form::number('matricula',null,['step' => '0.01','class'=>'validate','placeholder'=>'0.00']) !!}
                         </div>
                         <div class="input-field  col l6 m6 s12">
                             {!! Form::label('cuposT','Cupos:') !!}
@@ -48,7 +48,7 @@
                     </div>
 
                 </div>
-                {!! Form::button('Crear<i class="fa fa-play right"></i>', ['class'=>'btn waves-effect waves-light','type' => 'submit']) !!}
+                {!! Form::button('Actualizar<i class="fa fa-wrench right" aria-hidden="true"></i>', ['class'=>'btn waves-effect waves-light','type' => 'submit']) !!}
                 {!! Form::button('Cancelar<i class="fa fa-close right"></i>',['class'=>'btn waves-effect waves-light red darken-1','type' => 'reset']) !!}
                 <a href="{{ route('admin.programs.index') }}" class="tooltipped" data-position="bottom" data-delay="50" data-tooltip="Regresar">
                     {!! Form::button('<i class="fa fa-undo"></i>',['class'=>'btn waves-effect waves-light darken-1']) !!}

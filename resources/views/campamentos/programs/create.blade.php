@@ -39,8 +39,8 @@
                             {!! Form::number('matricula',null,['step' => '0.01','min' => '1','class'=>'validate','placeholder'=>'0.00']) !!}
                         </div>
                         <div class="input-field  col l6 m6 s12">
-                            {!! Form::label('cupos','Cupos:') !!}
-                            {!! Form::number('cupos',null,['class'=>'validate' ,'placeholder'=>'0' ,'required']) !!}
+                            {!! Form::label('cuposT','Cupos:') !!}
+                            {!! Form::number('cuposT',null,['class'=>'validate' ,'placeholder'=>'0' ,'required']) !!}
 
                         </div>
 
