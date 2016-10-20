@@ -30,10 +30,7 @@ class ProgramsController extends Controller
             ->select('p.id','e.escenario','d.disciplina','m.modulo','matricula','cuposT','p.activated')
             ->where('p.activated',true)
             ->orderBy('p.id')->get();
-
-
-
-        return view('campamentos.programs.index',compact('programs'));
+       return view('campamentos.programs.index',compact('programs'));
     }
 
     /**
@@ -46,8 +43,7 @@ class ProgramsController extends Controller
         $modulos=[] + Modulo::where('activated','1')->orderBy('modulo', 'desc')->lists('modulo', 'id')->all();
         $escenarios=[] + Escenario::where('activated','1')->lists('escenario', 'id')->all();
         $disciplinas=[] + Disciplina::lists('disciplina', 'id')->all();
-//          $horarios=[] + Horario::select(DB::raw('CONCAT(start_time, " - ", end_time) AS horario'), 'id')->orderBy('horario') ->lists('horario' , 'id')->all();
-       
+      
         return view('campamentos.programs.create',compact('escenarios','disciplinas','modulos'));
     }
 

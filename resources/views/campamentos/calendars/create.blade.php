@@ -11,36 +11,49 @@
     <div class="row">
         <div class="col l8 m12 s12">
             <div class="card-panel">
-                <h5 class="header teal-text text-darken-2">Calendario para el programa</h5>
+                {{--<h5 class="header teal-text text-darken-2">Calendario:</h5>--}}
                 <div class="card-content ">
-                    @include('alert.request')
-                    {!! Form::open(['route'=>'admin.programs.store', 'method'=>'POST'])  !!}
+                        <div class="panel panel-success">
+                            <div class="panel-heading">
+                                <h3 class="panel-title ">Calendario</h3>
+                            </div>
+                            <div class="panel-body">
+                                <table class="table table-striped table-bordered table-condensed table-hover highlight responsive-table">
+                                    <thead>
+                                    <th>Escenario</th>
+                                    <th>Disciplina</th>
+                                    <th>Modulo</th>
+                                    </thead>
+                                    <tr>
+                                        <td>{{$escenario->escenario}}</td>
+                                        <td>{{$disciplina->disciplina}}</td>
+                                        <td>{{$modulo->modulo}}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
                     <div class="col s12">
-
-                        <div class="input-field col offset-l6 6 m6 s12 ">
-                            {{--Form::select('size', array('L' => 'Large', 'S' => 'Small'), null, ['disabled' => 'disabled', placeholder' => 'Pick a size...']);--}}
-                            {!! Form::select('modulo',$modulos,null, ['id'=>'modulo_id','placeholder' => 'Seleccione el Modulo...','required']) !!}
-                            {!! Form::label('modulo', 'Modulo:') !!}
-                        </div>
-
-
+                        @include('alert.request')
+                        {!! Form::open(['route'=>'admin.calendars.store', 'method'=>'POST'])  !!}
+                        {!! Form::hidden('program_id',$program->id) !!}
                         <div class="input-field col l6 m6 s12 ">
-                            {!! Form::select('escenario',$escenarios,null, ['id'=>'escenario_id','placeholder' => 'Seleccione el Escenario...','required']) !!}
-                            {!! Form::label('escenario', 'Escenarios:') !!}
+                            {!! Form::select('dia_id',$dias,null, ['id'=>'dia_id','placeholder' => 'Seleccione los dias...']) !!}
+                            {!! Form::label('dia_id', 'Dias:') !!}
                         </div>
-                        <div class="input-field col l6 m6 s12">
-                            {!! Form::select('disciplina',$disciplinas,null, ['id'=>'disciplina_id','placeholder' => 'Seleccione la Disciplina...','required']) !!}
-                            {!! Form::label('disciplina', 'Disciplinas:') !!}
+                        <div class="input-field col l6 m6 s12 ">
+                            {!! Form::select('horario_id',$horarios,null, ['id'=>'horario_id','placeholder' => 'Seleccione los horarios...']) !!}
+                            {!! Form::label('horario_id', 'Horario:') !!}
                         </div>
 
                         <div class="input-field col l6 m6 s12 ">
                             <i class="fa fa-usd prefix" aria-hidden="true"></i>
-                            {!! Form::label('matricula','Matricula:') !!}
-                            {!! Form::number('matricula',null,['step' => '0.01','min' => '1','class'=>'validate','placeholder'=>'0.00']) !!}
+                            {!! Form::label('mensualidad','Mensualidad:') !!}
+                            {!! Form::number('mensualidad',null,['step' => '0.01','min' => '1','class'=>'validate','placeholder'=>'0.00','required']) !!}
                         </div>
                         <div class="input-field  col l6 m6 s12">
                             {!! Form::label('cupos','Cupos:') !!}
-                            {!! Form::number('cupos',null,['class'=>'validate' ,'placeholder'=>'0' ,'required']) !!}
+                            {!! Form::number('cupos',null,['class'=>'validate' ,'placeholder'=>'0']) !!}
 
                         </div>
 
@@ -61,7 +74,3 @@
 
 @endsection
 
-
-@section('scripts')
-    {{--Scripts--}}
-@endsection

@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use App\Http\Requests\Request;
 
-class ProgramsStoreRequest extends Request
+class CalendarStoreRequest extends Request
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,11 +24,11 @@ class ProgramsStoreRequest extends Request
     public function rules()
     {
         return [
-            'modulo' => 'required',
-            'escenario' => 'required',
-            'disciplina' => 'required',
-            'cuposT' => 'numeric|min:1|required',
-            'matricula'=>'numeric'
+            'program_id'=> 'required',
+            'dia_id'=> 'required',
+            'horario_id'=> 'required',
+            'cupos' => 'numeric|min:1',
+            'mensualidad'=>'numeric|required'
         ];
     }
 }

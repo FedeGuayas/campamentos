@@ -64,7 +64,7 @@
                             {{--<a href="{{ route('admin.programs.show', $program->id ) }}">--}}
                                 {{--{!! Form::button('<i class="fa fa-eye"></i>',['class'=>'btn-floating waves-effect waves-light teal darken-1']) !!}--}}
                             {{--</a>--}}
-                            <a href="{{ route('admin.calendars.create') }}">
+                            <a href="{{ route('admin.calendars.create',$program->id) }}">
                             {!! Form::button('<i class="fa fa-calendar left"></i>',['class'=>'btn-floating waves-effect waves-light teal darken-1']) !!}
                             </a>
                         </td>
