@@ -32,23 +32,23 @@ class Calendar extends Model
         
     ];
 
-    public function programs()
+    public function program()
     {
-        return $this->hasMany('App\Program');
+        return $this->belongsTo('App\Program');
     }
 
-    public function horarios()
+    public function horario()
     {
-        return $this->hasMany('App\Horario');
+        return $this->belongsTo('App\Horario');
     }
 
-    public function dias()
+    public function dia()
     {
-        return $this->hasMany('App\Dia');
+        return $this->belongsTo('App\Dia');
     }
 
-    public function inscripcion()
+    public function inscripcions()
     {
-        return $this->belongsTo('App\Inscripcion');
+        return $this->hasMany('App\Inscripcion');
     }
 }

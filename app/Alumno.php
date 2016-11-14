@@ -49,7 +49,7 @@ class Alumno extends Model
         return $this->belongsTo('App\Representante');
     }
 
-    public function inscripcion(){
-        return $this->belongsTo('App\Inscripcion');
+    public function inscripcions(){
+        return $this->hasMany('App\Inscripcion');
     }
 }

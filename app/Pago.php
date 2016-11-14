@@ -31,8 +31,8 @@ class Pago extends Model
         'forma','descripcion'
     ];
 
-    public function factura()
+    public function facturas()
     {
-        return $this->belongsTo('App\Factura');
+        return $this->hasMany('App\Factura');
     }
 }

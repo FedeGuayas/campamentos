@@ -32,21 +32,21 @@ class Program extends Model
         'escenario_id','disciplina_id','modulo_id','matricula','cuposT','activated'
     ];
     
-    public function escenarios(){
-       return $this->hasMany('App\Escenario');
+    public function escenario(){
+       return $this->belongsTo('App\Escenario');
     }
 
-    public function disciplinas(){
-        return $this->hasMany('App\Disciplina');
+    public function disciplina(){
+        return $this->belongsTo('App\Disciplina');
     }
 
-    public function modulos(){
-        return $this->hasMany('App\Modulo');
+    public function modulo(){
+        return $this->belongsTo('App\Modulo');
     }
 
-    public function calendar()
+    public function calendars()
     {
-        return $this->belongsTo('App\Calendar');
+        return $this->hasMany('App\Calendar');
     }
 
 }

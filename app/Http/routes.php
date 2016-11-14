@@ -20,6 +20,7 @@ Route::auth();
 
 
 Route::get('/home', 'HomeController@index');
+
 //Para manejar la respuesta cuando el usuario de en el link de activar la cuenta
 Route::get('user/activation/{token}', 'Auth\AuthController@activateUser')->name('user.activate');
 

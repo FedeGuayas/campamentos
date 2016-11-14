@@ -31,8 +31,8 @@ class Dia extends Model
         'dia','activated'
     ];
 
-    public function calendar()
+    public function calendars()
     {
-        return $this->belongsTo('App\Calendar');
+        return $this->hasMany('App\Calendar');
     }
 }

@@ -45,18 +45,18 @@ class Factura extends Model
         return $this->belongsTo('App\Representante');
     }
 
-    public function pagos()
+    public function pago()
     {
-        return $this->hasMany('App\Pago');
+        return $this->belongsTo('App\Pago');
     }
 
-    public function descuento()
+    public function descuentos()
     {
-        return $this->belongsTo('App\Descuento');
+        return $this->hasMany('App\Descuento');
     }
 
-    public function inscripcion()
+    public function inscripcions()
     {
-        return $this->belongsTo('App\Inscripcion');
+        return $this->hasMany('App\Inscripcion');
     }
 }

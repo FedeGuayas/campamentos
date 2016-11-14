@@ -32,9 +32,9 @@ class Modulo extends Model
         'modulo', 'inicio','fin','activated'
     ];
 
-    public function program()
+    public function programs()
     {
-        return $this->belongsTo('App\Program');
+        return $this->hasMany('App\Program');
     }
 
 

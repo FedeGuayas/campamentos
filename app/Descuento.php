@@ -31,9 +31,9 @@ class Descuento extends Model
         'descripcion','valor','factura_id'
     ];
 
-    public function facturas()
+    public function factura()
     {
-        return $this->hasMany('App\Factura');
+        return $this->belongsTo('App\Factura');
     }
     
 }

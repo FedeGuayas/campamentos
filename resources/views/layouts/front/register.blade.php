@@ -33,7 +33,7 @@
 <body class="fixed-sn blue-skin">
 
 <!--Navbar-->
-@include('layouts.front.navbar')
+@include('layouts.front.nav')
         <!--/.Navbar-->
 
 <!--Mask-->

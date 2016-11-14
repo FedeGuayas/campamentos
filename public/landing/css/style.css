@@ -1,0 +1,387 @@
+/* Custom Stylesheet */
+/**
+ * Use this file to override Materialize files so you can update
+ * the core Materialize files in the future
+ *
+ * Made By MaterializeCSS.com
+ */
+
+/*Footer adesivo al fondo*/
+body {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
+main {
+  flex: 1 0 auto;
+}
+/*fin footer adesivo*/
+
+nav ul a,
+nav .brand-logo {
+  color: #ffffff;
+}
+
+p {
+  line-height: 2rem;
+}
+
+.button-collapse {
+  color: #26a69a;
+}
+
+.parallax-container {
+  min-height: 380px;
+  line-height: 0;
+  height: auto;
+  color: rgba(255,255,255,.9);
+}
+.parallax-container .section {
+  width: 100%;
+}
+
+.banner-content {
+  min-height: 680px;
+  /*height: 100%;*/
+  width: 100%;
+  /*position: absolute;*/
+  /*overflow: hidden;*/
+  top: 0;
+  left: 0;
+
+}
+
+.banner-content .content {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  overflow: hidden;
+  top: 0;
+  left: 0;
+}
+
+
+
+@media only screen and (max-width : 992px) {
+  .parallax-container .section {
+    position: absolute;
+    top: 40%;
+  }
+  #index-banner .section {
+    top: 10%;
+  }
+}
+
+@media only screen and (max-width : 600px) {
+  #index-banner .section {
+    top: 0;
+  }
+}
+
+.icon-block {
+  padding: 0 15px;
+}
+.icon-block .material-icons {
+  font-size: inherit;
+}
+
+footer.page-footer {
+  margin: 0;
+  /*margin-top: 20px;*/
+  padding-top: 20px;
+  /*background-color: #3E4551;*/
+  /*color: #fff;*/
+}
+
+
+footer.page-footer .footer-copyright {
+  overflow: hidden;
+  height: 50px;
+  line-height: 50px;
+  color: rgba(255, 255, 255, 0.8);
+  background-color: rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+
+footer.page-footer a {
+  color: #fff;
+}
+
+footer.page-footer .title {
+  text-transform: uppercase;
+}
+
+footer.page-footer .call-to-action {
+  text-align: center;
+  padding-top: 1.3rem;
+  padding-bottom: 0.5rem;
+}
+
+footer.page-footer .call-to-action ul li {
+  display: inline-block;
+  padding-right: 10px;
+}
+
+footer.page-footer .social-section {
+  text-align: center;
+}
+
+footer.page-footer .social-section ul li {
+  display: inline-block;
+}
+
+.hr-light {
+  background-color: #fff;
+  height: 0.5px;
+}
+
+.hr-dark {
+  background-color: #666;
+  height: 0.5px;
+}
+
+
+
+/*Personalizado*/
+
+
+/* Responsive Headings */
+/* Extra Small Devices, Phones */
+@media only screen and (max-width: 768px) {
+  .h1-responsive, .section .section-heading {
+    font-size: 150%;
+    font-weight: 500;
+  }
+  .h2-responsive {
+    font-size: 145%;
+  }
+  .h3-responsive {
+    font-size: 135%;
+  }
+  .h4-responsive {
+    font-size: 135%;
+  }
+  .h5-responsive {
+    font-size: 135%;
+  }
+}
+
+/* Small Devices, Tablets */
+@media only screen and (min-width: 768px) {
+  .h1-responsive, .section .section-heading {
+    font-size: 170%;
+  }
+  .h2-responsive {
+    font-size: 140%;
+  }
+  .h3-responsive {
+    font-size: 125%;
+  }
+  .h4-responsive {
+    font-size: 125%;
+  }
+  .h5-responsive {
+    font-size: 125%;
+  }
+}
+
+/* Medium Devices, Desktops */
+@media only screen and (min-width: 992px) {
+  .h1-responsive, .section .section-heading {
+    font-size: 200%;
+  }
+  .h2-responsive {
+    font-size: 170%;
+  }
+  .h3-responsive {
+    font-size: 140%;
+  }
+  .h4-responsive {
+    font-size: 125%;
+  }
+  .h5-responsive {
+    font-size: 125%;
+  }
+}
+
+/* Large Devices, Wide Screens */
+@media only screen and (min-width: 1200px) {
+  .h1-responsive, .section .section-heading {
+    font-size: 250%;
+  }
+  .h2-responsive {
+    font-size: 200%;
+  }
+  .h3-responsive {
+    font-size: 170%;
+  }
+  .h4-responsive {
+    font-size: 140%;
+  }
+  .h5-responsive {
+    font-size: 125%;
+  }
+}
+
+
+.section {
+  margin-bottom: 4rem;
+  margin-top: 2rem;
+}
+
+.section .section-heading {
+  margin-top: 2rem;
+  margin-bottom: 4rem;
+}
+
+.section .section-description {
+  color: #757575;
+  margin-bottom: 4rem;
+  margin-left: 15%;
+  margin-right: 15%;
+  text-align: center;
+}
+
+
+@media (max-width: 992px) {
+  .section .section-description {
+    margin-left: 5%;
+    margin-right: 5%;
+  }
+}
+
+.section.extra-margins h5,
+.section.extra-margins h4,
+.section.extra-margins a {
+  margin-bottom: 1rem;
+}
+
+.section h4 {
+  font-weight: 400;
+}
+
+.section h5 .fa {
+  margin-right: 8px;
+}
+
+.section hr {
+  margin-top: 1rem;
+  margin-bottom: 3rem;
+}
+
+@media (min-width: 992px) {
+  .section hr {
+    display: none;
+  }
+}
+
+.section .contact-icons {
+  text-align: center;
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.section .contact-icons li {
+  margin-bottom: 2.2rem;
+}
+
+
+.divider-new {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  font-weight: 300;
+  margin-top: 45px;
+  margin-bottom: 45px;
+}
+
+.divider-new h2 {
+  margin-top: 5px;
+}
+
+.divider-new::before {
+  content: '';
+  height: 1.5px;
+  background: #666;
+  flex: 1;
+  margin: 0 .45em 0 0;
+}
+
+.divider-new::after {
+  content: '';
+  height: 1.5px;
+  background: #666;
+  flex: 1;
+  margin: 0 0 0 .45em;
+}
+
+.section-title {
+  text-transform: uppercase;
+  margin-top: 0;
+  margin-bottom: 1rem;
+  padding: 0.7rem;
+}
+
+.section-title small {
+  text-transform: none;
+  padding-left: 7px;
+  margin-left: 10px;
+}
+
+.view {
+  overflow: hidden;
+  position: relative;
+  cursor: default;
+}
+
+.view .mask,
+.view .content {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  overflow: hidden;
+  top: 0;
+  left: 0;
+}
+
+.view img, .view video {
+  display: block;
+  position: relative;
+}
+
+.full-bg-img {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  overflow: hidden;
+  top: 0;
+  left: 0;
+}
+
+
+.flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.flex-center p {
+  margin: 0;
+}
+
+.flex-center ul {
+  text-align: center;
+}
+
+.flex-center ul li {
+  margin-bottom: 1rem;
+}
+
+.price {
+  font-weight: bold;
+  font-size: 20px;
+}
+

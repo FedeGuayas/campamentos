@@ -31,9 +31,9 @@ class Horario extends Model
         'start_time', 'end_time','activated'
     ];
 
-    public function calendar()
+    public function calendars()
     {
-        return $this->belongsTo('App\Calendar');
+        return $this->hasMany('App\Calendar');
     }
     
 }

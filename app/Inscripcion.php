@@ -43,23 +43,23 @@ class Inscripcion extends Model
 
     ];
 
-    public function facturas()
+    public function factura()
     {
-        return $this->hasMany('App\Factura');
+        return $this->belongsTo('App\Factura');
     }
 
-    public function calendars()
+    public function calendar()
     {
-        $this->hasMany('App\Program');
+        $this->belongsTo('App\Program');
     }
 
-    public function users()
+    public function user()
     {
-        return $this->hasMany('App\User');
+        return $this->belongsTo('App\User');
     }
 
-    public function alumnos()
+    public function alumno()
     {
-        $this->hasMany('App\Alumno');
+        $this->belongsTo('App\Alumno');
     }
 }

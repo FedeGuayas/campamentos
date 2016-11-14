@@ -32,8 +32,8 @@ class Disciplina extends Model
         'disciplina','activated'
     ];
     
-    public function program()
+    public function programs()
     {
-        return $this->belongsTo('App\Program');
+        return $this->hasMany('App\Program');
     }
 }

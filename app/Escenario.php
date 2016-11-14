@@ -36,8 +36,8 @@ class Escenario extends Model
         return $this->belongsToMany('App\Transporte')->withPivot('precio');
     }
 
-     public function program()
+     public function programs()
     {
-        return $this->belongsTo('App\Program');
+        return $this->hasMany('App\Program');
     }
 }
