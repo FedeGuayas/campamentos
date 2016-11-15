@@ -1,7 +1,7 @@
 @extends('layouts.front.master-plane')
 
 @section('content')
-
+    <br><br><br>
     <div class="container">
         <div class="row">
             <div class="col s12 m6 offset-l2">
@@ -55,11 +55,11 @@
                         <div class="clearfix">
                             <div class="input-field pull-right">
                                 {!! Form::button('Entrar<i class="fa fa-sign-in left"></i>', ['class'=>'btn ','type' => 'submit']) !!}
-                                {!! Form::close() !!}
+
                             </div>
                         </div>
 
-
+                        {!! Form::close() !!}
                     </div>
 
                     <div class="card-action">

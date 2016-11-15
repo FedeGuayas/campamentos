@@ -12,6 +12,7 @@ namespace App;
 
 use Illuminate\Mail\Mailer;
 use Illuminate\Mail\Message;
+use Mail;
 
 class ActivationService
 {
@@ -39,11 +40,18 @@ class ActivationService
         $token = $this->activationRepo->createActivation($user);
 
         $link = route('user.activate', $token);
-        $message = sprintf('Activate account <a href="%s">%s</a>', $link, $link);
+        
+       
+//        $message = sprintf('Activate account <a href="%s">%s</a>', $link, $link);
+//        //cambiando raw por send se puede utilizar una plantilla html para el mail
+//        $this->mailer->raw($message, function (Message $m) use ($user) {
+//            $m->to($user->email)->subject('Activation mail');
+//        });
 
-        //cambiando raw por send se puede utilizar una plantilla html para el mail
-        $this->mailer->raw($message, function (Message $m) use ($user) {
-            $m->to($user->email)->subject('Activation mail');
+        Mail::send('campamentos.emails.new_user_activation', ['user' => $user,'link'=>$link], function ($message) use ($user){
+            $message->from('admin@fedeguayas.com.ec', 'Campamentos Deportivos');
+            $message->subject('Activación de cuenta');
+            $message->to($user->email);
         });
 
 

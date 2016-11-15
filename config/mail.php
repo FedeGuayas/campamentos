@@ -58,7 +58,7 @@ return [
     */
 
 //    'from' => ['address' => null, 'name' => null],
-    'from' => ['address' => 'nialah80@gmail.com', 'name' => 'FEDEGUAYAS'],
+    'from' => ['address' => 'admin@fedeguayas.com.ec', 'name' => 'Campamentos Deportivos'],
    
 
     /*

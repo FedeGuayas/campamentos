@@ -55,8 +55,8 @@ class User extends Authenticatable
 
     //setear el password, ya no es necesario encriptar pass en controlador
     public function setPasswordAttribute($value){
-        if (!empty ($value)) {
-            $this->attributes['password'] = Hash::make($value);
+        if (!empty ($value)){
+            $this->attributes['password'] =bcrypt($value);
         }
     }
 

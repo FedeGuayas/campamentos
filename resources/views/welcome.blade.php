@@ -12,9 +12,12 @@
                 <div class="row center">
                     <h5 class="header col s12 light wow fadeIn" data-wow-delay="1s">La mejor opción para ejercitar y disfrutar en familia.</h5>
                 </div>
+               @if (Auth::guest())
                 <div class="row center">
                     <a href="{{url('/login')}}" class="waves-effect waves-light btn btn-large teal lighten-1 wow flipInX" data-wow-delay="1.5s"><i class="material-icons right">input</i>Entrar</a>
+                    <a href="{{ url('/register') }}" class="waves-effect waves-light btn btn-large teal lighten-1 wow flipInX" data-wow-delay="1.5s"><i class="material-icons right">fingerprint</i>Registrarse</a>
                 </div>
+                @endif
             </div>
         </div>
         <div class="parallax"><img src="{{asset('img/camp/the-ball-cancha.jpg')}}" style=" opacity: 100; " alt="Unsplashed background img 1"></div>

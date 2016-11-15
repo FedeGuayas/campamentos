@@ -42,7 +42,7 @@ p {
 }
 
 .banner-content {
-  min-height: 680px;
+  min-height: 740px;
   /*height: 100%;*/
   width: 100%;
   /*position: absolute;*/
@@ -226,8 +226,8 @@ footer.page-footer .social-section ul li {
 
 
 .section {
-  margin-bottom: 4rem;
-  margin-top: 2rem;
+  margin-bottom: 15rem;
+  margin-top: 10rem;
 }
 
 .section .section-heading {
@@ -336,7 +336,6 @@ footer.page-footer .social-section ul li {
   cursor: default;
 }
 
-.view .mask,
 .view .content {
   width: 100%;
   height: 100%;
@@ -384,4 +383,3 @@ footer.page-footer .social-section ul li {
   font-weight: bold;
   font-size: 20px;
 }
-

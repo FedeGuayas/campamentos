@@ -23,7 +23,7 @@
                 @endif
                 @if (Auth::check())
                 <!-- Dropdown Trigger -->
-                <li><a class="dropdown-button" href="#!" data-activates="dropdownUser">Usuario<i class="material-icons right">arrow_drop_down</i><i class="fa fa-user left"></i> {{ Auth::user()->first_name }}</a></li>
+                <li><a class="dropdown-button" href="#!" data-activates="dropdownUser">{{ Auth::user()->first_name }}<i class="material-icons right">arrow_drop_down</i><i class="fa fa-user left"></i></a></li>
                 @endif
             </ul>
 

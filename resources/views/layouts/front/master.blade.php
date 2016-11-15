@@ -12,8 +12,9 @@
     {!! Html::style('css/font-awesome.min.css') !!}
     {!! Html::style('css/bootstrap.min.css') !!}
     {!! Html::style('css/bootstrap-social.css') !!}
-    {!! Html::style('landing/css/materialize.css') !!}
     {!! Html::style('landing/css/style.css') !!}
+    {!! Html::style('landing/css/materialize.css') !!}
+
     {!! Html::style('landing/css/animate.css') !!}
 
 </head>

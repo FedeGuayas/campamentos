@@ -86,7 +86,7 @@ class AuthController extends Controller
     }
 
 /**
- * Sobrescribiendo metodo de la clase
+ * Sobrescribiendo metodo de la clase, metodo que guarda en la bd el registro de usaurios
  * \vendor\laravel\framework\src\Illuminate\Foundation\Auth\RegistersUsers.php
  * para la activacion de la cuenta por email
 */
