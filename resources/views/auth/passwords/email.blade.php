@@ -1,5 +1,5 @@
 @extends('layouts.front.master-plane')
-
+@section('title','Recuperar Clave')
 @section('content')
     <br><br><br>
 <div class="container">
@@ -15,8 +15,8 @@
                     @endif
                     {!! Form::open(['url'=>'/password/email','method'=>'POST','role'=>'form']) !!}
                         <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
-                            <div class="input-field col m10 s12 offset-l1">
-                                <i class="material-icons prefix">mail</i>
+                            <div class="input-field col m10 s12 white-text offset-l1">
+                                <i class="material-icons white-text prefix">mail</i>
                                 {!! Form::email('email',null,['class'=>'validate', 'id'=>'email', 'value'=>"{{ old('email')}}"]) !!}
                                 {!! Form::label('email','Correo:') !!}
                                 @if ($errors->has('email'))

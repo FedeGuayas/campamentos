@@ -1,5 +1,6 @@
 @extends('layouts.front.master')
 
+@section('title','Campamentos Deportivos')
 @section('content')
 
     {{--Banner imagen Parallax--}}

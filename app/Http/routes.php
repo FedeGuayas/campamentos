@@ -126,3 +126,8 @@ Route::get('/shopping-card',[
     'as'=>'product.shoppingCart'
 ]);
 
+//*****SELECT DINAMICOS****//
+
+//obtener el id de las personas por area para select dinamico
+Route::get('/escenarios/{id}','ProgramsController@getEscenarios');
+

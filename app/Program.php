@@ -48,5 +48,5 @@ class Program extends Model
     {
         return $this->hasMany('App\Calendar');
     }
-
+    
 }

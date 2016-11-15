@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Escenario;
 use App\Modulo;
 use Illuminate\Http\Request;
 use Session;
@@ -116,4 +117,6 @@ class ModulosController extends Controller
         $modulo->update();
         return back();
     }
+       
+    
 }

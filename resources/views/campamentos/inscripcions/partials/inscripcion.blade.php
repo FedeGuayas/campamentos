@@ -24,7 +24,7 @@
             </div>
             <div class="col l3 m4 s6 offset-l2 ">
                 <i class="fa fa-calendar-check-o" aria-hidden="true"></i>
-                {!! Form::select('modulo_id', ['modul1' => 'Enero', 'mod2' => 'Febrero'],null, ['id'=>'modulo_id']) !!}
+                {!! Form::select('modulo_id', $modulos,null, ['placeholder'=>'Seleccione Modulo','id'=>'modulo_id']) !!}
                 {!! Form::label('modulo_id','Modulo:') !!}
             </div>
         </div>
@@ -42,7 +42,7 @@
             <div class="col l6">
                 <div class="input-field">
                     {{--{!! Form::select('escenario_id', '$escenarios',null, ['id'=>'escenario_id']) !!}--}}
-                    {!! Form::select('escenario_id', ['Esc' => 'Escenarios'],null, ['id'=>'escenario_id']) !!}
+                    {!! Form::select('escenario_id', ['placeholder'=>'Seleccione escenario'],null, ['id'=>'escenario_id']) !!}
                     {!! Form::label('escenario_id', 'Escenarios:*') !!}
                 </div>
             </div>
@@ -103,7 +103,8 @@
     <div class="card-action">
         <div class="row">
             <div class="col l6 offset-l6">
-                <a href="{{route('product.addToCart',['id'=>$product->id])}}">
+{{--                <a href="{{route('product.addToCart',['id'=>$product->id])}}">--}}
+                <a href="#!">
                     {!! Form::button('<i class="fa fa-plus"></i>', ['class'=>'btn waves-effect waves-light']) !!}
                 </a>
 

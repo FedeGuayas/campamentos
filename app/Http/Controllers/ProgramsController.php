@@ -159,4 +159,22 @@ class ProgramsController extends Controller
         return back();
     }
 
+
+    //obtener todos los escenarios activos por modulo y devolver un json para select dinamico
+    public function getEscenarios(Request $request,$id){
+        if ($request->ajax()){
+            $escenarios_coll=Program::
+                join('escenarios as e','e.id','=','p.escenario_id','programs as p')
+                ->join('modulos as m','m.id','=','p.modulo_id')
+                ->select('e.escenario')
+                ->where('modulo_id',$id)
+                ->where('e.activated',true)->get();
+            dd($escenarios_coll);
+
+//            $categoria = ['' => 'Seleccione la categoría'] + Categoria::lists('categoria', 'id')->all();
+            $escenarios = $escenarios_coll::lists('e.escenario', 'id')->all();
+            return response()->json($escenarios);
+        }
+    }
+
 }

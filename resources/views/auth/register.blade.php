@@ -1,8 +1,7 @@
 @extends('layouts.front.master-plane')
-
+@section('title','Registrarse')
 @section('content')
     <br><br><br>
-
 <div class="container">
     <div class="row">
         <div class="col m8 s12 offset-l1">

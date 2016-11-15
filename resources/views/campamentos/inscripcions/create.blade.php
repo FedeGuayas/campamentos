@@ -33,3 +33,10 @@
     </div><!--/.row-->
 
 @endsection
+
+@section('scripts')
+
+    {{--Script para select dinamico condicional dropdown --}}
+    <script src="{{ asset("js/dropdown.js") }}" type="text/javascript"></script>
+
+@endsection

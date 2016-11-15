@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Modulo;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -25,8 +26,9 @@ class InscripcionsController extends Controller
      */
     public function create()
     {
-       
-        return view('campamentos.inscripcions.create');
+        $modulos_coll = Modulo::where('activated',true);
+        $modulos = $modulos_coll->pluck('modulo', 'id');
+        return view('campamentos.inscripcions.create',compact('modulos'));
     }
 
     /**
