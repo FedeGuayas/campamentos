@@ -103,7 +103,10 @@
     <div class="card-action">
         <div class="row">
             <div class="col l6 offset-l6">
-                {!! Form::button('<i class="fa fa-plus"></i>', ['class'=>'btn waves-effect waves-light']) !!}
+                <a href="{{route('product.addToCart',['id'=>$product->id])}}">
+                    {!! Form::button('<i class="fa fa-plus"></i>', ['class'=>'btn waves-effect waves-light']) !!}
+                </a>
+
                 {!! Form::button('<i class="fa fa-close"></i>',['class'=>'btn waves-effect waves-light red darken-1','type' => 'reset']) !!}
                 <a href="#!">
                     {!! Form::button('<i class="fa fa-money" aria-hidden="true"></i>',['class'=>'btn btn-large pull-right waves-effect waves-light darken-1','type' => 'submit']) !!}

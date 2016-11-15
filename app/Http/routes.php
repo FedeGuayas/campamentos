@@ -45,8 +45,6 @@ Route::group(['middleware' => 'auth', 'prefix' => 'admin'], function () {
     Route::get('representantes/search/{search}',['as' => 'admin.representantes.search', 'uses'=>'RepresentantesController@search']);
     Route::get('representantes/listSearch/{d?}',['as' => 'admin.representantes.listSearch', 'uses'=>'RepresentantesController@listSearch']);
 
-
-
     //adicionar roles a los usuarios
     Route::get('user/{id}/roles', ['as' => 'admin.users.roles','uses'=>'UsersController@roles' ]);
     Route::POST('user/setroles', ['as' => 'admin.users.setroles','uses'=>'UsersController@setRoles' ]);
@@ -62,8 +60,6 @@ Route::group(['middleware' => 'auth', 'prefix' => 'admin'], function () {
 
     //perfil de usuario
     Route::get('user/profile',['as' => 'admin.user.profile', 'uses'=>'UsersController@showProfile']);
-
-
 
     Route::resource('users', 'UsersController');
     Route::resource('roles', 'RolesController');
@@ -109,3 +105,24 @@ Route::group(['middleware' => 'auth', 'prefix' => 'admin'], function () {
     Route::get('programs/{program}/disable',['as' => 'admin.programs.disable', 'uses'=>'ProgramsController@disable']);
 
 });
+
+//********** PRODUCTOS ****//
+
+//agregar al carrito
+Route::get('/add-to-card/{id}',[
+    'uses'=>'CalendarsController@getAddToCart',
+    'as'=>'product.addToCart'
+]);
+
+//eliminar uno del carrito
+Route::get('/reduce/{id}',[
+    'uses'=>'CalendarsController@getReduceByOne',
+    'as'=>'product.reduceByOne'
+]);
+
+//obtener el carrito
+Route::get('/shopping-card',[
+    'uses'=>'CalendarsController@getCart',
+    'as'=>'product.shoppingCart'
+]);
+

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Calendar;
+use App\Cart;
 use App\Dia;
 use App\Disciplina;
 use App\Escenario;
@@ -147,4 +148,108 @@ class CalendarsController extends Controller
     {
         //
     }
+    
+    
+    /*****PRODUCTO*****/
+
+    /**
+     * Adicionar Productos al carrito al dar en el boton de +
+     *
+     * @param Request $request
+     * @param $id
+     * @return mixed
+     */
+
+    public function getAddToCart(Request $request,$id){
+
+        $product=Calendar::findOrFail($id);
+
+        //si hay un cart almacenado en la session lo tomo, sino le paso nulo
+        $oldCart=Session::has('cart') ? Session::get('cart') : null;
+
+        //creo una instancia del carrito
+        $cart=new Cart($oldCart);
+        $cart->add($product,$product->id);//Agrego este producto(Programa+Calendario) al carrito
+
+        //pongo el carrito en la session
+        $request->session()->put('cart',$cart);
+//        dd($request->session()->get('cart'));
+        return redirect()->route('admin.inscripcions.create ');
+    }
+
+
+    /**
+     * Quitar 1 solo Productos del Item en el carrito, uno a uno
+     * @param $id
+     * @return mixed
+     */
+    public function getReduceByOne($id){
+        $oldCart=Session::has('cart') ? Session::get('cart') : null;
+        $cart=new Cart($oldCart);
+        $cart->reduceByOne($id);
+
+        if (count($cart->items)>0){
+            Session::put('cart',$cart);
+        }else{
+            Session::forget('cart');
+        }
+
+        return redirect()->route('product.shoppingCart');//product.shoppingCart Vista detallada del carrito
+    }
+
+
+    /**
+     * Eliminar el item completo, Ejj tengo 3 inscripciones de gimnasi en el EM las elimina las 3
+     *
+     * @param $id
+     * @return mixed
+     */
+
+    public function getRemoveItem($id){
+        $oldCart=Session::has('cart') ? Session::get('cart') : null;
+        $cart=new Cart($oldCart);
+        $cart->removeItem($id);
+
+        if (count($cart->items)>0){
+            Session::put('cart',$cart);
+        }else{
+            Session::forget('cart');
+        }
+        return redirect()->route('product.shoppingCart');
+    }
+
+    /**
+     * El carrito en detalle
+     *
+     * @param Request $request
+     * @return mixed
+     */
+    public function getCart(Request $request)
+    {
+        if (!Session::has('cart')){
+            return view('shop.shopping-cart');
+        }
+        $oldCart=Session::get('cart');
+        $cart=new Cart($oldCart);
+        return view('shop.shopping-cart',['products'=>$cart->items,'totalPrice'=>$cart->totalPrice]);
+    }
+
+    /**
+     * Obtengo la vista para la facturacion
+     *
+     * @return mixed
+     *
+     */
+    public function getCheckout()
+    {
+        if (!Session::has('cart')){
+            return view('shop.shopping-cart');
+        }
+        $oldCart=Session::get('cart');
+        $cart=new Cart($oldCart);
+        $total=$cart->totalPrice;
+        return view('shop.checkout',['total'=>$total]);
+    }
+
+
 }

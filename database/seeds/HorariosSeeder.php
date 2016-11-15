@@ -1,0 +1,105 @@
+<?php
+
+use Illuminate\Database\Seeder;
+
+class HorariosSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
+    public function run()
+    {
+        DB::table('horarios')->insert([
+            'start_time'=>'16:00:00',
+            'end_time'=>'17:20:00',
+            'activated'=>'1',
+        ]);
+        DB::table('horarios')->insert([
+            'start_time'=>'16:00:00',
+            'end_time'=>'17:00:00',
+            'activated'=>'1',
+        ]);
+        DB::table('horarios')->insert([
+            'start_time'=>'09:00:00',
+            'end_time'=>'10:30:00',
+            'activated'=>'1',
+        ]);
+        DB::table('horarios')->insert([
+            'start_time'=>'15:00:00',
+            'end_time'=>'16:00:00',
+            'activated'=>'1',
+        ]);
+        DB::table('horarios')->insert([
+            'start_time'=>'15:30:00',
+            'end_time'=>'17:00:00',
+            'activated'=>'1',
+        ]);
+        DB::table('horarios')->insert([
+            'start_time'=>'17:00:00',
+            'end_time'=>'19:00:00',
+            'activated'=>'1',
+        ]);
+        DB::table('horarios')->insert([
+            'start_time'=>'09:00:00',
+            'end_time'=>'10:30:00',
+            'activated'=>'1',
+        ]);
+        DB::table('horarios')->insert([
+            'start_time'=>'15:00:00',
+            'end_time'=>'16:30:00',
+            'activated'=>'1',
+        ]);
+        DB::table('horarios')->insert([
+            'start_time'=>'16:30:00',
+            'end_time'=>'18:00:00',
+            'activated'=>'1',
+        ]);
+        DB::table('horarios')->insert([
+            'start_time'=>'18:00:00',
+            'end_time'=>'19:30:00',
+            'activated'=>'1',
+        ]);
+        DB::table('horarios')->insert([
+            'start_time'=>'13:00:00',
+            'end_time'=>'14:30:00',
+            'activated'=>'1',
+        ]);
+        DB::table('horarios')->insert([
+            'start_time'=>'09:00:00',
+            'end_time'=>'10:00:00',
+            'activated'=>'1',
+        ]);
+        DB::table('horarios')->insert([
+            'start_time'=>'17:00:00',
+            'end_time'=>'18:00:00',
+            'activated'=>'1',
+        ]);
+        DB::table('horarios')->insert([
+            'start_time'=>'18:00:00',
+            'end_time'=>'19:00:00',
+            'activated'=>'1',
+        ]);
+        DB::table('horarios')->insert([
+            'start_time'=>'15:00:00',
+            'end_time'=>'15:50:00',
+            'activated'=>'1',
+        ]);
+        DB::table('horarios')->insert([
+            'start_time'=>'16:00:00',
+            'end_time'=>'16:50:00',
+            'activated'=>'1',
+        ]);
+        DB::table('horarios')->insert([
+            'start_time'=>'17:00:00',
+            'end_time'=>'17:50:00',
+            'activated'=>'1',
+        ]);
+        DB::table('horarios')->insert([
+            'start_time'=>'18:00:00',
+            'end_time'=>'18:50:00',
+            'activated'=>'1',
+        ]);
+    }
+}
