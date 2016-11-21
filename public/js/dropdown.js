@@ -5,7 +5,8 @@
 //V1 OK
 
 $("#modulo_id").change(function(event){
-   $.get("/escenarios/"+event.target.value+"",function(response,state){
+    alert('ok');
+   $.get("escenarios/"+event.target.value+"",function(response,state){
        // console.log(response);
        $("#escenario_id").empty();
        for (i=0; i<response.length; i++){
@@ -13,7 +14,6 @@ $("#modulo_id").change(function(event){
        }
    });
 });
-
 
 
 

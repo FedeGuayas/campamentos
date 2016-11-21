@@ -40,6 +40,11 @@ Route::group(['middleware' => 'auth', 'prefix' => 'admin'], function () {
         return view('layouts.admin.index');
     }]);
 
+    //*****SELECT DINAMICOS****//
+
+//obtener el id de las personas por area para select dinamico
+    Route::get('inscripcions/escenarios/{id}','ProgramsController@getEscenarios');
+
     //Buscar represenante
     Route::POST('representantes/search',['as' => 'admin.representantes.beforeSearch', 'uses'=>'RepresentantesController@beforeSearch']);
     Route::get('representantes/search/{search}',['as' => 'admin.representantes.search', 'uses'=>'RepresentantesController@search']);
@@ -126,8 +131,5 @@ Route::get('/shopping-card',[
     'as'=>'product.shoppingCart'
 ]);
 
-//*****SELECT DINAMICOS****//
 
-//obtener el id de las personas por area para select dinamico
-Route::get('/escenarios/{id}','ProgramsController@getEscenarios');
 

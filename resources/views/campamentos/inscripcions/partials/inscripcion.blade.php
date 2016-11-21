@@ -42,7 +42,7 @@
             <div class="col l6">
                 <div class="input-field">
                     {{--{!! Form::select('escenario_id', '$escenarios',null, ['id'=>'escenario_id']) !!}--}}
-                    {!! Form::select('escenario_id', ['placeholder'=>'Seleccione escenario'],null, ['id'=>'escenario_id']) !!}
+                    {!! Form::select('escenario_id',['placeholder'=>'Seleccione Modulo'],null, ['id'=>'escenario_id']) !!}
                     {!! Form::label('escenario_id', 'Escenarios:*') !!}
                 </div>
             </div>

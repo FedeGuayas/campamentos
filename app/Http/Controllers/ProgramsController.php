@@ -160,19 +160,40 @@ class ProgramsController extends Controller
     }
 
 
-    //obtener todos los escenarios activos por modulo y devolver un json para select dinamico
+    //obtener todos los escenarios activos por modulo y devolver un json para select dinamico, ID->modulo
     public function getEscenarios(Request $request,$id){
-        if ($request->ajax()){
-            $escenarios_coll=Program::
-                join('escenarios as e','e.id','=','p.escenario_id','programs as p')
-                ->join('modulos as m','m.id','=','p.modulo_id')
-                ->select('e.escenario')
-                ->where('modulo_id',$id)
-                ->where('e.activated',true)->get();
-            dd($escenarios_coll);
 
+        if ($request->ajax()){
+
+//            $escenario=Escenario::where('activated',true);
+//            $program=Program::where('modulo_id',$id);
+
+
+//            $escenarios_coll=Program::
+//                join('escenarios as e','e.id','=','p.escenario_id','as p')
+//                ->join('modulos as m','m.id','=','p.modulo_id')
+//                ->join('disciplinas as d','d.id','=','p.disciplina_id')
+//                ->select('e.escenario as escenario','p.id as pID','e.id as eID','d.id as dID','m.id as mID','d.disciplina','m.modulo',
+//                    'p.modulo_id','p.escenario_id','p.disciplina_id')
+//                ->where('p.modulo_id',$id)
+//                ->where('p.escenario_id','e.id')
+//                ->where('p.disciplina_id','d.id')
+//                ->where('e.activated',true)->get();
+
+
+                $escenarios_coll=Escenario::
+                join('escenarios as e','e.id','=','p.escenario_id','as p')
+                    ->join('modulos as m','m.id','=','p.modulo_id')
+                    ->join('disciplinas as d','d.id','=','p.disciplina_id')
+//                    ->select('e.escenario as escenario','p.id as pID','e.id as eID','d.id as dID','m.id as mID','d.disciplina','m.modulo',
+//                    'p.modulo_id','p.escenario_id','p.disciplina_id')
+                    ->where('p.modulo_id',$id)
+                    ->where('e.activated',true)->groupBy('dID');
+            dd($escenarios_coll);
 //            $categoria = ['' => 'Seleccione la categoría'] + Categoria::lists('categoria', 'id')->all();
-            $escenarios = $escenarios_coll::lists('e.escenario', 'id')->all();
+            $escenarios = $escenarios_coll->pluck('escenario', 'pID');
+
+
             return response()->json($escenarios);
         }
     }
