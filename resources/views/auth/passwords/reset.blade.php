@@ -15,7 +15,7 @@
                         <div class="row">
                             <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
                                 <div class="input-field col m8 s12 offset-l1">
-                                    <i class="material-icons prefix blue-text">mail</i>
+                                    <i class="material-icons prefix">mail</i>
                                     {{--<input id="email" type="email" class="form-control" name="email" value="{{ $email or old('email') }}">--}}
                                     {!! Form::email('email',$email,['class'=>'validate','id'=>'email','value'=>"{{ old('email')}}"]) !!}
                                     {!! Form::label('email','Correo:') !!}
