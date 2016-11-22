@@ -42,13 +42,13 @@
             <div class="col l6">
                 <div class="input-field">
                     {{--{!! Form::select('escenario_id', '$escenarios',null, ['id'=>'escenario_id']) !!}--}}
-                    {!! Form::select('escenario_id',['placeholder'=>'Seleccione Modulo'],null, ['id'=>'escenario_id']) !!}
+                    {!! Form::select('escenario_id',['placeholder'=>'Seleccione escenario'],null,['id'=>'escenario_id']) !!}
                     {!! Form::label('escenario_id', 'Escenarios:*') !!}
                 </div>
             </div>
             <div class="col l6">
                 <div class="input-field">
-                    {!! Form::select('disciplina_id', ['Disc' => 'Disc'],null, ['id'=>'disciplina_id']) !!}
+                    {!! Form::select('disciplina_id', ['placeholder'=>'Seleccione disciplina'],null, ['id'=>'disciplina_id']) !!}
                     {!! Form::label('disciplina_id', 'Disciplinas:*') !!}
                 </div>
             </div>
@@ -90,13 +90,13 @@
                     {!! Form::label('fpago_id', 'Forma de pago:*') !!}
                 </div>
             </div>
-            <div class="col l2">
-                <div class="input-field">
-                    <i class="fa fa-usd prefix" aria-hidden="true"></i>
-                    {!! Form::label('anticipo','Anticipo:') !!}
-                    {!! Form::number('anticipo',null,['step' => '0.01','min' => '1','class'=>'validate','placeholder'=>'0.00']) !!}
-                </div>
-            </div>
+            {{--<div class="col l2">--}}
+                {{--<div class="input-field">--}}
+                    {{--<i class="fa fa-usd prefix" aria-hidden="true"></i>--}}
+                    {{--{!! Form::label('anticipo','Anticipo:') !!}--}}
+                    {{--{!! Form::number('anticipo',null,['step' => '0.01','min' => '1','class'=>'validate','placeholder'=>'0.00']) !!}--}}
+                {{--</div>--}}
+            {{--</div>--}}
         </div>
 
     </div><!--/.card content-->

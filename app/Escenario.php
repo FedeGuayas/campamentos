@@ -40,4 +40,5 @@ class Escenario extends Model
     {
         return $this->hasMany('App\Program');
     }
+    
 }

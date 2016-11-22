@@ -36,6 +36,13 @@
 
 @section('scripts')
 
+    <script>
+
+       $("#modulo_id").material_select();
+
+
+    </script>
+
     {{--Script para select dinamico condicional dropdown --}}
     <script src="{{ asset("js/dropdown.js") }}" type="text/javascript"></script>
 

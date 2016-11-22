@@ -42,8 +42,10 @@ Route::group(['middleware' => 'auth', 'prefix' => 'admin'], function () {
 
     //*****SELECT DINAMICOS****//
 
-//obtener el id de las personas por area para select dinamico
+    //obtener los escenarios para un modulo  para select dinamico
     Route::get('inscripcions/escenarios/{id}','ProgramsController@getEscenarios');
+    //obtener las disciplina para un escenario  para select dinamico
+    Route::get('inscripcions/disciplinas/{id}','ProgramsController@getDisciplinas');
 
     //Buscar represenante
     Route::POST('representantes/search',['as' => 'admin.representantes.beforeSearch', 'uses'=>'RepresentantesController@beforeSearch']);

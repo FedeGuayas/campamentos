@@ -159,43 +159,61 @@ class ProgramsController extends Controller
         return back();
     }
 
+    /**
+     *
+     * Obtener todos los escenarios activos por modulo para select dinamico,
+     * @param Request $request
+     * @param $id
+     * @return mixed
+     */
 
-    //obtener todos los escenarios activos por modulo y devolver un json para select dinamico, ID->modulo
     public function getEscenarios(Request $request,$id){
 
         if ($request->ajax()){
 
-//            $escenario=Escenario::where('activated',true);
-//            $program=Program::where('modulo_id',$id);
-
-
-//            $escenarios_coll=Program::
-//                join('escenarios as e','e.id','=','p.escenario_id','as p')
-//                ->join('modulos as m','m.id','=','p.modulo_id')
-//                ->join('disciplinas as d','d.id','=','p.disciplina_id')
-//                ->select('e.escenario as escenario','p.id as pID','e.id as eID','d.id as dID','m.id as mID','d.disciplina','m.modulo',
-//                    'p.modulo_id','p.escenario_id','p.disciplina_id')
-//                ->where('p.modulo_id',$id)
-//                ->where('p.escenario_id','e.id')
-//                ->where('p.disciplina_id','d.id')
-//                ->where('e.activated',true)->get();
-
-
-                $escenarios_coll=Escenario::
-                join('escenarios as e','e.id','=','p.escenario_id','as p')
+                $escenarios=Program::
+                    join('escenarios as e','e.id','=','p.escenario_id','as p')
                     ->join('modulos as m','m.id','=','p.modulo_id')
-                    ->join('disciplinas as d','d.id','=','p.disciplina_id')
-//                    ->select('e.escenario as escenario','p.id as pID','e.id as eID','d.id as dID','m.id as mID','d.disciplina','m.modulo',
-//                    'p.modulo_id','p.escenario_id','p.disciplina_id')
+                    ->select('e.escenario as escenario','p.id as pID','e.id as eID','m.id as mID',
+                    'p.modulo_id','p.escenario_id')
                     ->where('p.modulo_id',$id)
-                    ->where('e.activated',true)->groupBy('dID');
-            dd($escenarios_coll);
+                    ->where('e.activated',true)->groupBy('eID')->get()->toArray();
+
 //            $categoria = ['' => 'Seleccione la categoría'] + Categoria::lists('categoria', 'id')->all();
-            $escenarios = $escenarios_coll->pluck('escenario', 'pID');
+//            $escenar = $escenarios->pluck('escenario', 'escenario_id');
 
-
-            return response()->json($escenarios);
+            return response($escenarios);
         }
     }
+
+    /**
+     * Obtener las disciplina para un escenario  para select dinamico
+     *
+     * @param Request $request
+     * @param $id
+     * @return mixed
+     */
+
+    public function getDisciplinas(Request $request,$id){
+
+        if ($request->ajax()){
+
+            $disciplinas=Program::
+                join('escenarios as e','e.id','=','p.escenario_id','as p')
+                ->join('modulos as m','m.id','=','p.modulo_id')
+                ->join('disciplinas as d','d.id','=','p.disciplina_id')
+                ->select('e.escenario as escenario','p.id as pID','e.id as eID','m.id as mID','d.id as dID',
+                    'p.modulo_id','p.escenario_id','d.disciplina as disciplina','d.activated')
+                ->where('p.escenario_id',$id)
+                ->where('d.activated',true)->groupBy('dID')->get()->toArray();
+
+
+//            $categoria = ['' => 'Seleccione la categoría'] + Categoria::lists('categoria', 'id')->all();
+//            $escenar = $escenarios->pluck('escenario', 'escenario_id');
+
+            return response($disciplinas);
+        }
+    }
+
 
 }

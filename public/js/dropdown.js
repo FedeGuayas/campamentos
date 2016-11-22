@@ -4,16 +4,38 @@
 
 //V1 OK
 
-$("#modulo_id").change(function(event){
-    alert('ok');
-   $.get("escenarios/"+event.target.value+"",function(response,state){
-       // console.log(response);
-       $("#escenario_id").empty();
-       for (i=0; i<response.length; i++){
-           $("#escenario_id").append("<option value='"+response[i].id+"'>"+response[i].escenario+"</option>");
-       }
-   });
+
+//cargar escenarios al selecciona el modulo
+$("#modulo_id").change(function (event) {
+    var escenario=$("#escenario_id");
+    $.get("escenarios/" + event.target.value + "", function (response, state) {
+        // console.log(response);
+        escenario.empty();
+        for (i = 0; i < response.length; i++) {
+            escenario.append('<option value="' + response[i].eID + '">' + response[i].escenario + '</option>');
+        }
+        escenario.material_select();
+    });
 });
+
+
+//cargar disciplinas al seleccionar el escenario
+$("#escenario_id").change(function (event) {
+    var disciplina=$("#disciplina_id");
+    $.get("disciplinas/" + event.target.value + "", function (response, state) {
+        // console.log(response);
+        disciplina.empty();
+        for (i = 0; i < response.length; i++) {
+            disciplina.append('<option value="' + response[i].dID + '">' + response[i].disciplina + '</option>');
+        }
+        disciplina.material_select();
+    });
+});
+
+
+
+
+
 
 
 
