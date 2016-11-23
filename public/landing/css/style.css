@@ -147,7 +147,7 @@ footer.page-footer .social-section ul li {
 
 /* Boton up */
 a.back-to-top {
-	/*display: none;*/
+	display: none;
 	width: 50px;
 	height: 50px;
 	text-indent: -9999px;
@@ -155,16 +155,15 @@ a.back-to-top {
 	z-index: 999;
 	right: 20px;
 	bottom: 20px;
-	background: teal url("../../img/camp/up-arrow.png") no-repeat center 43%;
+	background: #26a69a url("../../img/camp/up-arrow.png") no-repeat center 43%;
 	-webkit-border-radius: 30px;
 	-moz-border-radius: 30px;
 	border-radius: 30px;
 }
 a:hover.back-to-top {
-	background-color: #80cbc4 ;
+	background-color: #004d40   ;
+  /*#80cbc4*/
 }
-
-
 
 
 /* Responsive Headings */
@@ -404,6 +403,8 @@ a:hover.back-to-top {
   font-weight: bold;
   font-size: 20px;
 }
+
+
 
 
 

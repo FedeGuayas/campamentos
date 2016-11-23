@@ -40,6 +40,20 @@
 
        $("#modulo_id").material_select();
 
+       $(document).ready(function () {
+           // para ventana modal de busqueda
+           $('.modal-representante').leanModal({
+               dismissible: false, // Modal can be dismissed by clicking outside of the modal
+               opacity: .5, // Opacity of modal background
+               in_duration: 300, // Transition in duration
+               out_duration: 200, // Transition out duration
+               starting_top: '40%', // Starting top style attribute
+               ending_top: '2%', // Ending top style attribute
+
+            });
+       });
+
+
 
     </script>
 

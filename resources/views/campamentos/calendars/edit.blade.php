@@ -46,15 +46,18 @@
                             {!! Form::label('horario_id', 'Horario:') !!}
                         </div>
 
-                        <div class="input-field col l6 m6 s12 ">
+                        <div class="input-field col l4 m4 s12 ">
                             <i class="fa fa-usd prefix" aria-hidden="true"></i>
                             {!! Form::label('mensualidad','Mensualidad:') !!}
                             {!! Form::number('mensualidad',null,['step' => '0.01','min' => '1','class'=>'validate','placeholder'=>'0.00','required']) !!}
                         </div>
-                        <div class="input-field  col l6 m6 s12">
+                        <div class="input-field  col l4 m4 s12">
                             {!! Form::label('cupos','Cupos:') !!}
                             {!! Form::number('cupos',null,['class'=>'validate' ,'placeholder'=>'0']) !!}
-
+                        </div>
+                        <div class="input-field  col l4 m4 s12">
+                            {!! Form::text('nivel',null,['class'=>'validate']) !!}
+                            {!! Form::label('nivel','Nivel:') !!}
                         </div>
 
                     </div>

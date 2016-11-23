@@ -148,7 +148,68 @@ class CalendarsController extends Controller
     {
         //
     }
-    
+
+    /**
+     *  Obtener los dias para un programa  para select dinamico
+     * @param Request $request
+     * @param $id
+     * @return mixed
+     */
+    public function getDias(Request $request){
+        if ($request->ajax()){
+
+            $escenario_id=$request->get('escenario');
+            $disciplina_id=$request->get('disciplina');
+            $modulo_id=$request->get('modulo');
+
+            $program=Program::where('escenario_id',$escenario_id)
+                ->where('disciplina_id',$disciplina_id)
+                ->where('modulo_id',$modulo_id)->first();
+
+            $dias=Calendar::
+                join('dias as d','d.id','=','c.dia_id','as c')
+                ->select('d.dia as dias','d.activated','c.id as cID','d.id as dID',
+                    'c.dia_id','c.horario_id','c.nivel','c.program_id')
+                ->where('program_id',$program->id)
+                ->where('d.activated',true)->get()->toArray();
+            return response($dias);
+        }
+    }
+
+    /**
+     * Obtener horarios para los dias
+     *
+     * @param Request $request
+     * @param $id
+     * @return mixed
+     */
+    public function getHorario(Request $request){
+        if ($request->ajax()){
+
+            $escenario_id=$request->get('escenario');
+            $disciplina_id=$request->get('disciplina');
+            $modulo_id=$request->get('modulo');
+            $dia_id=$request->get('dia_id');
+
+            $program=Program::where('escenario_id',$escenario_id)
+                ->where('disciplina_id',$disciplina_id)
+                ->where('modulo_id',$modulo_id)->first();
+            
+            $horario=Calendar::
+                join('horarios as h','h.id','=','c.horario_id','as c')
+                ->join('dias as d','d.id','=','c.dia_id')
+                ->select('h.start_time as start_time','h.end_time as end_time','h.activated','c.id as cID',
+                    'h.id as hID','c.dia_id','c.horario_id','c.nivel')
+                ->where('program_id',$program->id)
+                ->where('c.dia_id',$dia_id)
+                ->where('h.activated',true)->get()->toArray();
+
+            return response($horario);
+        }
+    }
+
+
+
     
     /*****PRODUCTO*****/
 

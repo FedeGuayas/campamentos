@@ -19,7 +19,7 @@
 
 </head>
 <body>
-<a href="#" class="back-to-top waves-effect waves-light btn btn-floating teal lighten-1 wow slideInUp">Subir</a>
+<a href="#" class="back-to-top waves-effect waves-light btn btn-floating wow slideInUp">Subir</a>
 <header>
     @include('layouts.front.nav')
 </header>

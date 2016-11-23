@@ -43,9 +43,13 @@ Route::group(['middleware' => 'auth', 'prefix' => 'admin'], function () {
     //*****SELECT DINAMICOS****//
 
     //obtener los escenarios para un modulo  para select dinamico
-    Route::get('inscripcions/escenarios/{id}','ProgramsController@getEscenarios');
+    Route::get('inscripcions/escenarios/{modulo_id}','ProgramsController@getEscenarios');
     //obtener las disciplina para un escenario  para select dinamico
-    Route::get('inscripcions/disciplinas/{id}','ProgramsController@getDisciplinas');
+    Route::get('inscripcions/disciplinas/{escenario_id}','ProgramsController@getDisciplinas');
+    //obtener los dias para un programa, data defien al programa(esc,disc,modulo)
+    Route::get('inscripcions/dias{data?}',['uses'=>'CalendarsController@getDias','as'=>'program.getDias']);
+    //obtener los horarios para el un dia
+    Route::get('inscripcions/horario/{data?}','CalendarsController@getHorario');
 
     //Buscar represenante
     Route::POST('representantes/search',['as' => 'admin.representantes.beforeSearch', 'uses'=>'RepresentantesController@beforeSearch']);

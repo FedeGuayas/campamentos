@@ -197,7 +197,6 @@ class ProgramsController extends Controller
     public function getDisciplinas(Request $request,$id){
 
         if ($request->ajax()){
-
             $disciplinas=Program::
                 join('escenarios as e','e.id','=','p.escenario_id','as p')
                 ->join('modulos as m','m.id','=','p.modulo_id')

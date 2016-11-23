@@ -14,14 +14,21 @@ main {
 
 /*!*ventana modal responsitive*!*/
 .modal {
-    max-height: 90%;
-    max-width:90%;
+    max-height: 90% !important ;
+    max-width:90% !important ;
     left:0;
     right:0;
     top:0;
     bottom:0;
     margin:auto;
+    overflow-y: hidden !important ;
 }
+
+/*.modal {*/
+    /*width: 75% !important ;*/
+    /*max-height: 100% !important ;*/
+    /*overflow-y: hidden !important ;*/
+/*}  !* increase the width, height and prevent vertical scroll! However, i don't recommend this, its better to turn on vertical scrolling. *!*/
 
 /*Para cambiar los colores en los input, especificar los prefijos */
 

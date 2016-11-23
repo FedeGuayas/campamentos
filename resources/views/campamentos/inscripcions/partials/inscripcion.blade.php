@@ -15,8 +15,9 @@
                             </a>
                         </li>
                         <li>
-                            <a href="#!" class="btn-floating  waves-effect waves-light darken-1 tooltipped" data-position="top" data-delay="50" data-tooltip="Crear"
+                            <a href="#modal-representante" type="button" class="btn-floating  waves-effect waves-light darken-1 tooltipped modal-representante" data-position="top" data-delay="50" data-tooltip="Crear"
                                style="transform: scaleY(0.4) scaleX(0.4) translateY(0px) translateX(40px); opacity: 0;"><i class="fa fa-plus"></i>
+{{--                                {!! Form::button('<i class="fa fa-plus" aria-hidden="true"></i>',['class'=>'btn waves-effect waves-light darken-1 modal-representante' ,'data-target'=>'modal-representante' ]) !!}--}}
                             </a>
                         </li>
                     </ul>
@@ -33,9 +34,11 @@
             <div class="col l6">
                 {!! Form::select('alumno_id', ['Al' => 'Alumno'],null, ['id'=>'alumno_id']) !!}
             </div>
-            <a href="#!" class="tooltipped" data-position="top" data-delay="50" data-tooltip="Crear">
-                {!! Form::button('<i class="fa fa-plus"></i>',['class'=>'btn-floating waves-effect waves-light darken-1']) !!}
-            </a>
+            <div class="pull-left" style="position: relative; display: inline-block;">
+                <a href="#!" class="tooltipped" data-position="top" data-delay="50" data-tooltip="Crear">
+                    {!! Form::button('<i class="fa fa-plus"></i>',['class'=>'btn-floating waves-effect waves-light darken-1']) !!}
+                </a>
+            </div>
         </div>
 
         <div class="row">
@@ -52,32 +55,41 @@
                     {!! Form::label('disciplina_id', 'Disciplinas:*') !!}
                 </div>
             </div>
+        </div>
 
-            <div class="col l6">
+        <div class="row">
+            <div class="input-field  col l3 ">
+                {!! Form::select('nivel',['placeholder'=>'Nivel'],null,['id'=>'nivel']) !!}
+                {!! Form::label('nivel','Nivel:') !!}
+            </div>
+            <div class="col l3">
                 <div class="input-field">
                     {!! Form::select('dia_id', ['Dia' => 'Diass'],null, ['id'=>'dia_id']) !!}
                     {!! Form::label('dia_id', 'Dias:*') !!}
                 </div>
             </div>
-            <div class="col l6">
+            <div class="col l3">
                 <div class="input-field">
                     {!! Form::select('horario_id', ['Hor' => 'Horas'],null, ['id'=>'horario_id']) !!}
                     {!! Form::label('horario_id', 'Horario:*') !!}
                 </div>
             </div>
+        </div>
 
-            <div class="col l2">
-                <div class="input-field">
-                    {!! Form::checkbox('desc_10',null,false,['id'=>'desc_10']) !!}
-                    {!! Form::label('desc_10','Desc 10%') !!}
-                </div>
-            </div>
-            <div class="col l2">
-                <div class="input-field">
-                    {!! Form::checkbox('desc_50',null,false,['id'=>'desc_50']) !!}
-                    {!! Form::label('desc_50','Desc 50%') !!}
-                </div>
-            </div>
+
+        <div class="row">
+            {{--<div class="col l2">--}}
+                {{--<div class="input-field">--}}
+                    {{--{!! Form::checkbox('desc_10',null,false,['id'=>'desc_10']) !!}--}}
+                    {{--{!! Form::label('desc_10','Desc 10%') !!}--}}
+                {{--</div>--}}
+            {{--</div>--}}
+            {{--<div class="col l2">--}}
+                {{--<div class="input-field">--}}
+                    {{--{!! Form::checkbox('desc_50',null,false,['id'=>'desc_50']) !!}--}}
+                    {{--{!! Form::label('desc_50','Desc 50%') !!}--}}
+                {{--</div>--}}
+            {{--</div>--}}
             <div class="col l2">
                 <div class="input-field">
                     {!! Form::checkbox('matricula',null,false,['id'=>'matricula']) !!}
@@ -91,13 +103,15 @@
                 </div>
             </div>
             {{--<div class="col l2">--}}
-                {{--<div class="input-field">--}}
-                    {{--<i class="fa fa-usd prefix" aria-hidden="true"></i>--}}
-                    {{--{!! Form::label('anticipo','Anticipo:') !!}--}}
-                    {{--{!! Form::number('anticipo',null,['step' => '0.01','min' => '1','class'=>'validate','placeholder'=>'0.00']) !!}--}}
-                {{--</div>--}}
+            {{--<div class="input-field">--}}
+            {{--<i class="fa fa-usd prefix" aria-hidden="true"></i>--}}
+            {{--{!! Form::label('anticipo','Anticipo:') !!}--}}
+            {{--{!! Form::number('anticipo',null,['step' => '0.01','min' => '1','class'=>'validate','placeholder'=>'0.00']) !!}--}}
             {{--</div>--}}
+            {{--</div>--}}
+
         </div>
+
 
     </div><!--/.card content-->
     <div class="card-action">
@@ -115,5 +129,6 @@
             </div>
         </div>
         {!! Form::close() !!}
+        @include('campamentos.inscripcions.partials.representante_create')
     </div>
 
