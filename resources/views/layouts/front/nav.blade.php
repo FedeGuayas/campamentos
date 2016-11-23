@@ -14,7 +14,7 @@
         <div class="nav-wrapper text-white container">
             <a id="logo-container" href="#" class="brand-logo"><img class="img-responsive" src="{{asset('../img/camp/fdg-footer.png')}}" alt="" style="max-height: 70px; width: auto;"></a>
             <ul class="right hide-on-med-and-down">
-                <li class="active"><a class="nav-link" href="/home">Home <span class="sr-only">(current)</span></a></li>
+                <li class="active"><a class="nav-link" href="/home">Inicio<span class="sr-only">(current)</span><i class="material-icons left">home</i></a></li>
                 <li><a href="#disciplinas">Disciplinas</a></li>
                 <li><a href="#beneficios">Beneficios</a></li>
                 <li><a href="#contacto">Contacto</a></li>

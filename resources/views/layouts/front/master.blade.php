@@ -19,7 +19,7 @@
 
 </head>
 <body>
-
+<a href="#" class="back-to-top waves-effect waves-light btn btn-floating teal lighten-1 wow slideInUp">Subir</a>
 <header>
     @include('layouts.front.nav')
 </header>
@@ -79,29 +79,41 @@
     $(".button-collapse").sideNav();
 
     function init_map() {
-
         var var_location = new google.maps.LatLng(-2.190098, -79.892341);
-
         var var_mapoptions = {
             center: var_location,
-
             zoom: 14
         };
-
         var var_marker = new google.maps.Marker({
             position: var_location,
             map: var_map,
             title: "FDGuayas"
         });
-
         var var_map = new google.maps.Map(document.getElementById("map-container"),
                 var_mapoptions);
-
         var_marker.setMap(var_map);
-
     }
-
     google.maps.event.addDomListener(window, 'load', init_map);
+
+
+
+    $(document).ready(function(){
+        var $backToTop = $(".back-to-top");
+        $backToTop.hide();
+
+        $(window).on('scroll', function() {
+            if ($(this).scrollTop() > 300) { /* back to top will appear after the user scrolls 100 pixels */
+                $backToTop.fadeIn();
+            } else {
+                $backToTop.fadeOut();
+            }
+        });
+
+        $backToTop.on('click', function(e) {
+            $("html, body").animate({scrollTop: 0}, 500);
+
+        });
+    })
 
 </script>
 
