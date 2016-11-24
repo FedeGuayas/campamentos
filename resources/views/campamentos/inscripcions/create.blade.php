@@ -74,7 +74,7 @@
                }
            });
 
-
+            //buscar representante
            $("#Buscar").on('click', function (event) {
                event.preventDefault();
                var datos = $("#search").val();
@@ -120,6 +120,39 @@
                        }
                    });
                }
+           });
+
+            function crear_representante_ajax(){
+                var route = "{{route('admin.representantes.store')}}";
+                var token = $("input[name=_token]").val();
+                $.ajax({
+                    url: route,
+                    type: "POST",
+                    headers: {'X-CSRF-TOKEN': token},
+                    contentType: 'application/x-www-form-urlencoded',
+                    data:$("#form_representante").serialize(),
+
+                    success: function (resp) {
+//                     $("#nombres,#apellidos,#tipo_doc,#num_doc,#genero,#email,#direccion,#phone,#telefono,#foto_ced,#foto").text('');
+                        $("#msj-succes").html(resp.message)
+                        $("#mensaje-success").fadeIn();
+                    },
+                    error: function (resp) {
+                        console.log(resp)
+//                        $("#msj-error").html(resp.responseJSON.nombre);
+
+                        $("#mensaje-error").fadeIn();
+
+//                   $("#search-result").empty().html("Error en la busqueda");
+                    }
+                });
+            }
+
+            //crear representante al dar click
+           $("#representante_create").on("click", function (event) {
+               event.preventDefault();
+               $("#msj-error").empty();
+               crear_representante_ajax();
            });
 
        });
