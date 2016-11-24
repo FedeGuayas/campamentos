@@ -5,7 +5,7 @@
 @section('content')
 
     <div class="row">
-        <div class="col l8 m12 s12">
+        <div class="col l10 m12 s12">
             <div class="card-panel">
                 <h5 class="header teal-text text-darken-2">Editar Alumno</h5>
                 <div class="card-content ">
@@ -32,39 +32,40 @@
                             {!! Form::text('apellidos',$alumno->persona->apellidos,['class'=>'validate','required']) !!}
                         </div>
 
-                        <div class="input-field col l6 m6 s12">
-                            {!! Form::select('tipo_doc', ['Cedula' => 'Cedula', 'Pasaporte' => 'Pasaporte', 'NoDoc' => 'NoDoc'],$alumno->persona->tipo_doc, ['id'=>'tipo_doc']) !!}
+                        <div class="input-field col l4 m4 s12">
+                            {!! Form::select('tipo_doc', ['Cedula' => 'Cedula', 'Pasaporte' => 'Pasaporte'],$alumno->persona->tipo_doc, ['id'=>'tipo_doc']) !!}
                             {!! Form::label('tipo_doc', 'Tipo doc:') !!}
                         </div>
-                        <div class="input-field col l6 m6 s12">
+                        <div class="input-field col l4 m4 s12">
                             {!! Form::label('num_doc','Número del documento:*') !!}
                             {!! Form::text('num_doc',$alumno->persona->num_doc,['class'=>'validate','required']) !!}
                         </div>
-
-                        <div class="input-field col l6 m6 s12">
+                        <div class="input-field col l4 m4 s12">
                             {!! Form::select('genero', ['Masculino' => 'Masculino', 'Femenino' => 'Femenino'],$alumno->persona->genero, ['id'=>'genero']) !!}
                             {!! Form::label('genero','Género:') !!}
                         </div>
-                        <div class="form-group col l6 m6 s12">
-                            {!! Form::label('fecha','Fecha de Nacimiento:',['class'=>'label-control']) !!}
-                            {{  Form::date('fecha_nac',$alumno->persona->fecha_nac,[ 'class'=>'validate','required']) }}
-                        </div>
 
-                        <div class="input-field col l2 m6 s12 offset-l6">
-                            @if($alumno->discapacitado=='SI')
-                                {!! Form::checkbox('discapacitado',null,true,['id'=>'discapacitado']) !!}
-                                {!! Form::label('discapacitado','Discapacitado') !!}
-                            @else
-                                {!! Form::checkbox('discapacitado',null,false,['id'=>'discapacitado']) !!}
-                                {!! Form::label('discapacitado','Discapacitado') !!}
-                            @endif
-                        </div>
-
-                        <div class="input-field  col l12 m6 s12">
+                        <div class="input-field  col l8 m8 s12">
                             <i class="fa fa-pencil prefix"></i>
                             {!! Form::textarea('direccion',$alumno->persona->direccion,['class'=>'materialize-textarea validate','id'=>'direccion','length'=>'150']) !!}
                             {!! Form::label('direccion','Dirección:') !!}
                         </div>
+                        <div class="form-group col l4 m4 s12">
+                            {!! Form::label('fecha','Fecha de Nacimiento:',['class'=>'label-control']) !!}
+                            {{  Form::date('fecha_nac',$alumno->persona->fecha_nac,[ 'class'=>'validate','required']) }}
+                        </div>
+
+                        {{--<div class="input-field col l2 m6 s12 offset-l6">--}}
+                            {{--@if($alumno->discapacitado=='SI')--}}
+                                {{--{!! Form::checkbox('discapacitado',null,true,['id'=>'discapacitado']) !!}--}}
+                                {{--{!! Form::label('discapacitado','Discapacitado') !!}--}}
+                            {{--@else--}}
+                                {{--{!! Form::checkbox('discapacitado',null,false,['id'=>'discapacitado']) !!}--}}
+                                {{--{!! Form::label('discapacitado','Discapacitado') !!}--}}
+                            {{--@endif--}}
+                        {{--</div>--}}
+
+
 
                         <div class="file-field input-field  col l6 m6 s12">
                             <div class="btn">

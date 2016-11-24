@@ -19,7 +19,7 @@
 
 
                             <div class="input-field col l4 m6 s12">
-                                {!! Form::select('tipo_doc', ['Cedula' => 'Cedula', 'Pasaporte' => 'Pasaporte', 'NoDoc' => 'NoDoc'],null, ['id'=>'tipo_doc']) !!}
+                                {!! Form::select('tipo_doc', ['Cedula' => 'Cedula', 'Pasaporte' => 'Pasaporte'],null, ['id'=>'tipo_doc']) !!}
                                 {!! Form::label('tipo_doc', 'Tipo doc:*') !!}
                             </div>
                             <div class="input-field col l4 m6 s12">
@@ -87,16 +87,20 @@
                         </div>
 
                     </div>
-                    {!! Form::button('Crear<i class="fa fa-play right"></i>', ['class'=>'btn waves-effect waves-light','type' => 'submit']) !!}
-                    {!! Form::button('Cancelar<i class="fa fa-close right"></i>',['class'=>'btn waves-effect waves-light red darken-1','type' => 'reset']) !!}
-                    {!! Form::close() !!}
+
+            <div class="">
+                {!! Form::button('Crear<i class="fa fa-play right"></i>', ['class'=>'btn waves-effect waves-light','type' => 'submit']) !!}
+                {!! Form::button('Cancelar<i class="fa fa-close right"></i>',['class'=>'btn waves-effect waves-light red darken-1','type' => 'reset']) !!}
+                {!! Form::close() !!}
+                {!! Form::button('Cerrar',['class'=>'modal-action modal-close waves-effect waves-ligh btn right']) !!}
+            </div>
+
 
                 </div><!--/.card content-->
+
             </div><!--/.card panel-->
 
-    <div class="modal-footer">
-        {!! Form::button('Cerrar',['class'=>'modal-action modal-close waves-effect waves-ligh btn']) !!}
-    </div>
+
 
 
 </div>

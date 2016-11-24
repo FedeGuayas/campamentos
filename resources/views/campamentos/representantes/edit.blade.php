@@ -5,7 +5,7 @@
 @section('content')
 
     <div class="row">
-        <div class="col l8 m12 s12">
+        <div class="col l10 m6 s12">
             <div class="card-panel">
                 <h5 class="header teal-text text-darken-2">Editar Representante</h5>
                 <div class="card-content ">
@@ -24,32 +24,32 @@
                             {!! Form::text('apellidos',$representante->persona->apellidos,['class'=>'validate','required']) !!}
                         </div>
 
-                        <div class="input-field col l6 m6 s12">
-                            {!! Form::select('tipo_doc', ['Cedula' => 'Cedula', 'Pasaporte' => 'Pasaporte', 'NoDoc' => 'NoDoc'],$representante->persona->tipo_doc, ['id'=>'tipo_doc']) !!}
+                        <div class="input-field col l4 m4 s12">
+                            {!! Form::select('tipo_doc', ['Cedula' => 'Cedula', 'Pasaporte' => 'Pasaporte'],$representante->persona->tipo_doc, ['id'=>'tipo_doc']) !!}
                             {!! Form::label('tipo_doc', 'Tipo doc:*') !!}
                         </div>
-                        <div class="input-field col l6 m6 s12">
+                        <div class="input-field col l4 m4 s12">
                             {!! Form::label('num_doc','Número del documento:*') !!}
                             {!! Form::text('num_doc',$representante->persona->num_doc,['class'=>'validate','required']) !!}
                         </div>
 
-                        <div class="input-field col l6 m6 s12">
+                        <div class="input-field col l4 m4 s12">
                             {!! Form::select('genero', ['Masculino' => 'Masculino', 'Femenino' => 'Femenino'],$representante->persona->genero, ['id'=>'genero']) !!}
                             {!! Form::label('genero','Género:') !!}
                         </div>
-                        <div class="form-group col l6 m6 s12">
-                            {!! Form::label('fecha','Fecha de Nacimiento:',['class'=>'label-control']) !!}
-                            {{  Form::date('fecha_nac',$representante->persona->fecha_nac,[ 'class'=>'validate','required']) }}
-                        </div>
+                        {{--<div class="form-group col l6 m6 s12">--}}
+                            {{--{!! Form::label('fecha','Fecha de Nacimiento:',['class'=>'label-control']) !!}--}}
+                            {{--{{  Form::date('fecha_nac',$representante->persona->fecha_nac,[ 'class'=>'validate','required']) }}--}}
+                        {{--</div>--}}
 
-                        <div class="input-field col l12 m6 s12">
+                        <div class="input-field col l6 m6 s12">
                             <i class="fa fa-envelope prefix"></i>
                             {!! Form::label('email','Correo:*') !!}
                             {!! Form::email('email',$representante->persona->email,['class'=>'validate']) !!}
 
                         </div>
 
-                        <div class="input-field  col l12 m6 s12">
+                        <div class="input-field  col l6 m6 s12">
                             <i class="fa fa-pencil prefix"></i>
                             {!! Form::textarea('direccion',$representante->persona->direccion,['class'=>'materialize-textarea validate','id'=>'direccion','length'=>'255']) !!}
                             {!! Form::label('direccion','Dirección:') !!}

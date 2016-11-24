@@ -33,11 +33,14 @@ class AlumnosController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
+        $data =   $request->all();
+        $representante_id=key($data);
+        $representante=Representante::find($representante_id);
 
 //        $encuestas=[] + Encuesta::lists('encuesta', 'id')->all();
-        return view('campamentos.alumnos.create');
+        return view('campamentos.alumnos.create',compact('representante'));
     }
 
     /**

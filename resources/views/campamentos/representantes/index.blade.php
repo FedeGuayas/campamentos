@@ -26,9 +26,9 @@
                     <thead>
                     <th>Id</th>
                     <th>Nombres y Apellidos</th>
-                    <th>Identificación</th>
-                    <th>Tipo</th>
-                    <th>Género</th>
+                    <th>CI</th>
+                    <th>Alumno</th>
+                    <th>CI</th>
                     <th>Opciones</th>
                     </thead>
                     @foreach ($representantes as $rep)
@@ -36,8 +36,16 @@
                             <td>{{ $rep->id }}</td>
                             <td>{{ $rep->persona->getNombreAttribute() }}</td>
                             <td>{{ $rep->persona->num_doc }}</td>
-                            <td>{{ $rep->persona->tipo_doc }}</td>
-                            <td>{{ $rep->persona->genero }}</td>
+                            <td>
+                                @foreach ($rep->alumnos as $alumno)
+                                    {{ $alumno->persona->getNombreAttribute() }}<br>
+                                @endforeach
+                            </td>
+                            <td>
+                                @foreach ($rep->alumnos as $alumno)
+                                    {{ $alumno->persona->num_doc }}<br>
+                                @endforeach
+                            </td>
                             <td>
                                 {!! Form::button('<i class="fa fa-trash-o" ></i>',['class'=>'modal-trigger btn-floating waves-effect waves-light red darken-1','data-target'=>"modal-delete-$rep->id"]) !!}
                                 <a href="{{ route('admin.representantes.edit', $rep->id ) }}">
@@ -46,7 +54,7 @@
                                 <a href="{{ route('admin.representantes.show', $rep->id ) }}">
                                     {!! Form::button('<i class="fa fa-eye"></i>',['class'=>'btn-floating waves-effect waves-light teal darken-1']) !!}
                                 </a>
-                                <a href="{{ route('admin.alumnos.create' ) }}">
+                                <a href="{{ route('admin.alumnos.create',$rep->id ) }}">
                                     {!! Form::button('<i class="fa fa-child" aria-hidden="true"></i>',['class'=>'btn-floating waves-effect waves-light teal darken-1']) !!}
                                 </a>
 

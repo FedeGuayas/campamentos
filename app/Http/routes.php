@@ -40,7 +40,7 @@ Route::group(['middleware' => 'auth', 'prefix' => 'admin'], function () {
         return view('layouts.admin.index');
     }]);
 
-    //*****SELECT DINAMICOS****//
+    //*****SELECT DINAMICOS para inscripcion****//
 
     //obtener los escenarios para un modulo  para select dinamico
     Route::get('inscripcions/escenarios/{modulo_id}','ProgramsController@getEscenarios');
@@ -48,13 +48,17 @@ Route::group(['middleware' => 'auth', 'prefix' => 'admin'], function () {
     Route::get('inscripcions/disciplinas/{escenario_id}','ProgramsController@getDisciplinas');
     //obtener los dias para un programa, data defien al programa(esc,disc,modulo)
     Route::get('inscripcions/dias{data?}',['uses'=>'CalendarsController@getDias','as'=>'program.getDias']);
-    //obtener los horarios para el un dia
+    //obtener los horarios para el dia
     Route::get('inscripcions/horario/{data?}','CalendarsController@getHorario');
 
+    
     //Buscar represenante
     Route::POST('representantes/search',['as' => 'admin.representantes.beforeSearch', 'uses'=>'RepresentantesController@beforeSearch']);
     Route::get('representantes/search/{search}',['as' => 'admin.representantes.search', 'uses'=>'RepresentantesController@search']);
     Route::get('representantes/listSearch/{d?}',['as' => 'admin.representantes.listSearch', 'uses'=>'RepresentantesController@listSearch']);
+
+    //crear alumno a partir de dar clik en el representante
+    Route::get(' alumnos/create{representante?}',['as' => 'admin.alumnos.create', 'uses'=>'AlumnosController@create']);
 
     //adicionar roles a los usuarios
     Route::get('user/{id}/roles', ['as' => 'admin.users.roles','uses'=>'UsersController@roles' ]);

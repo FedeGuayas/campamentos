@@ -14,7 +14,7 @@
             <td>{{ $per->genero }}</td>
             <td>
                 {!! Form::checkbox($per->id,$per->id,null,['id'=>$per->id]) !!}
-                {!! Form::label($per->id, 'Add') !!}
+                {!! Form::label($per->id, 'Agregar') !!}
             </td>
         </tr>
         @endforeach

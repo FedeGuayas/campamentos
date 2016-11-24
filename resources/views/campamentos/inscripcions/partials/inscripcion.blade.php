@@ -2,22 +2,26 @@
         {!! Form::open(['route'=>'admin.inscripcions.store', 'method'=>'POST'])  !!}
 
         <div class="row">
-            <div class="col l6"><br>
-                {!! Form::select('representante_id', ['Repre' => 'Representante'],null, ['id'=>'representante_id']) !!}
-            </div>
+            {{--<div class="col l6"><br>--}}
+                <div class="input-field col l6 m6 s10">
+                    {!! Form::text('representate',null,['class'=>'validate','required','placeholder'=>'Representante', 'id'=>'representante','disabled']) !!}
+                    {!! Form::hidden('persona_id',null,['id'=>'persona_id','required']) !!}
+                </div>
+
+{{--                {!! Form::select('representante_id', ['Repre' => 'Representante'],null, ['id'=>'representante_id']) !!}--}}
+            {{--</div>--}}
             <div class="pull-left" style="position: relative; display: inline-block;">
                 <div class="fixed-action-btn horizontal" style="position: relative; display: inline-block; right: 24px; ">
                     <a class="btn-floating btn-medium teal"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></a>
                     <ul>
                         <li>
-                            <a href="#!" class="btn-floating waves-effect waves-light darken-1 tooltipped" data-position="top" data-delay="50" data-tooltip="Buscar"
+                            <a href="#modal-search" type="button" class="btn-floating waves-effect waves-light darken-1 tooltipped modal-search" data-position="top" data-delay="50" data-tooltip="Buscar"
                                style="transform: scaleY(0.4) scaleX(0.4) translateY(0px) translateX(40px); opacity: 0;"><i class="fa fa-search"></i>
                             </a>
                         </li>
                         <li>
                             <a href="#modal-representante" type="button" class="btn-floating  waves-effect waves-light darken-1 tooltipped modal-representante" data-position="top" data-delay="50" data-tooltip="Crear"
                                style="transform: scaleY(0.4) scaleX(0.4) translateY(0px) translateX(40px); opacity: 0;"><i class="fa fa-plus"></i>
-{{--                                {!! Form::button('<i class="fa fa-plus" aria-hidden="true"></i>',['class'=>'btn waves-effect waves-light darken-1 modal-representante' ,'data-target'=>'modal-representante' ]) !!}--}}
                             </a>
                         </li>
                     </ul>
@@ -130,5 +134,6 @@
         </div>
         {!! Form::close() !!}
         @include('campamentos.inscripcions.partials.representante_create')
+        @include('campamentos.alumnos.search')
     </div>
 

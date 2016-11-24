@@ -5,7 +5,7 @@
 @section('content')
 
     <div class="row">
-        <div class="col l8 m12 s12">
+        <div class="col l10 m12 s12">
             <div class="card-panel">
                 <h5 class="header teal-text text-darken-2">Crear Alumno</h5>
                 <div class="card-content ">
@@ -31,34 +31,35 @@
                             {!! Form::text('apellidos',null,['class'=>'validate','required']) !!}
                         </div>
 
-                        <div class="input-field col l6 m6 s12">
-                            {!! Form::select('tipo_doc', ['Cedula' => 'Cedula', 'Pasaporte' => 'Pasaporte', 'NoDoc' => 'NoDoc'],null, ['id'=>'tipo_doc']) !!}
+                        <div class="input-field col l4 m4 s12">
+                            {!! Form::select('tipo_doc', ['Cedula' => 'Cedula', 'Pasaporte' => 'Pasaporte'],null, ['id'=>'tipo_doc']) !!}
                             {!! Form::label('tipo_doc', 'Tipo doc:') !!}
                         </div>
-                        <div class="input-field col l6 m6 s12">
+                        <div class="input-field col l4 m4 s12">
                             {!! Form::label('num_doc','Número del documento:*') !!}
                             {!! Form::text('num_doc',null,['class'=>'validate','required']) !!}
                         </div>
 
-                        <div class="input-field col l6 m6 s12">
+                        <div class="input-field col l4 m4 s12">
                             {!! Form::select('genero', ['Masculino' => 'Masculino', 'Femenino' => 'Femenino'],null, ['id'=>'genero']) !!}
                             {!! Form::label('genero','Género:') !!}
                         </div>
-                        <div class="form-group col l6 m6 s12">
-                            {!! Form::label('fecha','Fecha de Nacimiento:',['class'=>'label-control']) !!}
-                            {{  Form::date('fecha_nac',null,[ 'class'=>'validate','required']) }}
-                        </div>
 
-                        <div class="input-field col l2 m6 s12 offset-l6">
-                            {!! Form::checkbox('discapacitado',null,false,['id'=>'discapacitado']) !!}
-                            {!! Form::label('discapacitado','Discapacitado') !!}
-                        </div>
 
-                        <div class="input-field  col l12 m6 s12">
+                        <div class="input-field  col l8 m6 s12">
                             <i class="fa fa-pencil prefix"></i>
                             {!! Form::textarea('direccion',null,['class'=>'materialize-textarea validate','id'=>'direccion','length'=>'150']) !!}
                             {!! Form::label('direccion','Dirección:') !!}
                         </div>
+                        <div class="form-group col l4 m4 s12">
+                            {!! Form::label('fecha','Fecha de Nacimiento:',['class'=>'label-control']) !!}
+                            {{  Form::date('fecha_nac',null,[ 'class'=>'validate','required']) }}
+                        </div>
+
+                        {{--<div class="input-field col l2 m6 s12 offset-l6">--}}
+                            {{--{!! Form::checkbox('discapacitado',null,false,['id'=>'discapacitado']) !!}--}}
+                            {{--{!! Form::label('discapacitado','Discapacitado') !!}--}}
+                        {{--</div>--}}
 
                         <div class="file-field input-field  col l6 m6 s12">
                             <div class="btn">
@@ -83,8 +84,7 @@
                 </div>
                 {!! Form::button('Crear<i class="fa fa-play right"></i>', ['class'=>'btn waves-effect waves-light','type' => 'submit']) !!}
                 {!! Form::button('Cancelar<i class="fa fa-close right"></i>',['class'=>'btn waves-effect waves-light red darken-1','type' => 'reset']) !!}
-                <a href="{{ route('admin.alumnos.index') }}" class="tooltipped" data-position="top" data-delay="50"
-                   data-tooltip="Regresar">
+                <a href="{{ route('admin.alumnos.index') }}" class="tooltipped" data-position="top" data-delay="50" data-tooltip="Regresar">
                     {!! Form::button('<i class="fa fa-undo"></i>',['class'=>'btn waves-effect waves-light darken-1']) !!}
                 </a>
                 {!! Form::close() !!}
@@ -107,7 +107,7 @@
                         in_duration: 300, // Transition in duration
                         out_duration: 200, // Transition out duration
                         starting_top: '4%', // Starting top style attribute
-                        ending_top: '10%', // Ending top style attribute
+                        ending_top: '4%', // Ending top style attribute
             });
         });
 
@@ -115,6 +115,7 @@
 
         $(function(){
 
+            //prevenir que al dar enter se envie el formulario
             $(".form_noEnter").keypress(function(e){
                 if(e.width == 13){
                     return false;

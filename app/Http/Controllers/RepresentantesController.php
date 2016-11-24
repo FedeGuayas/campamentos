@@ -63,9 +63,9 @@ class RepresentantesController extends Controller
         $out['nombres'] = 'required | max:50';
         $out['apellidos'] = 'required | max:50';
         $out['genero'] = 'required';
-        $out['fecha_nac'] = 'required';
+//        $out['fecha_nac'] = 'required';
         $out['email'] = 'email|required|unique:personas';
-        $out['direccion'] = 'max:255';
+        $out['direccion'] = 'required|max:255';
         $out['telefono'] = 'max:15';
         $out['tipo_doc'] = 'required';
         $out['num_doc'] = 'required';
@@ -80,9 +80,6 @@ class RepresentantesController extends Controller
                 break;
             case 'Pasaporte':
                 $out['num_doc'] = 'required|alpha_num |max:8 |min:5| unique:personas';
-                break;
-            case 'NoDoc':
-                $out['num_doc'] = 'required|alpha_num |max:5 |min:3| unique:personas';
                 break;
         }
 
@@ -114,7 +111,7 @@ class RepresentantesController extends Controller
         $persona->tipo_doc=$request->get('tipo_doc');
         $persona->num_doc=$request->get('num_doc');
         $persona->genero=$request->get('genero');
-        $persona->fecha_nac=$request->get('fecha_nac');
+//        $persona->fecha_nac=$request->get('fecha_nac');
         $persona->email=$request->get('email');
         $persona->direccion=$request->get('direccion');
         $persona->telefono=$request->get('telefono');
@@ -194,7 +191,7 @@ class RepresentantesController extends Controller
         $out['nombres'] = 'required | max:50';
         $out['apellidos'] = 'required | max:50';
         $out['genero'] = 'required';
-        $out['fecha_nac'] = 'required';
+//        $out['fecha_nac'] = 'required';
         $out['email'] = 'email';
         $out['direccion'] = 'max:255';
         $out['telefono'] = 'max:15';
@@ -211,9 +208,6 @@ class RepresentantesController extends Controller
                 break;
             case 'Pasaporte':
                 $out['num_doc'] = 'required|alpha_num |max:8 |min:5';
-                break;
-            case 'NoDoc':
-                $out['num_doc'] = 'required|alpha_num |max:5 |min:3';
                 break;
         }
 
@@ -249,7 +243,7 @@ class RepresentantesController extends Controller
             $persona->tipo_doc=$request->get('tipo_doc');
             $persona->num_doc=$request->get('num_doc');
             $persona->genero=$request->get('genero');
-            $persona->fecha_nac=$request->get('fecha_nac');
+//            $persona->fecha_nac=$request->get('fecha_nac');
             $persona->email=$request->get('email');
             $persona->direccion=$request->get('direccion');
             $persona->telefono=$request->get('telefono');
@@ -297,9 +291,15 @@ class RepresentantesController extends Controller
         $representante=Representante::findOrFail($id);
         $persona=$representante->persona;
 
-        $persona->representantes()->delete();
-        $persona->delete();
+        $flag=$representante->alumnos;
 
+        if (count($flag)>0){
+            Session::flash('message_danger', 'No puede eliminar a '.$representante->persona-> getNombreAttribute().' mientras este representando alumnos');
+        } else{
+            $persona->representantes()->delete();
+            $persona->delete();
+            Session::flash('message', 'Se elimino al representante '.$representante->persona-> getNombreAttribute().'');
+        }
         return back();
     }
 
