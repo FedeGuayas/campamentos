@@ -117,7 +117,7 @@ class RepresentantesController extends Controller
                 $persona->email = $request->get('email');
                 $persona->direccion = $request->get('direccion');
                 $persona->telefono = $request->get('telefono');
-//                $persona->save();
+                $persona->save();
 
                 $encuesta_id = $request->get('encuesta_id');
                 $encuesta = Encuesta::find($encuesta_id);
@@ -142,7 +142,7 @@ class RepresentantesController extends Controller
                 }
 
                 $representante->phone = $request->get('phone');
-//                $representante->save();
+                $representante->save();
 
                 DB::commit();
 
@@ -153,7 +153,7 @@ class RepresentantesController extends Controller
                 if ($request->ajax()){
                     return response()->json([
                         'message'=>'Representante creado correctamente',
-                        'persona_id'=>$persona->id,
+                        'representante_id'=>$representante->id,
                         'nombre'=>$persona->getNombreAttribute(),
                     ]);
                 }

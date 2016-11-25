@@ -42,6 +42,20 @@
 
        $(document).ready(function () {
            // para ventana modal de busqueda
+           $('.modal-alumno').leanModal({
+               dismissible: false, // Modal can be dismissed by clicking outside of the modal
+               opacity: .5, // Opacity of modal background
+               in_duration: 300, // Transition in duration
+               out_duration: 200, // Transition out duration
+               starting_top: '4%', // Starting top style attribute
+               ending_top: '20%', // Ending top style attribute
+           });
+
+       });
+
+
+       $(document).ready(function () {
+           // para ventana modal de busqueda
            $('.modal-representante').leanModal({
                dismissible: false, // Modal can be dismissed by clicking outside of the modal
                opacity: .5, // Opacity of modal background
@@ -121,7 +135,7 @@
                }
            });
 
-
+            //funcion crear representante
             function crear_representante_ajax(){
                 var route = "{{route('admin.representantes.store')}}";
                 var token = $("input[name=_token]").val();
@@ -143,7 +157,7 @@
                         $("#msj-succes").html(resp.message)
                         $("#mensaje-success").fadeIn();
                         $("#representante").val(resp.nombre);
-                        $("#persona_id").val(resp.persona_id);
+                        $("#representante_id").val(resp.representante_id);
                         $("#representante").addClass("teal-text");
                     },
                     error: function (resp) {
@@ -158,11 +172,54 @@
                 });
             }
 
-            //crear representante al dar click
+            //llamar a funcion crear representante
            $("#representante_create").on("click", function (event) {
                event.preventDefault();
                crear_representante_ajax();
            });
+
+
+           function crear_alumno_ajax(){
+               var route = "{{route('admin.alumnos.store')}}";
+               var token = $("input[name=_token]").val();
+               var formData = new FormData(document.getElementById("form_alumno"));
+               $.ajax({
+                   url: route,
+                   type: "POST",
+                   headers: {'X-CSRF-TOKEN': token},
+//                    contentType: 'application/x-www-form-urlencoded',
+                   data: formData,
+                   cache: false,
+                   contentType: false,
+                   processData: false,
+//                    data:$("#form_representante").serialize(),
+                   success: function (resp) {
+                       $("#form_alumno").trigger("reset");//limpio el form
+                       $("#msj-succes").html(resp.message)
+                       $("#mensaje-success").fadeIn();
+                       $("#alumno_id").val(resp.nombre);
+                       $("#persona_id").val(resp.persona_id);
+                       $("#representante").addClass("teal-text");
+                   },
+                   error: function (resp) {
+                       //console.log(resp.responseJSON)
+                       var errors = '';
+                       $.each(resp.responseJSON, function (ind, elem) {
+                           errors += elem + '<br>';
+                       });
+                       $('#msj-error').show().html(errors);
+                       $("#mensaje-error").fadeIn();
+                   }
+               });
+           }
+
+           //llamar a funcion crear alumno
+           $("#representante_create").on("click", function (event) {
+               event.preventDefault();
+               crear_alumno_ajax();
+           });
+
+
 
        });
 

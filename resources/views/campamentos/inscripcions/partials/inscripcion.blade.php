@@ -5,7 +5,7 @@
             {{--<div class="col l6"><br>--}}
                 <div class="input-field col l6 m6 s10">
                     {!! Form::text('representate',null,['class'=>'validate','required','placeholder'=>'Representante', 'id'=>'representante','disabled']) !!}
-                    {!! Form::hidden('persona_id',null,['id'=>'persona_id','required']) !!}
+                    {!! Form::hidden('representante_id',null,['id'=>'persona_id','required']) !!}
                 </div>
 
 {{--                {!! Form::select('representante_id', ['Repre' => 'Representante'],null, ['id'=>'representante_id']) !!}--}}
@@ -39,8 +39,8 @@
                 {!! Form::select('alumno_id', ['Al' => 'Alumno'],null, ['id'=>'alumno_id']) !!}
             </div>
             <div class="pull-left" style="position: relative; display: inline-block;">
-                <a href="#!" class="tooltipped" data-position="top" data-delay="50" data-tooltip="Crear">
-                    {!! Form::button('<i class="fa fa-plus"></i>',['class'=>'btn-floating waves-effect waves-light darken-1']) !!}
+                <a href="#modal-alumno" type="button" class="btn-floating  waves-effect waves-light darken-1 tooltipped modal-alumno" data-position="top" data-delay="50" data-tooltip="Crear">
+                    <i class="fa fa-plus"></i>
                 </a>
             </div>
         </div>
@@ -134,6 +134,7 @@
         </div>
         {!! Form::close() !!}
         @include('campamentos.inscripcions.partials.representante_create')
+        @include('campamentos.inscripcions.partials.alumno_create')
         @include('campamentos.alumnos.search')
     </div>
 

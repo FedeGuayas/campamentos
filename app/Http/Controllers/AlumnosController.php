@@ -109,6 +109,15 @@ class AlumnosController extends Controller
 
             DB::commit();
 
+
+            if ($request->ajax()){
+                return response()->json([
+                    'message'=>'Alumno creado correctamente',
+                    'alumno_id'=>$alumno->id,
+                    'nombre'=>$persona->getNombreAttribute(),
+                ]);
+            }
+
         } catch (\Exception $e) {
             dd($e);
             DB::rollback();
