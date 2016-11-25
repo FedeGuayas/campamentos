@@ -69,8 +69,8 @@ class RepresentantesController extends Controller
         $out['telefono'] = 'max:15';
         $out['tipo_doc'] = 'required';
         $out['num_doc'] = 'required';
-        $out['foto_ced'] = 'required|max:1000';
-        $out['foto'] = 'required|max:150';
+        $out['foto_ced'] = 'required|image|max:1000';
+        $out['foto'] = 'required|image|max:150';
         $out['phone'] = 'required|max:15';
 
         //Hacer validación condicional dependiendo del tipo de documento a utilizar.
@@ -104,8 +104,6 @@ class RepresentantesController extends Controller
             );
         }
 
-        if ($request->ajax()){
-
             try {
                 DB::beginTransaction();
 
@@ -119,7 +117,7 @@ class RepresentantesController extends Controller
                 $persona->email = $request->get('email');
                 $persona->direccion = $request->get('direccion');
                 $persona->telefono = $request->get('telefono');
-                $persona->save();
+//                $persona->save();
 
                 $encuesta_id = $request->get('encuesta_id');
                 $encuesta = Encuesta::find($encuesta_id);
@@ -144,7 +142,7 @@ class RepresentantesController extends Controller
                 }
 
                 $representante->phone = $request->get('phone');
-                $representante->save();
+//                $representante->save();
 
                 DB::commit();
 
@@ -152,67 +150,20 @@ class RepresentantesController extends Controller
                     Event::fire(new EncuestaRespondida($encuesta));
                 }
 
-            } catch (\Exception $e) {
-                DB::rollback();
-            }
-            return response()->json(['message'=>'Representante creado correctamente']);
-
-        } else{ //si no es ajax
-
-            try {
-                DB::beginTransaction();
-
-                $persona = new Persona;
-                $persona->nombres = $request->get('nombres');
-                $persona->apellidos = $request->get('apellidos');
-                $persona->tipo_doc = $request->get('tipo_doc');
-                $persona->num_doc = $request->get('num_doc');
-                $persona->genero = $request->get('genero');
-//        $persona->fecha_nac=$request->get('fecha_nac');
-                $persona->email = $request->get('email');
-                $persona->direccion = $request->get('direccion');
-                $persona->telefono = $request->get('telefono');
-                $persona->save();
-
-                $encuesta_id = $request->get('encuesta_id');
-                $encuesta = Encuesta::find($encuesta_id);
-
-                $representante = new Representante;
-                $representante->persona()->associate($persona);
-                $representante->encuesta()->associate($encuesta);
-
-                if ($request->hasFile('foto_ced')) {
-                    $file = $request->file('foto_ced');
-                    $name = 'rep_ced_' . time() . '.' . $file->getClientOriginalExtension();
-                    $path = public_path() . '/dist/img/representantes/cedula/';//ruta donde se guardara
-                    $file->move($path, $name);//lo copio a $path con el nombre $name
-                    $representante->foto_ced = $name;//ahora se guarda  en el atributo foto_ced la imagen
-                }
-                if ($request->hasFile('foto')) {
-                    $file = $request->file('foto');
-                    $name = 'rep_perfil_' . time() . '.' . $file->getClientOriginalExtension();
-                    $path = public_path() . '/dist/img/representantes/perfil/';//ruta donde se guardara
-                    $file->move($path, $name);//lo copio a $path con el nombre $name
-                    $representante->foto = $name;//ahora se guarda  en el atributo foto_ced la imagen
-                }
-
-                $representante->phone = $request->get('phone');
-                $representante->save();
-
-                DB::commit();
-
-                if ($encuesta) {
-                    Event::fire(new EncuestaRespondida($encuesta));
+                if ($request->ajax()){
+                    return response()->json([
+                        'message'=>'Representante creado correctamente',
+                        'persona_id'=>$persona->id,
+                        'nombre'=>$persona->getNombreAttribute(),
+                    ]);
                 }
 
             } catch (\Exception $e) {
                 DB::rollback();
             }
 
-            Session::flash('message', 'Representante creado correctamente');
-            return redirect()->route('admin.representantes.index');
-        }
-
+        Session::flash('message', 'Representante creado correctamente');
+        return redirect()->route('admin.representantes.index');
     }
 
     /**

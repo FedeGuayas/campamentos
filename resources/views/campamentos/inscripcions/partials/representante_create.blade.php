@@ -3,7 +3,7 @@
         <div class="card-panel">
                     <h5 class="header teal-text text-darken-2">Crear Representante</h5>
                     <div class="card-content ">
-                        {!! Form::open(['class'=>'form_noEnter', 'id'=>'form_representante','files'=>'true']) !!}
+                        {!! Form::open(['class'=>'form_noEnter', 'id'=>'form_representante']) !!}
 {{--                        {!! Form::open(['route'=>'admin.representantes.store', 'method'=>'POST','files'=>'true'])  !!}--}}
 
                         <div id="mensaje-success" class="alert alert-success alert-dismissible" role="alert" style="display: none">

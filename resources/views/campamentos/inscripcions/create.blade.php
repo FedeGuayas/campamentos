@@ -66,7 +66,6 @@
        });
 
        $(function(){
-
            //prevenir que al dar enter se envie el formulario
            $(".form_noEnter").keypress(function(e){
                if(e.width == 13){
@@ -122,28 +121,39 @@
                }
            });
 
+
             function crear_representante_ajax(){
                 var route = "{{route('admin.representantes.store')}}";
                 var token = $("input[name=_token]").val();
+                var formData = new FormData(document.getElementById("form_representante"));//se envia tod el form al controlador
+                //formData.append("dato", "valor"); //agregar otros datos a en viar al controlador
+                // formData.append(f.attr("name"), $(this)[0].files[0]);
                 $.ajax({
                     url: route,
                     type: "POST",
                     headers: {'X-CSRF-TOKEN': token},
-                    contentType: 'application/x-www-form-urlencoded',
-                    data:$("#form_representante").serialize(),
-
+//                    contentType: 'application/x-www-form-urlencoded',
+                    data: formData,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+//                    data:$("#form_representante").serialize(),
                     success: function (resp) {
-//                     $("#nombres,#apellidos,#tipo_doc,#num_doc,#genero,#email,#direccion,#phone,#telefono,#foto_ced,#foto").text('');
+                        $("#form_representante").trigger("reset");//limpio el form
                         $("#msj-succes").html(resp.message)
                         $("#mensaje-success").fadeIn();
+                        $("#representante").val(resp.nombre);
+                        $("#persona_id").val(resp.persona_id);
+                        $("#representante").addClass("teal-text");
                     },
                     error: function (resp) {
-                        console.log(resp)
-//                        $("#msj-error").html(resp.responseJSON.nombre);
-
+                        //console.log(resp.responseJSON)
+                        var errors = '';
+                        $.each(resp.responseJSON, function (ind, elem) {
+                            errors += elem + '<br>';
+                        });
+                        $('#msj-error').show().html(errors);
                         $("#mensaje-error").fadeIn();
-
-//                   $("#search-result").empty().html("Error en la busqueda");
                     }
                 });
             }
@@ -151,7 +161,6 @@
             //crear representante al dar click
            $("#representante_create").on("click", function (event) {
                event.preventDefault();
-               $("#msj-error").empty();
                crear_representante_ajax();
            });
 
