@@ -13,7 +13,7 @@ class AlterIndexTableCalendars extends Migration
     public function up()
     {
         Schema::table('calendars', function (Blueprint $table) {
-            $table->unique(['dia_id', 'horario_id','program_id']);
+            $table->unique(['dia_id', 'horario_id','program_id','nivel']);
         });
     }
 

@@ -22,6 +22,8 @@ class CreateTableCalendars extends Migration
             $table->integer('contador');
             $table->double('mensualidad',5,2);
             $table->string('nivel',30)->nullable();
+            $table->integer('init_age')->nullable();
+            $table->integer('end_age')->nullable();
 
             $table->foreign('program_id')->references('id')->on('programs')
                 ->onUpdate('cascade')->onDelete('cascade');

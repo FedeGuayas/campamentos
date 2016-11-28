@@ -78,7 +78,9 @@ class CalendarsController extends Controller
         $calendar->horario_id=$request->get('horario_id');
         $calendar->cupos=$request->get('cupos');
         $calendar->mensualidad=$request->get('mensualidad');
-//        $calendar->nivel=$request->get('nivel');
+        $calendar->init_age=$request->get('init_age');
+        $calendar->end_age=$request->get('end_age');
+        $calendar->nivel=$request->get('nivel');
         $calendar->save();
         
         return redirect()->route('admin.programs.index');
@@ -126,15 +128,16 @@ class CalendarsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $calendar=Calendar::findOrFail($id);
-//        $calendar->program_id=$request->get('program_id');
-//        $calendar->dia_id=$request->get('dia_id');
-//        $calendar->horario_id=$request->get('horario_id');
-//        $calendar->cupos=$request->get('cupos');
-//        $calendar->mensualidad=$request->get('mensualidad');
-//        $calendar->nivel=$request->get('nivel');
 
-        $calendar->update($request->all());
+        $calendar=Calendar::findOrFail($id);
+        $calendar->dia_id=$request->get('dia_id');
+        $calendar->horario_id=$request->get('horario_id');
+        $calendar->cupos=$request->get('cupos');
+        $calendar->mensualidad=$request->get('mensualidad');
+        $calendar->init_age=$request->get('init_age');
+        $calendar->end_age=$request->get('end_age');
+        $calendar->nivel=$request->get('nivel');
+        $calendar->update();
         return redirect()->route('admin.programs.index');
     }
 

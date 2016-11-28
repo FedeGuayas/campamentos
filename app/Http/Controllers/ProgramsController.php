@@ -9,6 +9,7 @@ use App\Escenario;
 use App\Horario;
 use App\Modulo;
 use App\Program;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use DB;
 use Session;
@@ -82,14 +83,24 @@ class ProgramsController extends Controller
         $disciplina=Disciplina::findOrFail($program->disciplina_id);
         $escenario=Escenario::findOrFail($program->escenario_id);
         $modulo=Modulo::findOrFail($program->modulo_id);
+        $start=new Carbon($modulo->inicio);
+        $end=new Carbon($modulo->fin);
+
+        $estacion='';
+        if (($start->month > 2)){
+            $estacion='Verano';
+        }else{
+            $estacion='Invierno';
+        }
+
         $calendars=Calendar::
             join('dias as d','d.id','=','cal.dia_id','as cal')
             ->join('horarios as h','h.id','=','cal.horario_id')
-            ->select('d.dia','h.start_time','h.end_time','cupos','contador','mensualidad','cal.id')
+            ->select('d.dia','h.start_time','h.end_time','cupos','contador','mensualidad','cal.id','cal.nivel','cal.init_age','cal.end_age')
             ->where('program_id',$id)
             ->get();
         
-        return view('campamentos.programs.show',compact('program','disciplina','escenario','modulo','calendars'));
+        return view('campamentos.programs.show',compact('program','disciplina','escenario','modulo','calendars','estacion'));
     }
 
     /**

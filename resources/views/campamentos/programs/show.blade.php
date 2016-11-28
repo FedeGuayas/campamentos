@@ -5,14 +5,14 @@
 @section('content')
 
     <div class="row">
-        <div class="col l8 m8 s">
-            <h4>Campamentos de Verano</h4>
+        <div class="col l8 m8 ">
+            <h4>Campamentos de {{$estacion}}</h4>
             {{-- @include('runner.usuarios.search')--}}
         </div>
     </div>
 
     <div class="row">
-        <div class="col l12 m12 s12">
+        <div class="col s12">
 
             {{--<a href="{{route('admin.programs.create')}}">--}}
             {{--{!! Form::button('<i class="fa fa-user-plus" ></i>',['class'=>'btn tooltipped waves-effect waves-light','data-position'=>'right', 'data-delay'=>'50', 'data-tooltip'=>'Nuevo programa']) !!}--}}
@@ -40,6 +40,8 @@
                             <tr>
                                 <th>Dias</th>
                                 <th>Horario</th>
+                                <th>Nivel</th>
+                                <th>Edad</th>
                                 <th>Costo</th>
                                 <th>Cupos</th>
                                 <th>Modificar</th>
@@ -50,6 +52,8 @@
                                 <tr>
                                     <td>{{ $calendar->dia}}</td>
                                     <td>{{ $calendar->start_time.'-'.$calendar->end_time }}</td>
+                                    <td>{{ $calendar->nivel}}</td>
+                                    <td>{{ $calendar->init_age.'-'.$calendar->end_age  }}</td>
                                     <td>{{ $calendar->mensualidad }}</td>
                                     <td>{{ $calendar->cupos }}</td>
                                     <td>

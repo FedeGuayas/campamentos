@@ -16,9 +16,8 @@ class CreateTableAlumnos extends Migration
             $table->increments('id');
             $table->integer('persona_id')->unsigned();
             $table->integer('representante_id')->unsigned();
-            $table->enum('discapacitado',['SI','NO'])->default('NO');
-            $table->string('foto_ced')->nullable();
-            $table->string('foto')->nullable();
+            $table->string('foto_ced');
+            $table->string('foto');
             $table->timestamps();
             $table->softDeletes();
             

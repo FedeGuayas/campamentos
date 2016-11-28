@@ -19,8 +19,9 @@ class CreateInscripcionsTable extends Migration
             $table->integer('alumno_id')->unsigned();
             $table->integer('user_id')->unsigned();
             $table->integer('factura_id')->unsigned();
-            $table->double('matricula',4,2)->nullable();
-            $table->double('mensualidad',4,2);
+            $table->double('matricula',5,2)->nullable();
+            $table->double('mensualidad',5,2);
+            $table->enum('estado',['Reservada','Pagada','Cancelado'])->default('Pagada');
             
             $table->softDeletes();
 

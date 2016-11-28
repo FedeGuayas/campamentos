@@ -60,6 +60,15 @@
                             {!! Form::label('nivel','Nivel:') !!}
                         </div>
 
+                        <div class="range-field  col l4 m4 s12">
+                            {!! Form::label('init_age','Edad inicial:') !!}
+                            {!! Form::number('init_age',null,['class'=>'validate']) !!}
+                        </div>
+                        <div class="range-field  col l4 m4 s12">
+                            {!! Form::label('end_age','Edad final:') !!}
+                            {!! Form::number('end_age',null,['class'=>'validate']) !!}
+                        </div>
+
                     </div>
 
                 </div>
