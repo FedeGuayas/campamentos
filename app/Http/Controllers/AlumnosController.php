@@ -51,7 +51,6 @@ class AlumnosController extends Controller
      */
     public function store(Request $request)
     {
-
         $validator = $this->validator($request->all());
         if ($validator->fails()) {
             $this->throwValidationException(
@@ -81,12 +80,6 @@ class AlumnosController extends Controller
             $alumno->representante()->associate($representante);
             $alumno->representante_id=$representante->id;
 
-            $discapacitado=$request->get('discapacitado');
-            if ($discapacitado){
-                $alumno->discapacitado='SI';
-            }else {
-                $alumno->discapacitado='NO';
-            }
 
             if ($request->hasFile('foto_ced')) {
                 $file = $request->file('foto_ced');
@@ -103,12 +96,9 @@ class AlumnosController extends Controller
                 $alumno->foto=$name;//ahora se guarda  en el atributo foto_ced la imagen
             }
 
-
             $alumno->save();
 
-
             DB::commit();
-
 
             if ($request->ajax()){
                 return response()->json([
@@ -191,12 +181,6 @@ class AlumnosController extends Controller
             $alumno->representante()->associate($representante);
             $alumno->representante_id=$representante->id;
 
-            $discapacitado=$request->get('discapacitado');
-            if ($discapacitado){
-                $alumno->discapacitado='SI';
-            }else {
-                $alumno->discapacitado='NO';
-            }
 
             if ($request->hasFile('foto_ced')) {
                 $file = $request->file('foto_ced');

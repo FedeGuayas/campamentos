@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 
 
+use App\Alumno;
 use Event;
 use App\Encuesta;
 use App\Events\EncuestaRespondida;
@@ -63,7 +64,7 @@ class RepresentantesController extends Controller
         $out['nombres'] = 'required | max:50';
         $out['apellidos'] = 'required | max:50';
         $out['genero'] = 'required';
-//        $out['fecha_nac'] = 'required';
+        $out['fecha_nac'] = 'required';
         $out['email'] = 'email|required|unique:personas';
         $out['direccion'] = 'required|max:255';
         $out['telefono'] = 'max:15';
@@ -113,7 +114,7 @@ class RepresentantesController extends Controller
                 $persona->tipo_doc = $request->get('tipo_doc');
                 $persona->num_doc = $request->get('num_doc');
                 $persona->genero = $request->get('genero');
-//        $persona->fecha_nac=$request->get('fecha_nac');
+                $persona->fecha_nac=$request->get('fecha_nac');
                 $persona->email = $request->get('email');
                 $persona->direccion = $request->get('direccion');
                 $persona->telefono = $request->get('telefono');
@@ -201,7 +202,7 @@ class RepresentantesController extends Controller
         $out['nombres'] = 'required | max:50';
         $out['apellidos'] = 'required | max:50';
         $out['genero'] = 'required';
-//        $out['fecha_nac'] = 'required';
+        $out['fecha_nac'] = 'required';
         $out['email'] = 'email';
         $out['direccion'] = 'max:255';
         $out['telefono'] = 'max:15';
@@ -253,7 +254,7 @@ class RepresentantesController extends Controller
             $persona->tipo_doc=$request->get('tipo_doc');
             $persona->num_doc=$request->get('num_doc');
             $persona->genero=$request->get('genero');
-//            $persona->fecha_nac=$request->get('fecha_nac');
+            $persona->fecha_nac=$request->get('fecha_nac');
             $persona->email=$request->get('email');
             $persona->direccion=$request->get('direccion');
             $persona->telefono=$request->get('telefono');
@@ -338,6 +339,31 @@ class RepresentantesController extends Controller
     public function listSearch()
     {
         return view('campamentos.alumnos.listSearch');
+    }
+
+
+
+    /**
+     *  Obtener los alumnos para un representnate para select dinamico
+     * @param Request $request
+     * @param $id
+     * @return mixed
+     */
+    public function getAlumnos(Request $request,$id){
+
+        if ($request->ajax()){
+//            $representante=Representante::where('persona_id',$id)->get();
+            $alumnos=DB::table('alumnos as a')
+                ->join('representantes as r','r.id','=','a.representante_id')
+                ->join('personas as p','p.id','=','r.persona_id')
+                ->select('p.nombres as nombres','p.apellidos as apellidos','a.id as aID','r.persona_id')
+                ->where('a.representante_id',$id)
+                ->get();
+//            $categoria = ['' => 'Seleccione la categoría'] + Categoria::lists('categoria', 'id')->all();
+//            $escenar = $escenarios->pluck('escenario', 'escenario_id');
+dd($alumnos);
+//            return response($alumnos);
+        }
     }
 
 

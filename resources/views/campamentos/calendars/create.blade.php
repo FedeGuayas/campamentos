@@ -61,14 +61,12 @@
                         </div>
 
                         <div class="range-field  col l4 m4 s12">
-                            {!! Form::label('out_init_age','Edad inicial:') !!}
-                            <output id="out_init_age"></output>
-                            <input type="range" id="init_age" min="3" max="18" oninput="out_init_age.value = init_age.value">
+                            {!! Form::label('init_age','Edad inicial:') !!}
+                            {!! Form::number('init_age',null,['class'=>'validate']) !!}
                         </div>
                         <div class="range-field  col l4 m4 s12">
-                            {!! Form::label('out_end_age','Edad inicial:') !!}
-                            <output id="out_end_age"></output>
-                            <input type="range" id="end_age" min="4" max="80" oninput="out_end_age.value = end_age.value">
+                            {!! Form::label('end_age','Edad final:') !!}
+                            {!! Form::number('end_age',null,['class'=>'validate']) !!}
                         </div>
 
                     </div>

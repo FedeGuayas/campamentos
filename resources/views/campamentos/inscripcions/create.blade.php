@@ -41,43 +41,43 @@
        $("#modulo_id").material_select();
 
        $(document).ready(function () {
-           // para ventana modal de busqueda
+           // para ventana modal de crear alumno
            $('.modal-alumno').leanModal({
                dismissible: false, // Modal can be dismissed by clicking outside of the modal
                opacity: .5, // Opacity of modal background
                in_duration: 300, // Transition in duration
                out_duration: 200, // Transition out duration
                starting_top: '4%', // Starting top style attribute
-               ending_top: '20%', // Ending top style attribute
+               ending_top: '10%', // Ending top style attribute
            });
 
        });
 
-
        $(document).ready(function () {
-           // para ventana modal de busqueda
+           // para ventana modal de crear representante
            $('.modal-representante').leanModal({
                dismissible: false, // Modal can be dismissed by clicking outside of the modal
                opacity: .5, // Opacity of modal background
                in_duration: 300, // Transition in duration
                out_duration: 200, // Transition out duration
-               starting_top: '2%', // Starting top style attribute
-               ending_top: '2%', // Ending top style attribute
+               starting_top: '2', // Starting top style attribute
+               ending_top: '4%', // Ending top style attribute
             });
 
        });
 
        $(document).ready(function () {
-           // para ventana modal de busqueda
+           // para ventana modal de busqueda de representante
            $('.modal-search').leanModal({
                dismissible: false, // Modal can be dismissed by clicking outside of the modal
                opacity: .5, // Opacity of modal background
                in_duration: 300, // Transition in duration
                out_duration: 200, // Transition out duration
                starting_top: '4%', // Starting top style attribute
-               ending_top: '4%', // Ending top style attribute
+               ending_top: '10%', // Ending top style attribute
            });
        });
+
 
        $(function(){
            //prevenir que al dar enter se envie el formulario
@@ -107,7 +107,7 @@
 
                            // Comprobar cuando cambia un checkbox
                            $("#table_search input[type=checkbox]").on('change', function() {
-
+                               var alumno_id=$("#alumno_id");
                                // si se activa
                                if ($(this).is(':checked') ) {
                                    console.log("Checkbox " + $(this).prop("id") +  " (" + $(this).val() + ") => Seleccionado");
@@ -119,6 +119,20 @@
                                    // guardo el id para enviarlo al controlador
                                    $("#persona_id").val($(this).val());
                                    $("#representante").addClass("teal-text");
+
+                                   //dropdown para seleccionar el alumno segun representante
+                                   var representanteid=$("#persona_id").val();
+                                   $.get("alumnos/" + representanteid + "", function (response, state) {
+//                                       console.log(response);
+                                       alumno_id.empty();
+                                       for (i = 0; i < response.length; i++) {
+                                           alumno_id.append('<option value="' + response[i].aID + '">' + response[i].nombres + '</option>');
+                                       }
+                                       alumno_id.material_select();
+                                   });
+
+
+
                                } else {
                                    console.log("Checkbox " + $(this).prop("id") +  " (" + $(this).val() + ") => Deseleccionado");
                                    $("#representante").removeClass("teal-text");
@@ -134,6 +148,7 @@
                    });
                }
            });
+
 
             //funcion crear representante
             function crear_representante_ajax(){
@@ -178,7 +193,7 @@
                crear_representante_ajax();
            });
 
-
+            //funcion crear alumno
            function crear_alumno_ajax(){
                var route = "{{route('admin.alumnos.store')}}";
                var token = $("input[name=_token]").val();
@@ -218,7 +233,6 @@
                event.preventDefault();
                crear_alumno_ajax();
            });
-
 
 
        });
