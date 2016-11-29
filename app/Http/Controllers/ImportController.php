@@ -8,6 +8,8 @@ use App\Persona;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Maatwebsite\Excel\Facades\Excel;
+use DB;
+use Session;
 
 use App\Http\Requests;
 
@@ -56,7 +58,7 @@ class ImportController extends Controller
         }else{
             Session::flash('message','Error al Importar');
         }
-        return redirect()->route('admin.persons.index');
+        return redirect()->back();
     }
 
     /**
@@ -66,10 +68,10 @@ class ImportController extends Controller
 
     public function truncate()
     {
-        DB::table('results')->delete();
+        DB::table('personas')->delete();
 
-        Session::flash('message','Tabla resultados vaciada');
-        return redirect()->route('result.index');
+        Session::flash('message','Tabla personas vaciada');
+        return redirect()->back();
     }
 
 
