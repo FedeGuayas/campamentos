@@ -54,6 +54,11 @@ Route::group(['middleware' => 'auth', 'prefix' => 'admin'], function () {
     Route::get('inscripcions/alumnos/{representante_id}','RepresentantesController@getAlumnos');
 
     
+    //******** Importar personas de archivo excel********//
+    Route::get('/persons/import', ['as'=>'persons.import','uses'=>'ImportController@getPersonas']);
+    Route::get('/persons/truncate', ['as'=>'persons.truncate','uses'=>'ImportController@truncate']);
+    Route::post('/persons/import', ['as'=>'persons.store','uses'=>'ImportController@postPersonsImport']);
+    
     //Buscar represenante
     Route::POST('representantes/search',['as' => 'admin.representantes.beforeSearch', 'uses'=>'RepresentantesController@beforeSearch']);
     Route::get('representantes/search/{search}',['as' => 'admin.representantes.search', 'uses'=>'RepresentantesController@search']);

@@ -82,6 +82,7 @@ $("#disciplina_id").change(function (event) {
 //cargar horarios al seleccionar el dia,  paso todos los parametros pa determinar el programa al k pertenecen
 $("#dia_id").change(function (event) {
     var horario=$("#horario_id");
+    var nivel=$("#nivel");
     var escenario_id=$("#escenario_id").val();
     var disciplina_id=$("#disciplina_id").val();
     var modulo_id=$("#modulo_id").val();
@@ -99,7 +100,9 @@ $("#dia_id").change(function (event) {
         // contentType: 'application/x-www-form-urlencoded',
         data: datos,
         success: function (response) {
-            // console.log(response);
+            console.log(response);
+            nivel.empty();
+            nivel.add().html("Holaaa");
             horario.empty();
             for (i = 0; i < response.length; i++) {
                 horario.append('<option value="' + response[i].horario_id + '">' + response[i].start_time + ' ' + response[i].end_time + ' ( ' + response[i].init_age + ' - ' + response[i].end_age + ') </option>');

@@ -51,14 +51,14 @@
         </div>
 
         <div class="row">
-            <div class="col l6">
+            <div class="col l4">
                 <div class="input-field">
                     {{--{!! Form::select('escenario_id', '$escenarios',null, ['id'=>'escenario_id']) !!}--}}
                     {!! Form::select('escenario_id',['placeholder'=>'Seleccione escenario'],null,['id'=>'escenario_id']) !!}
                     {!! Form::label('escenario_id', 'Escenarios:*') !!}
                 </div>
             </div>
-            <div class="col l6">
+            <div class="col l4">
                 <div class="input-field">
                     {!! Form::select('disciplina_id', ['placeholder'=>'Seleccione disciplina'],null, ['id'=>'disciplina_id']) !!}
                     {!! Form::label('disciplina_id', 'Disciplinas:*') !!}
@@ -67,10 +67,6 @@
         </div>
 
         <div class="row">
-            <div class="input-field  col l3 ">
-                {!! Form::select('nivel',['placeholder'=>'Nivel'],null,['id'=>'nivel']) !!}
-                {!! Form::label('nivel','Nivel:') !!}
-            </div>
             <div class="col l3">
                 <div class="input-field">
                     {!! Form::select('dia_id', ['Dia' => 'Diass'],null, ['id'=>'dia_id']) !!}
@@ -83,8 +79,17 @@
                     {!! Form::label('horario_id', 'Horario (Edades):*') !!}
                 </div>
             </div>
+            <div class="input-field  col l3 ">
+                {!! Form::text('nivel',null,['class'=>'validate','id'=>'nivel']) !!}
+                {!! Form::label('nivel','Nivel:') !!}
+            </div>
+            <div class="col l2">
+                <div class="input-field">
+                    {!! Form::checkbox('matricula',null,false,['id'=>'matricula']) !!}
+                    {!! Form::label('matricula','Matricula') !!}
+                </div>
+            </div>
         </div>
-
 
         <div class="row">
             {{--<div class="col l2">--}}
@@ -99,17 +104,18 @@
                     {{--{!! Form::label('desc_50','Desc 50%') !!}--}}
                 {{--</div>--}}
             {{--</div>--}}
-            <div class="col l2">
-                <div class="input-field">
-                    {!! Form::checkbox('matricula',null,false,['id'=>'matricula']) !!}
-                    {!! Form::label('matricula','Matricula') !!}
-                </div>
-            </div>
+
             <div class="col l4">
                 <div class="input-field">
                     {!! Form::select('fpago_id', ['Fpago' => 'F pago'],null, ['id'=>'fpago_id']) !!}
                     {!! Form::label('fpago_id', 'Forma de pago:*') !!}
                 </div>
+            </div>
+
+            <div class="input-field col l2 m2 s2 right ">
+                <i class="fa fa-usd prefix" aria-hidden="true"></i>
+                {!! Form::label('valor','Valor:') !!}
+                {!! Form::number('valor',null,['placeholder'=>'0.00','disabled']) !!}
             </div>
             {{--<div class="col l2">--}}
             {{--<div class="input-field">--}}
@@ -118,7 +124,6 @@
             {{--{!! Form::number('anticipo',null,['step' => '0.01','min' => '1','class'=>'validate','placeholder'=>'0.00']) !!}--}}
             {{--</div>--}}
             {{--</div>--}}
-
         </div>
 
 
@@ -130,7 +135,6 @@
                 <a href="#!">
                     {!! Form::button('<i class="fa fa-plus"></i>', ['class'=>'btn waves-effect waves-light']) !!}
                 </a>
-
                 {!! Form::button('<i class="fa fa-close"></i>',['class'=>'btn waves-effect waves-light red darken-1','type' => 'reset']) !!}
                 <a href="#!">
                     {!! Form::button('<i class="fa fa-money" aria-hidden="true"></i>',['class'=>'btn btn-large pull-right waves-effect waves-light darken-1','type' => 'submit']) !!}

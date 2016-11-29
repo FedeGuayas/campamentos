@@ -46,6 +46,7 @@
                 <li><a href="{!! route('admin.users.index') !!}" class="waves-effect waves-teal">Usuarios</a></li>
                 <li><a href="{!! route('admin.roles.index') !!}" class="waves-effect waves-teal">Roles</a></li>
                 <li><a href="{!! route('admin.permissions.index') !!}" class="waves-effect waves-teal">Permisos</a></li>
+                <li><a href="{!! route('persons.import') !!}" class="waves-effect waves-teal">Imp Personas</a></li>
 
 
 
