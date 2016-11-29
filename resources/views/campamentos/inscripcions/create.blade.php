@@ -48,7 +48,7 @@
                in_duration: 300, // Transition in duration
                out_duration: 200, // Transition out duration
                starting_top: '4%', // Starting top style attribute
-               ending_top: '10%', // Ending top style attribute
+               ending_top: '2%', // Ending top style attribute
            });
 
        });
@@ -60,8 +60,8 @@
                opacity: .5, // Opacity of modal background
                in_duration: 300, // Transition in duration
                out_duration: 200, // Transition out duration
-               starting_top: '2', // Starting top style attribute
-               ending_top: '4%', // Ending top style attribute
+               starting_top: '4%', // Starting top style attribute
+               ending_top: '2%', // Ending top style attribute
             });
 
        });
@@ -74,7 +74,7 @@
                in_duration: 300, // Transition in duration
                out_duration: 200, // Transition out duration
                starting_top: '4%', // Starting top style attribute
-               ending_top: '10%', // Ending top style attribute
+               ending_top: '2%', // Ending top style attribute
            });
        });
 
@@ -107,38 +107,22 @@
 
                            // Comprobar cuando cambia un checkbox
                            $("#table_search input[type=checkbox]").on('change', function() {
-                               var alumno_id=$("#alumno_id");
+                               var representante_id=$("#representante_id");
                                // si se activa
                                if ($(this).is(':checked') ) {
                                    console.log("Checkbox " + $(this).prop("id") +  " (" + $(this).val() + ") => Seleccionado");
                                    // buscar el td más cercano en el DOM hacia "arriba"
                                    // luego encontrar los td adyacentes a este y obtener el nombre
                                    var name=$(this).closest('td').siblings('td:eq(1)').text();
-                                   // poner el texto en el input
-                                   $("#representante").val(name);
-                                   // guardo el id para enviarlo al controlador
-                                   $("#persona_id").val($(this).val());
-                                   $("#representante").addClass("teal-text");
-
-                                   //dropdown para seleccionar el alumno segun representante
-                                   var representanteid=$("#persona_id").val();
-                                   $.get("alumnos/" + representanteid + "", function (response, state) {
-//                                       console.log(response);
-                                       alumno_id.empty();
-                                       for (i = 0; i < response.length; i++) {
-                                           alumno_id.append('<option value="' + response[i].aID + '">' + response[i].nombres + '</option>');
-                                       }
-                                       alumno_id.material_select();
-                                   });
-
-
+                                   representante_id.append('<option value="' +$(this).val()+ '">' + name + '</option>');
+                                   representante_id.addClass("teal-text");
 
                                } else {
                                    console.log("Checkbox " + $(this).prop("id") +  " (" + $(this).val() + ") => Deseleccionado");
-                                   $("#representante").removeClass("teal-text");
-                                   $("#persona_id").val("");
-                                   $("#representante").val("");
+                                   representante_id.find("option:gt(0)").remove();//elimino las opciones menos la primera
+                                   representante_id.addClass("teal-text");
                                }
+                               representante_id.material_select();
                            });
                        },
                        error: function (resp) {
@@ -229,7 +213,7 @@
            }
 
            //llamar a funcion crear alumno
-           $("#representante_create").on("click", function (event) {
+           $("#alumno_create").on("click", function (event) {
                event.preventDefault();
                crear_alumno_ajax();
            });

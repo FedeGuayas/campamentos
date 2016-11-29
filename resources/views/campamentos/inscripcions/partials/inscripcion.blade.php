@@ -4,8 +4,10 @@
         <div class="row">
             {{--<div class="col l6"><br>--}}
                 <div class="input-field col l6 m6 s10">
-                    {!! Form::text('representate',null,['class'=>'validate','required','placeholder'=>'Representante', 'id'=>'representante','disabled']) !!}
-                    {!! Form::hidden('representante_id',null,['id'=>'persona_id','required']) !!}
+                    {!! Form::select('representante_id',['placeholder'=>'Seleccione ...'],null,['id'=>'representante_id']) !!}
+                    {!! Form::label('representante_id', 'Representante:*') !!}
+{{--                    {!! Form::text('representate',null,['class'=>'validate','required','placeholder'=>'Representante', 'id'=>'representante','disabled']) !!}--}}
+{{--                    {!! Form::hidden('representante_id',null,['id'=>'representante_id','required']) !!}--}}
                 </div>
 {{--                {!! Form::select('representante_id', ['Repre' => 'Representante'],null, ['id'=>'representante_id']) !!}--}}
             {{--</div>--}}
@@ -75,10 +77,10 @@
                     {!! Form::label('dia_id', 'Dias:*') !!}
                 </div>
             </div>
-            <div class="col l3">
+            <div class="col l4">
                 <div class="input-field">
                     {!! Form::select('horario_id', ['Hor' => 'Horas'],null, ['id'=>'horario_id']) !!}
-                    {!! Form::label('horario_id', 'Horario:*') !!}
+                    {!! Form::label('horario_id', 'Horario (Edades):*') !!}
                 </div>
             </div>
         </div>

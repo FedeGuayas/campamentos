@@ -352,17 +352,16 @@ class RepresentantesController extends Controller
     public function getAlumnos(Request $request,$id){
 
         if ($request->ajax()){
-//            $representante=Representante::where('persona_id',$id)->get();
-            $alumnos=DB::table('alumnos as a')
-                ->join('representantes as r','r.id','=','a.representante_id')
-                ->join('personas as p','p.id','=','r.persona_id')
-                ->select('p.nombres as nombres','p.apellidos as apellidos','a.id as aID','r.persona_id')
-                ->where('a.representante_id',$id)
-                ->get();
-//            $categoria = ['' => 'Seleccione la categoría'] + Categoria::lists('categoria', 'id')->all();
-//            $escenar = $escenarios->pluck('escenario', 'escenario_id');
-dd($alumnos);
-//            return response($alumnos);
+
+            $representante=Representante::where('persona_id',$id)->first();
+
+            $alumnos=Alumno::
+                join('personas as p','p.id','=','persona_id')
+                ->select('alumnos.id as aID','p.nombres','p.apellidos')
+                ->where('representante_id',$representante->id)
+                ->get()->toArray();
+
+            return response($alumnos);
         }
     }
 

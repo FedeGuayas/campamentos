@@ -31,7 +31,6 @@
                             {!! Form::label('num_doc','Número del documento:*') !!}
                             {!! Form::text('num_doc',null,['class'=>'validate','required']) !!}
                         </div>
-
                         <div class="input-field col l4 m4 s12">
                             {!! Form::select('genero', ['Masculino' => 'Masculino', 'Femenino' => 'Femenino'],null, ['id'=>'genero']) !!}
                             {!! Form::label('genero','Género:') !!}
@@ -41,31 +40,28 @@
                             <i class="fa fa-envelope prefix"></i>
                             {!! Form::label('email','Correo:*') !!}
                             {!! Form::email('email',null,['class'=>'validate']) !!}
-
                         </div>
-                        <div class="form-group col l4 m4 s12">
-                            {!! Form::label('fecha','Fecha de Nacimiento:',['class'=>'label-control']) !!}
-                            {{  Form::date('fecha_nac',null,[ 'class'=>'validate','required']) }}
-                        </div>
-
-
-
-                        <div class="input-field  col l6 m6 s12">
-                            <i class="fa fa-pencil prefix"></i>
-                            {!! Form::textarea('direccion',null,['class'=>'materialize-textarea validate','id'=>'direccion','length'=>'255']) !!}
-                            {!! Form::label('direccion','Dirección*:') !!}
-                        </div>
-
-                        <div class="input-field  col l6 m6 s12">
+                        <div class="input-field  col l3 m3 s6">
                             <i class="fa fa-phone prefix"></i>
                             {!! Form::text('phone',null,['class'=>'validate','id'=>'phone']) !!}
                             {!! Form::label('phone','Teléfono1:*') !!}
                         </div>
-                        <div class="input-field  col l6 m6 s12">
+                        <div class="input-field  col l3 m3 s6">
                             <i class="fa fa-phone prefix"></i>
                             {!! Form::text('telefono',null,['class'=>'validate','id'=>'telefono']) !!}
                             {!! Form::label('telefono','Teléfono2:') !!}
                         </div>
+
+                        <div class="input-field  col l7 m7 s12">
+                            <i class="fa fa-pencil prefix"></i>
+                            {!! Form::textarea('direccion',null,['class'=>'materialize-textarea validate','id'=>'direccion','length'=>'255']) !!}
+                            {!! Form::label('direccion','Dirección*:') !!}
+                        </div>
+                        <div class="form-group col l4 m4 s6">
+                            {!! Form::label('fecha','Fecha de Nacimiento:',['class'=>'label-control']) !!}
+                            {{  Form::date('fecha_nac',null,[ 'class'=>'validate','required']) }}
+                        </div>
+
 
                         <div class="file-field input-field  col l6 m6 s12">
                             <div class="btn">

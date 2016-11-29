@@ -5,6 +5,21 @@
 //V1 OK
 
 
+//cargar alumnos del representante
+$("#representante_id").change(function (event) {
+    var alumno=$("#alumno_id");
+    $.get("alumnos/" + event.target.value + "", function (response, state) {
+        // console.log(response);
+        alumno.empty();
+        for (i = 0; i < response.length; i++) {
+            alumno.append('<option value="' + response[i].aID + '">' + response[i].nombres + ' ' + response[i].apellidos + '</option>');
+        }
+        alumno.material_select();
+    });
+});
+
+
+
 //cargar escenarios al selecciona el modulo
 $("#modulo_id").change(function (event) {
     var escenario=$("#escenario_id");
@@ -87,7 +102,7 @@ $("#dia_id").change(function (event) {
             // console.log(response);
             horario.empty();
             for (i = 0; i < response.length; i++) {
-                horario.append('<option value="' + response[i].horario_id + '">' + response[i].start_time + ' ' + response[i].end_time + '</option>');
+                horario.append('<option value="' + response[i].horario_id + '">' + response[i].start_time + ' ' + response[i].end_time + ' ( ' + response[i].init_age + ' - ' + response[i].end_age + ') </option>');
             }
             horario.material_select();
         },

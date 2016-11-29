@@ -174,7 +174,7 @@ class CalendarsController extends Controller
                 ->select('d.dia as dias','d.activated','c.id as cID','d.id as dID',
                     'c.dia_id','c.horario_id','c.nivel','c.program_id')
                 ->where('program_id',$program->id)
-                ->where('d.activated',true)->get()->toArray();
+                ->where('d.activated',true)->groupBy('dID')->get()->toArray();
             return response($dias);
         }
     }
@@ -202,7 +202,7 @@ class CalendarsController extends Controller
                 join('horarios as h','h.id','=','c.horario_id','as c')
                 ->join('dias as d','d.id','=','c.dia_id')
                 ->select('h.start_time as start_time','h.end_time as end_time','h.activated','c.id as cID',
-                    'h.id as hID','c.dia_id','c.horario_id','c.nivel')
+                    'h.id as hID','c.dia_id','c.horario_id','c.nivel', 'c.init_age','c.end_age')
                 ->where('program_id',$program->id)
                 ->where('c.dia_id',$dia_id)
                 ->where('h.activated',true)->get()->toArray();
@@ -211,6 +211,36 @@ class CalendarsController extends Controller
         }
     }
 
+
+    /**
+     * Obtener Nivel para los horarios
+     *
+     * @param Request $request
+     * @param $id
+     * @return mixed
+     */
+    public function getNivel(Request $request){
+        if ($request->ajax()){
+
+//            $nivel = ['' => 'Seleccione ...'] + Categoria::lists('categoria', 'id')->all();
+//            $escenar = $escenarios->pluck('escenario', 'escenario_id');
+
+            $nivel=Calendar::where('escenario_id',$escenario_id)
+                ->where('disciplina_id',$disciplina_id)
+                ->where('modulo_id',$modulo_id)->first();
+
+            $horario=Calendar::
+            join('horarios as h','h.id','=','c.horario_id','as c')
+                ->join('dias as d','d.id','=','c.dia_id')
+                ->select('h.start_time as start_time','h.end_time as end_time','h.activated','c.id as cID',
+                    'h.id as hID','c.dia_id','c.horario_id','c.nivel', 'c.init_age','c.end_age')
+                ->where('program_id',$program->id)
+                ->where('c.dia_id',$dia_id)
+                ->where('h.activated',true)->get()->toArray();
+
+            return response($horario);
+        }
+    }
 
 
     
