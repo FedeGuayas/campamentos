@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 ini_set('max_execution_time', 300); //5 minutes
 
+use App\Persona;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Maatwebsite\Excel\Facades\Excel;
@@ -32,21 +33,22 @@ class ImportController extends Controller
     public function postPersonsImport(Request $request)
     {
         if ($request->file('persons')){
-//            $file=$request->file('chip');
-//            $name=$file->getClientOriginalName();
+            $file=$request->file('persons');
+            $name=$file->getClientOriginalName();
+            
             Excel::load(Input::file('persons'), function($reader) {
 
                 foreach ($reader->get() as $result) {
-                    Result::create([
-                        'first_name'=> $result->first_name,
-                        'second_name' =>$result->second_name,
-                        'last_name' =>$result->last_name,
-                        'sex' =>$result->sex,
-                        'category' =>$result->category,
-                        'circuit' =>$result->circuit,
-                        'chip' =>$result->chip,
-                        'place' =>$result->place,
-                        'time' =>$result->time
+                    Persona::create([
+                        'nombres'=> $result->nombres,
+                        'apellidos' =>$result->apellidos,
+                        'tipo_doc' =>$result->tipo_doc,
+                        'num_doc' =>$result->num_doc,
+                        'genero' =>$result->genero,
+                        'fecha_nac' =>$result->fecha_nac,
+                        'email' =>$result->email,
+                        'direccion' =>$result->direccion,
+                        'telefono' =>$result->telefono
                     ]);
                 }
             });
@@ -54,7 +56,7 @@ class ImportController extends Controller
         }else{
             Session::flash('message','Error al Importar');
         }
-        return redirect()->route('result.index');
+        return redirect()->route('admin.persons.index');
     }
 
     /**

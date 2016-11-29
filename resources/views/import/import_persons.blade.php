@@ -9,6 +9,7 @@
     <div class="col l6 col m6 col s12">
         <h3>Importar Personas</h3>
         @include('alert.request')
+        @include('alert.success')
     </div>
 </div>
 {!! Form::open (array('route' => 'persons.store', 'method'=>'POST','files'=>'true'))!!}
