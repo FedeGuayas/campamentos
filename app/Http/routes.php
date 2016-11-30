@@ -67,6 +67,8 @@ Route::group(['middleware' => 'auth', 'prefix' => 'admin'], function () {
     Route::POST('representantes/search',['as' => 'admin.representantes.beforeSearch', 'uses'=>'RepresentantesController@beforeSearch']);
     Route::get('representantes/search/{search}',['as' => 'admin.representantes.search', 'uses'=>'RepresentantesController@search']);
     Route::get('representantes/listSearch/{d?}',['as' => 'admin.representantes.listSearch', 'uses'=>'RepresentantesController@listSearch']);
+    
+    
 
     //crear alumno a partir de dar clik en el representante
     Route::get(' alumnos/create{representante?}',['as' => 'admin.alumnos.create', 'uses'=>'AlumnosController@create']);

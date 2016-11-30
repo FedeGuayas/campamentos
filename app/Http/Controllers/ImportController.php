@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-ini_set('max_execution_time', 300); //5 minutes
+ini_set('max_execution_time', 300); //5 minutos
 
 use App\Persona;
 use Illuminate\Http\Request;
@@ -15,6 +15,8 @@ use App\Http\Requests;
 
 class ImportController extends Controller
 {
+    
+
 
     /**
      * Mostrar vista de importar excel de personas.
@@ -26,7 +28,7 @@ class ImportController extends Controller
     }
 
     /**
-     * almacenar el ecel importado en la bd.
+     * almacenar el excel importado en la bd.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -34,28 +36,32 @@ class ImportController extends Controller
 
     public function postPersonsImport(Request $request)
     {
-        if ($request->file('persons')){
+        if ($request->file('persons')) {
 
-            Excel::load(Input::file('persons'), function($reader) {
+            Excel::load(Input::file('persons'), function($reader){
 
-                foreach ($reader->get() as $result) {
-                    Persona::create([
-                        'nombres'=> $result->nombres,
-                        'apellidos' =>$result->apellidos,
-                        'tipo_doc' =>$result->tipo_doc,
-                        'num_doc' =>$result->num_doc,
-                        'genero' =>$result->genero,
-                        'fecha_nac' =>$result->fecha_nac,
-                        'email' =>$result->email,
-                        'direccion' =>$result->direccion,
-                        'telefono' =>$result->telefono
-                    ]);
-                }
+                    foreach ($reader->get() as $result) {
+
+                        Persona::create([
+                            'nombres' => $result->nombres,
+                            'apellidos' => $result->apellidos,
+                            'tipo_doc' => $result->tipo_doc,
+                            'num_doc' => $result->num_doc,
+                            'genero' => $result->genero,
+                            'fecha_nac' => $result->fecha_nac,
+                            'email' => $result->email,
+                            'direccion' => $result->direccion,
+                            'telefono' => $result->telefono
+                        ]);
+
+                    }
+
             });
             Session::flash('message','Se importaron los datos');
         }else{
-            Session::flash('message','Error al Importar');
+            Session::flash('message_danger','Error al Importar');
         }
+
         return redirect()->back();
     }
 
@@ -71,7 +77,4 @@ class ImportController extends Controller
         Session::flash('message','Tabla personas vaciada');
         return redirect()->back();
     }
-
-
 }
-
