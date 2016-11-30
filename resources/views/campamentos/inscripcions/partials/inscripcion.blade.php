@@ -1,16 +1,14 @@
     <div class="card-content">
         {!! Form::open(['route'=>'admin.inscripcions.store', 'method'=>'POST'])  !!}
-
+        {!! Form::hidden('calendar_id',null,['id'=>'calendar_id']) !!}
+        {!! Form::hidden('program_id',null,['id'=>'program_id']) !!}
         <div class="row">
             {{--<div class="col l6"><br>--}}
                 <div class="input-field col l6 m6 s10">
                     {!! Form::select('representante_id',['placeholder'=>'Seleccione ...'],null,['id'=>'representante_id']) !!}
                     {!! Form::label('representante_id', 'Representante:*') !!}
-{{--                    {!! Form::text('representate',null,['class'=>'validate','required','placeholder'=>'Representante', 'id'=>'representante','disabled']) !!}--}}
-{{--                    {!! Form::hidden('representante_id',null,['id'=>'representante_id','required']) !!}--}}
                 </div>
-{{--                {!! Form::select('representante_id', ['Repre' => 'Representante'],null, ['id'=>'representante_id']) !!}--}}
-            {{--</div>--}}
+
             <div class="pull-left" style="position: relative; display: inline-block;">
                 <div class="fixed-action-btn horizontal" style="position: relative; display: inline-block; right: 24px; ">
                     <a class="btn-floating btn-medium teal"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></a>
@@ -80,7 +78,7 @@
                 </div>
             </div>
             <div class="input-field  col l3 ">
-                {!! Form::text('nivel',null,['class'=>'validate','id'=>'nivel']) !!}
+                {!! Form::select('nivel',['placeholder' => 'Seleccione...'],null,['class'=>'validate','id'=>'nivel']) !!}
                 {!! Form::label('nivel','Nivel:') !!}
             </div>
             <div class="col l2">

@@ -50,6 +50,10 @@ Route::group(['middleware' => 'auth', 'prefix' => 'admin'], function () {
     Route::get('inscripcions/dias{data?}',['uses'=>'CalendarsController@getDias','as'=>'program.getDias']);
     //obtener los horarios para el dia
     Route::get('inscripcions/horario/{data?}','CalendarsController@getHorario');
+    //obtener los niveles para el dia y horario
+    Route::get('inscripcions/nivel/{data?}','CalendarsController@getNivel');
+    //obtener ontener el id del calendario o curso
+    Route::get('inscripcions/curso/{data?}','CalendarsController@getCurso');
     //obtener los alumnos de un trabajador
     Route::get('inscripcions/alumnos/{representante_id}','RepresentantesController@getAlumnos');
 

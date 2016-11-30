@@ -197,12 +197,12 @@ class CalendarsController extends Controller
             $program=Program::where('escenario_id',$escenario_id)
                 ->where('disciplina_id',$disciplina_id)
                 ->where('modulo_id',$modulo_id)->first();
-            
+
             $horario=Calendar::
                 join('horarios as h','h.id','=','c.horario_id','as c')
                 ->join('dias as d','d.id','=','c.dia_id')
                 ->select('h.start_time as start_time','h.end_time as end_time','h.activated','c.id as cID',
-                    'h.id as hID','c.dia_id','c.horario_id','c.nivel', 'c.init_age','c.end_age','c.nivel')
+                    'h.id as hID','c.dia_id','c.horario_id','c.nivel', 'c.init_age','c.end_age')
                 ->where('program_id',$program->id)
                 ->where('c.dia_id',$dia_id)
                 ->where('h.activated',true)->get()->toArray();
@@ -210,6 +210,85 @@ class CalendarsController extends Controller
             return response($horario);
         }
     }
+
+
+    /**
+     * Obtener los niveles
+     *
+     * @param Request $request
+     * @param $id
+     * @return mixed
+     */
+    public function getNivel(Request $request){
+        if ($request->ajax()){
+
+            $escenario_id=$request->get('escenario');
+            $disciplina_id=$request->get('disciplina');
+            $modulo_id=$request->get('modulo');
+            $dia_id=$request->get('dia_id');
+            $horario_id=$request->get('horario_id');
+
+            $program=Program::where('escenario_id',$escenario_id)
+                ->where('disciplina_id',$disciplina_id)
+                ->where('modulo_id',$modulo_id)->first();
+
+            $nivel=Calendar::
+               where('program_id',$program->id)
+                ->where('dia_id',$dia_id)
+                ->where('horario_id',$horario_id)->get()->toArray();
+
+            $nivezxcvzxvcl=Calendar::
+            join('horarios as h','h.id','=','c.horario_id','as c')
+                ->join('dias as d','d.id','=','c.dia_id')
+                ->select('c.id as cID','c.dia_id','c.horario_id','c.nivel')
+
+                ->where('c.dia_id',$dia_id)
+                ->where('c.horario_id',$horario_id)
+               ->get()->toArray();
+
+
+            return response($nivel);
+        }
+    }
+
+    /**
+     * Obtener el curso o calendario del formulario de inscripcion
+     *
+     * @param Request $request
+     * @param $id
+     * @return mixed
+     */
+    public function getCurso(Request $request){
+        if ($request->ajax()){
+
+            $escenario_id=$request->get('escenario');
+            $disciplina_id=$request->get('disciplina');
+            $modulo_id=$request->get('modulo');
+            $dia_id=$request->get('dia_id');
+            $horario_id=$request->get('horario_id');
+            $calendar_id=$request->get('nivel');//xk en el value del select de nivel estoy pasando el calenadr_id
+
+            $program=Program::where('escenario_id',$escenario_id)
+                ->where('disciplina_id',$disciplina_id)
+                ->where('modulo_id',$modulo_id)->first();
+
+            $calendar=Calendar::findOrFail($calendar_id);
+
+            $curso=Calendar::
+            join('horarios as h','h.id','=','c.horario_id','as c')
+                ->join('dias as d','d.id','=','c.dia_id')
+                ->select('c.id as cID','c.program_id')
+                ->where('c.program_id',$program->id)
+                ->where('c.id',$calendar_id)
+                ->where('c.dia_id',$dia_id)
+                ->where('c.horario_id',$horario_id)
+                ->get()->toArray();
+
+
+            return response($curso);
+        }
+    }
+    
 
     
     /*****PRODUCTO*****/

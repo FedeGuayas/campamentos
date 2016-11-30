@@ -39,6 +39,7 @@ class InscripcionsController extends Controller
      */
     public function store(Request $request)
     {
+        dd($request->all());
         return ('inscrito');
     }
 

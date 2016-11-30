@@ -35,9 +35,7 @@ class ImportController extends Controller
     public function postPersonsImport(Request $request)
     {
         if ($request->file('persons')){
-            $file=$request->file('persons');
-            $name=$file->getClientOriginalName();
-            
+
             Excel::load(Input::file('persons'), function($reader) {
 
                 foreach ($reader->get() as $result) {

@@ -82,7 +82,6 @@ $("#disciplina_id").change(function (event) {
 //cargar horarios al seleccionar el dia,  paso todos los parametros pa determinar el programa al k pertenecen
 $("#dia_id").change(function (event) {
     var horario=$("#horario_id");
-    var nivel=$("#nivel");
     var escenario_id=$("#escenario_id").val();
     var disciplina_id=$("#disciplina_id").val();
     var modulo_id=$("#modulo_id").val();
@@ -100,14 +99,84 @@ $("#dia_id").change(function (event) {
         // contentType: 'application/x-www-form-urlencoded',
         data: datos,
         success: function (response) {
-            console.log(response);
-            nivel.empty();
-            nivel.add().html("Holaaa");
             horario.empty();
             for (i = 0; i < response.length; i++) {
                 horario.append('<option value="' + response[i].horario_id + '">' + response[i].start_time + ' ' + response[i].end_time + ' ( ' + response[i].init_age + ' - ' + response[i].end_age + ') </option>');
             }
             horario.material_select();
+        },
+        error: function (response) {
+            // console.log(response);
+        }
+    });
+});
+
+//cargar nivel al seleccionar el dia y el horario paso todos los parametros pa determinar el programa al k pertenecen
+$("#horario_id").change(function (event) {
+    var nivel=$("#nivel");
+    var escenario_id=$("#escenario_id").val();
+    var disciplina_id=$("#disciplina_id").val();
+    var modulo_id=$("#modulo_id").val();
+    var dia_id=$("#dia_id").val();
+    var datos={
+        escenario:escenario_id,
+        disciplina:disciplina_id,
+        modulo:modulo_id,
+        dia_id:dia_id,
+        horario_id:event.target.value
+    }
+    // var token = $("input[name=_token]").val();
+    $.ajax({
+        url: "nivel/",
+        type: "GET",
+        // headers: {'X-CSRF-TOKEN': token},
+        // contentType: 'application/x-www-form-urlencoded',
+        data: datos,
+        success: function (response) {
+            console.log(response);
+            nivel.empty();
+            for (i = 0; i < response.length; i++) {
+                nivel.append('<option value="' + response[i].id + '">' + response[i].nivel + '</option>');
+            }
+            nivel.material_select();
+        },
+        error: function (response) {
+            // console.log(response);
+        }
+    });
+});
+
+//obtener el id del curso  paso todos los parametros pa determinar el programa al k pertenecen
+$("#nivel").change(function (event) {
+    var calendar_id=$("#calendar_id");
+    var program_id=$("#program_id");
+    var escenario_id=$("#escenario_id").val();
+    var disciplina_id=$("#disciplina_id").val();
+    var modulo_id=$("#modulo_id").val();
+    var dia_id=$("#dia_id").val();
+    var horario_id=$("#horario_id").val();
+    var datos={
+        escenario:escenario_id,
+        disciplina:disciplina_id,
+        modulo:modulo_id,
+        dia_id:dia_id,
+        horario_id:horario_id,
+        nivel:event.target.value
+    }
+    // var token = $("input[name=_token]").val();
+    $.ajax({
+        url: "curso/",
+        type: "GET",
+        // headers: {'X-CSRF-TOKEN': token},
+        // contentType: 'application/x-www-form-urlencoded',
+        data: datos,
+        success: function (response) {
+            console.log(response);
+            calendar_id.empty();
+            program_id.empty();
+            calendar_id.val(response[0].cID);
+            program_id.val(response[0].program_id);
+            
         },
         error: function (response) {
             // console.log(response);

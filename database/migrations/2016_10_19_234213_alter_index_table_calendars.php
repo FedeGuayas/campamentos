@@ -25,7 +25,7 @@ class AlterIndexTableCalendars extends Migration
     public function down()
     {
         Schema::table('calendars', function (Blueprint $table) {
-            $table->dropUnique(['dia_id', 'horario_id','program_id']);
+            $table->dropUnique(['dia_id', 'horario_id','program_id','nivel']);
         });
     }
 }
