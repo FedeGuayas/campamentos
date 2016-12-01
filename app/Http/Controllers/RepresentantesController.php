@@ -354,6 +354,7 @@ class RepresentantesController extends Controller
         if ($request->ajax()){
 
             $representante=Representante::where('persona_id',$id)->first();
+//            $representante=Representante::findOrFail($id);
 
             $alumnos=Alumno::
                 join('personas as p','p.id','=','persona_id')

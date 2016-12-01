@@ -116,11 +116,13 @@
                                    var name=$(this).closest('td').siblings('td:eq(1)').text();
                                    representante_id.append('<option value="' +$(this).val()+ '">' + name + '</option>');
                                    representante_id.addClass("teal-text");
+//                                   $("#persona_id").val($(this).val());
 
                                } else {
                                    console.log("Checkbox " + $(this).prop("id") +  " (" + $(this).val() + ") => Deseleccionado");
                                    representante_id.find("option:gt(0)").remove();//elimino las opciones menos la primera
-                                   representante_id.addClass("teal-text");
+                                   representante_id.removeClass("teal-text");
+                                   $("#persona_id").empty();
                                }
                                representante_id.material_select();
                            });
@@ -138,6 +140,7 @@
             function crear_representante_ajax(){
                 var route = "{{route('admin.representantes.store')}}";
                 var token = $("input[name=_token]").val();
+                var representante_id=$("#representante_id");
                 var formData = new FormData(document.getElementById("form_representante"));//se envia tod el form al controlador
                 //formData.append("dato", "valor"); //agregar otros datos a en viar al controlador
                 // formData.append(f.attr("name"), $(this)[0].files[0]);
@@ -152,12 +155,15 @@
                     processData: false,
 //                    data:$("#form_representante").serialize(),
                     success: function (resp) {
+                        var id=resp.representante_id;
+                        var name=resp.nombre;
                         $("#form_representante").trigger("reset");//limpio el form
                         $("#msj-succes").html(resp.message)
                         $("#mensaje-success").fadeIn();
-                        $("#representante").val(resp.nombre);
-                        $("#representante_id").val(resp.representante_id);
-                        $("#representante").addClass("teal-text");
+                        representante_id.append('<option value="'+id+'">'+ name+'</option>');
+                        representante_id.addClass("teal-text");
+                        representante_id.material_select()
+//                        $("#persona_id").val(id);
                     },
                     error: function (resp) {
                         //console.log(resp.responseJSON)
@@ -167,7 +173,11 @@
                         });
                         $('#msj-error').show().html(errors);
                         $("#mensaje-error").fadeIn();
+                        representante_id.removeClass("teal-text");
+                        representante_id.find("option:gt(0)").remove();
+                        $("#persona_id").empty();
                     }
+
                 });
             }
 
@@ -180,8 +190,10 @@
             //funcion crear alumno
            function crear_alumno_ajax(){
                var route = "{{route('admin.alumnos.store')}}";
+               var alumno_id=$("#alumno_id");
                var token = $("input[name=_token]").val();
                var formData = new FormData(document.getElementById("form_alumno"));
+               formData.append("persona_id", $("#representante_id").val());
                $.ajax({
                    url: route,
                    type: "POST",
@@ -193,12 +205,17 @@
                    processData: false,
 //                    data:$("#form_representante").serialize(),
                    success: function (resp) {
+                       var id=resp.alumno_id;
+                       var name=resp.nombre;
                        $("#form_alumno").trigger("reset");//limpio el form
                        $("#msj-succes").html(resp.message)
                        $("#mensaje-success").fadeIn();
                        $("#alumno_id").val(resp.nombre);
                        $("#persona_id").val(resp.persona_id);
                        $("#representante").addClass("teal-text");
+                       alumno_id.append('<option value="'+id+'">'+ name+'</option>');
+                       alumno_id.addClass("teal-text");
+                       alumno_id.material_select();
                    },
                    error: function (resp) {
                        //console.log(resp.responseJSON)
@@ -208,6 +225,8 @@
                        });
                        $('#msj-error').show().html(errors);
                        $("#mensaje-error").fadeIn();
+                       alumno_id.removeClass("teal-text");
+                       alumno_id.find("option:gt(0)").remove();
                    }
                });
            }

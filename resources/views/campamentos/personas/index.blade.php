@@ -1,6 +1,6 @@
 @extends('layouts.admin.index')
 
-@section('title','Representantes')
+@section('title','Personas')
 
 {{--@section('head')--}}
     {{--{!! Html::style('plugins/datatables/dataTables.bootstrap.css') !!}--}}
@@ -11,58 +11,47 @@
     <div class="row">
         <div class="col l8 m8 s">
             @include('alert.success')
-            <h4>Representantes</h4>
-                <a href="{{route('admin.representantes.create')}}">
-                    {!! Form::button('<i class="fa fa-user-plus" ></i>',['class'=>'btn tooltipped waves-effect waves-light','data-position'=>'right', 'data-delay'=>'50', 'data-tooltip'=>'Crear representante']) !!}
-                </a>
-
-            {{-- @include('runner.usuarios.search')--}}
+            <h4>Personas</h4>
         </div>
     </div>
-
     <div class="row">
         <div class="col l12 m12 s12">
 
-                <table id="representante_table" class="table table-striped table-bordered table-condensed table-hover highlight responsive-table" cellspacing="0" width="100%"
-                       data-order='[[ 0, "asc" ]]'>
+                <table id="persona_table" class="table table-striped table-bordered table-condensed table-hover highlight responsive-table" cellspacing="0" width="100%" style="display: none"  data-order='[[ 0, "asc" ]]'>
                     <thead>
                     <th>Id</th>
                     <th>Nombres y Apellidos</th>
-                    <th>CI</th>
-                    <th>Alumno</th>
-                    <th>CI</th>
-                    <th>Opciones</th>
+                    <th>Tipo Doc</th>
+                    <th>Doc</th>
+                    <th>Genero</th>
+                    <th>Fecha Nac</th>
+                    <th>Email</th>
+                    <th>Direccion</th>
+                    <th>Telefono</th>
+                    <th>Opcion</th>
                     </thead>
-                    @foreach ($representantes as $rep)
+                    @foreach ($personas as $per)
                         <tr>
-                            <td>{{ $rep->id }}</td>
-                            <td>{{ $rep->persona->getNombreAttribute() }}</td>
-                            <td>{{ $rep->persona->num_doc }}</td>
+                            <td>{{ $per->id }}</td>
+                            <td>{{ $per->getNombreAttribute() }}</td>
+                            <td>{{ $per->tipo_doc }}</td>
+                            <td>{{ $per->num_doc }}</td>
+                            <td>{{ $per->genero }}</td>
+                            <td>{{ $per->fecha_nac }}</td>
+                            <td>{{ $per->email }}</td>
+                            <td>{{ $per->direccion }}</td>
+                            <td>{{ $per->telefono }}</td>
                             <td>
-                                @foreach ($rep->alumnos as $alumno)
-                                    {{ $alumno->persona->getNombreAttribute() }}<br>
-                                @endforeach
-                            </td>
-                            <td>
-                                @foreach ($rep->alumnos as $alumno)
-                                    {{ $alumno->persona->num_doc }}<br>
-                                @endforeach
-                            </td>
-                            <td>
-                                {!! Form::button('<i class="fa fa-trash-o" ></i>',['class'=>'modal-trigger btn-floating waves-effect waves-light red darken-1','data-target'=>"modal-delete-$rep->id"]) !!}
-                                <a href="{{ route('admin.representantes.edit', $rep->id ) }}">
-                                    {!! Form::button('<i class="fa fa-pencil-square-o" ></i>',['class'=>'btn-floating waves-effect waves-light teal darken-1']) !!}
-                                </a>
-                                <a href="{{ route('admin.representantes.show', $rep->id ) }}">
-                                    {!! Form::button('<i class="fa fa-eye"></i>',['class'=>'btn-floating waves-effect waves-light teal darken-1']) !!}
-                                </a>
-                                <a href="{{ route('admin.alumnos.create',$rep->id ) }}">
+                                {!! Form::button('<i class="fa fa-trash-o" ></i>',['class'=>'modal-trigger btn-floating waves-effect waves-light red darken-1','data-target'=>"modal-delete-$per->id"]) !!}
+                                {{--agregar como representante--}}
+
+                                <a href="{{ route('persona.representante',$per->id ) }}">
                                     {!! Form::button('<i class="fa fa-child" aria-hidden="true"></i>',['class'=>'btn-floating waves-effect waves-light teal darken-1']) !!}
                                 </a>
 
                             </td>
                         </tr>
-                        @include ('campamentos.representantes.modal')
+                        @include ('campamentos.personas.modal')
                     @endforeach
                 </table><!--end table-responsive-->
             {{--  {{ $usuarios->render() }}--}}
@@ -75,7 +64,7 @@
     <script>
         $(document).ready( function () {
 
-            var table =  $('#representante_table').DataTable({
+            var table =  $('#persona_table').DataTable({
                 "lengthMenu": [[10, 25], [10, 25]],
                 "processing": true,
                 "language":{
@@ -103,11 +92,11 @@
                     }
                 },
                 "fnInitComplete":function(){
-                    $('#representante_table').fadeIn();
+                    $('#persona_table').fadeIn();
                 }
             });
 
-            $("select").val('1'); //seleccionar valor por defecto del select
+            $("select").val('10'); //seleccionar valor por defecto del select
             $('select').addClass("browser-default"); //agregar una clase de materializecss de esta forma ya no se pierde el select de numero de registros.
             $('select').material_select(); //inicializar el select de materialize
 

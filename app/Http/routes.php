@@ -67,8 +67,9 @@ Route::group(['middleware' => 'auth', 'prefix' => 'admin'], function () {
     Route::POST('representantes/search',['as' => 'admin.representantes.beforeSearch', 'uses'=>'RepresentantesController@beforeSearch']);
     Route::get('representantes/search/{search}',['as' => 'admin.representantes.search', 'uses'=>'RepresentantesController@search']);
     Route::get('representantes/listSearch/{d?}',['as' => 'admin.representantes.listSearch', 'uses'=>'RepresentantesController@listSearch']);
-    
-    
+
+    //crear represntante a partir de la lista de persona importada
+    Route::get('/persona/{id}/representante', ['as'=>'persona.representante','uses'=>'PersonasController@postRepresentante']);
 
     //crear alumno a partir de dar clik en el representante
     Route::get(' alumnos/create{representante?}',['as' => 'admin.alumnos.create', 'uses'=>'AlumnosController@create']);
@@ -94,6 +95,7 @@ Route::group(['middleware' => 'auth', 'prefix' => 'admin'], function () {
     Route::resource('permissions', 'PermissionsController');
     Route::resource('encuestas', 'EncuestasController');
     Route::resource('representantes', 'RepresentantesController');
+    Route::resource('personas', 'PersonasController');
     Route::resource('alumnos', 'AlumnosController');
     Route::resource('transportes', 'TransportesController');
     Route::resource('escenarios', 'EscenariosController');

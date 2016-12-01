@@ -43,6 +43,46 @@ class AlumnosController extends Controller
         return view('campamentos.alumnos.create',compact('representante'));
     }
 
+
+    /**
+     * Get a validator for an incoming registration request.
+     * @param  array  $data
+     * @return \Illuminate\Contracts\Validation\Validator
+     */
+    protected function validator(array $data)
+    {
+        //variable tipo arreglo en donde se haga el arreglo de validación final
+        $out = [];
+        $out['persona_id'] = 'required';
+        $out['nombres'] = 'required | max:50';
+        $out['apellidos'] = 'required | max:50';
+        $out['genero'] = 'required';
+        $out['fecha_nac'] = 'required';
+//        $out['email'] = 'email|unique:personas';
+        $out['direccion'] = 'max:255';
+        $out['telefono'] = 'max:15';
+        $out['tipo_doc'] = 'required';
+        $out['num_doc'] = 'required';
+        $out['foto_ced'] = 'required|image|max:1000';
+        $out['foto'] = 'required|image|max:150';
+
+
+
+        //Hacer validación condicional dependiendo del tipo de documento a utilizar.
+        switch($data['tipo_doc']){
+            case 'Cedula':
+                $out['num_doc'] = 'required|digits:10 | unique:personas';
+                break;
+            case 'Pasaporte':
+                $out['num_doc'] = 'required|alpha_num |max:8 |min:5| unique:personas';
+                break;
+        }
+
+        //Retornar la variable $out auxiliar
+        return Validator::make($data, $out);
+    }
+    
+
     /**
      * Store a newly created resource in storage.
      *
@@ -73,13 +113,10 @@ class AlumnosController extends Controller
 
             $alumno=new Alumno;
 
-            $per=$request->get('persona_id');
-            $per=Persona::findOrFail($per);
-            $representante=$per->representantes()->first();
+            $representante_id=$request->get('persona_id');
+            $representante=Representante::findOrFail($representante_id);
             $alumno->persona()->associate($persona);
             $alumno->representante()->associate($representante);
-            $alumno->representante_id=$representante->id;
-
 
             if ($request->hasFile('foto_ced')) {
                 $file = $request->file('foto_ced');
@@ -109,7 +146,6 @@ class AlumnosController extends Controller
             }
 
         } catch (\Exception $e) {
-            dd($e);
             DB::rollback();
         }
 
@@ -228,46 +264,7 @@ class AlumnosController extends Controller
         return back();
     }
 
-    /**
-     * Get a validator for an incoming registration request.
-     * @param  array  $data
-     * @return \Illuminate\Contracts\Validation\Validator
-     */
-    protected function validator(array $data)
-    {
-        //variable tipo arreglo en donde se haga el arreglo de validación final
-        $out = [];
-        $out['persona_id'] = 'required';
-        $out['nombres'] = 'required | max:50';
-        $out['apellidos'] = 'required | max:50';
-        $out['genero'] = 'required';
-        $out['fecha_nac'] = 'required';
-        $out['email'] = 'email|unique:personas';
-        $out['direccion'] = 'max:255';
-        $out['telefono'] = 'max:15';
-        $out['tipo_doc'] = 'required';
-        $out['num_doc'] = 'required';
-        $out['foto_ced'] = 'image|max:1000';
-        $out['foto'] = 'image|max:150';
-
-
-
-        //Hacer validación condicional dependiendo del tipo de documento a utilizar.
-        switch($data['tipo_doc']){
-            case 'Cedula':
-                $out['num_doc'] = 'required|digits:10 | unique:personas';
-                break;
-            case 'Pasaporte':
-                $out['num_doc'] = 'required|alpha_num |max:8 |min:5| unique:personas';
-                break;
-            case 'NoDoc':
-                $out['num_doc'] = 'required|alpha_num |max:5 |min:3| unique:personas';
-                break;
-        }
-
-        //Retornar la variable $out auxiliar
-        return Validator::make($data, $out);
-    }
+    
 
 
     protected function validatorUpdate(array $data)

@@ -98,9 +98,6 @@
                     {!! Form::button('Cerrar',['class'=>'modal-action modal-close waves-effect waves-light btn right']) !!}
                 </div>
 
-
-
-
             </div> <!--/.col-->
         </div><!--/.row-->
     </div>

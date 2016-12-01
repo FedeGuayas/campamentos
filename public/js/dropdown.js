@@ -10,11 +10,12 @@ $("#representante_id").change(function (event) {
     var alumno=$("#alumno_id");
     $.get("alumnos/" + event.target.value + "", function (response, state) {
         // console.log(response);
-        alumno.empty();
-        for (i = 0; i < response.length; i++) {
-            alumno.append('<option value="' + response[i].aID + '">' + response[i].nombres + ' ' + response[i].apellidos + '</option>');
-        }
-        alumno.material_select();
+        alumno.find("option:gt(0)").remove();
+        alumno.addClass("teal-text");
+            for (i = 0; i < response.length; i++) {
+                alumno.append('<option value="' + response[i].aID + '">' + response[i].nombres + ' ' + response[i].apellidos + '</option>');
+            }
+            alumno.material_select();
     });
 });
 

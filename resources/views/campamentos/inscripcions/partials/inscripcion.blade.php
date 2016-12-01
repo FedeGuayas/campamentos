@@ -4,10 +4,10 @@
         {!! Form::hidden('program_id',null,['id'=>'program_id']) !!}
         <div class="row">
             {{--<div class="col l6"><br>--}}
-                <div class="input-field col l6 m6 s10">
-                    {!! Form::select('representante_id',['placeholder'=>'Seleccione ...'],null,['id'=>'representante_id']) !!}
-                    {!! Form::label('representante_id', 'Representante:*') !!}
-                </div>
+            <div class="input-field col l6 m6 s10">
+                {!! Form::select('representante_id',['placeholder'=>'Seleccione ...'],null,['id'=>'representante_id']) !!}
+                {!! Form::label('representante_id', 'Representante:*') !!}
+            </div>
 
             <div class="pull-left" style="position: relative; display: inline-block;">
                 <div class="fixed-action-btn horizontal" style="position: relative; display: inline-block; right: 24px; ">
@@ -35,7 +35,8 @@
 
         <div class="row">
             <div class="col l6">
-                {!! Form::select('alumno_id', ['Al' => 'Alumno'],null, ['id'=>'alumno_id']) !!}
+                {!! Form::select('alumno_id',['placeholder'=>'Seleccione ...'],null,['id'=>'alumno_id']) !!}
+                {!! Form::label('alumno_id', 'Alumno:*') !!}
             </div>
             <div class="pull-left" style="position: relative; display: inline-block;">
                 <div class="fixed-action-btn horizontal" style="position: relative; display: inline-block; right: 24px; ">
@@ -142,6 +143,7 @@
         {!! Form::close() !!}
         @include('campamentos.inscripcions.partials.representante_create')
         @include('campamentos.inscripcions.partials.alumno_create')
+        {{--Busca el represenatnte --}}
         @include('campamentos.alumnos.search')
 
     </div>
