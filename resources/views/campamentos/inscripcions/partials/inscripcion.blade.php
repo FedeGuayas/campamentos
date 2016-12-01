@@ -2,6 +2,7 @@
         {!! Form::open(['route'=>'admin.inscripcions.store', 'method'=>'POST'])  !!}
         {!! Form::hidden('calendar_id',null,['id'=>'calendar_id']) !!}
         {!! Form::hidden('program_id',null,['id'=>'program_id']) !!}
+        {!! Form::hidden('valor',null,['id'=>'valor']) !!}
         <div class="row">
             {{--<div class="col l6"><br>--}}
             <div class="input-field col l6 m6 s10">
@@ -26,7 +27,13 @@
                     </ul>
                 </div>
             </div>
-            <div class="col l3 m4 s6 offset-l2 ">
+            <div class="col l2">
+                <div class="input-field">
+                    {!! Form::checkbox('adulto',null,false,['id'=>'adulto']) !!}
+                    {!! Form::label('adulto','Inscribir') !!}
+                </div>
+            </div>
+            <div class="col l3 m3 s6 ">
                 <i class="fa fa-calendar-check-o" aria-hidden="true"></i>
                 {!! Form::select('modulo_id', $modulos,null, ['placeholder'=>'Seleccione Modulo','id'=>'modulo_id']) !!}
                 {!! Form::label('modulo_id','Modulo:') !!}
@@ -34,32 +41,37 @@
         </div>
 
         <div class="row">
-            <div class="col l6">
-                {!! Form::select('alumno_id',['placeholder'=>'Seleccione ...'],null,['id'=>'alumno_id']) !!}
-                {!! Form::label('alumno_id', 'Alumno:*') !!}
-            </div>
-            <div class="pull-left" style="position: relative; display: inline-block;">
-                <div class="fixed-action-btn horizontal" style="position: relative; display: inline-block; right: 24px; ">
-
-                    <a href="#modal-alumno" type="button" class="btn-floating  waves-effect waves-light darken-1 tooltipped modal-alumno" data-position="top" data-delay="50" data-tooltip="Crear">
-                        <i class="fa fa-plus"></i>
-                    </a>
-
+            <div class="alumno">
+                <div class="col l6">
+                    {!! Form::select('alumno_id',['placeholder'=>'Seleccione ...'],null,['id'=>'alumno_id']) !!}
+                    {!! Form::label('alumno_id', 'Alumno:*') !!}
+                </div>
+                <div class="pull-left" style="position: relative; display: inline-block;">
+                    <div class="fixed-action-btn horizontal" style="position: relative; display: inline-block; right: 24px; ">
+                        <a href="#modal-alumno" type="button" class="btn-floating  waves-effect waves-light darken-1 tooltipped modal-alumno" data-position="top" data-delay="50" data-tooltip="Crear">
+                            <i class="fa fa-plus"></i>
+                        </a>
+                    </div>
                 </div>
             </div>
+            <div class="col l3 right">
+                {!! Form::text('estacion',null,['id'=>'estacion', 'class'=>'hidden']) !!}
+            </div>
         </div>
+
+
 
         <div class="row">
             <div class="col l4">
                 <div class="input-field">
                     {{--{!! Form::select('escenario_id', '$escenarios',null, ['id'=>'escenario_id']) !!}--}}
-                    {!! Form::select('escenario_id',['placeholder'=>'Seleccione escenario'],null,['id'=>'escenario_id']) !!}
+                    {!! Form::select('escenario_id',['placeholder'=>'Seleccione ...'],null,['id'=>'escenario_id']) !!}
                     {!! Form::label('escenario_id', 'Escenarios:*') !!}
                 </div>
             </div>
             <div class="col l4">
                 <div class="input-field">
-                    {!! Form::select('disciplina_id', ['placeholder'=>'Seleccione disciplina'],null, ['id'=>'disciplina_id']) !!}
+                    {!! Form::select('disciplina_id', ['placeholder'=>'Seleccione ...'],null, ['id'=>'disciplina_id']) !!}
                     {!! Form::label('disciplina_id', 'Disciplinas:*') !!}
                 </div>
             </div>
@@ -68,13 +80,13 @@
         <div class="row">
             <div class="col l3">
                 <div class="input-field">
-                    {!! Form::select('dia_id', ['Dia' => 'Diass'],null, ['id'=>'dia_id']) !!}
+                    {!! Form::select('dia_id', ['placeholder'=>'Seleccione ...'],null, ['id'=>'dia_id']) !!}
                     {!! Form::label('dia_id', 'Dias:*') !!}
                 </div>
             </div>
             <div class="col l4">
                 <div class="input-field">
-                    {!! Form::select('horario_id', ['Hor' => 'Horas'],null, ['id'=>'horario_id']) !!}
+                    {!! Form::select('horario_id', ['placeholder'=>'Seleccione ...'],null, ['id'=>'horario_id']) !!}
                     {!! Form::label('horario_id', 'Horario (Edades):*') !!}
                 </div>
             </div>
@@ -106,7 +118,7 @@
 
             <div class="col l4">
                 <div class="input-field">
-                    {!! Form::select('fpago_id', ['Fpago' => 'F pago'],null, ['id'=>'fpago_id']) !!}
+                    {!! Form::select('fpago_id',$fpagos,null, ['placeholder'=>'Seleccione ...'], ['id'=>'fpago_id']) !!}
                     {!! Form::label('fpago_id', 'Forma de pago:*') !!}
                 </div>
             </div>
@@ -114,7 +126,7 @@
             <div class="input-field col l2 m2 s2 right ">
                 <i class="fa fa-usd prefix" aria-hidden="true"></i>
                 {!! Form::label('valor','Valor:') !!}
-                {!! Form::number('valor',null,['placeholder'=>'0.00','disabled']) !!}
+                {!! Form::number('valor',null,['placeholder'=>'0.00','disabled','id'=>'valor','style'=>'font-size: large']) !!}
             </div>
             {{--<div class="col l2">--}}
             {{--<div class="input-field">--}}

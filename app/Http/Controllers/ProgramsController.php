@@ -182,18 +182,34 @@ class ProgramsController extends Controller
 
         if ($request->ajax()){
 
+            $modulo=Modulo::where('id',$id)->first();
+
+            $inicio=$modulo->inicio;
+            $inicio=new Carbon($inicio);
+            $mes=$inicio->month;
+
                 $escenarios=Program::
                     join('escenarios as e','e.id','=','p.escenario_id','as p')
                     ->join('modulos as m','m.id','=','p.modulo_id')
                     ->select('e.escenario as escenario','p.id as pID','e.id as eID','m.id as mID',
-                    'p.modulo_id','p.escenario_id')
+                    'p.modulo_id','p.escenario_id','p.matricula')
                     ->where('p.modulo_id',$id)
-                    ->where('e.activated',true)->groupBy('eID')->get()->toArray();
+                    ->where('e.activated',true)->groupBy('eID')->get();
 
 //            $categoria = ['' => 'Seleccione la categoría'] + Categoria::lists('categoria', 'id')->all();
 //            $escenar = $escenarios->pluck('escenario', 'escenario_id');
 
-            return response($escenarios);
+            if ($mes>=4 && $mes<=12)
+                $estacion='CAMPAMENTOS DE VERANO';
+            elseif ($mes>=1 && $mes<2)
+                $estacion='CAMPAMENTOS DE VERANO';
+            else
+                $estacion='CAMPAMENTOS DE INVIERNO';
+
+            return response()->json([
+                'escenarios'=>$escenarios,
+                'estacion'=>$estacion,
+            ]);
         }
     }
 
@@ -213,7 +229,7 @@ class ProgramsController extends Controller
                 ->join('modulos as m','m.id','=','p.modulo_id')
                 ->join('disciplinas as d','d.id','=','p.disciplina_id')
                 ->select('e.escenario as escenario','p.id as pID','e.id as eID','m.id as mID','d.id as dID',
-                    'p.modulo_id','p.escenario_id','d.disciplina as disciplina','d.activated')
+                    'p.modulo_id','p.escenario_id','p.matricula','d.disciplina as disciplina','d.activated')
                 ->where('p.escenario_id',$id)
                 ->where('d.activated',true)->groupBy('dID')->get()->toArray();
 

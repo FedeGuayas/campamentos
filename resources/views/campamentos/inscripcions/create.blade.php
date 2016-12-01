@@ -240,11 +240,36 @@
 
        });
 
+        $(document).ready(function(){
+            // Adulto que se kiere inscribir
+            $("#adulto").on('change', function() {
+
+                // si se activa
+                if ($(this).is(':checked') ) {
+                    console.log("Checkbox " + $(this).prop("id") +  " (" + $(this).val() + ") => Seleccionado");
+                    $("div").remove(".alumno");
+//                   representante_id.append('<option value="' +$(this).val()+ '">' + name + '</option>');
+//                   representante_id.addClass("teal-text");
+//                                   $("#persona_id").val($(this).val());
+
+                } else {
+                    console.log("Checkbox " + $(this).prop("id") +  " (" + $(this).val() + ") => Deseleccionado");
+                    $("div").add(".alumno");
+//                   representante_id.find("option:gt(0)").remove();//elimino las opciones menos la primera
+//                   representante_id.removeClass("teal-text");
+//                   $("#persona_id").empty();
+                }
+//               representante_id.material_select();
+            });
+        });
+
 
 
     </script>
 
     {{--Script para select dinamico condicional dropdown --}}
     <script src="{{ asset("js/dropdown.js") }}" type="text/javascript"></script>
+    {{--Script para select dinamico condicional dropdown --}}
+    <script src="{{ asset("js/updateCosto.js") }}" type="text/javascript"></script>
 
 @endsection

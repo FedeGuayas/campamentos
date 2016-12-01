@@ -17,7 +17,7 @@ class Cart
      * Items -> Grupos del mismo producto, para agruparlos, inicialmente lo pongo vacio
      * Ejemplo: Items#1(tiene 3 Iphone5), Items#2(tiene 2 LG)
      */
-    public $items=null; //Calendars_id  compuesto x los programas de un mismo tipo Ej: Gimnasi en Estadio modelo dias x
+    public $items=null; //curso (calendar_id + program_id)  compuesto x los programas de un mismo tipo Ej: Gimnasi en Estadio modelo dias x
 
     public $totalQty=0; //cantidad total de productos(inscripciones) en el carrito
 

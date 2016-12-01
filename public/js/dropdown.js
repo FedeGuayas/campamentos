@@ -19,18 +19,29 @@ $("#representante_id").change(function (event) {
     });
 });
 
-
-
-//cargar escenarios al selecciona el modulo
+//cargar escenarios al seleccionar el modulo
 $("#modulo_id").change(function (event) {
     var escenario=$("#escenario_id");
+    var estacion=$("#estacion");
+
     $.get("escenarios/" + event.target.value + "", function (response, state) {
-        // console.log(response);
-        escenario.empty();
-        for (i = 0; i < response.length; i++) {
-            escenario.append('<option value="' + response[i].eID + '">' + response[i].escenario + '</option>');
-        }
+        console.log(response);
+        escenario.find("option:gt(0)").remove();
+        escenario.addClass("teal-text");
+        // escenario.empty();
+        $.each(response.escenarios, function(i, item) {
+            escenario.append('<option value="' + item.eID + '">' + item.escenario + '</option>');
+        });
+        // for (i = 0; i < response['escenarios'].length; i++) {
+        //     escenario.append('<option value="' + response[i].eID + '">' + response[i].escenario + '</option>');
+        // }
+        estacion.removeClass('hidden');
+        estacion.addClass("teal-text");
+        estacion.fadeIn();
+        estacion.val(response.estacion);
         escenario.material_select();
+
+
     });
 });
 
@@ -40,7 +51,9 @@ $("#escenario_id").change(function (event) {
     var disciplina=$("#disciplina_id");
     $.get("disciplinas/" + event.target.value + "", function (response, state) {
         // console.log(response);
-        disciplina.empty();
+        // disciplina.empty();
+        disciplina.find("option:gt(0)").remove();
+        disciplina.addClass("teal-text");
         for (i = 0; i < response.length; i++) {
             disciplina.append('<option value="' + response[i].dID + '">' + response[i].disciplina + '</option>');
         }
@@ -68,7 +81,11 @@ $("#disciplina_id").change(function (event) {
         data: datos,
         success: function (response) {
             // console.log(response);
-                dia.empty();
+
+            //     dia.empty();
+            dia.find("option:gt(0)").remove();
+            dia.addClass("teal-text");
+
                 for (i = 0; i < response.length; i++) {
                     dia.append('<option value="' + response[i].dia_id + '">' + response[i].dias + '</option>');
                 }
@@ -100,7 +117,10 @@ $("#dia_id").change(function (event) {
         // contentType: 'application/x-www-form-urlencoded',
         data: datos,
         success: function (response) {
-            horario.empty();
+            // console.log(response);
+            // horario.empty();
+            horario.find("option:gt(0)").remove();
+            horario.addClass("teal-text");
             for (i = 0; i < response.length; i++) {
                 horario.append('<option value="' + response[i].horario_id + '">' + response[i].start_time + ' ' + response[i].end_time + ' ( ' + response[i].init_age + ' - ' + response[i].end_age + ') </option>');
             }
@@ -134,10 +154,12 @@ $("#horario_id").change(function (event) {
         // contentType: 'application/x-www-form-urlencoded',
         data: datos,
         success: function (response) {
-            console.log(response);
-            nivel.empty();
+            // console.log(response);
+            // nivel.empty();
+            nivel.find("option:gt(0)").remove();
+            nivel.addClass("teal-text");
             for (i = 0; i < response.length; i++) {
-                nivel.append('<option value="' + response[i].id + '">' + response[i].nivel + '</option>');
+                nivel.append('<option value="' + response[i].id + '">' + response[i].nivel + ' ( ' + response[i].init_age + ' - ' + response[i].end_age + ')</option>');
             }
             nivel.material_select();
         },
@@ -147,7 +169,7 @@ $("#horario_id").change(function (event) {
     });
 });
 
-//obtener el id del curso  paso todos los parametros pa determinar el programa al k pertenecen
+//obtener el id del curso completo program+calendar
 $("#nivel").change(function (event) {
     var calendar_id=$("#calendar_id");
     var program_id=$("#program_id");
@@ -172,7 +194,7 @@ $("#nivel").change(function (event) {
         // contentType: 'application/x-www-form-urlencoded',
         data: datos,
         success: function (response) {
-            console.log(response);
+            // console.log(response);
             calendar_id.empty();
             program_id.empty();
             calendar_id.val(response[0].cID);
@@ -183,6 +205,7 @@ $("#nivel").change(function (event) {
             // console.log(response);
         }
     });
+
 });
 
 

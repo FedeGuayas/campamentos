@@ -57,6 +57,8 @@ Route::group(['middleware' => 'auth', 'prefix' => 'admin'], function () {
     //obtener los alumnos de un trabajador
     Route::get('inscripcions/alumnos/{representante_id}','RepresentantesController@getAlumnos');
 
+    //*****Actualizar costo de inscripcion****//
+    Route::get('inscripcions/costo/{data?}','InscripcionsController@costoUpdate');
     
     //******** Importar personas de archivo excel********//
     Route::get('/persons/import', ['as'=>'persons.import','uses'=>'ImportController@getPersonas']);
