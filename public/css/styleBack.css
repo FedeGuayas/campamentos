@@ -24,6 +24,13 @@ main {
     overflow-y: hidden !important ;
 }
 
+/*Datatable*/
+tfoot input {
+    width: 100%;
+    padding: 3px;
+    box-sizing: border-box;
+}
+
 /*.modal {*/
     /*width: 75% !important ;*/
     /*max-height: 100% !important ;*/

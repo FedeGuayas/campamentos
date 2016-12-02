@@ -1,5 +1,6 @@
 <?php
 
+
 namespace App\Http\Controllers;
 
 use App\Alumno;
@@ -22,7 +23,7 @@ class AlumnosController extends Controller
     public function index(Request $request)
     {
         if ($request){
-            $alumnos=Alumno::all();
+            $alumnos=Alumno::with('persona')->paginate(10);
         }
 
         return view('campamentos.alumnos.index', compact('alumnos'));

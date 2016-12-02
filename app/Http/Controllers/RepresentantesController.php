@@ -32,7 +32,7 @@ class RepresentantesController extends Controller
     public function index(Request $request)
     {
         if ($request){
-            $representantes=Representante::all();
+            $representantes=Representante::with('persona')->paginate(10);
         }
  
         return view('campamentos.representantes.index', compact('representantes'));

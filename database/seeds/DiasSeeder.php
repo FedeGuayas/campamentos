@@ -12,39 +12,39 @@ class DiasSeeder extends Seeder
     public function run()
     {
         DB::table('dias')->insert([
-            'dia'=>'Lunes, Miercoles y Viernes',
+            'dia'=>'LUNES, MIERCOLES Y VIERNES',
             'activated'=>'1',
         ]);
         DB::table('dias')->insert([
-            'dia'=>'Lunes a Viernes',
+            'dia'=>'LUNES A VIERNES',
             'activated'=>'1',
         ]);
         DB::table('dias')->insert([
-            'dia'=>'Martes y Jueves',
+            'dia'=>'MARTES Y JUEVES',
             'activated'=>'1',
         ]);
         DB::table('dias')->insert([
-            'dia'=>'Sábado',
+            'dia'=>'SABADO',
             'activated'=>'1',
         ]);
         DB::table('dias')->insert([
-            'dia'=>'4 dias a la semana',
+            'dia'=>'4 DIAS A LA SEMANA',
             'activated'=>'1',
         ]);
         DB::table('dias')->insert([
-            'dia'=>'3 Dias a la semana',
+            'dia'=>'3 DIAS A LA SEMANA',
             'activated'=>'1',
         ]);
         DB::table('dias')->insert([
-            'dia'=>'Lunes, Miercoles y Jueves',
+            'dia'=>'LUNES, MIERCOLES y JUEVES',
             'activated'=>'1',
         ]);
         DB::table('dias')->insert([
-            'dia'=>'Sábado + 1 dia',
+            'dia'=>'SABADO + 1 DIA',
             'activated'=>'1',
         ]);
         DB::table('dias')->insert([
-            'dia'=>'Martes, Jueves y Viernes',
+            'dia'=>'MARTES, JUEVES Y VIERNES',
             'activated'=>'1',
         ]);
     }

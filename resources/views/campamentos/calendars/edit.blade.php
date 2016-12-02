@@ -56,7 +56,7 @@
                             {!! Form::number('cupos',null,['class'=>'validate' ,'placeholder'=>'0']) !!}
                         </div>
                         <div class="input-field  col l4 m4 s12">
-                            {!! Form::text('nivel',null,['class'=>'validate']) !!}
+                            {!! Form::text('nivel',null,['class'=>'validate','style'=>'text-transform:uppercase']) !!}
                             {!! Form::label('nivel','Nivel:') !!}
                         </div>
 

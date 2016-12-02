@@ -4,6 +4,7 @@ $(document).ready(function () {
     $("#nivel").change(function (event) {
         var calendar_id = $("#calendar_id");
         var program_id = $("#program_id");
+        var precio = $("#precio");
         var escenario_id = $("#escenario_id").val();
         var disciplina_id = $("#disciplina_id").val();
         var modulo_id = $("#modulo_id").val();
@@ -26,14 +27,17 @@ $(document).ready(function () {
             // contentType: 'application/x-www-form-urlencoded',
             data: datos,
             success: function (response) {
-                // console.log(response);
+                console.log(response);
                 valor.addClass("teal-text");
                 valor.val(response);
+
                 // valor.val(response.mensualidad[0].mensualidad);
                 // calendar_id.empty();
+                precio.empty();
                 // program_id.empty();
                 // calendar_id.val(response[0].cID);
                 // program_id.val(response[0].program_id);
+                precio.val(response);
 
             },
             error: function (response) {

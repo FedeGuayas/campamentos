@@ -80,7 +80,7 @@ class CalendarsController extends Controller
         $calendar->mensualidad=$request->get('mensualidad');
         $calendar->init_age=$request->get('init_age');
         $calendar->end_age=$request->get('end_age');
-        $calendar->nivel=$request->get('nivel');
+        $calendar->nivel=strtoupper($request->get('nivel'));
         $calendar->save();
         
         return redirect()->route('admin.programs.index');
@@ -128,7 +128,6 @@ class CalendarsController extends Controller
      */
     public function update(Request $request, $id)
     {
-
         $calendar=Calendar::findOrFail($id);
         $calendar->dia_id=$request->get('dia_id');
         $calendar->horario_id=$request->get('horario_id');
@@ -136,7 +135,7 @@ class CalendarsController extends Controller
         $calendar->mensualidad=$request->get('mensualidad');
         $calendar->init_age=$request->get('init_age');
         $calendar->end_age=$request->get('end_age');
-        $calendar->nivel=$request->get('nivel');
+        $calendar->nivel=strtoupper($request->get('nivel'));
         $calendar->update();
         return redirect()->route('admin.programs.index');
     }

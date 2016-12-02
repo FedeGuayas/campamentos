@@ -12,55 +12,55 @@ class DisciplinasSeeder extends Seeder
     public function run()
     {
         DB::table('disciplinas')->insert([
-            'disciplina'=>'Gimnasia Rítmica',
+            'disciplina'=>'GIMNASIA RITMICA',
             'activated'=>'1',
         ]);
         DB::table('disciplinas')->insert([
-            'disciplina'=>'Patinaje',
+            'disciplina'=>'PATINAJE',
             'activated'=>'1',
         ]);
         DB::table('disciplinas')->insert([
-            'disciplina'=>'Tennis',
+            'disciplina'=>'TENIS',
             'activated'=>'1',
         ]);
         DB::table('disciplinas')->insert([
-            'disciplina'=>'Fútbol',
+            'disciplina'=>'FUTBOL',
             'activated'=>'1',
         ]);
         DB::table('disciplinas')->insert([
-            'disciplina'=>'Gimnasia Artística',
+            'disciplina'=>'GIMNASIA ARTISTICA',
             'activated'=>'1',
         ]);
         DB::table('disciplinas')->insert([
-            'disciplina'=>'Patinaje Artístico',
+            'disciplina'=>'PATINAJE ARTISTICO',
             'activated'=>'1',
         ]);
         DB::table('disciplinas')->insert([
-            'disciplina'=>'Ajedrez',
+            'disciplina'=>'AJEDREZ',
             'activated'=>'1',
         ]);
         DB::table('disciplinas')->insert([
-            'disciplina'=>'Atletismo',
+            'disciplina'=>'ATLETISMO',
             'activated'=>'1',
         ]);
         DB::table('disciplinas')->insert([
-            'disciplina'=>'Escalada',
+            'disciplina'=>'ESCALADA',
             'activated'=>'1',
         ]);
         DB::table('disciplinas')->insert([
-            'disciplina'=>'Tae Kwon Do',
+            'disciplina'=>'TAE KWON DO',
             'activated'=>'1',
         ]);
         DB::table('disciplinas')->insert([
-            'disciplina'=>'Básquet',
+            'disciplina'=>'BASQUET',
             'activated'=>'1',
         ]);
         DB::table('disciplinas')->insert([
-            'disciplina'=>'Boxeo',
+            'disciplina'=>'BOXEO',
             'activated'=>'1',
         ]);
         DB::table('disciplinas')->insert([
-            'disciplina'=>'Natación',
+            'disciplina'=>'NATACION',
             'activated'=>'1',
         ]);
     }

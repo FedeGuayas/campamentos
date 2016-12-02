@@ -33,7 +33,21 @@ class ProgramsController extends Controller
             ->where('p.activated',true)
             ->orderBy('e.escenario')->get();
 
-       return view('campamentos.programs.index',compact('programs'));
+        
+        $programs->each(function($programs){
+            $programs->calendars;
+        });
+
+        
+
+        $array = [];
+        foreach ($programs as $p) {
+            $array[] = [
+                'cupos' => Calendar::where('program_id', $p->id)->sum('contador'),
+            ];
+        }
+        
+        return view('campamentos.programs.index',compact('programs','array'));
     }
 
     /**
@@ -43,7 +57,7 @@ class ProgramsController extends Controller
      */
     public function create()
     {
-        $modulos=[] + Modulo::where('activated','1')->orderBy('modulo', 'desc')->lists('modulo', 'id')->all();
+        $modulos=[] + Modulo::where('activated','1')->orderBy('inicio', 'asc')->lists('modulo', 'id')->all();
         $escenarios=[] + Escenario::where('activated','1')->lists('escenario', 'id')->all();
         $disciplinas=[] + Disciplina::lists('disciplina', 'id')->all();
       
@@ -87,11 +101,12 @@ class ProgramsController extends Controller
         $end=new Carbon($modulo->fin);
 
         $estacion='';
-        if (($start->month > 2)){
+        if (($start->month >=4) && ($start->month <= 12))
             $estacion='Verano';
-        }else{
+        elseif (($start->month >=1) && ($start->month < 2))
+            $estacion='Verano';
+        else
             $estacion='Invierno';
-        }
 
         $calendars=Calendar::
             join('dias as d','d.id','=','cal.dia_id','as cal')

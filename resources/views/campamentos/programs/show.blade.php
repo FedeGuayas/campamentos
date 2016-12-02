@@ -44,6 +44,8 @@
                                 <th>Edad</th>
                                 <th>Costo</th>
                                 <th>Cupos</th>
+                                <th>Cont.</th>
+                                <th>Disp.</th>
                                 <th>Modificar</th>
                             </tr>
                             </thead>
@@ -56,6 +58,14 @@
                                     <td>{{ $calendar->init_age.'-'.$calendar->end_age  }}</td>
                                     <td>{{ $calendar->mensualidad }}</td>
                                     <td>{{ $calendar->cupos }}</td>
+                                    <td>{{ $calendar->contador }}</td>
+                                    <td>
+                                        @if( ($calendar->cupos - $calendar->contador) <=1)
+                                            <span class="label label-danger">{{ $calendar->cupos - $calendar->contador }}</span>
+                                        @else
+                                            <span class="label label-success">{{ $calendar->cupos - $calendar->contador }}</span>
+                                        @endif
+                                    </td>
                                     <td>
                                         <a class="label label-warning"
                                            href="{{ route('admin.calendars.edit',$calendar->id) }}">Edit</a>

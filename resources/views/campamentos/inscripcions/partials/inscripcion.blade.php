@@ -2,7 +2,7 @@
         {!! Form::open(['route'=>'admin.inscripcions.store', 'method'=>'POST'])  !!}
         {!! Form::hidden('calendar_id',null,['id'=>'calendar_id']) !!}
         {!! Form::hidden('program_id',null,['id'=>'program_id']) !!}
-        {!! Form::hidden('valor',null,['id'=>'valor']) !!}
+        {!! Form::hidden('precio',null,['id'=>'precio']) !!}
         <div class="row">
             {{--<div class="col l6"><br>--}}
             <div class="input-field col l6 m6 s10">

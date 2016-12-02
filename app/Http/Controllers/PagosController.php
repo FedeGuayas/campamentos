@@ -40,8 +40,8 @@ class PagosController extends Controller
     public function store(Request $request)
     {
         $fpago=new Pago;
-        $fpago->forma=$request->get('forma');
-        $fpago->descripcion=$request->get('descripcion');
+        $fpago->forma=strtoupper($request->get('forma'));
+        $fpago->descripcion=strtoupper($request->get('descripcion'));
         $fpago->save();
         Session::flash('message','Forma de pago creada');
         return redirect()->route('admin.fpagos.index');
@@ -70,8 +70,8 @@ class PagosController extends Controller
     public function update(Request $request, $id)
     {
         $fpago=Pago::findOrFail($id);
-        $fpago->forma=$request->get('forma');
-        $fpago->descripcion=$request->get('descripcion');
+        $fpago->forma=strtoupper($request->get('forma'));
+        $fpago->descripcion=strtoupper($request->get('descripcion'));
         $fpago->update();
         Session::flash('message','Forma de pago actualizada');
         return redirect()->route('admin.fpagos.index');

@@ -108,9 +108,8 @@ class InscripcionsController extends Controller
             $escenario_id = $request->get('escenario');
             $disciplina_id = $request->get('disciplina');
             $modulo_id = $request->get('modulo');
-
             $matricula=Program::
-            select('matricula')
+                select('matricula')
                 ->where('escenario_id',$escenario_id)
                 ->where('disciplina_id',$disciplina_id)
                 ->where('modulo_id',$modulo_id)->first();
@@ -140,7 +139,6 @@ class InscripcionsController extends Controller
             $mes=$mensualidad->mensualidad;
 
             $precio=$mes+$mat;
-
 
             return response( number_format($precio, 2, '.', ' '));
         }

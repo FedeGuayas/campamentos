@@ -15,11 +15,11 @@
                         <div class="input-field col s12 ">
                             <i class="fa fa-money prefix" aria-hidden="true"></i>
                             {!! Form::label('forma','Forma de Pago:*') !!}
-                            {!! Form::text('forma',null,['class'=>'validate','required']) !!}
+                            {!! Form::text('forma',null,['class'=>'validate','required','style'=>'text-transform:uppercase']) !!}
                         </div>
                         <div class="input-field col s12 ">
                             <i class="fa fa-pencil prefix"></i>
-                            {!! Form::textarea('descripcion',null,['class'=>'materialize-textarea validate','id'=>'direccion','length'=>'100']) !!}
+                            {!! Form::textarea('descripcion',null,['class'=>'materialize-textarea validate','id'=>'direccion','length'=>'100','style'=>'text-transform:uppercase']) !!}
                             {!! Form::label('descripcion','Descripción:') !!}
                         </div>
 

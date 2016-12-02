@@ -23,8 +23,7 @@
     <div class="row">
         <div class="col l12 m12 s12">
 
-                <table id="representante_table" class="table table-striped table-bordered table-condensed table-hover highlight responsive-table" cellspacing="0" width="100%"
-                       data-order='[[ 0, "asc" ]]'>
+                <table id="representante_tabl" class="table table-striped table-bordered table-condensed table-hover highlight responsive-table" cellspacing="0" width="100%">
                     <thead>
                     <th>Id</th>
                     <th>Nombres y Apellidos</th>
@@ -65,7 +64,7 @@
                         @include ('campamentos.representantes.modal')
                     @endforeach
                 </table><!--end table-responsive-->
-            {{--  {{ $usuarios->render() }}--}}
+              {{ $representantes->render() }}
         </div><!--end div ./col-lg-12. etc-->
     </div><!--end div ./row-->
 
@@ -77,7 +76,7 @@
 
             var table =  $('#representante_table').DataTable({
                 "lengthMenu": [[10, 25], [10, 25]],
-                "processing": true,
+                "processing": false,
                 "language":{
                     "decimal":        "",
                     "emptyTable":     "No se encontraron datos en la tabla",
@@ -107,7 +106,7 @@
                 }
             });
 
-            $("select").val('1'); //seleccionar valor por defecto del select
+            $("select").val('10'); //seleccionar valor por defecto del select
             $('select').addClass("browser-default"); //agregar una clase de materializecss de esta forma ya no se pierde el select de numero de registros.
             $('select').material_select(); //inicializar el select de materialize
 

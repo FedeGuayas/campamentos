@@ -47,7 +47,7 @@
                         @include ('campamentos.alumnos.modal')
                     @endforeach
                 </table><!--end table-responsive-->
-            {{--  {{ $usuarios->render() }}--}}
+              {{ $alumnos->render() }}
         </div><!--end div ./col-lg-12. etc-->
     </div><!--end div ./row-->
 

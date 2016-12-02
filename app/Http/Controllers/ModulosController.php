@@ -40,7 +40,7 @@ class ModulosController extends Controller
     public function store(Request $request)
     {
         $modulo=new Modulo();
-        $modulo->modulo=$request->get('modulo');
+        $modulo->modulo=strtoupper($request->get('modulo'));
         $modulo->inicio=$request->get('inicio');
         $modulo->fin=$request->get('fin');
 
@@ -82,7 +82,10 @@ class ModulosController extends Controller
     public function update(Request $request, $id)
     {
         $modulo=Modulo::findOrFail($id);
-        $modulo->update($request->all());
+        $modulo->modulo=strtoupper($request->get('modulo'));
+        $modulo->inicio=$request->get('inicio');
+        $modulo->fin=$request->get('fin');
+        $modulo->update();
 
         Session::flash('message','Modulo actualizado correctamente');
         return redirect()->route('admin.modulos.index');
