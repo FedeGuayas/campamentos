@@ -50,7 +50,7 @@ class Inscripcion extends Model
 
     public function calendar()
     {
-        $this->belongsTo('App\Program');
+        return $this->belongsTo('App\Calendar');
     }
 
     public function user()
@@ -60,6 +60,6 @@ class Inscripcion extends Model
 
     public function alumno()
     {
-        $this->belongsTo('App\Alumno');
+        return $this->belongsTo('App\Alumno');
     }
 }

@@ -2,11 +2,14 @@
         {!! Form::open(['route'=>'admin.inscripcions.store', 'method'=>'POST'])  !!}
         {!! Form::hidden('calendar_id',null,['id'=>'calendar_id']) !!}
         {!! Form::hidden('program_id',null,['id'=>'program_id']) !!}
-        {!! Form::hidden('precio',null,['id'=>'precio']) !!}
+        {!! Form::hidden('user_id',Auth::user()->id) !!}
+        {{--{!! Form::hidden('precio',null,['id'=>'precio']) !!}--}}
+        @include('alert.request')
+        @include('alert.success')
         <div class="row">
             {{--<div class="col l6"><br>--}}
             <div class="input-field col l6 m6 s10">
-                {!! Form::select('representante_id',['placeholder'=>'Seleccione ...'],null,['id'=>'representante_id']) !!}
+                {!! Form::select('representante_id',['placeholder'=>'Seleccione ...'],null,['id'=>'representante_id','required']) !!}
                 {!! Form::label('representante_id', 'Representante:*') !!}
             </div>
 
@@ -59,13 +62,11 @@
             </div>
         </div>
 
-
-
         <div class="row">
             <div class="col l4">
                 <div class="input-field">
                     {{--{!! Form::select('escenario_id', '$escenarios',null, ['id'=>'escenario_id']) !!}--}}
-                    {!! Form::select('escenario_id',['placeholder'=>'Seleccione ...'],null,['id'=>'escenario_id']) !!}
+                    {!! Form::select('escenario_id',['placeholder'=>'Seleccione ...'],null,['id'=>'escenario_id','required']) !!}
                     {!! Form::label('escenario_id', 'Escenarios:*') !!}
                 </div>
             </div>
@@ -103,19 +104,6 @@
         </div>
 
         <div class="row">
-            {{--<div class="col l2">--}}
-                {{--<div class="input-field">--}}
-                    {{--{!! Form::checkbox('desc_10',null,false,['id'=>'desc_10']) !!}--}}
-                    {{--{!! Form::label('desc_10','Desc 10%') !!}--}}
-                {{--</div>--}}
-            {{--</div>--}}
-            {{--<div class="col l2">--}}
-                {{--<div class="input-field">--}}
-                    {{--{!! Form::checkbox('desc_50',null,false,['id'=>'desc_50']) !!}--}}
-                    {{--{!! Form::label('desc_50','Desc 50%') !!}--}}
-                {{--</div>--}}
-            {{--</div>--}}
-
             <div class="col l4">
                 <div class="input-field">
                     {!! Form::select('fpago_id',$fpagos,null, ['placeholder'=>'Seleccione ...'], ['id'=>'fpago_id']) !!}
@@ -123,18 +111,13 @@
                 </div>
             </div>
 
-            <div class="input-field col l2 m2 s2 right ">
-                <i class="fa fa-usd prefix" aria-hidden="true"></i>
-                {!! Form::label('valor','Valor:') !!}
-                {!! Form::number('valor',null,['placeholder'=>'0.00','disabled','id'=>'valor','style'=>'font-size: large']) !!}
+            <div class="col l2 m2 s2 right">
+                <div class="input-field disabled">
+                    <i class="fa fa-usd prefix" aria-hidden="true"></i>
+                    {!! Form::label('valor','Valor:') !!}
+                    {!! Form::number('valor',null,['placeholder'=>'0.00','style'=>'font-size: large','readonly']) !!}
+                </div>
             </div>
-            {{--<div class="col l2">--}}
-            {{--<div class="input-field">--}}
-            {{--<i class="fa fa-usd prefix" aria-hidden="true"></i>--}}
-            {{--{!! Form::label('anticipo','Anticipo:') !!}--}}
-            {{--{!! Form::number('anticipo',null,['step' => '0.01','min' => '1','class'=>'validate','placeholder'=>'0.00']) !!}--}}
-            {{--</div>--}}
-            {{--</div>--}}
         </div>
 
 
@@ -143,7 +126,7 @@
         <div class="row">
             <div class="col l6 offset-l6">
 {{--                <a href="{{route('product.addToCart',['id'=>$product->id])}}">--}}
-                <a href="#!">
+                <a href="#!" id="add-to-cart">
                     {!! Form::button('<i class="fa fa-plus"></i>', ['class'=>'btn waves-effect waves-light']) !!}
                 </a>
                 {!! Form::button('<i class="fa fa-close"></i>',['class'=>'btn waves-effect waves-light red darken-1','type' => 'reset']) !!}

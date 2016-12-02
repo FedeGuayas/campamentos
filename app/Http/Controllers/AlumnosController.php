@@ -23,7 +23,7 @@ class AlumnosController extends Controller
     public function index(Request $request)
     {
         if ($request){
-            $alumnos=Alumno::with('persona')->paginate(10);
+            $alumnos=Alumno::with('persona')->get();
         }
 
         return view('campamentos.alumnos.index', compact('alumnos'));

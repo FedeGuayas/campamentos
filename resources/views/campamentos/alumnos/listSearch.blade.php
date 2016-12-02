@@ -5,6 +5,7 @@
         <th>Identificación</th>
         <th>Género</th>
         <th>Seleccionar</th>
+        <th>Editar</th>
     </thead>
         @foreach ($representantes as $per)
         <tr>
@@ -15,6 +16,11 @@
             <td>
                 {!! Form::checkbox($per->id,$per->id,null,['id'=>$per->id]) !!}
                 {!! Form::label($per->id, 'Agregar') !!}
+            </td>
+            <td>
+                <a href="{{ route('admin.representantes.edit', $per->id ) }}">
+                    {!! Form::button('<i class="fa fa-pencil-square-o" ></i>',['class'=>'btn-floating waves-effect waves-light teal darken-1']) !!}
+                </a>
             </td>
         </tr>
         @endforeach

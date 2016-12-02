@@ -302,6 +302,7 @@ class CalendarsController extends Controller
 
     public function getAddToCart(Request $request,$id){
 
+        dd($id);
         $product=Calendar::findOrFail($id);
 
         //si hay un cart almacenado en la session lo tomo, sino le paso nulo
@@ -309,11 +310,11 @@ class CalendarsController extends Controller
 
         //creo una instancia del carrito
         $cart=new Cart($oldCart);
-        $cart->add($product,$product->id);//Agrego este producto(Programa+Calendario) al carrito
+        $cart->add($product,$product->id);//Agrego este producto(Programa+Calendario=calendar_id) al carrito
 
         //pongo el carrito en la session
         $request->session()->put('cart',$cart);
-//        dd($request->session()->get('cart'));
+        dd($request->session()->get('cart'));
         return redirect()->route('admin.inscripcions.create ');
     }
 

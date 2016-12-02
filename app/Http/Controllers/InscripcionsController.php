@@ -3,10 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Calendar;
+use App\Factura;
+use App\Inscripcion;
 use App\Modulo;
 use App\Pago;
 use App\Program;
+use App\Representante;
 use Illuminate\Http\Request;
+use App\Http\Requests\InscripcionStoreRequest;
 
 use App\Http\Requests;
 
@@ -44,8 +48,47 @@ class InscripcionsController extends Controller
      */
     public function store(Request $request)
     {
-        dd($request->all());
-        return ('inscrito');
+        
+        
+        //factura
+        $pago_id=$request->input('fpago_id');
+        $fpago=Pago::findOrFail($pago_id);
+        $representante_id=$request->input('representante_id');
+        $representante=Representante::findOrFail($representante_id);
+        $factura=new Factura();
+        $factura->pago()->associate($fpago);
+        $factura->representante()->associate($representante);
+        $factura->total=$request->input('valor');
+//        if (!$request->input('descuentos')==''){
+//            $factura->descuento=$request->input('descuento');
+//        }
+        $factura->total=$request->input('valor');
+        $factura->save();
+
+        //inscripcion
+        $user=$request->user();
+        $calendar_id=$request->input('calendar_id');
+        $program_id=$request->input('program_id');
+        $program=Program::findOrFail($program_id);
+        $calendar=Calendar::findOrFail($calendar_id);
+        $inscripcion=new Inscripcion();
+        $inscripcion->calendar()->associate($calendar);
+        $inscripcion->factura()->associate($factura);
+        $inscripcion->user()->associate($user);
+        if ($request->input('adulto')==true){
+            $inscripcion->alumno_id=$request->input('representante_id');
+        }else {
+            $inscripcion->alumno_id=$request->input('alumno_id');
+        }
+        if ($request->input('matricula')==true){
+            $inscripcion->matricula=$program->matricula;
+        }
+        $inscripcion->mensualidad=$calendar->mensualidad;
+
+        $inscripcion->save();
+
+
+        return response()->back()->with('message','Inscripción satisfactoria');
     }
 
     /**

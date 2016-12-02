@@ -238,6 +238,62 @@
            });
 
 
+
+           //agregar cursos al carrito
+           function add_cart_ajax(){
+//             alert($("#add-to-cart").attr("value"));
+                var x;
+               var route = "{{route('product.addToCart',['id'=>$x])}}";
+               var token = $("input[name=_token]").val();
+               var representante_id=$("#representante_id");
+               var formData = new FormData(document.getElementById("form_representante"));//se envia tod el form al controlador
+               //formData.append("dato", "valor"); //agregar otros datos a en viar al controlador
+               // formData.append(f.attr("name"), $(this)[0].files[0]);
+               $.ajax({
+                   url: route,
+                   type: "POST",
+                   headers: {'X-CSRF-TOKEN': token},
+//                    contentType: 'application/x-www-form-urlencoded',
+                   data: formData,
+                   cache: false,
+                   contentType: false,
+                   processData: false,
+//                    data:$("#form_representante").serialize(),
+                   success: function (resp) {
+                       var id=resp.representante_id;
+                       var name=resp.nombre;
+                       $("#form_representante").trigger("reset");//limpio el form
+                       $("#msj-succes").html(resp.message)
+                       $("#mensaje-success").fadeIn();
+                       representante_id.append('<option value="'+id+'">'+ name+'</option>');
+                       representante_id.addClass("teal-text");
+                       representante_id.material_select()
+//                        $("#persona_id").val(id);
+                   },
+                   error: function (resp) {
+                       //console.log(resp.responseJSON)
+                       var errors = '';
+                       $.each(resp.responseJSON, function (ind, elem) {
+                           errors += elem + '<br>';
+                       });
+                       $('#msj-error').show().html(errors);
+                       $("#mensaje-error").fadeIn();
+                       representante_id.removeClass("teal-text");
+                       representante_id.find("option:gt(0)").remove();
+                       $("#persona_id").empty();
+                   }
+
+               });
+           }
+
+            //llamar a funcion add-to-cart
+           $("#add-to-cart").on("click", function (event) {
+               event.preventDefault();
+               add_cart_ajax();
+           });
+
+
+
        });
 
         $(document).ready(function(){
@@ -262,6 +318,9 @@
 //               representante_id.material_select();
             });
         });
+
+
+
 
 
 

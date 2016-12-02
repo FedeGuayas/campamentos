@@ -30,18 +30,12 @@ $(document).ready(function () {
                 console.log(response);
                 valor.addClass("teal-text");
                 valor.val(response);
-
-                // valor.val(response.mensualidad[0].mensualidad);
-                // calendar_id.empty();
-                precio.empty();
-                // program_id.empty();
-                // calendar_id.val(response[0].cID);
-                // program_id.val(response[0].program_id);
-                precio.val(response);
+                // precio.empty();
+               
+                // precio.val(response);
 
             },
             error: function (response) {
-                // console.log(response);
                 valor.removeClass("teal-text");
             }
         });
@@ -89,9 +83,6 @@ $(document).ready(function (event) {
                     console.log("Checkbox => Deseleccionado");
                     valor.addClass("teal-text");
                     valor.val(response);
-                    // representante_id.find("option:gt(0)").remove();//elimino las opciones menos la primera
-                    // representante_id.removeClass("teal-text");
-
                 }
                 // dia.addClass("teal-text");
             },

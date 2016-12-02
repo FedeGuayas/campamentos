@@ -199,7 +199,8 @@ $("#nivel").change(function (event) {
             program_id.empty();
             calendar_id.val(response[0].cID);
             program_id.val(response[0].program_id);
-            
+            $("#add-to-cart").attr("value",response[0].cID)//agrego el calendar_id al value del boton +
+
         },
         error: function (response) {
             // console.log(response);
