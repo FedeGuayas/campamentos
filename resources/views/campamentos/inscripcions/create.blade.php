@@ -1,6 +1,6 @@
 @extends('layouts.admin.index')
 
-@section('title', 'Indcripción')
+@section('title', 'Inscripción')
 
 @section('content')
 
@@ -10,13 +10,16 @@
             <div class="card-panel">
                 <ul class="tabs">
                     <li class="tab col s4"><a class="active" href="#inscripcion"><h5><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Inscripción</h5></a></li>
-                    <li class="tab col s4"><a href="#test2"><h5><i class="fa fa-shopping-cart" aria-hidden="true"></i> Detalle</h5></a></li>
-                    <li class="tab col s4 "><a href="#test3"><h5><i class="fa fa-money" aria-hidden="true"></i> Facturación</h5></a></li>
+                    <li class="tab col s4">
+                        <a href="#detalle" id="getCart"><h5><i class="fa fa-shopping-cart" aria-hidden="true"></i> Detalle
+                                <span class="label label-danger">{{Session::has('cart') ? Session::get('cart')->totalQty : ''}}</span></h5>
+                        </a>
+                    </li>
+                    <li class="tab col s4 "><a href="#facturacion"><h5><i class="fa fa-money" aria-hidden="true"></i> Facturación</h5></a></li>
                 </ul>
             </div>
         </div>
     </div>
-
 
     <div class="row">
         <div class="col  s12">
@@ -26,8 +29,11 @@
                     <br>
                     @include('campamentos.inscripcions.partials.inscripcion')
                 </div>
-
-
+                <div id="facturacion">
+                    <br>
+                    @include('campamentos.inscripcions.partials.facturacion')
+                </div>
+                <div id="detalle"></div>
             </div><!--/.card panel-->
         </div><!--/.card col-->
     </div><!--/.row-->
@@ -36,9 +42,12 @@
 
 @section('scripts')
 
-    <script>
 
-       $("#modulo_id").material_select();
+    <script>
+        $(document).ready(function () {
+
+            $("#modulo_id").material_select();
+        });
 
        $(document).ready(function () {
            // para ventana modal de crear alumno
@@ -77,6 +86,11 @@
                ending_top: '2%', // Ending top style attribute
            });
        });
+
+       $(document).ready(function(){
+           $('ul.tabs').tabs();
+       });
+
 
 
        $(function(){
@@ -158,8 +172,8 @@
                         var id=resp.representante_id;
                         var name=resp.nombre;
                         $("#form_representante").trigger("reset");//limpio el form
-                        $("#msj-succes").html(resp.message)
-                        $("#mensaje-success").fadeIn();
+                        $("#msj-ins-succes").html(resp.message)
+                        $("#mensaje-ins-success").fadeIn();
                         representante_id.append('<option value="'+id+'">'+ name+'</option>');
                         representante_id.addClass("teal-text");
                         representante_id.material_select()
@@ -171,8 +185,8 @@
                         $.each(resp.responseJSON, function (ind, elem) {
                             errors += elem + '<br>';
                         });
-                        $('#msj-error').show().html(errors);
-                        $("#mensaje-error").fadeIn();
+                        $('#msj-ins-error').show().html(errors);
+                        $("#mensaje-ins-error").fadeIn();
                         representante_id.removeClass("teal-text");
                         representante_id.find("option:gt(0)").remove();
                         $("#persona_id").empty();
@@ -180,7 +194,6 @@
 
                 });
             }
-
             //llamar a funcion crear representante
            $("#representante_create").on("click", function (event) {
                event.preventDefault();
@@ -230,7 +243,6 @@
                    }
                });
            }
-
            //llamar a funcion crear alumno
            $("#alumno_create").on("click", function (event) {
                event.preventDefault();
@@ -242,50 +254,33 @@
            //agregar cursos al carrito
            function add_cart_ajax(){
 //             alert($("#add-to-cart").attr("value"));
-                var x;
-               var route = "{{route('product.addToCart',['id'=>$x])}}";
+               var id=$("#calendar_id").val();
+               var form=$("#form_inscripcion");
+               var data=form.serialize();
+               var route=$("#add-to-cart").attr('href').replace(':CALENDAR',id);
                var token = $("input[name=_token]").val();
-               var representante_id=$("#representante_id");
-               var formData = new FormData(document.getElementById("form_representante"));//se envia tod el form al controlador
+
+//               var formData = new FormData(document.getElementById("form_representante"));//se envia tod el form al controlador
                //formData.append("dato", "valor"); //agregar otros datos a en viar al controlador
                // formData.append(f.attr("name"), $(this)[0].files[0]);
                $.ajax({
                    url: route,
-                   type: "POST",
+                   type: "GET",
                    headers: {'X-CSRF-TOKEN': token},
 //                    contentType: 'application/x-www-form-urlencoded',
-                   data: formData,
+                   data: data,
                    cache: false,
                    contentType: false,
                    processData: false,
-//                    data:$("#form_representante").serialize(),
                    success: function (resp) {
-                       var id=resp.representante_id;
-                       var name=resp.nombre;
-                       $("#form_representante").trigger("reset");//limpio el form
-                       $("#msj-succes").html(resp.message)
-                       $("#mensaje-success").fadeIn();
-                       representante_id.append('<option value="'+id+'">'+ name+'</option>');
-                       representante_id.addClass("teal-text");
-                       representante_id.material_select()
-//                        $("#persona_id").val(id);
+                       alert(resp.message);
+
                    },
                    error: function (resp) {
-                       //console.log(resp.responseJSON)
-                       var errors = '';
-                       $.each(resp.responseJSON, function (ind, elem) {
-                           errors += elem + '<br>';
-                       });
-                       $('#msj-error').show().html(errors);
-                       $("#mensaje-error").fadeIn();
-                       representante_id.removeClass("teal-text");
-                       representante_id.find("option:gt(0)").remove();
-                       $("#persona_id").empty();
+                       alert("No se pudo realizar la acción");
                    }
-
                });
            }
-
             //llamar a funcion add-to-cart
            $("#add-to-cart").on("click", function (event) {
                event.preventDefault();
@@ -293,6 +288,29 @@
            });
 
 
+
+           //obtener el carrito
+           $("#getCart").on('click', function (event) {
+               event.preventDefault();
+               var route = "{{route('product.shoppingCart')}}";
+               var token = $("input[name=_token]").val();
+
+                   $.ajax({
+                       url: route,
+                       type: "GET",
+                       headers: {'X-CSRF-TOKEN': token},
+                       contentType: 'application/x-www-form-urlencoded',
+//                       data: {datos},
+                       success: function (resp) {
+                           console.log(resp);
+                           $("#detalle").empty().html(resp);
+                       },
+                       error: function (resp) {
+                           console.log(resp);
+                           $("#detalle").empty().html("!!! No Hay Productos en el Carrito ");
+                       }
+                   });
+           });
 
        });
 
@@ -318,11 +336,6 @@
 //               representante_id.material_select();
             });
         });
-
-
-
-
-
 
     </script>
 

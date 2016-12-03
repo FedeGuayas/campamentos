@@ -12,6 +12,7 @@ use App\Modulo;
 use App\Program;
 use Illuminate\Http\Request;
 use DB;
+use Session;
 use App\Http\Requests;
 use App\Http\Requests\CalendarStoreRequest;
 
@@ -302,20 +303,43 @@ class CalendarsController extends Controller
 
     public function getAddToCart(Request $request,$id){
 
-        dd($id);
         $product=Calendar::findOrFail($id);
 
         //si hay un cart almacenado en la session lo tomo, sino le paso nulo
         $oldCart=Session::has('cart') ? Session::get('cart') : null;
-
         //creo una instancia del carrito
         $cart=new Cart($oldCart);
-        $cart->add($product,$product->id);//Agrego este producto(Programa+Calendario=calendar_id) al carrito
-
+        $cart->add($product,$product->id);//Agrego este producto(+Calendario=calendar_id) al carrito
         //pongo el carrito en la session
         $request->session()->put('cart',$cart);
-        dd($request->session()->get('cart'));
-        return redirect()->route('admin.inscripcions.create ');
+
+        $message='Curso agregado al carrito';
+        if ($request->ajax()){
+            return response()->json([
+                'message'=>$message
+            ]);
+        }
+//           dd($request->session()->get('cart'));
+            return redirect()->route('admin.inscripcions.create ');
+
+
+    }
+
+    /**
+     * El carrito en detalle
+     *
+     * @param Request $request
+     * @return mixed
+     */
+    public function getCart(Request $request)
+    {
+        if (!Session::has('cart')){
+
+            return view('campamentos.inscripcions.create');
+        }
+        $oldCart=Session::get('cart');
+        $cart=new Cart($oldCart);
+        return view('campamentos.inscripcions.partials.detalle',['products'=>$cart->items,'totalPrice'=>$cart->totalPrice]);
     }
 
 
@@ -335,7 +359,7 @@ class CalendarsController extends Controller
             Session::forget('cart');
         }
 
-        return redirect()->route('product.shoppingCart');//product.shoppingCart Vista detallada del carrito
+        return redirect()->route('admin.inscripcions.create');//product.shoppingCart Vista detallada del carrito
     }
 
 
@@ -356,27 +380,12 @@ class CalendarsController extends Controller
         }else{
             Session::forget('cart');
         }
-        return redirect()->route('product.shoppingCart');
+        return redirect()->route('admin.inscripcions.create');
     }
 
-    /**
-     * El carrito en detalle
-     *
-     * @param Request $request
-     * @return mixed
-     */
-    public function getCart(Request $request)
-    {
-        if (!Session::has('cart')){
-            return view('shop.shopping-cart');
-        }
-        $oldCart=Session::get('cart');
-        $cart=new Cart($oldCart);
-        return view('shop.shopping-cart',['products'=>$cart->items,'totalPrice'=>$cart->totalPrice]);
-    }
 
     /**
-     * Obtengo la vista para la facturacion
+     * Obtengo la vista para la facturacion y hacer el pago
      *
      * @return mixed
      *
@@ -384,7 +393,7 @@ class CalendarsController extends Controller
     public function getCheckout()
     {
         if (!Session::has('cart')){
-            return view('shop.shopping-cart');
+            return redirect()->route('admin.inscripcions.create');
         }
         $oldCart=Session::get('cart');
         $cart=new Cart($oldCart);
@@ -392,5 +401,43 @@ class CalendarsController extends Controller
         return view('shop.checkout',['total'=>$total]);
     }
 
+    /**
+     * Realizar el pago online
+     * @param Request $request
+     * @return mixed
+     */
+    public function postCheckout(Request $request)
+    {
+        if (!Session::has('cart')){
+            return redirect()->route('shopppingCart');
+        }
+        $oldCart=Session::get('cart');
+        $cart=new Cart($oldCart);
+        Stripe::setApiKey('sk_test_yXZNh4Iswaypk4Jq2i9UugiP');//my test secret key for stripe
+        try {
+            //cargando la ordena a stripe
+            //tomado de stripe, multiplicar *100 para que tenga en cuenta las centenas
+            $charge=Charge::create(array(
+                "amount" => $cart->totalPrice*100,
+                "currency" => "usd",
+                "source" => $request->input('stripeToken'), // obtained with Stripe.js
+                "description" => "Charge for james.smith@example.com"
+            ));
+            //almacenando la informacion de la orden en mi bd
+            $order=new Order();
+            $order->cart=serialize($cart);//serializo el objeto cart, para guaradrlo como string en la bd
+            $order->address=$request->input('address');
+            $order->name=$request->input('name');
+            $order->payment_id=$charge->id; //tomo el id del response del stripe
+            //Guardar en la bd segun la relacion establecida entre el usuario y la orden.
+
+            Auth::user()->orders()->save($order);
+        }catch(\Exception $e){
+            return redirect()->route('checkout')->with('error',$e->getMessage());
+        }
+
+        Session::forget('cart');//limpiando la session, vaciando el carrito
+        return redirect()->route('product.index')->with('success','Compra satisfactoria del producto');
+    }
 
 }

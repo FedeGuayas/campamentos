@@ -141,22 +141,19 @@ Route::group(['middleware' => 'auth', 'prefix' => 'admin'], function () {
 //********** PRODUCTOS ****//
 
 //agregar al carrito
-Route::get('/add-to-card/{id}',[
-    'uses'=>'CalendarsController@getAddToCart',
-    'as'=>'product.addToCart'
-]);
-
-//eliminar uno del carrito
-Route::get('/reduce/{id}',[
-    'uses'=>'CalendarsController@getReduceByOne',
-    'as'=>'product.reduceByOne'
-]);
+Route::get('/add-to-card/{id}',['uses'=>'CalendarsController@getAddToCart', 'as'=>'product.addToCart']);
 
 //obtener el carrito
-Route::get('/shopping-card',[
-    'uses'=>'CalendarsController@getCart',
-    'as'=>'product.shoppingCart'
-]);
+Route::get('/shopping-card',['uses'=>'CalendarsController@getCart','as'=>'product.shoppingCart']);
+
+//eliminar uno del carrito
+Route::get('/reduce/{id}',['uses'=>'CalendarsController@getReduceByOne','as'=>'product.reduceByOne']);
+
+//borrar el carrito
+Route::get('/remove/{id}',['uses'=>'CalendarsController@getRemoveItem','as'=>'product.remove']);
+
+//realizar el pago
+Route::get('/checkout',['uses'=>'CalendarsController@getCheckout','as'=>'checkout']);
 
 
 

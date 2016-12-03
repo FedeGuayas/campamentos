@@ -1,5 +1,5 @@
     <div class="card-content">
-        {!! Form::open(['route'=>'admin.inscripcions.store', 'method'=>'POST'])  !!}
+        {!! Form::open(['route'=>'admin.inscripcions.store', 'method'=>'POST', 'class'=>'form_noEnter', 'id'=>'form_inscripcion'])  !!}
         {!! Form::hidden('calendar_id',null,['id'=>'calendar_id']) !!}
         {!! Form::hidden('program_id',null,['id'=>'program_id']) !!}
         {!! Form::hidden('user_id',Auth::user()->id) !!}
@@ -37,7 +37,7 @@
                 </div>
             </div>
             <div class="col l3 m3 s6 ">
-                <i class="fa fa-calendar-check-o" aria-hidden="true"></i>
+                <i class="fa fa-calendar-check-o fa-2x teal-text" aria-hidden="true"></i>
                 {!! Form::select('modulo_id', $modulos,null, ['placeholder'=>'Seleccione Modulo','id'=>'modulo_id']) !!}
                 {!! Form::label('modulo_id','Modulo:') !!}
             </div>
@@ -57,7 +57,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col l3 right">
+            <div class="col l4 right">
                 {!! Form::text('estacion',null,['id'=>'estacion', 'class'=>'hidden']) !!}
             </div>
         </div>
@@ -126,12 +126,12 @@
         <div class="row">
             <div class="col l6 offset-l6">
 {{--                <a href="{{route('product.addToCart',['id'=>$product->id])}}">--}}
-                <a href="#!" id="add-to-cart">
-                    {!! Form::button('<i class="fa fa-plus"></i>', ['class'=>'btn waves-effect waves-light']) !!}
+                <a href="{{route('product.addToCart',':CALENDAR')}}" id="add-to-cart">
+                    {!! Form::button('<i class="fa fa-plus"></i>', ['class'=>'btn waves-effect waves-light  tooltipped','data-position'=>'top', 'data-delay'=>'10', 'data-tooltip'=>'Agregar']) !!}
                 </a>
-                {!! Form::button('<i class="fa fa-close"></i>',['class'=>'btn waves-effect waves-light red darken-1','type' => 'reset']) !!}
+                {!! Form::button('<i class="fa fa-close"></i>',['class'=>'btn waves-effect waves-light red darken-1 tooltipped','data-position'=>'top', 'data-delay'=>'10', 'data-tooltip'=>'Cancelar','type' => 'reset']) !!}
                 <a href="#!">
-                    {!! Form::button('<i class="fa fa-money" aria-hidden="true"></i>',['class'=>'btn btn-large pull-right waves-effect waves-light darken-1','type' => 'submit']) !!}
+                    {!! Form::button('<i class="fa fa-money" aria-hidden="true"></i> Pagar',['class'=>'btn btn-lg pull-right waves-effect waves-light darken-1 tooltipped','data-position'=>'top', 'data-delay'=>'50', 'data-tooltip'=>'Pagar','type' => 'submit']) !!}
                 </a>
             </div>
         </div>

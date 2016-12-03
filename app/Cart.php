@@ -42,7 +42,7 @@ class Cart
         if ($this->items){
             //chequeo si el producto que estoy agregando ahora, identificado por $id, se encuentra entre todos los productos que tengo en el carrito
             if (array_key_exists($id,$this->items)){
-                $storedItem=$this->items[$id];//esta linea sobreescribe el $storedItem anterior constantemente segun se agregen productos
+                $storedItem=$this->items[$id];//esta linea sobreescribe el $storedItem anterior constantemente segun se agregen productos, al guardar los items por su id esto permite acceder despues a ellos por su id
             }
         }
         $storedItem['qty']++;//incrementar la cantidad
@@ -59,9 +59,9 @@ class Cart
     public function reduceByOne($id) {
 
         $this->items[$id]['qty']--;
-        $this->items[$id]['price'] -= $this->items[$id]['item']['price'];
+        $this->items[$id]['price'] -= $this->items[$id]['item']['mensualidad'];
         $this->totalQty--;
-        $this->totalPrice -= $this->items[$id]['item']['price'];
+        $this->totalPrice -= $this->items[$id]['item']['mensualidad'];
         if ($this->items[$id]['qty']<=0){
             unset($this->items[$id]);//destrulle la variable y todos su elementos para que no haya precios ni cantidades negativas
         }
