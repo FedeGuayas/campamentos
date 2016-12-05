@@ -22,8 +22,8 @@ class Cart
     public $totalQty=0; //cantidad total de productos en el carrito
 
     public $totalPrice=0; //Precio total de la inscripcion
-    //price=total de la inscripcion sin decuentos, solo con matricula y mensualidad
-    public $descuento=0;
+    
+    
 
     //agregar al constructor xk hay k estar sobreescribiendo cada ves k se adiciona un producto
     public function __construct($oldCart)
@@ -35,7 +35,9 @@ class Cart
         }
     }
 
-    public function add($item,$id){ //$id=calendar_id=producto $item=curso completo
+    public function add($item,$id,$opciones){ //$id=calendar_id=producto $item=curso completo
+
+        
         //Creo un array de items, inicio en 0 xk se ira incrementando, almaceno el precio del curso y el curso k es
         $storedItem=['qty'=>0,'price'=>$item->mensualidad,'item'=>$item];
         //compruebo si tengo items en el carrito
@@ -45,11 +47,26 @@ class Cart
                 $storedItem=$this->items[$id];//esta linea sobreescribe el $storedItem anterior constantemente segun se agregen productos, al guardar los items por su id esto permite acceder despues a ellos por su id
             }
         }
+
         $storedItem['qty']++;//incrementar la cantidad
-        $storedItem['price']=$item->mensualidad*$storedItem['qty']; //precio total de los items=producto->precio*cantidad Ejj : 3Ihphone a $100=> 100*3=300
+
+        if (($opciones[0]['matricula'])=='on'){
+            $mat=$opciones[0]['program']->matricula;
+        }else $mat=0;
+
+
+        if (($opciones[0]['$desc_emp'])=='true'){
+            $desc_empleado=0.5; //50%
+        }else $desc_empleado=0;
+
+
+
+        $precio=$mat+($item->mensualidad-($item->mensualidad*$desc_empleado));
+        
+        $storedItem['price']=$precio*$storedItem['qty']; //PT items=producto->precio*cantidad Ejj : 3Ihphone a $100=> 100*3=300
         $this->items[$id]=$storedItem;//aqui accedo a mi item sino exite en el carrito guardo el primer $storedItem
-        $this->totalQty++;    //precio total del carrito, toda la compra
-        $this->totalPrice+=$item->mensualidad;
+        $this->totalQty++;
+        $this->totalPrice+=$precio;//precio total del carrito, toda la compra
         //        if ($storedItem['qty']>1){
 //            $item->price=$item->price*(30/100);
 //        }

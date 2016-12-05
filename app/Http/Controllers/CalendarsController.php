@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Alumno;
 use App\Calendar;
 use App\Cart;
 use App\Dia;
@@ -10,6 +11,7 @@ use App\Escenario;
 use App\Horario;
 use App\Modulo;
 use App\Program;
+use App\Representante;
 use Illuminate\Http\Request;
 use DB;
 use Session;
@@ -291,7 +293,7 @@ class CalendarsController extends Controller
     
 
     
-    /*****PRODUCTO*****/
+    /*****PRODUCTO venta del curso*****/
 
     /**
      * Adicionar Productos al carrito al dar en el boton de +
@@ -305,14 +307,28 @@ class CalendarsController extends Controller
 
         $product=Calendar::findOrFail($id);
 
+        $desc_est=$request->input('descuento_estacion');
+        $desc_emp=$request->input('descuento_empleado');
+//        $representante=Representante::findOrFail($request->input('representante_id'));
+//        $alumno=Alumno::findOrFail($request->input('alumno_id'));
+        $matricula=$request->input('matricula');
+        $program=Program::findOrFail($product->program_id);
+        
+        $opciones[]=[
+            'desc_est'=>$desc_est,
+            '$desc_emp'=>$desc_emp,
+            'matricula'=>$matricula,
+            'program'=>$program
+        ];
+//        dd($opciones);
         //si hay un cart almacenado en la session lo tomo, sino le paso nulo
         $oldCart=Session::has('cart') ? Session::get('cart') : null;
         //creo una instancia del carrito
         $cart=new Cart($oldCart);
-        $cart->add($product,$product->id);//Agrego este producto(+Calendario=calendar_id) al carrito
+        $cart->add($product,$product->id,$opciones);//Agrego este producto(+Calendario=calendar_id) al carrito
         //pongo el carrito en la session
         $request->session()->put('cart',$cart);
-
+        
         $message='Curso agregado al carrito';
         if ($request->ajax()){
             return response()->json([

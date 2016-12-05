@@ -30,7 +30,7 @@ class ProgramsController extends Controller
             ->join('disciplinas as d','d.id','=','p.disciplina_id')
             ->join('modulos as m','m.id','=','p.modulo_id')
             ->select('p.id','e.escenario','d.disciplina','m.modulo','matricula','cuposT','p.activated')
-            ->where('p.activated',true)
+//            ->where('p.activated',true)
             ->orderBy('e.escenario')->get();
 
         
@@ -215,11 +215,11 @@ class ProgramsController extends Controller
 //            $escenar = $escenarios->pluck('escenario', 'escenario_id');
 
             if ($mes>=4 && $mes<=12)
-                $estacion='CAMPAMENTOS DE VERANO';
+                $estacion='VERANO';
             elseif ($mes>=1 && $mes<2)
-                $estacion='CAMPAMENTOS DE VERANO';
+                $estacion='VERANO';
             else
-                $estacion='CAMPAMENTOS DE INVIERNO';
+                $estacion='INVIERNO';
 
             return response()->json([
                 'escenarios'=>$escenarios,

@@ -46,10 +46,9 @@ class InscripcionsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(InscripcionStoreRequest $request)
     {
-        
-        
+        dd($request->all());
         //factura
         $pago_id=$request->input('fpago_id');
         $fpago=Pago::findOrFail($pago_id);
@@ -88,7 +87,7 @@ class InscripcionsController extends Controller
         $inscripcion->save();
 
 
-        return response()->back()->with('message','Inscripción satisfactoria');
+        return back()->with('message','Inscripción satisfactoria');
     }
 
     /**
@@ -161,6 +160,16 @@ class InscripcionsController extends Controller
                 $mat=$matricula->matricula;
             }else $mat=0;
 
+            if ($request->input('descuento_empleado')=='true'){
+                $desc_empleado=0.5; //50%
+            }else $desc_empleado=0;
+
+            if ($request->input('descuento_estacion')=='VERANO'){
+                //condiciones para verano
+            }elseif ($request->input('descuento_estacion')=='INVIERNO'){
+                //condiciones para invierno ... Dewcuento del 10% para inscripciones en mas de 3 meses en el mismo curso
+            }
+
 
             //Al seleccionar el nivel
             $dia_id=$request->get('dia_id');
@@ -181,7 +190,7 @@ class InscripcionsController extends Controller
 
             $mes=$mensualidad->mensualidad;
 
-            $precio=$mes+$mat;
+            $precio=$mat+($mes-($mes*$desc_empleado));
 
             return response( number_format($precio, 2, '.', ' '));
         }

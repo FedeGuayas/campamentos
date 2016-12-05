@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 
 
 use App\Alumno;
+use App\Worker;
 use Event;
 use App\Encuesta;
 use App\Events\EncuestaRespondida;
@@ -64,15 +65,14 @@ class RepresentantesController extends Controller
         $out['nombres'] = 'required | max:50';
         $out['apellidos'] = 'required | max:50';
         $out['genero'] = 'required';
-        $out['fecha_nac'] = 'required';
         $out['email'] = 'email|required|unique:personas';
         $out['direccion'] = 'required|max:255';
-        $out['telefono'] = 'max:15';
+        $out['phone'] = 'max:15';
         $out['tipo_doc'] = 'required';
         $out['num_doc'] = 'required';
         $out['foto_ced'] = 'required|image|max:1000';
         $out['foto'] = 'required|image|max:150';
-        $out['phone'] = 'required|max:15';
+        $out['telefono'] = 'required|max:15';
 
         //Hacer validación condicional dependiendo del tipo de documento a utilizar.
         switch($data['tipo_doc']){
@@ -114,10 +114,10 @@ class RepresentantesController extends Controller
                 $persona->tipo_doc = $request->get('tipo_doc');
                 $persona->num_doc = $request->get('num_doc');
                 $persona->genero = $request->get('genero');
-                $persona->fecha_nac=$request->get('fecha_nac');
                 $persona->email = $request->get('email');
                 $persona->direccion = $request->get('direccion');
                 $persona->telefono = $request->get('telefono');
+                $persona->phone = $request->get('phone');
                 $persona->save();
 
                 $encuesta_id = $request->get('encuesta_id');
@@ -141,8 +141,6 @@ class RepresentantesController extends Controller
                     $file->move($path, $name);//lo copio a $path con el nombre $name
                     $representante->foto = $name;//ahora se guarda  en el atributo foto_ced la imagen
                 }
-
-                $representante->phone = $request->get('phone');
                 $representante->save();
 
                 DB::commit();
@@ -202,15 +200,14 @@ class RepresentantesController extends Controller
         $out['nombres'] = 'required | max:50';
         $out['apellidos'] = 'required | max:50';
         $out['genero'] = 'required';
-        $out['fecha_nac'] = 'required';
         $out['email'] = 'email';
         $out['direccion'] = 'max:255';
-        $out['telefono'] = 'max:15';
+        $out['phone'] = 'max:15';
         $out['tipo_doc'] = 'required';
         $out['num_doc'] = 'required';
         $out['foto_ced'] = 'max:1000';
         $out['foto'] = 'max:150';
-        $out['phone'] = 'required|max:15';
+        $out['telefono'] = 'required|max:15';
 
         //Hacer validación condicional dependiendo del tipo de documento a utilizar.
         switch($data['tipo_doc']){
@@ -254,10 +251,10 @@ class RepresentantesController extends Controller
             $persona->tipo_doc=$request->get('tipo_doc');
             $persona->num_doc=$request->get('num_doc');
             $persona->genero=$request->get('genero');
-            $persona->fecha_nac=$request->get('fecha_nac');
             $persona->email=$request->get('email');
             $persona->direccion=$request->get('direccion');
             $persona->telefono=$request->get('telefono');
+            $persona->phone=$request->get('phone');
             $persona->update();
 
 
@@ -276,9 +273,6 @@ class RepresentantesController extends Controller
                 $file->move($path,$name);//lo copio a $path con el nombre $name
                 $representante->foto=$name;//ahora se guarda  en el atributo foto_ced la imagen
             }
-
-            
-            $representante->phone=$request->get('phone');
             $representante->update();
 
             DB::commit();
@@ -288,7 +282,7 @@ class RepresentantesController extends Controller
         }
 
         Session::flash('message', 'Representante '.$representante->persona-> getNombreAttribute().' actualizado');
-        return redirect()->route('admin.representantes.index');
+        return redirect()->back();
     }
 
     /**
@@ -353,8 +347,17 @@ class RepresentantesController extends Controller
 
         if ($request->ajax()){
 
-            $representante=Representante::where('persona_id',$id)->first();
-//            $representante=Representante::findOrFail($id);
+            $representante=Representante::with('persona')
+                ->where('persona_id',$id)->first();
+
+            $trabajador=Worker::searchWorker($representante->persona->num_doc)->first();
+
+
+            if ($trabajador)
+                $descuento_empleado=true;
+            else
+                $descuento_empleado=false;
+
 
             $alumnos=Alumno::
                 join('personas as p','p.id','=','persona_id')
@@ -362,7 +365,11 @@ class RepresentantesController extends Controller
                 ->where('representante_id',$representante->id)
                 ->get()->toArray();
 
-            return response($alumnos);
+            return response()->json([
+                'alumnos'=>$alumnos,
+                'representante'=>$representante,
+                'descuento_empleado'=>$descuento_empleado,
+            ]);
         }
     }
 

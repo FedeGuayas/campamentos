@@ -4,6 +4,9 @@
         <th>Nombres y Apellidos</th>
         <th>Identificación</th>
         <th>Género</th>
+        <th class="hidden">Correo</th>
+        <th class="hidden">Telefono</th>
+        <th class="hidden">Dirección</th>
         <th>Seleccionar</th>
         <th>Editar</th>
     </thead>
@@ -13,6 +16,9 @@
             <td>{{ $per->getNombreAttribute() }}</td>
             <td>{{ $per->num_doc }}</td>
             <td>{{ $per->genero }}</td>
+            <td class="hidden">{{ $per->email }}</td>
+            <td class="hidden">{{ $per->telefono }}</td>
+            <td class="hidden">{{ $per->direccion }}</td>
             <td>
                 {!! Form::checkbox($per->id,$per->id,null,['id'=>$per->id]) !!}
                 {!! Form::label($per->id, 'Agregar') !!}

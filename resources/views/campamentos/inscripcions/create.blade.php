@@ -30,7 +30,6 @@
                     @include('campamentos.inscripcions.partials.inscripcion')
                 </div>
                 <div id="facturacion">
-                    <br>
                     @include('campamentos.inscripcions.partials.facturacion')
                 </div>
                 <div id="detalle"></div>
@@ -257,6 +256,7 @@
                var id=$("#calendar_id").val();
                var form=$("#form_inscripcion");
                var data=form.serialize();
+               //agregar id a la ruta dinamicamente
                var route=$("#add-to-cart").attr('href').replace(':CALENDAR',id);
                var token = $("input[name=_token]").val();
 

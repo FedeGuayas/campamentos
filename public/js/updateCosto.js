@@ -5,19 +5,25 @@ $(document).ready(function () {
         var calendar_id = $("#calendar_id");
         var program_id = $("#program_id");
         var precio = $("#precio");
+        var desc_emp = $("#descuento_empleado").val();
+        var desc_est = $("#descuento_estacion").val();
         var escenario_id = $("#escenario_id").val();
         var disciplina_id = $("#disciplina_id").val();
         var modulo_id = $("#modulo_id").val();
         var dia_id = $("#dia_id").val();
         var horario_id = $("#horario_id").val();
-        var valor = $("#valor");
+        var valor = $(".valor");
+       
         var datos = {
             escenario: escenario_id,
             disciplina: disciplina_id,
             modulo: modulo_id,
             dia_id: dia_id,
             horario_id: horario_id,
+            descuento_empleado:desc_emp,
+            descuento_estacion:desc_est,
             nivel: event.target.value
+            
         }
         // var token = $("input[name=_token]").val();
         $.ajax({
@@ -48,11 +54,13 @@ $(document).ready(function (event) {
     $("#matricula").on('change', function () {
         var dia_id = $("#dia_id").val();
         var nivel = $("#nivel").val();
+        var desc_emp = $("#descuento_empleado").val();
+        var desc_est = $("#descuento_estacion").val();
         var horario_id = $("#horario_id").val();
         var escenario_id = $("#escenario_id").val();
         var disciplina_id = $("#disciplina_id").val();
         var modulo_id = $("#modulo_id").val();
-        var valor = $("#valor");
+        var valor = $(".valor");
         var matricula = $("#matricula");
 
         var datos = {
@@ -62,6 +70,8 @@ $(document).ready(function (event) {
             escenario: escenario_id,
             disciplina: disciplina_id,
             modulo: modulo_id,
+            descuento_empleado:desc_emp,
+            descuento_estacion:desc_est,
             matricula:  matricula.prop("checked")
         }
         $.ajax({

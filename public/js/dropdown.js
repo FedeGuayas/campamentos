@@ -8,14 +8,32 @@
 //cargar alumnos del representante
 $("#representante_id").change(function (event) {
     var alumno=$("#alumno_id");
+    var fact_nombres=$(".fact_nombres")
+    var fact_email=$(".fact_email");
+    var fact_phone=$(".fact_phone");
+    var fact_direccion=$(".fact_direccion");
+    var descuento_empleado=$("#descuento_empleado");
+
     $.get("alumnos/" + event.target.value + "", function (response, state) {
-        // console.log(response);
+        //actualizar datos de vista de factura
+        
+        fact_nombres.val(response.representante.persona.nombres+ ' '+response.representante.persona.apellidos).addClass("teal-text");
+        fact_email.val(response.representante.persona.email).addClass("teal-text");
+        fact_phone.val(response.representante.persona.telefono).addClass("teal-text");
+        fact_direccion.val(response.representante.persona.direccion).addClass("teal-text");
+
+        //descuento de empleado
+        descuento_empleado.val(response.descuento_empleado);
+
+        //cargar alumno en select
         alumno.find("option:gt(0)").remove();
         alumno.addClass("teal-text");
-            for (i = 0; i < response.length; i++) {
-                alumno.append('<option value="' + response[i].aID + '">' + response[i].nombres + ' ' + response[i].apellidos + '</option>');
-            }
+        $.each(response.alumnos, function(i, al) {
+                alumno.append('<option value="' + al.aID + '">' + al.nombres + ' ' + al.apellidos + '</option>');
+        });
             alumno.material_select();
+
+
     });
 });
 
@@ -23,6 +41,7 @@ $("#representante_id").change(function (event) {
 $("#modulo_id").change(function (event) {
     var escenario=$("#escenario_id");
     var estacion=$("#estacion");
+    var desc_est=$("#descuento_estacion");
 
     $.get("escenarios/" + event.target.value + "", function (response, state) {
         console.log(response);
@@ -38,8 +57,11 @@ $("#modulo_id").change(function (event) {
         estacion.removeClass('hidden');
         estacion.addClass("teal-text");
         estacion.fadeIn();
-        estacion.val(response.estacion);
+        estacion.val('CAMPAMENTOS DE '+ response.estacion+'');
         escenario.material_select();
+
+        //descuento de empleado
+        desc_est.val(response.estacion);
 
 
     });
