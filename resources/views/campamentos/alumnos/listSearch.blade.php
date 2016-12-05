@@ -10,12 +10,12 @@
         <th>Seleccionar</th>
         <th>Editar</th>
     </thead>
-        @foreach ($representantes as $per)
+        @foreach ($personas as $per)
         <tr>
             <td>{{ $per->id }}</td>
             <td>{{ $per->getNombreAttribute() }}</td>
             <td>{{ $per->num_doc }}</td>
-            <td>{{ $per->genero }}</td>
+            <td>{{$per->genero}}
             <td class="hidden">{{ $per->email }}</td>
             <td class="hidden">{{ $per->telefono }}</td>
             <td class="hidden">{{ $per->direccion }}</td>
@@ -24,9 +24,11 @@
                 {!! Form::label($per->id, 'Agregar') !!}
             </td>
             <td>
-                <a href="{{ route('admin.representantes.edit', $per->id ) }}">
-                    {!! Form::button('<i class="fa fa-pencil-square-o" ></i>',['class'=>'btn-floating waves-effect waves-light teal darken-1']) !!}
-                </a>
+                @foreach($per->representantes as $rep)
+                    <a href="{{ route('admin.representantes.edit', $rep->id ) }}">
+                        {!! Form::button('<i class="fa fa-pencil-square-o" ></i>',['class'=>'btn-floating waves-effect waves-light teal darken-1']) !!}
+                    </a>
+                @endforeach
             </td>
         </tr>
         @endforeach

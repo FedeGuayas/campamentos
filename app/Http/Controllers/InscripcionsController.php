@@ -23,7 +23,9 @@ class InscripcionsController extends Controller
      */
     public function index()
     {
-        //
+        $inscripciones=Inscripcion::with('factura','calendar','user','alumno')->get();
+//        dd($inscripciones);
+        return view('campamentos.inscripcions.index',['inscripciones'=>$inscripciones]);
     }
 
     /**
@@ -48,7 +50,7 @@ class InscripcionsController extends Controller
      */
     public function store(InscripcionStoreRequest $request)
     {
-        dd($request->all());
+//        dd($request->all());
         //factura
         $pago_id=$request->input('fpago_id');
         $fpago=Pago::findOrFail($pago_id);

@@ -51,7 +51,7 @@ class RepresentantesController extends Controller
         return view('campamentos.representantes.create',compact('encuestas'));
     }
 
-
+    
     /**
      * Get a validator for an incoming registration request.
      * @param  array  $data
@@ -67,19 +67,20 @@ class RepresentantesController extends Controller
         $out['genero'] = 'required';
         $out['email'] = 'email|required|unique:personas';
         $out['direccion'] = 'required|max:255';
+        $out['telefono'] = 'required|max:15';
         $out['phone'] = 'max:15';
         $out['tipo_doc'] = 'required';
         $out['num_doc'] = 'required';
         $out['foto_ced'] = 'required|image|max:1000';
         $out['foto'] = 'required|image|max:150';
-        $out['telefono'] = 'required|max:15';
+       
 
         //Hacer validación condicional dependiendo del tipo de documento a utilizar.
         switch($data['tipo_doc']){
-            case 'Cedula':
+            case 'CEDULA':
                 $out['num_doc'] = 'required|digits:10 | unique:personas';
                 break;
-            case 'Pasaporte':
+            case 'PASAPORTE':
                 $out['num_doc'] = 'required|alpha_num |max:8 |min:5| unique:personas';
                 break;
         }
@@ -104,62 +105,61 @@ class RepresentantesController extends Controller
                 $request, $validator
             );
         }
+        try {
+            DB::beginTransaction();
 
-            try {
-                DB::beginTransaction();
+            $persona = new Persona;
+            $persona->nombres = strtoupper($request->get('nombres'));
+            $persona->apellidos = strtoupper($request->get('apellidos'));
+            $persona->tipo_doc = $request->get('tipo_doc');
+            $persona->num_doc = $request->get('num_doc');
+            $persona->genero = $request->get('genero');
+            $persona->email = $request->get('email');
+            $persona->direccion = strtoupper($request->get('direccion'));
+            $persona->telefono = $request->get('telefono');
+            $persona->phone = $request->get('phone');
+            $persona->save();
 
-                $persona = new Persona;
-                $persona->nombres = $request->get('nombres');
-                $persona->apellidos = $request->get('apellidos');
-                $persona->tipo_doc = $request->get('tipo_doc');
-                $persona->num_doc = $request->get('num_doc');
-                $persona->genero = $request->get('genero');
-                $persona->email = $request->get('email');
-                $persona->direccion = $request->get('direccion');
-                $persona->telefono = $request->get('telefono');
-                $persona->phone = $request->get('phone');
-                $persona->save();
+            $encuesta_id = $request->get('encuesta_id');
+            $encuesta = Encuesta::find($encuesta_id);
 
-                $encuesta_id = $request->get('encuesta_id');
-                $encuesta = Encuesta::find($encuesta_id);
+            $representante = new Representante;
+            $representante->persona()->associate($persona);
+            $representante->encuesta()->associate($encuesta);
 
-                $representante = new Representante;
-                $representante->persona()->associate($persona);
-                $representante->encuesta()->associate($encuesta);
-
-                if ($request->hasFile('foto_ced')) {
-                    $file = $request->file('foto_ced');
-                    $name = 'rep_ced_' . time() . '.' . $file->getClientOriginalExtension();
-                    $path = public_path() . '/dist/img/representantes/cedula/';//ruta donde se guardara
-                    $file->move($path, $name);//lo copio a $path con el nombre $name
-                    $representante->foto_ced = $name;//ahora se guarda  en el atributo foto_ced la imagen
-                }
-                if ($request->hasFile('foto')) {
-                    $file = $request->file('foto');
-                    $name = 'rep_perfil_' . time() . '.' . $file->getClientOriginalExtension();
-                    $path = public_path() . '/dist/img/representantes/perfil/';//ruta donde se guardara
-                    $file->move($path, $name);//lo copio a $path con el nombre $name
-                    $representante->foto = $name;//ahora se guarda  en el atributo foto_ced la imagen
-                }
-                $representante->save();
-
-                DB::commit();
-
-                if ($encuesta) {
-                    Event::fire(new EncuestaRespondida($encuesta));
-                }
-
-                if ($request->ajax()){
-                    return response()->json([
-                        'message'=>'Representante creado correctamente',
-                        'representante_id'=>$representante->id,
-                        'nombre'=>$persona->getNombreAttribute(),
-                    ]);
-                }
-
-            } catch (\Exception $e) {
-                DB::rollback();
+            if ($request->hasFile('foto_ced')) {
+                $file = $request->file('foto_ced');
+                $name = 'rep_ced_' . time() . '.' . $file->getClientOriginalExtension();
+                $path = public_path() . '/dist/img/representantes/cedula/';//ruta donde se guardara
+                $file->move($path, $name);//lo copio a $path con el nombre $name
+                $representante->foto_ced = $name;//ahora se guarda  en el atributo foto_ced la imagen
             }
+            if ($request->hasFile('foto')) {
+                $file = $request->file('foto');
+                $name = 'rep_perfil_' . time() . '.' . $file->getClientOriginalExtension();
+                $path = public_path() . '/dist/img/representantes/perfil/';//ruta donde se guardara
+                $file->move($path, $name);//lo copio a $path con el nombre $name
+                $representante->foto = $name;//ahora se guarda  en el atributo foto_ced la imagen
+            }
+            $representante->save();
+
+            DB::commit();
+
+            if ($encuesta) {
+                Event::fire(new EncuestaRespondida($encuesta));
+            }
+
+            if ($request->ajax()) {
+                return response()->json([
+                    'message' => 'Representante creado correctamente',
+                    'representante_id' => $representante->id,
+                    'nombre' => $persona->getNombreAttribute(),
+                ]);
+            }
+
+        } catch (\Exception $e) {
+            DB::rollback();
+        }
 
         Session::flash('message', 'Representante creado correctamente');
         return redirect()->route('admin.representantes.index');
@@ -202,19 +202,20 @@ class RepresentantesController extends Controller
         $out['genero'] = 'required';
         $out['email'] = 'email';
         $out['direccion'] = 'max:255';
+        $out['telefono'] = 'required|max:15';
         $out['phone'] = 'max:15';
         $out['tipo_doc'] = 'required';
         $out['num_doc'] = 'required';
         $out['foto_ced'] = 'max:1000';
         $out['foto'] = 'max:150';
-        $out['telefono'] = 'required|max:15';
+        
 
         //Hacer validación condicional dependiendo del tipo de documento a utilizar.
         switch($data['tipo_doc']){
-            case 'Cedula':
+            case 'CEDULA':
                 $out['num_doc'] = 'required|digits:10';
                 break;
-            case 'Pasaporte':
+            case 'PASAPORTE':
                 $out['num_doc'] = 'required|alpha_num |max:8 |min:5';
                 break;
         }
@@ -233,26 +234,24 @@ class RepresentantesController extends Controller
     public function update(Request $request, $id)
     {
         $validator = $this->validatorUpdate($request->all());
-
         if ($validator->fails()) {
             $this->throwValidationException(
                 $request, $validator
             );
         }
-
         try {
             DB::beginTransaction();
 
             $representante=Representante::findOrFail($id);
             $persona=$representante->persona;
 
-            $persona->nombres=$request->get('nombres');
-            $persona->apellidos=$request->get('apellidos');
+            $persona->nombres=strtoupper($request->get('nombres'));
+            $persona->apellidos=strtoupper($request->get('apellidos'));
             $persona->tipo_doc=$request->get('tipo_doc');
             $persona->num_doc=$request->get('num_doc');
             $persona->genero=$request->get('genero');
             $persona->email=$request->get('email');
-            $persona->direccion=$request->get('direccion');
+            $persona->direccion=strtoupper($request->get('direccion'));
             $persona->telefono=$request->get('telefono');
             $persona->phone=$request->get('phone');
             $persona->update();
@@ -282,7 +281,7 @@ class RepresentantesController extends Controller
         }
 
         Session::flash('message', 'Representante '.$representante->persona-> getNombreAttribute().' actualizado');
-        return redirect()->back();
+        return redirect()->route('admin.representantes.index');
     }
 
     /**
@@ -323,10 +322,10 @@ class RepresentantesController extends Controller
     {
         $query=trim($search);
         if ($query!=""){
-            $representantes=Persona::searchPersona($search)->orderBy('created_at','DESC')->get();
+            $personas=Persona::searchPersona($search)->orderBy('created_at','DESC')->get();
         }
 
-        return view('campamentos.alumnos.listSearch',compact('representantes'));
+        return view('campamentos.alumnos.listSearch',compact('personas'));
 
     }
 

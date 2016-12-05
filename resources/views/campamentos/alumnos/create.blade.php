@@ -24,15 +24,15 @@
                         <div class="input-field col l6 m6 s12 ">
                             <i class="fa fa-user prefix"></i>
                             {!! Form::label('nombres','Nombres:*') !!}
-                            {!! Form::text('nombres',null,['class'=>'validate','required']) !!}
+                            {!! Form::text('nombres',null,['class'=>'validate','required','style'=>'text-transform:uppercase']) !!}
                         </div>
                         <div class="input-field col l6 m6 s12">
                             {!! Form::label('apellidos','Apellidos:*') !!}
-                            {!! Form::text('apellidos',null,['class'=>'validate','required']) !!}
+                            {!! Form::text('apellidos',null,['class'=>'validate','required','style'=>'text-transform:uppercase']) !!}
                         </div>
 
                         <div class="input-field col l4 m4 s12">
-                            {!! Form::select('tipo_doc', ['Cedula' => 'Cedula', 'Pasaporte' => 'Pasaporte'],null, ['id'=>'tipo_doc']) !!}
+                            {!! Form::select('tipo_doc', ['CEDULA' => 'CEDULA', 'PASAPORTE' => 'PASAPORTE'],null, ['id'=>'tipo_doc','required']) !!}
                             {!! Form::label('tipo_doc', 'Tipo doc:') !!}
                         </div>
                         <div class="input-field col l4 m4 s12">
@@ -41,14 +41,14 @@
                         </div>
 
                         <div class="input-field col l4 m4 s12">
-                            {!! Form::select('genero', ['Masculino' => 'Masculino', 'Femenino' => 'Femenino'],null, ['id'=>'genero']) !!}
+                            {!! Form::select('genero', ['MASCULINO' => 'MASCULINO', 'FEMENINO' => 'FEMENINO'],null, ['id'=>'genero','required']) !!}
                             {!! Form::label('genero','Género:') !!}
                         </div>
 
 
                         <div class="input-field  col l8 m6 s12">
                             <i class="fa fa-pencil prefix"></i>
-                            {!! Form::textarea('direccion',null,['class'=>'materialize-textarea validate','id'=>'direccion','length'=>'150']) !!}
+                            {!! Form::textarea('direccion',null,['class'=>'materialize-textarea validate','id'=>'direccion','length'=>'150','required','style'=>'text-transform:uppercase']) !!}
                             {!! Form::label('direccion','Dirección:') !!}
                         </div>
                         <div class="form-group col l4 m4 s12">
@@ -67,7 +67,7 @@
                                 {!! Form::file('foto_ced') !!}
                             </div>
                             <div class="file-path-wrapper">
-                                {!! Form::text('foto_ced',null,['class'=>'file-path validate','placeholder'=>'Foto-Cedula']) !!}
+                                {!! Form::text('foto_ced',null,['class'=>'file-path validate','placeholder'=>'Foto-Cedula','required']) !!}
                             </div>
                         </div>
                         <div class="file-field input-field  col l6 m6 s12">
@@ -76,7 +76,7 @@
                                 {!! Form::file('foto') !!}
                             </div>
                             <div class="file-path-wrapper">
-                                {!! Form::text('foto',null,['class'=>'file-path validate','placeholder'=>'Foto']) !!}
+                                {!! Form::text('foto',null,['class'=>'file-path validate','placeholder'=>'Foto','required']) !!}
                             </div>
                         </div>
 

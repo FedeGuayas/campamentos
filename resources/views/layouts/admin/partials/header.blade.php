@@ -13,7 +13,7 @@
 
             <!-- Dropdown Inscripciones -->
             <ul id="dropdownInsc" class="dropdown-content">
-                <li><a href="#!" class="waves-effect waves-teal">Ver</a></li>
+                <li><a href="{!! route('admin.inscripcions.index') !!}" class="waves-effect waves-teal">Ver</a></li>
                 <li class="divider"></li>
                 <li><a href="{!! route('admin.inscripcions.create') !!}" class="waves-effect waves-teal">Nueva</a></li>
                 <li class="divider"></li>

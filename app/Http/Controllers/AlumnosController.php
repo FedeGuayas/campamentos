@@ -60,8 +60,8 @@ class AlumnosController extends Controller
         $out['genero'] = 'required';
         $out['fecha_nac'] = 'required';
 //        $out['email'] = 'email|unique:personas';
-        $out['direccion'] = 'max:255';
-        $out['telefono'] = 'max:15';
+        $out['direccion'] = 'max:255|required';
+//        $out['telefono'] = 'max:15';
         $out['tipo_doc'] = 'required';
         $out['num_doc'] = 'required';
         $out['foto_ced'] = 'required|image|max:1000';
@@ -71,10 +71,10 @@ class AlumnosController extends Controller
 
         //Hacer validación condicional dependiendo del tipo de documento a utilizar.
         switch($data['tipo_doc']){
-            case 'Cedula':
+            case 'CEDULA':
                 $out['num_doc'] = 'required|digits:10 | unique:personas';
                 break;
-            case 'Pasaporte':
+            case 'PASAPORTE':
                 $out['num_doc'] = 'required|alpha_num |max:8 |min:5| unique:personas';
                 break;
         }
@@ -98,24 +98,22 @@ class AlumnosController extends Controller
                 $request, $validator
             );
         }
-
         try {
             DB::beginTransaction();
 
             $persona=new Persona;
-            $persona->nombres=$request->get('nombres');
-            $persona->apellidos=$request->get('apellidos');
+            $persona->nombres=strtoupper($request->get('nombres'));
+            $persona->apellidos=strtoupper($request->get('apellidos'));
             $persona->tipo_doc=$request->get('tipo_doc');
             $persona->num_doc=$request->get('num_doc');
             $persona->genero=$request->get('genero');
             $persona->fecha_nac=$request->get('fecha_nac');
-            $persona->direccion=$request->get('direccion');
+            $persona->direccion=strtoupper($request->get('direccion'));
             $persona->save();
 
             $alumno=new Alumno;
 
-            $representante_id=$request->get('persona_id');
-            $representante=Representante::findOrFail($representante_id);
+            $representante=Representante::where('persona_id',$request->get('persona_id'))->first();
             $alumno->persona()->associate($persona);
             $alumno->representante()->associate($representante);
 
@@ -195,29 +193,25 @@ class AlumnosController extends Controller
                 $request, $validator
             );
         }
-
         try {
             DB::beginTransaction();
 
             $alumno=Alumno::findOrFail($id);
             $persona=$alumno->persona;
 
-            $persona->nombres=$request->get('nombres');
-            $persona->apellidos=$request->get('apellidos');
+            $persona->nombres=strtoupper($request->get('nombres'));
+            $persona->apellidos=strtoupper($request->get('apellidos'));
             $persona->tipo_doc=$request->get('tipo_doc');
             $persona->num_doc=$request->get('num_doc');
             $persona->genero=$request->get('genero');
             $persona->fecha_nac=$request->get('fecha_nac');
-            $persona->direccion=$request->get('direccion');
+            $persona->direccion=strtoupper($request->get('direccion'));
             $persona->update();
 
-            $per=$request->get('persona_id');
-            $per=Persona::findOrFail($per);
-            $representante=$per->representantes()->first();
+
+            $representante=Representante::where('persona_id',$request->get('persona_id'))->first();
             $alumno->persona()->associate($persona);
             $alumno->representante()->associate($representante);
-            $alumno->representante_id=$representante->id;
-
 
             if ($request->hasFile('foto_ced')) {
                 $file = $request->file('foto_ced');
@@ -233,7 +227,6 @@ class AlumnosController extends Controller
                 $file->move($path,$name);//lo copio a $path con el nombre $name
                 $alumno->foto=$name;//ahora se guarda  en el atributo foto_ced la imagen
             }
-
 
             $alumno->update();
 
@@ -277,9 +270,9 @@ class AlumnosController extends Controller
         $out['apellidos'] = 'required | max:50';
         $out['genero'] = 'required';
         $out['fecha_nac'] = 'required';
-        $out['email'] = 'email';
-        $out['direccion'] = 'max:255';
-        $out['telefono'] = 'max:15';
+//        $out['email'] = 'email';
+        $out['direccion'] = 'max:255|required';
+//        $out['telefono'] = 'max:15';
         $out['tipo_doc'] = 'required';
         $out['num_doc'] = 'required';
         $out['foto_ced'] = 'max:1000';
@@ -288,14 +281,11 @@ class AlumnosController extends Controller
 
         //Hacer validación condicional dependiendo del tipo de documento a utilizar.
         switch($data['tipo_doc']){
-            case 'Cedula':
+            case 'CEDULA':
                 $out['num_doc'] = 'required|digits:10';
                 break;
-            case 'Pasaporte':
+            case 'PASAPORTE':
                 $out['num_doc'] = 'required|alpha_num |max:8 |min:5';
-                break;
-            case 'NoDoc':
-                $out['num_doc'] = 'required|alpha_num |max:5 |min:3';
                 break;
         }
 

@@ -25,15 +25,15 @@
                         <div class="input-field col l6 m6 s12 ">
                             <i class="fa fa-user prefix"></i>
                             {!! Form::label('nombres','Nombres:*') !!}
-                            {!! Form::text('nombres',$alumno->persona->nombres,['class'=>'validate','required']) !!}
+                            {!! Form::text('nombres',$alumno->persona->nombres,['class'=>'validate','required','style'=>'text-transform:uppercase']) !!}
                         </div>
                         <div class="input-field col l6 m6 s12">
                             {!! Form::label('apellidos','Apellidos:*') !!}
-                            {!! Form::text('apellidos',$alumno->persona->apellidos,['class'=>'validate','required']) !!}
+                            {!! Form::text('apellidos',$alumno->persona->apellidos,['class'=>'validate','required','style'=>'text-transform:uppercase']) !!}
                         </div>
 
                         <div class="input-field col l4 m4 s12">
-                            {!! Form::select('tipo_doc', ['Cedula' => 'Cedula', 'Pasaporte' => 'Pasaporte'],$alumno->persona->tipo_doc, ['id'=>'tipo_doc']) !!}
+                            {!! Form::select('tipo_doc', ['CEDULA' => 'CEDULA', 'PASAPORTE' => 'PASAPORTE'],$alumno->persona->tipo_doc, ['id'=>'tipo_doc']) !!}
                             {!! Form::label('tipo_doc', 'Tipo doc:') !!}
                         </div>
                         <div class="input-field col l4 m4 s12">
@@ -41,13 +41,13 @@
                             {!! Form::text('num_doc',$alumno->persona->num_doc,['class'=>'validate','required']) !!}
                         </div>
                         <div class="input-field col l4 m4 s12">
-                            {!! Form::select('genero', ['Masculino' => 'Masculino', 'Femenino' => 'Femenino'],$alumno->persona->genero, ['id'=>'genero']) !!}
+                            {!! Form::select('genero', ['MASCULINO' => 'MASCULINO', 'FEMENINO' => 'FEMENINO'],$alumno->persona->genero, ['id'=>'genero']) !!}
                             {!! Form::label('genero','Género:') !!}
                         </div>
 
                         <div class="input-field  col l8 m8 s12">
                             <i class="fa fa-pencil prefix"></i>
-                            {!! Form::textarea('direccion',$alumno->persona->direccion,['class'=>'materialize-textarea validate','id'=>'direccion','length'=>'150']) !!}
+                            {!! Form::textarea('direccion',$alumno->persona->direccion,['class'=>'materialize-textarea validate','id'=>'direccion','length'=>'150','style'=>'text-transform:uppercase']) !!}
                             {!! Form::label('direccion','Dirección:') !!}
                         </div>
                         <div class="form-group col l4 m4 s12">

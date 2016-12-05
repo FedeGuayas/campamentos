@@ -16,9 +16,9 @@ class CreateTablePersonas extends Migration
             $table->increments('id');
             $table->string('nombres', 50);
             $table->string('apellidos', 50);
-            $table->enum('tipo_doc',['Cedula','Pasaporte'])->default('Cedula');
+            $table->enum('tipo_doc',['CEDULA','PASAPORTE'])->default('CEDULA');
             $table->char('num_doc', 10)->unique();
-            $table->enum('genero',['Masculino','Femenino'])->default('Masculino');
+            $table->enum('genero',['MASCULINO','FEMENINO'])->default('MASCULINO');
             $table->date('fecha_nac');
             $table->string('email',60)->nullable();
             $table->string('direccion')->nullable();
