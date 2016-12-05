@@ -22,6 +22,8 @@ class Cart
     public $totalQty=0; //cantidad total de productos en el carrito
 
     public $totalPrice=0; //Precio total de la inscripcion
+
+    public $discount=0; //Descuento total de la inscripcion
     
     
 
@@ -32,11 +34,11 @@ class Cart
             $this->items=$oldCart->items;
             $this->totalQty=$oldCart->totalQty;
             $this->totalPrice=$oldCart->totalPrice;
+            $this->discount=$oldCart->discount;
         }
     }
 
     public function add($item,$id,$opciones){ //$id=calendar_id=producto $item=curso completo
-
         
         //Creo un array de items, inicio en 0 xk se ira incrementando, almaceno el precio del curso y el curso k es
         $storedItem=['qty'=>0,'price'=>$item->mensualidad,'item'=>$item];
@@ -50,14 +52,26 @@ class Cart
 
         $storedItem['qty']++;//incrementar la cantidad
 
+        //costo de la matricula si se selecciona
         if (($opciones[0]['matricula'])=='on'){
             $mat=$opciones[0]['program']->matricula;
         }else $mat=0;
 
-
-        if (($opciones[0]['$desc_emp'])=='true'){
+        //descuento a empleados
+        if (($opciones[0]['desc_emp'])=='true'){
             $desc_empleado=0.5; //50%
         }else $desc_empleado=0;
+
+        
+        //descuentos a aplicar segun la etapa
+        if ( (($opciones[0]['desc_est'])=='VERANO') && ( $storedItem['qty']>=3)){
+            //condiciones para verano 10% ins de mas de un representado inscrito o 10% un inscrito en una disciplina mas de 3 meses
+            $descX3=0.1;
+            
+        }elseif (($opciones[0]['desc_est'])=='INVIERNO'){
+            //condiciones para invierno ... Dewcuento del 10% para inscripciones en mas de 3 meses en el mismo curso
+
+        }
 
 
 

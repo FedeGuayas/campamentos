@@ -11,6 +11,7 @@ use App\Program;
 use App\Representante;
 use Illuminate\Http\Request;
 use App\Http\Requests\InscripcionStoreRequest;
+use DB;
 
 use App\Http\Requests;
 
@@ -24,7 +25,7 @@ class InscripcionsController extends Controller
     public function index()
     {
         $inscripciones=Inscripcion::with('factura','calendar','user','alumno')->get();
-//        dd($inscripciones);
+
         return view('campamentos.inscripcions.index',['inscripciones'=>$inscripciones]);
     }
 
@@ -50,12 +51,14 @@ class InscripcionsController extends Controller
      */
     public function store(InscripcionStoreRequest $request)
     {
-//        dd($request->all());
+
         //factura
+        try {
+            DB::beginTransaction();
+
         $pago_id=$request->input('fpago_id');
         $fpago=Pago::findOrFail($pago_id);
-        $representante_id=$request->input('representante_id');
-        $representante=Representante::findOrFail($representante_id);
+        $representante=Representante::where('persona_id',$request->input('representante_id'))->first();
         $factura=new Factura();
         $factura->pago()->associate($fpago);
         $factura->representante()->associate($representante);
@@ -88,6 +91,13 @@ class InscripcionsController extends Controller
 
         $inscripcion->save();
 
+            DB::commit();
+
+
+        } catch (\Exception $e) {
+            DB::rollback();
+        }
+
 
         return back()->with('message','Inscripción satisfactoria');
     }
@@ -100,7 +110,7 @@ class InscripcionsController extends Controller
      */
     public function show($id)
     {
-        //
+        return ('Vista generakl de la inscripcion');
     }
 
     /**
@@ -111,7 +121,7 @@ class InscripcionsController extends Controller
      */
     public function edit($id)
     {
-        //
+        return ('formulario editar inscripcion');
     }
 
     /**
@@ -123,7 +133,7 @@ class InscripcionsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        return ('inscripcion editada');
     }
 
     /**
@@ -134,7 +144,7 @@ class InscripcionsController extends Controller
      */
     public function destroy($id)
     {
-        //
+        return ('inscripcion eliminada');
     }
 
 
@@ -167,7 +177,8 @@ class InscripcionsController extends Controller
             }else $desc_empleado=0;
 
             if ($request->input('descuento_estacion')=='VERANO'){
-                //condiciones para verano
+                //condiciones para verano 10% ins de mas de un representado inscrito o 10% un inscrito en una disciplina mas de 3 meses
+                
             }elseif ($request->input('descuento_estacion')=='INVIERNO'){
                 //condiciones para invierno ... Dewcuento del 10% para inscripciones en mas de 3 meses en el mismo curso
             }

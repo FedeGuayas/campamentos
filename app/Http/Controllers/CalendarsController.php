@@ -294,7 +294,6 @@ class CalendarsController extends Controller
 
     
     /*****PRODUCTO venta del curso*****/
-
     /**
      * Adicionar Productos al carrito al dar en el boton de +
      *
@@ -312,15 +311,16 @@ class CalendarsController extends Controller
 //        $representante=Representante::findOrFail($request->input('representante_id'));
 //        $alumno=Alumno::findOrFail($request->input('alumno_id'));
         $matricula=$request->input('matricula');
-        $program=Program::findOrFail($product->program_id);
-        
+//        $program=Program::findOrFail($product->program_id);
+        $program=Program::where('id',$product->program_id)->with('escenario','disciplina','modulo')->first();
+
         $opciones[]=[
             'desc_est'=>$desc_est,
-            '$desc_emp'=>$desc_emp,
+            'desc_emp'=>$desc_emp,
             'matricula'=>$matricula,
             'program'=>$program
         ];
-//        dd($opciones);
+        
         //si hay un cart almacenado en la session lo tomo, sino le paso nulo
         $oldCart=Session::has('cart') ? Session::get('cart') : null;
         //creo una instancia del carrito
