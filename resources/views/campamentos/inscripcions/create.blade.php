@@ -11,9 +11,9 @@
                 <ul class="tabs">
                     <li class="tab col s4"><a class="active" href="#inscripcion"><h5><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Inscripción</h5></a></li>
                     <li class="tab col s4">
-                        <a href="#detalle" id="getCart"><h5><i class="fa fa-shopping-cart" aria-hidden="true"></i> Detalle
-                                <span class="label label-danger">{{Session::has('cart') ? Session::get('cart')->totalQty : ''}}</span></h5>
-                        </a>
+                        {{--<a href="#detalle" id="getCart"><h5><i class="fa fa-shopping-cart" aria-hidden="true"></i> Detalle--}}
+                                {{--<span class="label label-danger">{{Session::has('cart') ? Session::get('cart')->totalQty : ''}}</span></h5>--}}
+                        {{--</a>--}}
                     </li>
                     <li class="tab col s4 "><a href="#facturacion"><h5><i class="fa fa-money" aria-hidden="true"></i> Facturación</h5></a></li>
                 </ul>
@@ -32,7 +32,7 @@
                 <div id="facturacion">
                     @include('campamentos.inscripcions.partials.facturacion')
                 </div>
-                <div id="detalle"></div>
+                {{--<div id="detalle"></div>--}}
             </div><!--/.card panel-->
         </div><!--/.card col-->
     </div><!--/.row-->

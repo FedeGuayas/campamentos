@@ -41,6 +41,8 @@ $("#representante_id").change(function (event) {
 $("#modulo_id").change(function (event) {
     var escenario=$("#escenario_id");
     var estacion=$("#estacion");
+    var multiple=$(".multiple");
+
     var desc_est=$("#descuento_estacion");
 
     $.get("escenarios/" + event.target.value + "", function (response, state) {
@@ -58,6 +60,15 @@ $("#modulo_id").change(function (event) {
         estacion.addClass("teal-text");
         estacion.fadeIn();
         estacion.val('CAMPAMENTOS DE '+ response.estacion+'');
+
+       //mostrar u ocultar el checkbox de descunto del 10% insc multiple
+        if (response.estacion==='VERANO'){
+            multiple.show();
+        }else{
+            multiple.hide();
+            multiple.prop('checked',false);
+        }
+
         escenario.material_select();
 
         //descuento de empleado

@@ -3,20 +3,29 @@
 namespace App\Http\Controllers;
 
 use App\Calendar;
+use App\Events\NuevaInscripcion;
 use App\Factura;
 use App\Inscripcion;
 use App\Modulo;
 use App\Pago;
 use App\Program;
 use App\Representante;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Requests\InscripcionStoreRequest;
 use DB;
+use Session;
+use Event;
 
 use App\Http\Requests;
 
 class InscripcionsController extends Controller
 {
+    public function __construct()
+    {
+        Carbon::setLocale('es');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -24,9 +33,54 @@ class InscripcionsController extends Controller
      */
     public function index()
     {
-        $inscripciones=Inscripcion::with('factura','calendar','user','alumno')->get();
+        $inscripciones=Inscripcion::where('estado','Pagada')->with('factura','calendar','user','alumno')->get();
 
         return view('campamentos.inscripcions.index',['inscripciones'=>$inscripciones]);
+    }
+
+
+    /**
+     * Muestra las reservaciones
+     * @return mixed
+     */
+    public function reservas()
+    {
+        $inscripciones=Inscripcion::where('estado','Reservada')->with('factura','calendar','user','alumno')->get();
+        return view('campamentos.inscripcions.reservas',['inscripciones'=>$inscripciones]);
+    }
+
+
+    /**
+     * Cancelar reserva
+     * @return mixed
+     */
+    public function reservaCancel($id)
+    {
+
+        $inscripcion=Inscripcion::where('id',$id)->with('factura','calendar','user','alumno')->first();
+        $calendar=$inscripcion->calendar;
+        $calendar->decrement('contador');
+        $inscripcion->delete();
+        $inscripcion->factura->delete();
+
+        Session::flash('message','Reserva eliminada');
+        return redirect()->back();
+    }
+
+    /**
+     * Confirmar reserva
+     * @param $id
+     * @return mixed
+     */
+    public function reservaConfirm($id)
+    {
+
+        $inscripcion=Inscripcion::where('id',$id)->with('factura','calendar','user','alumno')->first();
+        $inscripcion->estado='Pagada';
+        $inscripcion->update();
+
+        Session::flash('message','Inscripcion Confirmada');
+        return redirect()->back();
     }
 
     /**
@@ -52,54 +106,76 @@ class InscripcionsController extends Controller
     public function store(InscripcionStoreRequest $request)
     {
 
-        //factura
         try {
             DB::beginTransaction();
+            $calendar_id=$request->input('calendar_id');
+            $program_id=$request->input('program_id');
+            $program=Program::findOrFail($program_id);
+            $matricula=$program->matricula;
+            $calendar=Calendar::findOrFail($calendar_id);
+            $mensualidad=$calendar->mensualidad;
+            $valor=$request->input('valor');
+            $pago_id=$request->input('fpago_id');
 
-        $pago_id=$request->input('fpago_id');
-        $fpago=Pago::findOrFail($pago_id);
-        $representante=Representante::where('persona_id',$request->input('representante_id'))->first();
-        $factura=new Factura();
-        $factura->pago()->associate($fpago);
-        $factura->representante()->associate($representante);
-        $factura->total=$request->input('valor');
-//        if (!$request->input('descuentos')==''){
-//            $factura->descuento=$request->input('descuento');
-//        }
-        $factura->total=$request->input('valor');
-        $factura->save();
+            $fpago=Pago::findOrFail($pago_id);
+            $representante=Representante::where('persona_id',$request->input('representante_id'))->first();
+            $factura=new Factura();
+            $factura->pago()->associate($fpago);
+            $factura->representante()->associate($representante);
+            $factura->total=$valor;
+
+            if ($request->input('matricula')=='on'){
+                $sub=$valor-$matricula;
+                $desc=$mensualidad-$sub;
+                if ($desc>0){
+                    $factura->descuento=$desc;
+                }
+            } else{
+                $desc=$mensualidad-$valor;
+                if ($desc>0){
+                    $factura->descuento=$desc;
+                }
+            }
+
+            $factura->save();
 
         //inscripcion
         $user=$request->user();
-        $calendar_id=$request->input('calendar_id');
-        $program_id=$request->input('program_id');
-        $program=Program::findOrFail($program_id);
-        $calendar=Calendar::findOrFail($calendar_id);
+
         $inscripcion=new Inscripcion();
         $inscripcion->calendar()->associate($calendar);
         $inscripcion->factura()->associate($factura);
         $inscripcion->user()->associate($user);
+
         if ($request->input('adulto')==true){
-            $inscripcion->alumno_id=$request->input('representante_id');
+            $inscripcion->alumno_id=0;
         }else {
             $inscripcion->alumno_id=$request->input('alumno_id');
         }
+            
         if ($request->input('matricula')==true){
-            $inscripcion->matricula=$program->matricula;
+            $inscripcion->matricula=$matricula;
         }
-        $inscripcion->mensualidad=$calendar->mensualidad;
+
+        if ($request->input('reservar')=='on'){
+            $inscripcion->estado='Reservada';
+        }
+        $inscripcion->mensualidad=$mensualidad;
 
         $inscripcion->save();
 
             DB::commit();
 
+            //aumentar contadores
+            Event::fire(new NuevaInscripcion($calendar));
 
         } catch (\Exception $e) {
             DB::rollback();
+            Session::flash('message_danger', 'Error' . $e->getMessage());
+            return redirect()->route('admin.inscripcions.index');
         }
-
-
-        return back()->with('message','Inscripción satisfactoria');
+        Session::flash('message','Inscripción satisfactoria');
+        return redirect()->route('admin.inscripcions.index');
     }
 
     /**
@@ -172,17 +248,24 @@ class InscripcionsController extends Controller
                 $mat=$matricula->matricula;
             }else $mat=0;
 
+            if ($request->input('descuento_familiar')=='true'){
+                $desc_familiar=0.1; //10%
+            }else $desc_familiar=0;
+
             if ($request->input('descuento_empleado')=='true'){
                 $desc_empleado=0.5; //50%
             }else $desc_empleado=0;
 
             if ($request->input('descuento_estacion')=='VERANO'){
                 //condiciones para verano 10% ins de mas de un representado inscrito o 10% un inscrito en una disciplina mas de 3 meses
-                
+                if ($request->input('descuento_multiple')=='true'){
+                    $desc_multiple=0.1; //10%
+                }else $desc_multiple=0;
+
             }elseif ($request->input('descuento_estacion')=='INVIERNO'){
                 //condiciones para invierno ... Dewcuento del 10% para inscripciones en mas de 3 meses en el mismo curso
+                $desc_multiple=0;
             }
-
 
             //Al seleccionar el nivel
             $dia_id=$request->get('dia_id');
@@ -203,7 +286,9 @@ class InscripcionsController extends Controller
 
             $mes=$mensualidad->mensualidad;
 
-            $precio=$mat+($mes-($mes*$desc_empleado));
+            $descuentos=($mes*$desc_empleado)+($mes*$desc_multiple)+($mes*$desc_familiar);
+
+            $precio=$mat+($mes-($descuentos));
 
             return response( number_format($precio, 2, '.', ' '));
         }

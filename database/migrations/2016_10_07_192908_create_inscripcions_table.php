@@ -27,7 +27,7 @@ class CreateInscripcionsTable extends Migration
             $table->softDeletes();
 
             $table->foreign('calendar_id')->references('id')->on('calendars');
-            $table->foreign('alumno_id')->references('id')->on('alumnos');
+//            $table->foreign('alumno_id')->references('id')->on('alumnos');
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('factura_id')->references('id')->on('facturas');
         });

@@ -91,6 +91,13 @@ Route::group(['middleware' => 'auth', 'prefix' => 'admin'], function () {
 
     //perfil de usuario
     Route::get('user/profile',['as' => 'admin.user.profile', 'uses'=>'UsersController@showProfile']);
+    
+    //mostrar reservas
+    Route::get('/inscripcions/reservas',['as' => 'admin.inscripcions.reservas', 'uses'=>'InscripcionsController@reservas']);
+    //cancelar reserva
+    Route::get('/inscripcions/reserva/{id}/cancel',['as' => 'admin.reserva.cancel', 'uses'=>'InscripcionsController@reservaCancel']);
+    //confirmar reserva
+    Route::get('/inscripcions/reserva/{id}/confirm',['as' => 'admin.reserva.confirm', 'uses'=>'InscripcionsController@reservaConfirm']);
 
     Route::resource('users', 'UsersController');
     Route::resource('roles', 'RolesController');

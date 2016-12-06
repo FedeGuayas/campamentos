@@ -13,9 +13,11 @@
 
             <!-- Dropdown Inscripciones -->
             <ul id="dropdownInsc" class="dropdown-content">
-                <li><a href="{!! route('admin.inscripcions.index') !!}" class="waves-effect waves-teal">Ver</a></li>
+                <li><a href="{!! route('admin.inscripcions.index') !!}" class="waves-effect waves-teal">Inscripciones</a></li>
                 <li class="divider"></li>
-                <li><a href="{!! route('admin.inscripcions.create') !!}" class="waves-effect waves-teal">Nueva</a></li>
+                <li><a href="{!! route('admin.inscripcions.reservas')!!}" class="waves-effect waves-teal">Reservas</a></li>
+                <li class="divider"></li>
+                <li><a href="{!! route('admin.inscripcions.create') !!}" class="waves-effect waves-teal">Nueva Inscripcion</a></li>
                 <li class="divider"></li>
                 <li><a href="{!! route('admin.alumnos.index') !!}" class="waves-effect waves-teal">Alumnos</a></li>
                 <li class="divider"></li>
@@ -25,8 +27,6 @@
             <!-- Dropdown Programacion -->
             <ul id="dropdownProg" class="dropdown-content">
                 <li><a href="{!! route('admin.modulos.index') !!}" class="waves-effect waves-teal">Modulos</a></li>
-                <li class="divider"></li>
-                <li><a href="#!" class="waves-effect waves-teal">Cupos</a></li>
                 <li class="divider"></li>
                 <li><a href="{!! route('admin.programs.index') !!}" class="waves-effect waves-teal">Programa</a></li>
                 <li class="divider"></li>

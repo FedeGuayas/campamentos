@@ -1,13 +1,13 @@
 @extends('layouts.admin.index')
 
-@section('title','Inscripciones')
+@section('title','Reservas')
 
 @section('content')
 
     <div class="row">
         <div class="col l8 m8 s">
             @include('alert.success')
-            <h4>Inscripciones</h4>
+            <h4>Reservas</h4>
         </div>
     </div>
 
@@ -18,32 +18,36 @@
                 <thead>
                 <tr>
                     <th>No.</th>
-                    <th>Alumno</th>
-                    <th>CI Al.</th>
-                    <th>Mes</th>
+                    {{--<th>Alumno</th>--}}
+                    {{--<th>CI Al.</th>--}}
+                    {{--<th>Mes</th>--}}
                     <th>Escenario</th>
                     <th>Disciplina</th>
-                    <th>Dias</th>
-                    <th>Horarios</th>
+                    {{--<th>Dias</th>--}}
+                    {{--<th>Horarios</th>--}}
                     <th>Representante</th>
                     <th>CI Rep.</th>
                     <th>Valor</th>
+                    <th>Creada</th>
+                    <th>Vence</th>
                     <th>Opciones</th>
                 </tr>
                 </thead>
                 <tfoot>
                 <tr>
                     <th class="search-filter">No.</th>
-                    <th>Alumno</th>
-                    <th class="search-filter">CI Al.</th>
-                    <th class="search-filter">Mes</th>
+                    {{--<th>Alumno</th>--}}
+                    {{--<th class="search-filter">CI Al.</th>--}}
+                    {{--<th class="search-filter">Mes</th>--}}
                     <th class="search-filter">Escenario</th>
                     <th class="search-filter">Disciplina</th>
-                    <th>Dias</th>
-                    <th>Horarios</th>
+                    {{--<th>Dias</th>--}}
+                    {{--<th>Horarios</th>--}}
                     <th>Representante</th>
                     <th>CI Rep.</th>
                     <th>Valor</th>
+                    <th>Creada</th>
+                    <th>Vence</th>
                     <th>Opciones</th>
                 </tr>
                 </tfoot>
@@ -52,34 +56,35 @@
                 @foreach ($inscripciones as $insc)
                     <tr>
                         <td>{{ sprintf("%'.05d",$insc->id) }}</td>
-                        <td>@if ($insc->alumno_id==0)
-                                {{ $insc->factura->representante->persona->getNombreAttribute() }}
-                            @else
-                                {{ $insc->alumno->persona->getNombreAttribute() }}
-                            @endif
-                        </td>
-                        <td>
-                            @if ($insc->alumno_id==0)
-                                {{ $insc->factura->representante->persona->num_doc }}
-                            @else
-                            {{ $insc->alumno->persona->num_doc }}
-                            @endif
-                        </td>
-                        <td>{{ $insc->calendar->program->modulo->modulo }}</td>
+                        {{--<td>@if ($insc->alumno_id==0)--}}
+                                {{--{{ $insc->factura->representante->persona->getNombreAttribute() }}--}}
+                            {{--@else--}}
+                                {{--{{ $insc->alumno->persona->getNombreAttribute() }}--}}
+                            {{--@endif--}}
+                        {{--</td>--}}
+                        {{--<td>--}}
+                            {{--@if ($insc->alumno_id==0)--}}
+                                {{--{{ $insc->factura->representante->persona->num_doc }}--}}
+                            {{--@else--}}
+                            {{--{{ $insc->alumno->persona->num_doc }}--}}
+                            {{--@endif--}}
+                        {{--</td>--}}
+                        {{--<td>{{ $insc->calendar->program->modulo->modulo }}</td>--}}
                         <td>{{ $insc->calendar->program->escenario->escenario }}</td>
                         <td>{{ $insc->calendar->program->disciplina->disciplina }}</td>
-                        <td>{{ $insc->calendar->dia->dia }}</td>
-                        <td>{{ $insc->calendar->horario->start_time}}-{{ $insc->calendar->horario->end_time}}</td>
+                        {{--<td>{{ $insc->calendar->dia->dia }}</td>--}}
+                        {{--<td>{{ $insc->calendar->horario->start_time}}-{{ $insc->calendar->horario->end_time}}</td>--}}
                         <td>{{ $insc->factura->representante->persona->getNombreAttribute() }}</td>
                         <td>{{ $insc->factura->representante->persona->num_doc }}</td>
-                        <td>{{ number_format($insc->factura->total, 2, '.', ' ') }}</td>
+                        <td>$ {{ number_format($insc->factura->total, 2, '.', ' ') }}</td>
+                        <td>{{$insc->created_at->diffForHumans()}}</td>
+                        <td>{{ $insc->created_at }}</td>
                         <td>
-                            {!! Form::button('<i class="fa fa-trash-o" ></i>',['class'=>'modal-trigger btn-floating waves-effect waves-light red darken-1','data-target'=>"modal-delete-$insc->id"]) !!}
-                            <a href="{{ route('admin.inscripcions.edit', $insc->id ) }}">
-                                {!! Form::button('<i class="fa fa-pencil-square-o" ></i>',['class'=>'btn-floating waves-effect waves-light teal darken-1']) !!}
+                            <a href="{{ route('admin.reserva.cancel', $insc->id ) }}">
+                            {!! Form::button('<i class="fa fa-ban" aria-hidden="true"></i>',['class'=>'btn-danger']) !!}
                             </a>
-                            <a href="{{ route('admin.inscripcions.show', $insc->id ) }}">
-                                {!! Form::button('<i class="fa fa-eye"></i>',['class'=>'btn-floating waves-effect waves-light teal darken-1']) !!}
+                            <a href="{{ route('admin.reserva.confirm', $insc->id ) }}">
+                            {!! Form::button('<i class="fa fa-check" aria-hidden="true"></i>',['class'=>'btn-success']) !!}
                             </a>
                         </td>
                     </tr>

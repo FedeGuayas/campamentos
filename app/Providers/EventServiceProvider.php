@@ -16,6 +16,10 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\EncuestaRespondida' => [
             'App\Listeners\AumentarContadorEncuesta',
         ],
+        'App\Events\NuevaInscripcion' => [
+            'App\Listeners\AumentarContadorCurso',
+        ],
+
     ];
 
     /**

@@ -97,23 +97,35 @@
                 {!! Form::select('nivel',['placeholder' => 'Seleccione...'],null,['class'=>'validate','id'=>'nivel']) !!}
                 {!! Form::label('nivel','Nivel:') !!}
             </div>
+        </div>
+
+        <div class="row">
+            <div class="col l2">
+                <div class="input-field">
+                    {!! Form::select('fpago_id',$fpagos,null, ['placeholder'=>'Seleccione ...'], ['id'=>'fpago_id']) !!}
+                    {!! Form::label('fpago_id', 'Forma de pago:*') !!}
+                </div>
+            </div>
+            <div class="col l2">
+                <div class="input-field">
+                    {!! Form::checkbox('familiar',null,false,['id'=>'familiar']) !!}
+                    {!! Form::label('familiar','Familiar') !!}
+                </div>
+            </div>
+            <div class="col l2">
+                <div class="input-field">
+                    {!! Form::checkbox('multiple',null,false,['id'=>'multiple','class'=>'multiple']) !!}
+                    {!! Form::label('multiple','Multiple',['class'=>'multiple']) !!}
+                </div>
+            </div>
             <div class="col l2">
                 <div class="input-field">
                     {!! Form::checkbox('matricula',null,false,['id'=>'matricula']) !!}
                     {!! Form::label('matricula','Matricula') !!}
                 </div>
             </div>
-        </div>
 
-        <div class="row">
-            <div class="col l4">
-                <div class="input-field">
-                    {!! Form::select('fpago_id',$fpagos,null, ['placeholder'=>'Seleccione ...'], ['id'=>'fpago_id']) !!}
-                    {!! Form::label('fpago_id', 'Forma de pago:*') !!}
-                </div>
-            </div>
-
-            <div class="col l2 m2 s2 right">
+            <div class="col l2 m2 s2">
                 <div class="input-field disabled">
                     <i class="fa fa-usd prefix" aria-hidden="true"></i>
                     {!! Form::label('valor','Valor:') !!}
@@ -126,15 +138,19 @@
     </div><!--/.card content-->
     <div class="card-action">
         <div class="row">
-            <div class="col l6 offset-l6">
+            <div class="col l10 offset-l2">
 {{--                <a href="{{route('product.addToCart',['id'=>$product->id])}}">--}}
-                <a href="{{route('product.addToCart',':CALENDAR')}}" id="add-to-cart">
-                    {!! Form::button('<i class="fa fa-plus"></i>', ['class'=>'btn waves-effect waves-light  tooltipped','data-position'=>'top', 'data-delay'=>'10', 'data-tooltip'=>'Agregar']) !!}
-                </a>
-                {!! Form::button('<i class="fa fa-close"></i>',['class'=>'btn waves-effect waves-light red darken-1 tooltipped','data-position'=>'top', 'data-delay'=>'10', 'data-tooltip'=>'Cancelar','type' => 'reset']) !!}
-                <a href="#!">
-                    {!! Form::button('<i class="fa fa-money" aria-hidden="true"></i> Pagar',['class'=>'btn btn-lg pull-right waves-effect waves-light darken-1 tooltipped','data-position'=>'top', 'data-delay'=>'50', 'data-tooltip'=>'Pagar','type' => 'submit']) !!}
-                </a>
+                {{--<a href="{{route('product.addToCart',':CALENDAR')}}" id="add-to-cart">--}}
+                    {{--{!! Form::button('<i class="fa fa-plus"></i>', ['class'=>'btn waves-effect waves-light  tooltipped','data-position'=>'top', 'data-delay'=>'10', 'data-tooltip'=>'Agregar']) !!}--}}
+                {{--</a>--}}
+                {!! Form::checkbox('reservar',null,false,['id'=>'reservar']) !!}
+                {!! Form::label('reservar','Reserva') !!}
+
+                {!! Form::button('<i class="fa fa-close right" aria-hidden="true"></i> Cancelar',['class'=>'btn waves-effect waves-light red darken-1 tooltipped','data-position'=>'top', 'data-delay'=>'10', 'data-tooltip'=>'Cancelar','type' => 'reset']) !!}
+
+                {{--<a href="#!">--}}
+                    {!! Form::button('<i class="fa fa-play right" aria-hidden="true"></i> Aplicar',['class'=>'btn waves-effect waves-light darken-1 tooltipped','data-position'=>'top', 'data-delay'=>'50', 'data-tooltip'=>'Aceptar','type' => 'submit']) !!}
+                {{--</a>--}}
             </div>
         </div>
         {!! Form::close() !!}

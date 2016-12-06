@@ -2,15 +2,12 @@
 
 namespace App\Listeners;
 
-use App\Encuesta;
-use App\Events\EncuestaRespondida;
+use App\Events\NuevaInscripcion;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-
-class AumentarContadorEncuesta
+class AumentarContadorCurso
 {
-
     /**
      * Create the event listener.
      *
@@ -18,19 +15,18 @@ class AumentarContadorEncuesta
      */
     public function __construct()
     {
-        
+        //
     }
 
     /**
      * Handle the event.
      *
-     * @param  EncuestaRespondida  $event
+     * @param  NuevaInscripcion  $event
      * @return void
      */
-    public function handle(EncuestaRespondida $event)
+    public function handle(NuevaInscripcion $event)
     {
-        $event->encuesta->increment('contador');
-        $event->encuesta->update();
-
+        $event->calendar->increment('contador');
+        $event->calendar->update();
     }
 }
