@@ -15,8 +15,6 @@
             <ul id="dropdownInsc" class="dropdown-content">
                 <li><a href="{!! route('admin.inscripcions.index') !!}" class="waves-effect waves-teal">Inscripciones</a></li>
                 <li class="divider"></li>
-                <li><a href="{!! route('admin.inscripcions.reservas')!!}" class="waves-effect waves-teal">Reservas</a></li>
-                <li class="divider"></li>
                 <li><a href="{!! route('admin.inscripcions.create') !!}" class="waves-effect waves-teal">Nueva Inscripcion</a></li>
                 <li class="divider"></li>
                 <li><a href="{!! route('admin.alumnos.index') !!}" class="waves-effect waves-teal">Alumnos</a></li>
@@ -71,7 +69,11 @@
 
                     <li class="active"><a href="#!" class="waves-effect waves-light"><i class="fa fa-1x fa-home left"></i>Home</a></li>
                     <li><a href="#!" class="waves-effect waves-light"><i class="fa fa-envelope left"></i>Contacto</a></li>
-                    <li><a href="#!" class="waves-effect waves-light"><i class="fa fa-bell-o left"></i>Alertas<span class="new badge red">4</span></a></li>
+                    <li>
+                        <a href="{!! route('admin.inscripcions.reservas')!!}" class="waves-effect waves-light"><i class="fa fa-bell-o left"></i>Reservas
+                            <span class="badge materialize-red-text"  data-badge-caption="Nueva">{{ Session::has('reservas') ?  Session::get('reservas') : ''}}</span>
+                        </a>
+                    </li>
 
                     {{--<li><a href="#" data-activates="slide-out" class="button-collapse"><i class="material-icons">repeat</i>Prueba</a></li>--}}
                     <!-- Dropdown Inscripciones -->

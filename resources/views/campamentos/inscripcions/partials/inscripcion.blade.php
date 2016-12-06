@@ -1,9 +1,9 @@
     <div class="card-content">
-        {!! Form::open(['route'=>'admin.inscripcions.store', 'method'=>'POST', 'class'=>'form_noEnter pagar', 'id'=>'form_inscripcion'])  !!}
+        {!! Form::open(['route'=>'admin.inscripcions.store', 'method'=>'POST', 'class'=>'form_noEnter', 'id'=>'form_inscripcion'])  !!}
         {!! Form::hidden('calendar_id',null,['id'=>'calendar_id']) !!}
         {!! Form::hidden('program_id',null,['id'=>'program_id']) !!}
-        {!! Form::hidden('descuento_empleado',null,['id'=>'descuento_empleado']) !!}
-        {!! Form::hidden('descuento_estacion',null,['id'=>'descuento_estacion']) !!}
+        {!! Form::hidden('descuento_empleado',null,['id'=>'descuento_empleado']) !!}{{-- Capturo si es empleado--}}
+        {!! Form::hidden('descuento_estacion',null,['id'=>'descuento_estacion']) !!} {{-- Capturo la estacion actual--}}
         {!! Form::hidden('user_id',Auth::user()->id) !!}
         {{--{!! Form::hidden('precio',null,['id'=>'precio']) !!}--}}
         @include('alert.request')
@@ -139,17 +139,17 @@
     <div class="card-action">
         <div class="row">
             <div class="col l10 offset-l2">
-{{--                <a href="{{route('product.addToCart',['id'=>$product->id])}}">--}}
-                {{--<a href="{{route('product.addToCart',':CALENDAR')}}" id="add-to-cart">--}}
-                    {{--{!! Form::button('<i class="fa fa-plus"></i>', ['class'=>'btn waves-effect waves-light  tooltipped','data-position'=>'top', 'data-delay'=>'10', 'data-tooltip'=>'Agregar']) !!}--}}
-                {{--</a>--}}
+                {{--<a href="{{route('product.addToCart',['id'=>$product->id])}}">--}}
+                <a href="{{route('inscripciones.addMultiples',':CALENDAR')}}" id="add-cursos">
+                    {!! Form::button('<i class="fa fa-plus"></i>', ['class'=>'btn waves-effect waves-light tooltipped agregar','disabled','data-position'=>'top', 'data-delay'=>'10', 'data-tooltip'=>'Agregar']) !!}
+                </a>
                 {!! Form::checkbox('reservar',null,false,['id'=>'reservar']) !!}
                 {!! Form::label('reservar','Reserva') !!}
 
                 {!! Form::button('<i class="fa fa-close right" aria-hidden="true"></i> Cancelar',['class'=>'btn waves-effect waves-light red darken-1 tooltipped','data-position'=>'top', 'data-delay'=>'10', 'data-tooltip'=>'Cancelar','type' => 'reset']) !!}
 
                 {{--<a href="#!">--}}
-                    {!! Form::button('<i class="fa fa-play right" aria-hidden="true"></i> Aplicar',['class'=>'btn waves-effect waves-light darken-1 tooltipped','data-position'=>'top', 'data-delay'=>'50', 'data-tooltip'=>'Aceptar','type' => 'submit']) !!}
+                    {!! Form::button('<i class="fa fa-play right" aria-hidden="true"></i> Aplicar',['class'=>'btn waves-effect waves-light darken-1 tooltipped pagar','data-position'=>'top', 'data-delay'=>'50', 'data-tooltip'=>'Aceptar','type' => 'submit','disabled']) !!}
                 {{--</a>--}}
             </div>
         </div>

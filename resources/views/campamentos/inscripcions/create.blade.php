@@ -11,9 +11,9 @@
                 <ul class="tabs">
                     <li class="tab col s4"><a class="active" href="#inscripcion"><h5><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Inscripción</h5></a></li>
                     <li class="tab col s4">
-                        {{--<a href="#detalle" id="getCart"><h5><i class="fa fa-shopping-cart" aria-hidden="true"></i> Detalle--}}
-                                {{--<span class="label label-danger">{{Session::has('cart') ? Session::get('cart')->totalQty : ''}}</span></h5>--}}
-                        {{--</a>--}}
+                        <a href="#detalle" id="getCurso"><h5><i class="fa fa-shopping-cart" aria-hidden="true"></i> Detalle
+                                <span class="label label-danger">{{Session::has('curso') ? Session::get('curso')->totalCursos : ''}}</span></h5>
+                        </a>
                     </li>
                     <li class="tab col s4 "><a href="#facturacion"><h5><i class="fa fa-money" aria-hidden="true"></i> Facturación</h5></a></li>
                 </ul>
@@ -32,7 +32,8 @@
                 <div id="facturacion">
                     @include('campamentos.inscripcions.partials.facturacion')
                 </div>
-                {{--<div id="detalle"></div>--}}
+                <div id="detalle"></div>
+                <input type="text" id="cursos_session" hidden value="{{Session::has('curso') ? Session::get('curso')->totalCursos : 0}}">
             </div><!--/.card panel-->
         </div><!--/.card col-->
     </div><!--/.row-->
@@ -171,8 +172,8 @@
                         var id=resp.representante_id;
                         var name=resp.nombre;
                         $("#form_representante").trigger("reset");//limpio el form
-                        $("#msj-ins-succes").html(resp.message)
-                        $("#mensaje-ins-success").fadeIn();
+                        $("#msj-rep-succes").html(resp.message)
+                        $("#mensaje-rep-success").fadeIn();
                         representante_id.append('<option value="'+id+'">'+ name+'</option>');
                         representante_id.addClass("teal-text");
                         representante_id.material_select()
@@ -184,8 +185,8 @@
                         $.each(resp.responseJSON, function (ind, elem) {
                             errors += elem + '<br>';
                         });
-                        $('#msj-ins-error').show().html(errors);
-                        $("#mensaje-ins-error").fadeIn();
+                        $('#msj-rep-error').show().html(errors);
+                        $("#mensaje-rep-error").fadeIn();
                         representante_id.removeClass("teal-text");
                         representante_id.find("option:gt(0)").remove();
                         $("#persona_id").empty();
@@ -251,6 +252,137 @@
 
 
            //agregar cursos al carrito
+           function add_cursos_ajax(){
+//             alert($("#add-curso").attr("value"));
+               var id=$("#calendar_id").val();
+               var form=$("#form_inscripcion");
+               var data=form.serialize();
+               //agregar id a la ruta dinamicamente
+               var route=$("#add-cursos").attr('href').replace(':CALENDAR',id);
+               var token = $("input[name=_token]").val();
+
+//               var formData = new FormData(document.getElementById("form_representante"));//se envia tod el form al controlador
+               //formData.append("dato", "valor"); //agregar otros datos a en viar al controlador
+               // formData.append(f.attr("name"), $(this)[0].files[0]);
+               $.ajax({
+                   url: route,
+                   type: "GET",
+                   headers: {'X-CSRF-TOKEN': token},
+//                    contentType: 'application/x-www-form-urlencoded',
+                   data: data,
+                   cache: false,
+                   contentType: false,
+                   processData: false,
+                   success: function (resp) {
+                       alert(resp.message);
+
+                   },
+                   error: function (resp) {
+                       console.log(resp);
+                       alert("No se pudo realizar la acción");
+                   }
+               });
+           }
+
+           //llamar a funcion de adicionar cursos
+           $("#add-cursos").on("click", function (event) {
+               event.preventDefault();
+               add_cursos_ajax();
+           });
+
+
+           //obtener coleccion de cursos
+           $("#getCurso").on('click', function (event) {
+               event.preventDefault();
+               var route = "{{route('inscripciones.multipleCursos')}}";
+               var token = $("input[name=_token]").val();
+
+               $.ajax({
+                   url: route,
+                   type: "GET",
+                   headers: {'X-CSRF-TOKEN': token},
+                   contentType: 'application/x-www-form-urlencoded',
+//                       data: {datos},
+                   success: function (resp) {
+                       console.log(resp);
+                       $("#detalle").empty().html(resp);
+                   },
+                   error: function (resp) {
+                       console.log(resp);
+                       $("#detalle").empty().html("!!! No Hay Productos en el Carrito ");
+                   }
+               });
+           });
+
+
+
+           $(document).ready(function(){
+               // Adulto que se kiere inscribir
+               $("#adulto").on('change', function() {
+
+                   // si se activa
+                   if ($(this).is(':checked') ) {
+                       console.log("Checkbox " + $(this).prop("id") +  " (" + $(this).val() + ") => Seleccionado");
+                       $("div").remove(".alumno");
+//                   representante_id.append('<option value="' +$(this).val()+ '">' + name + '</option>');
+//                   representante_id.addClass("teal-text");
+//                                   $("#persona_id").val($(this).val());
+
+                   } else {
+                       console.log("Checkbox " + $(this).prop("id") +  " (" + $(this).val() + ") => Deseleccionado");
+                       $("div").add(".alumno");
+//                   representante_id.find("option:gt(0)").remove();//elimino las opciones menos la primera
+//                   representante_id.removeClass("teal-text");
+//                   $("#persona_id").empty();
+                   }
+//               representante_id.material_select();
+               });
+           });
+
+
+           //inscripcion familiar
+           $(document).ready(function(){
+               $("#familiar").on('change', function() {
+                   if ($(this).is(':checked')) {
+                       $("#multiple").prop("disabled", true);
+                       $(".agregar").prop("disabled", false);
+
+                       var num_insc= $("#cursos_session")
+
+                       if (num_insc < 2){
+                           $(".pagar").prop("disabled", true);
+                       }else $(".pagar").prop("disabled", false);
+
+                   } else {
+                       $("#multiple").prop("disabled", false);
+                       $(".agregar").prop("disabled", true);
+                       $(".pagar").prop("disabled", false);
+                   }
+               });
+           });
+
+           //inscripcion multiple
+           $(document).ready(function(){
+               $("#multiple").on('change', function() {
+                   if ($(this).is(':checked')) {
+                       $("#familiar").prop("disabled", true);
+                       $(".agregar").prop("disabled", false);
+                   } else {
+                       $("#familiar").prop("disabled", false);
+                       $(".agregar").prop("disabled", true);
+                   }
+               });
+           });
+
+
+
+
+
+
+
+//****************CARRITO****************************************//
+
+           //agregar cursos al carrito
            function add_cart_ajax(){
 //             alert($("#add-to-cart").attr("value"));
                var id=$("#calendar_id").val();
@@ -314,34 +446,11 @@
 
        });
 
-        $(document).ready(function(){
-            // Adulto que se kiere inscribir
-            $("#adulto").on('change', function() {
-
-                // si se activa
-                if ($(this).is(':checked') ) {
-                    console.log("Checkbox " + $(this).prop("id") +  " (" + $(this).val() + ") => Seleccionado");
-                    $("div").remove(".alumno");
-//                   representante_id.append('<option value="' +$(this).val()+ '">' + name + '</option>');
-//                   representante_id.addClass("teal-text");
-//                                   $("#persona_id").val($(this).val());
-
-                } else {
-                    console.log("Checkbox " + $(this).prop("id") +  " (" + $(this).val() + ") => Deseleccionado");
-                    $("div").add(".alumno");
-//                   representante_id.find("option:gt(0)").remove();//elimino las opciones menos la primera
-//                   representante_id.removeClass("teal-text");
-//                   $("#persona_id").empty();
-                }
-//               representante_id.material_select();
-            });
-        });
 
     </script>
-
-    {{--Script para select dinamico condicional dropdown --}}
-    <script src="{{ asset("js/dropdown.js") }}" type="text/javascript"></script>
     {{--Script para select dinamico condicional dropdown --}}
     <script src="{{ asset("js/updateCosto.js") }}" type="text/javascript"></script>
+    {{--Script para select dinamico condicional dropdown --}}
+    <script src="{{ asset("js/dropdown.js") }}" type="text/javascript"></script>
 
 @endsection

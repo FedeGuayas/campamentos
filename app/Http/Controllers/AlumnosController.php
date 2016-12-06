@@ -60,7 +60,7 @@ class AlumnosController extends Controller
         $out['genero'] = 'required';
         $out['fecha_nac'] = 'required';
 //        $out['email'] = 'email|unique:personas';
-        $out['direccion'] = 'max:255|required';
+        $out['direccion'] = 'max:255';
 //        $out['telefono'] = 'max:15';
         $out['tipo_doc'] = 'required';
         $out['num_doc'] = 'required';
@@ -271,7 +271,7 @@ class AlumnosController extends Controller
         $out['genero'] = 'required';
         $out['fecha_nac'] = 'required';
 //        $out['email'] = 'email';
-        $out['direccion'] = 'max:255|required';
+        $out['direccion'] = 'max:255';
 //        $out['telefono'] = 'max:15';
         $out['tipo_doc'] = 'required';
         $out['num_doc'] = 'required';

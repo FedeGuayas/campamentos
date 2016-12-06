@@ -227,11 +227,22 @@ $("#nivel").change(function (event) {
         // contentType: 'application/x-www-form-urlencoded',
         data: datos,
         success: function (response) {
-            // console.log(response);
-            calendar_id.empty();
-            program_id.empty();
-            calendar_id.val(response[0].cID);
-            program_id.val(response[0].program_id);
+            console.log(response);
+            if (response[0].cupos >response[0].contador){
+                calendar_id.empty();
+                program_id.empty();
+                calendar_id.val(response[0].cID);
+                program_id.val(response[0].program_id);
+                $(".pagar").prop('disabled',false);
+            }else{
+                alert('No hay disponibilidad para ese Curso');
+                $("#valor").removeClass("teal-text");
+                $("#valor").empty();
+                $("#form_inscripcion").trigger("reset");
+                $(".pagar").prop('disabled',true);
+            }
+
+
             // $("#add-to-cart").attr("value",response[0].cID)//agrego el calendar_id al value del boton +
 
         },

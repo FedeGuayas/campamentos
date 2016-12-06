@@ -145,7 +145,21 @@ Route::group(['middleware' => 'auth', 'prefix' => 'admin'], function () {
 
 });
 
-//********** PRODUCTOS ****//
+
+
+//********** inscripciones multiples o familiar  ****//
+
+//agregar a la coleccion de cursos multiples para descuentos
+Route::get('/inscripcions-add/{id}',['uses'=>'CalendarsController@getAddCurso', 'as'=>'inscripciones.addMultiples']);
+//obtener la  coleccion
+Route::get('/inscripcions-collections',['uses'=>'CalendarsController@getCursos','as'=>'inscripciones.multipleCursos']);
+//eliminar un curso de la coleccion
+Route::get('/inscripcions-collections/reduce/{id}',['uses'=>'CalendarsController@getRestarUno','as'=>'inscripciones.restarUno']);
+//borrar la coleccion de cursos
+Route::get('/inscripcions-collections/remove/{id}',['uses'=>'CalendarsController@getRestarCurso','as'=>'inscripciones.restarTodo']);
+
+
+//********** Carrito ****//
 
 //agregar al carrito
 Route::get('/add-to-card/{id}',['uses'=>'CalendarsController@getAddToCart', 'as'=>'product.addToCart']);

@@ -10,6 +10,7 @@ use App\Disciplina;
 use App\Escenario;
 use App\Horario;
 use App\Modulo;
+use App\Multiples;
 use App\Program;
 use App\Representante;
 use Illuminate\Http\Request;
@@ -279,10 +280,11 @@ class CalendarsController extends Controller
             $curso=Calendar::
             join('horarios as h','h.id','=','c.horario_id','as c')
                 ->join('dias as d','d.id','=','c.dia_id')
-                ->select('c.id as cID','c.program_id')
+                ->select('c.id as cID','c.program_id','c.cupos','c.contador')
                 ->where('c.program_id',$program->id)
                 ->where('c.id',$calendar_id)
                 ->where('c.dia_id',$dia_id)
+                ->where('cupos','>','contador')
                 ->where('c.horario_id',$horario_id)
                 ->get()->toArray();
 
@@ -295,106 +297,108 @@ class CalendarsController extends Controller
     
     /*****PRODUCTO venta del curso*****/
     /**
-     * Adicionar Productos al carrito al dar en el boton de +
+     * Adicionar Cursos a arreglo multiple al dar en el boton de +
      *
      * @param Request $request
      * @param $id
      * @return mixed
      */
 
-    public function getAddToCart(Request $request,$id){
+    public function getAddCurso(Request $request,$id){
 
-        $product=Calendar::findOrFail($id);
+        $curso=Calendar::where('id',$id)->with('horario','dia','program')->first(); //obtengo el curso sobre de la actual inscripcion
 
-        $desc_est=$request->input('descuento_estacion');
         $desc_emp=$request->input('descuento_empleado');
-//        $representante=Representante::findOrFail($request->input('representante_id'));
-//        $alumno=Alumno::findOrFail($request->input('alumno_id'));
+        $alumno=Alumno::findOrFail($request->input('alumno_id'));
         $matricula=$request->input('matricula');
-//        $program=Program::findOrFail($product->program_id);
-        $program=Program::where('id',$product->program_id)->with('escenario','disciplina','modulo')->first();
+
+        
+        $familiar=$request->input('familiar');//10% familiares
+        $multiple=$request->input('multiple');//10% inscripcion en mismo curso 3 meses o mas
+
+        if ($familiar=='on')
+            $tipo_desc='familiar';
+        if ($multiple=='on')
+            $tipo_desc='multiple';
 
         $opciones[]=[
-            'desc_est'=>$desc_est,
+            'tipo_desc'=>$tipo_desc,
             'desc_emp'=>$desc_emp,
-            'matricula'=>$matricula,
-            'program'=>$program
+            'set_matricula'=>$matricula,
         ];
-        
-        //si hay un cart almacenado en la session lo tomo, sino le paso nulo
-        $oldCart=Session::has('cart') ? Session::get('cart') : null;
-        //creo una instancia del carrito
-        $cart=new Cart($oldCart);
-        $cart->add($product,$product->id,$opciones);//Agrego este producto(+Calendario=calendar_id) al carrito
-        //pongo el carrito en la session
-        $request->session()->put('cart',$cart);
-        
-        $message='Curso agregado al carrito';
+
+       
+        //si hay un curso almacenado en la session lo tomo, sino le paso nulo
+        $oldCurso=Session::has('curso') ? Session::get('curso') : null;
+        //creo una instancia de la coleccion de cursos
+        $multiples=new Multiples($oldCurso);
+        $multiples->addCursos($curso,$curso->id,$opciones);//Agrego este curso a la coleccion de cursos
+        //pongo el curso en la session
+        $request->session()->put('curso',$multiples);
+//        dd($request->session()->get('curso'));
+        $message='Curso agregado a la colección';
         if ($request->ajax()){
             return response()->json([
                 'message'=>$message
             ]);
         }
-//           dd($request->session()->get('cart'));
-            return redirect()->route('admin.inscripcions.create ');
 
+            return redirect()->route('admin.inscripcions.create');
 
     }
 
     /**
-     * El carrito en detalle
+     * Mostrar el detalle de la coleccion de cursos
      *
      * @param Request $request
      * @return mixed
      */
-    public function getCart(Request $request)
+    public function getCursos(Request $request)
     {
-        if (!Session::has('cart')){
+        if (!Session::has('curso')){
 
             return view('campamentos.inscripcions.create');
         }
-        $oldCart=Session::get('cart');
-        $cart=new Cart($oldCart);
-        return view('campamentos.inscripcions.partials.detalle',['products'=>$cart->items,'totalPrice'=>$cart->totalPrice]);
+        $oldCurso=Session::get('curso');
+        $cursos_coll=new Multiples($oldCurso);
+        return view('campamentos.inscripcions.partials.detalle',['cursos'=>$cursos_coll->cursos,'precioTotal'=>$cursos_coll->totalPrecio]);
     }
 
-
     /**
-     * Quitar 1 solo Productos del Item en el carrito, uno a uno
+     * Quitar 1 solo curso de la coleccion, uno a uno
      * @param $id
      * @return mixed
      */
-    public function getReduceByOne($id){
-        $oldCart=Session::has('cart') ? Session::get('cart') : null;
-        $cart=new Cart($oldCart);
-        $cart->reduceByOne($id);
+    public function getRestarUno($id){
+        $oldCurso=Session::has('curso') ? Session::get('curso') : null;
+        $curso=new Multiples($oldCurso);
+        $curso->restarUno($id);
 
-        if (count($cart->items)>0){
-            Session::put('cart',$cart);
+        if (count($curso->cursos)>0){
+            Session::put('curso',$curso);
         }else{
-            Session::forget('cart');
+            Session::forget('curso');
         }
-
-        return redirect()->route('admin.inscripcions.create');//product.shoppingCart Vista detallada del carrito
+        return redirect()->route('admin.inscripcions.create'); 
     }
 
 
     /**
-     * Eliminar el item completo, Ejj tengo 3 inscripciones de gimnasi en el EM las elimina las 3
+     * Eliminar el item de curso completo 
      *
      * @param $id
      * @return mixed
      */
 
-    public function getRemoveItem($id){
-        $oldCart=Session::has('cart') ? Session::get('cart') : null;
-        $cart=new Cart($oldCart);
-        $cart->removeItem($id);
+    public function getRestarCurso($id){
+        $oldCurso=Session::has('curso') ? Session::get('curso') : null;
+        $curso=new Multiples($oldCurso);
+        $curso->restarTodos($id);
 
-        if (count($cart->items)>0){
-            Session::put('cart',$cart);
+        if (count($curso->cursos)>0){
+            Session::put('curso',$curso);
         }else{
-            Session::forget('cart');
+            Session::forget('curso');
         }
         return redirect()->route('admin.inscripcions.create');
     }
