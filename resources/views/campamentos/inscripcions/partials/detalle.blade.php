@@ -5,12 +5,12 @@
                 @foreach($cursos as $curso)
                     <li class="list-group-item">
                         <span class="badge red white-text">{{$curso['qty']}}</span>
-                        <span class="truncate flow-text">{{$curso['curso']['program']['escenario']['escenario']}}-
-                            {{$curso['curso']['program']['disciplina']['disciplina']}}-
-                            {{$curso['curso']['program']['modulo']['modulo']}}-
+                        <span class="truncate flow-text">{{$curso['curso']['program']['escenario']['escenario']}} /
+                            {{$curso['curso']['program']['disciplina']['disciplina']}} /
+                            {{$curso['curso']['program']['modulo']['modulo']}} /
                             $ {{ number_format($curso['curso']['mensualidad'],2,'.',' ')}}
                         </span>
-                        <h5><span class="label label-success">$ {{number_format($curso['precio'],2,'.',' ')}}</span>
+                        <h5>Acumulado: <span class="label label-success">$ {{number_format($curso['precio'],2,'.',' ')}}</span>
                         </h5>
 
                         <div class="btn-group">
@@ -29,19 +29,27 @@
             </ul>
         </div>
     </div>
-
-    <h5><span class="label label-warning">Descuento:</span>
+    <hr>
+    <h5>Descuento: <span class="label label-warning"> $ {{ number_format($descuento,2,'.',' ')}}</span></h5>
+{{--    <h5>Matricula: <span class="label label-warning"> $ {{ number_format($matri,2,'.',' ')}}</span></h5>--}}
+    <h5>Conceptos:
+        @if($tipo_desc=='familiar')
+            Inscripción Familiar
+        @endif
+        @if($tipo_desc=='multiple')
+            Inscripción multiples meses
+        @endif
     </h5>
 
 
 
     <div class="row">
         <div class="col s2 offset-s2">
-            <h5><span class="label label-primary">Total: ${{number_format($precioTotal,2,'.',' ')}}</span></h5>
+            <h5><span class="label label-primary">Total: ${{number_format($total,2,'.',' ')}}</span></h5>
         </div>
         <div class="col s2 offset-s3">
-            <a href="!#" type="button" class="btn btn-lg waves-effect waves-light"><i class="fa fa-money"
-                                                                                      aria-hidden="true"></i> Pagar</a>
+            <a href="{{route('inscripciones.multipleStore')}}" type="button" class="btn btn-lg waves-effect waves-light"><i class="fa fa-money" aria-hidden="true"></i> Pagar
+            </a>
         </div>
     </div>
 
@@ -49,7 +57,7 @@
 @else
     <div class="row">
         <div class="col s6 col m6 offset-m3 offset-s3">
-            <h2>No hay Cursos en lña coleccion</h2>
+            <h2>No hay Cursos en la coleccion</h2>
         </div>
     </div>
 @endif

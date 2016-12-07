@@ -9,6 +9,7 @@ use App\Dia;
 use App\Disciplina;
 use App\Escenario;
 use App\Horario;
+use App\Inscripcion;
 use App\Modulo;
 use App\Multiples;
 use App\Program;
@@ -306,12 +307,12 @@ class CalendarsController extends Controller
 
     public function getAddCurso(Request $request,$id){
 
-        $curso=Calendar::where('id',$id)->with('horario','dia','program')->first(); //obtengo el curso sobre de la actual inscripcion
+        $curso=Calendar::where('id',$id)->with('horario','dia','program')->first(); //obtengo el curso, actual inscripcion
 
         $desc_emp=$request->input('descuento_empleado');
-        $alumno=Alumno::findOrFail($request->input('alumno_id'));
+        $alumno=Alumno::where('id',$request->input('alumno_id'))->with('persona')->first();
+        $representante=Representante::where('persona_id',$request->input('representante_id'))->with('persona')->first();
         $matricula=$request->input('matricula');
-
         
         $familiar=$request->input('familiar');//10% familiares
         $multiple=$request->input('multiple');//10% inscripcion en mismo curso 3 meses o mas
@@ -325,8 +326,9 @@ class CalendarsController extends Controller
             'tipo_desc'=>$tipo_desc,
             'desc_emp'=>$desc_emp,
             'set_matricula'=>$matricula,
+            'alumno'=>$alumno,
+            'representante'=>$representante,
         ];
-
        
         //si hay un curso almacenado en la session lo tomo, sino le paso nulo
         $oldCurso=Session::has('curso') ? Session::get('curso') : null;
@@ -355,13 +357,34 @@ class CalendarsController extends Controller
      */
     public function getCursos(Request $request)
     {
+//        dd($request->session()->get('curso'));
         if (!Session::has('curso')){
 
             return view('campamentos.inscripcions.create');
         }
         $oldCurso=Session::get('curso');
         $cursos_coll=new Multiples($oldCurso);
-        return view('campamentos.inscripcions.partials.detalle',['cursos'=>$cursos_coll->cursos,'precioTotal'=>$cursos_coll->totalPrecio]);
+
+        $cursos=$cursos_coll->cursos;
+        $precioTotal=$cursos_coll->totalPrecio;
+        $tipo_descuento=$cursos_coll->tipo_desc;
+        $desc_emp=$cursos_coll->desc_empleado;
+
+
+        if ($tipo_descuento=='familiar' || $tipo_descuento=='multiple'){
+            $desc1=0.1;
+        }
+
+        if ($desc_emp=='true'){
+            $desc2=0.5;
+        }else  $desc2=0;
+
+        $descuento=$precioTotal*$desc1 + $precioTotal*$desc2;
+
+        $total=$precioTotal-$descuento;
+
+//        dd($cursos_coll);
+        return view('campamentos.inscripcions.partials.detalle',['cursos'=>$cursos,'descuento'=>$descuento,'total'=>$total,'tipo_desc'=>$tipo_descuento]);
     }
 
     /**
@@ -405,59 +428,116 @@ class CalendarsController extends Controller
 
 
     /**
-     * Obtengo la vista para la facturacion y hacer el pago
-     *
-     * @return mixed
-     *
-     */
-    public function getCheckout()
-    {
-        if (!Session::has('cart')){
-            return redirect()->route('admin.inscripcions.create');
-        }
-        $oldCart=Session::get('cart');
-        $cart=new Cart($oldCart);
-        $total=$cart->totalPrice;
-        return view('shop.checkout',['total'=>$total]);
-    }
-
-    /**
      * Realizar el pago online
      * @param Request $request
      * @return mixed
      */
-    public function postCheckout(Request $request)
+    public function postStore(Request $request)
     {
-        if (!Session::has('cart')){
-            return redirect()->route('shopppingCart');
+        if (!Session::has('curso')){
+            return redirect()->route('admin.inscripcions.create');
         }
-        $oldCart=Session::get('cart');
-        $cart=new Cart($oldCart);
-        Stripe::setApiKey('sk_test_yXZNh4Iswaypk4Jq2i9UugiP');//my test secret key for stripe
+        $oldCurso=Session::get('curso');
+        $cart=new Multiples($oldCurso);
+
+        $cursos=$cart->cursos;
+        $precioTotal=$cart->totalPrecio;
+        $tipo_descuento=$cart->tipo_desc;
+        $desc_emp=$cart->desc_empleado;
+        
+        if ($tipo_descuento=='familiar' || $tipo_descuento=='multiple'){
+            $desc1=0.1;
+        }
+
+        if ($desc_emp=='true'){
+            $desc2=0.5;
+        }else  $desc2=0;
+
+        $descuento=$precioTotal*$desc1 + $precioTotal*$desc2;
+
+        $total=$precioTotal-$descuento;
+
+
         try {
-            //cargando la ordena a stripe
-            //tomado de stripe, multiplicar *100 para que tenga en cuenta las centenas
-            $charge=Charge::create(array(
-                "amount" => $cart->totalPrice*100,
-                "currency" => "usd",
-                "source" => $request->input('stripeToken'), // obtained with Stripe.js
-                "description" => "Charge for james.smith@example.com"
-            ));
             //almacenando la informacion de la orden en mi bd
-            $order=new Order();
-            $order->cart=serialize($cart);//serializo el objeto cart, para guaradrlo como string en la bd
-            $order->address=$request->input('address');
-            $order->name=$request->input('name');
-            $order->payment_id=$charge->id; //tomo el id del response del stripe
-            //Guardar en la bd segun la relacion establecida entre el usuario y la orden.
-
-            Auth::user()->orders()->save($order);
+            $inscripcion=new Inscripcion();
+            $inscripcion->cart=serialize($cart);//serializo el objeto cart, para guaradrlo como string en la bd
+            
+            
+            
+            Auth::user()->inscripcion->save($inscripcion);
         }catch(\Exception $e){
-            return redirect()->route('checkout')->with('error',$e->getMessage());
+            return redirect()->route('admin.inscripcions.create')->with('message_danger',$e->getMessage());
         }
 
-        Session::forget('cart');//limpiando la session, vaciando el carrito
-        return redirect()->route('product.index')->with('success','Compra satisfactoria del producto');
+        Session::forget('curso');//limpiando la session, vaciando el carrito
+        return redirect()->route('admin.inscripcions.index')->with('message','Inscripcion satisfactoria');
     }
+
+
+
+
+
+
+//    /**
+//     * Obtengo la vista para la facturacion y hacer el pago
+//     *
+//     * @return mixed
+//     *
+//     */
+//    public function getCheckout()
+//    {
+//        if (!Session::has('cart')){
+//            return redirect()->route('admin.inscripcions.create');
+//        }
+//        $oldCart=Session::get('cart');
+//        $cart=new Cart($oldCart);
+//        $total=$cart->totalPrice;
+//        return view('shop.checkout',['total'=>$total]);
+//    }
+//
+
+
+
+
+
+//    /**
+//     * Realizar el pago online
+//     * @param Request $request
+//     * @return mixed
+//     */
+//    public function postCheckout(Request $request)
+//    {
+//        if (!Session::has('cart')){
+//            return redirect()->route('shopppingCart');
+//        }
+//        $oldCart=Session::get('cart');
+//        $cart=new Cart($oldCart);
+//        Stripe::setApiKey('sk_test_yXZNh4Iswaypk4Jq2i9UugiP');//my test secret key for stripe
+//        try {
+//            //cargando la ordena a stripe
+//            //tomado de stripe, multiplicar *100 para que tenga en cuenta las centenas
+//            $charge=Charge::create(array(
+//                "amount" => $cart->totalPrice*100,
+//                "currency" => "usd",
+//                "source" => $request->input('stripeToken'), // obtained with Stripe.js
+//                "description" => "Charge for james.smith@example.com"
+//            ));
+//            //almacenando la informacion de la orden en mi bd
+//            $order=new Order();
+//            $order->cart=serialize($cart);//serializo el objeto cart, para guaradrlo como string en la bd
+//            $order->address=$request->input('address');
+//            $order->name=$request->input('name');
+//            $order->payment_id=$charge->id; //tomo el id del response del stripe
+//            //Guardar en la bd segun la relacion establecida entre el usuario y la orden.
+//
+//            Auth::user()->orders()->save($order);
+//        }catch(\Exception $e){
+//            return redirect()->route('checkout')->with('error',$e->getMessage());
+//        }
+//
+//        Session::forget('cart');//limpiando la session, vaciando el carrito
+//        return redirect()->route('product.index')->with('success','Compra satisfactoria del producto');
+//    }
 
 }
