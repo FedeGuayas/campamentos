@@ -233,15 +233,14 @@ $("#nivel").change(function (event) {
                 program_id.empty();
                 calendar_id.val(response[0].cID);
                 program_id.val(response[0].program_id);
-                $(".pagar").prop('disabled',false);
+                $("#pagar").prop('disabled',false);
             }else{
                 alert('No hay disponibilidad para ese Curso');
                 $("#valor").removeClass("teal-text");
                 $("#valor").empty();
                 $("#form_inscripcion").trigger("reset");
-                $(".pagar").prop('disabled',true);
+                $("#pagar").prop('disabled',true);
             }
-
 
             // $("#add-to-cart").attr("value",response[0].cID)//agrego el calendar_id al value del boton +
 

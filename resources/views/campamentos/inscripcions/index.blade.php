@@ -107,6 +107,7 @@
             var table =  $('#inscripcion_table').DataTable({
                 "lengthMenu": [[5, 10, 25], [5, 10, 25]],
                 "processing": false,
+                "order" : [0,'desc'],
                 "language":{
                     "decimal":        "",
                     "emptyTable":     "No se encontraron datos en la tabla",

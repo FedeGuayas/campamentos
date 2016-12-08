@@ -157,8 +157,7 @@ Route::get('/inscripcions-collections',['uses'=>'CalendarsController@getCursos',
 Route::get('/inscripcions-collections/reduce/{id}',['uses'=>'CalendarsController@getRestarUno','as'=>'inscripciones.restarUno']);
 //borrar la coleccion de cursos
 Route::get('/inscripcions-collections/remove/{id}',['uses'=>'CalendarsController@getRestarCurso','as'=>'inscripciones.restarTodo']);
-//guardar la coleccion de cursos
-Route::get('/inscripcions-collections/store',['uses'=>'CalendarsController@postStore', 'as'=>'inscripciones.multipleStore','middleware'=>'auth']);
+
 
 
 

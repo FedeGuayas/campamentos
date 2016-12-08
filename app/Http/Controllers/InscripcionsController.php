@@ -7,6 +7,7 @@ use App\Events\NuevaInscripcion;
 use App\Factura;
 use App\Inscripcion;
 use App\Modulo;
+use App\Multiples;
 use App\Pago;
 use App\Program;
 use App\Representante;
@@ -14,6 +15,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Requests\InscripcionStoreRequest;
 use DB;
+use Illuminate\Support\Facades\Auth;
 use Session;
 use Event;
 
@@ -107,79 +109,207 @@ class InscripcionsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(InscripcionStoreRequest $request)
+    public function store(Request $request)
     {
+        
+        if (!Session::has('curso')){
 
-        try {
-            DB::beginTransaction();
-            $calendar_id=$request->input('calendar_id');
-            $program_id=$request->input('program_id');
-            $program=Program::findOrFail($program_id);
-            $matricula=$program->matricula;
-            $calendar=Calendar::findOrFail($calendar_id);
-            $mensualidad=$calendar->mensualidad;
-            $valor=$request->input('valor');
-            $pago_id=$request->input('fpago_id');
+            try {
 
-            $fpago=Pago::findOrFail($pago_id);
-            $representante=Representante::where('persona_id',$request->input('representante_id'))->first();
-            $factura=new Factura();
-            $factura->pago()->associate($fpago);
-            $factura->representante()->associate($representante);
-            $factura->total=$valor;
+                DB::beginTransaction();
+                $calendar_id=$request->input('calendar_id');
+                $program_id=$request->input('program_id');
+                $program=Program::findOrFail($program_id);
+                $matricula=$program->matricula;
+                $calendar=Calendar::findOrFail($calendar_id);
+                $mensualidad=$calendar->mensualidad;
+                $valor=$request->input('valor');
+                $pago_id=$request->input('fpago_id');
 
-            if ($request->input('matricula')=='on'){
-                $sub=$valor-$matricula;
-                $desc=$mensualidad-$sub;
-                if ($desc>0){
-                    $factura->descuento=$desc;
+                $fpago=Pago::findOrFail($pago_id);
+                $representante=Representante::where('persona_id',$request->input('representante_id'))->first();
+                $factura=new Factura();
+                $factura->pago()->associate($fpago);
+                $factura->representante()->associate($representante);
+                $factura->total=$valor;
+
+                if ($request->input('matricula')=='on'){
+                    $sub=$valor-$matricula;
+                    $desc=$mensualidad-$sub;
+                    if ($desc>0){
+                        $factura->descuento=$desc;
+                    }
+                } else{
+                    $desc=$mensualidad-$valor;
+                    if ($desc>0){
+                        $factura->descuento=$desc;
+                    }
                 }
-            } else{
-                $desc=$mensualidad-$valor;
-                if ($desc>0){
-                    $factura->descuento=$desc;
+
+                $factura->save();
+
+                //inscripcion
+                $user=$request->user();
+
+                $inscripcion=new Inscripcion();
+                $inscripcion->calendar()->associate($calendar);
+                $inscripcion->factura()->associate($factura);
+                $inscripcion->user()->associate($user);
+
+                if ($request->input('adulto')==true){
+                    $inscripcion->alumno_id=0;
+                }else {
+                    $inscripcion->alumno_id=$request->input('alumno_id');
                 }
+
+                if ($request->input('matricula')==true){
+                    $inscripcion->matricula=$matricula;
+                }
+
+                if ($request->input('reservar')=='on'){
+                    $inscripcion->estado='Reservada';
+                }
+                $inscripcion->mensualidad=$mensualidad;
+
+                $inscripcion->save();
+
+                DB::commit();
+
+                //aumentar contadores
+                Event::fire(new NuevaInscripcion($calendar));
+
+                Session::flash('message','Inscripción satisfactoria');
+               
+
+            } catch (\Exception $e) {
+                DB::rollback();
+                Session::flash('message_danger', 'Error' . $e->getMessage());
+                return redirect()->route('admin.inscripcions.index');
             }
 
-            $factura->save();
-
-        //inscripcion
-        $user=$request->user();
-
-        $inscripcion=new Inscripcion();
-        $inscripcion->calendar()->associate($calendar);
-        $inscripcion->factura()->associate($factura);
-        $inscripcion->user()->associate($user);
-
-        if ($request->input('adulto')==true){
-            $inscripcion->alumno_id=0;
-        }else {
-            $inscripcion->alumno_id=$request->input('alumno_id');
-        }
-            
-        if ($request->input('matricula')==true){
-            $inscripcion->matricula=$matricula;
-        }
-
-        if ($request->input('reservar')=='on'){
-            $inscripcion->estado='Reservada';
-        }
-        $inscripcion->mensualidad=$mensualidad;
-
-        $inscripcion->save();
-
-            DB::commit();
-
-            //aumentar contadores
-            Event::fire(new NuevaInscripcion($calendar));
-
-        } catch (\Exception $e) {
-            DB::rollback();
-            Session::flash('message_danger', 'Error' . $e->getMessage());
             return redirect()->route('admin.inscripcions.index');
         }
-        Session::flash('message','Inscripción satisfactoria');
-        return redirect()->route('admin.inscripcions.index');
+
+
+
+
+
+        //  guardar los cursos de la session
+
+        $user= Auth::user();
+        $oldCurso=Session::get('curso');//obtengo la variable de la session
+        $cart=new Multiples($oldCurso); //creo na instancia de siuclase
+
+        $cursos=$cart->cursos;  //arreglo con los cursos agrupados por curso
+
+        $precioTotal=$cart->totalPrecio;
+        $tipo_descuento=$cart->tipo_desc;
+        $desc_emp=$cart->desc_empleado;
+
+        if ($tipo_descuento=='familiar' || $tipo_descuento=='multiple'){
+            $desc1=0.1;
+        }else  $desc1=0;
+
+        if ($desc_emp=='true'){
+            $desc2=0.5;
+        }else  $desc2=0;
+
+        $descuento=$precioTotal*$desc1 + $precioTotal*$desc2;
+
+        $total=$precioTotal-$descuento;
+
+        try {
+
+        $pago_id=$request->input('fpago_id');
+        $fpago=Pago::findOrFail($pago_id);
+        $representante=$cart->representante;
+        $factura=new Factura();
+        $factura->pago()->associate($fpago);
+        $factura->representante()->associate($representante);
+        $factura->total=$total;
+        $factura->descuento=$descuento;
+
+        $factura->save();
+
+        foreach ($cursos as $key => $curso){
+
+                if ($curso['qty']>1) { //mas de una inscripcion en un curso
+                    for ($i = 0; $i<$curso['qty'];++$i) { //recorro las incripciones
+                        if (count($curso['alumno'])>1){ //mas de un alumno en la inscripcion
+                            foreach ($curso['alumno'] as $alumno){ //creo una inscripcion x alumno
+                                $inscripcion=new Inscripcion();
+                                $calendar=$curso['curso'];
+
+                                $inscripcion->alumno_id=$alumno->id;
+
+                                $inscripcion->calendar()->associate($calendar);
+                                $inscripcion->factura()->associate($factura);
+                                $inscripcion->user()->associate($user);
+                                $inscripcion->save();
+
+                                Event::fire(new NuevaInscripcion($calendar));
+                            }
+                        }else { //si es solo un alumno una sola inscripcion
+                            $inscripcion=new Inscripcion();
+                            $calendar=$curso['curso'];
+                            $inscripcion->alumno_id=$curso['alumno']['id'];
+                            $inscripcion->calendar()->associate($calendar);
+                            $inscripcion->factura()->associate($factura);
+                            $inscripcion->user()->associate($user);
+                            $inscripcion->save();
+
+                            Event::fire(new NuevaInscripcion($calendar));
+                            $inscripcion->save();
+                        }
+
+
+
+                    }
+                }
+
+        }
+            DB::commit();
+
+        }catch(\Exception $e){
+        return redirect()->route('admin.inscripcions.create')->with('message_danger',$e->getMessage());
+        }
+
+
+
+//        $insc=[];
+//        $calendar=[];
+//        foreach($cursos as $key => $value)
+//        {
+//            if ($value['qty']>1 && $value['alumno']>1){//si existe mas de un alumno en el curso y mas de una inscripcion para el curso
+//                foreach ($value['alumno'] as $alumno_id=>$value){
+//                   $insc[]=[
+//                       'alumno_id'=>$key, //obtengo el id de cada alumno
+//                       'calendar_id'=>$key,
+//                       'cantidad_cupos'=>$value['qty']
+//                   ];
+//
+//                }
+//            }else
+//                $insc[]=[
+//                'alumno_id'=>$key, //obtengo el id de cada alumno
+//                'calendar_id'=>$key,
+//                'cantidad_cupos'=>$value['qty']
+//            ];
+//            var_dump($insc);
+//        }
+
+
+
+
+
+
+
+        Session::forget('curso');//limpiando la session, vaciando el carrito
+        return redirect()->route('admin.inscripcions.index')->with('message','Inscripcion satisfactoria');
+
+
+
+
     }
 
     /**

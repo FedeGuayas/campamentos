@@ -8,14 +8,19 @@ use App\Cart;
 use App\Dia;
 use App\Disciplina;
 use App\Escenario;
+use Event;
+use App\Events\NuevaInscripcion;
+use App\Factura;
 use App\Horario;
 use App\Inscripcion;
 use App\Modulo;
 use App\Multiples;
+use App\Pago;
 use App\Program;
 use App\Representante;
 use Illuminate\Http\Request;
 use DB;
+use Illuminate\Support\Facades\Auth;
 use Session;
 use App\Http\Requests;
 use App\Http\Requests\CalendarStoreRequest;
@@ -306,7 +311,7 @@ class CalendarsController extends Controller
      */
 
     public function getAddCurso(Request $request,$id){
-
+       
         $curso=Calendar::where('id',$id)->with('horario','dia','program')->first(); //obtengo el curso, actual inscripcion
 
         $desc_emp=$request->input('descuento_empleado');
@@ -341,7 +346,8 @@ class CalendarsController extends Controller
         $message='Curso agregado a la colección';
         if ($request->ajax()){
             return response()->json([
-                'message'=>$message
+                'message'=>$message,
+                'totalCursos'=>Session::get('curso')->totalCursos,
             ]);
         }
 
@@ -357,7 +363,8 @@ class CalendarsController extends Controller
      */
     public function getCursos(Request $request)
     {
-//        dd($request->session()->get('curso'));
+
+//        Session::forget('curso');
         if (!Session::has('curso')){
 
             return view('campamentos.inscripcions.create');
@@ -372,19 +379,21 @@ class CalendarsController extends Controller
 
 
         if ($tipo_descuento=='familiar' || $tipo_descuento=='multiple'){
-            $desc1=0.1;
-        }
+            $desc_familiar=0.1;
+        }else  $desc_familiar=0;
 
         if ($desc_emp=='true'){
-            $desc2=0.5;
-        }else  $desc2=0;
+            $desc_empleado=0.5;
+        }else  $desc_empleado=0;
 
-        $descuento=$precioTotal*$desc1 + $precioTotal*$desc2;
+        $descuento=$precioTotal*$desc_familiar + $precioTotal*$desc_empleado;
+
+        $subTotal=$precioTotal;
 
         $total=$precioTotal-$descuento;
 
 //        dd($cursos_coll);
-        return view('campamentos.inscripcions.partials.detalle',['cursos'=>$cursos,'descuento'=>$descuento,'total'=>$total,'tipo_desc'=>$tipo_descuento]);
+        return view('campamentos.inscripcions.partials.detalle',['cursos'=>$cursos,'descuento'=>$descuento,'total'=>$total,'tipo_desc'=>$tipo_descuento,'subTotal'=>$subTotal]);
     }
 
     /**
@@ -434,9 +443,10 @@ class CalendarsController extends Controller
      */
     public function postStore(Request $request)
     {
-        if (!Session::has('curso')){
-            return redirect()->route('admin.inscripcions.create');
-        }
+
+
+       //  guardar los cursos de la session
+
         $oldCurso=Session::get('curso');
         $cart=new Multiples($oldCurso);
 
@@ -447,7 +457,7 @@ class CalendarsController extends Controller
         
         if ($tipo_descuento=='familiar' || $tipo_descuento=='multiple'){
             $desc1=0.1;
-        }
+        }else  $desc1=0;
 
         if ($desc_emp=='true'){
             $desc2=0.5;
@@ -463,8 +473,7 @@ class CalendarsController extends Controller
             $inscripcion=new Inscripcion();
             $inscripcion->cart=serialize($cart);//serializo el objeto cart, para guaradrlo como string en la bd
             
-            
-            
+                        
             Auth::user()->inscripcion->save($inscripcion);
         }catch(\Exception $e){
             return redirect()->route('admin.inscripcions.create')->with('message_danger',$e->getMessage());

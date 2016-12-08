@@ -148,8 +148,8 @@
 
                 {!! Form::button('<i class="fa fa-close right" aria-hidden="true"></i> Cancelar',['class'=>'btn waves-effect waves-light red darken-1 tooltipped','data-position'=>'top', 'data-delay'=>'10', 'data-tooltip'=>'Cancelar','type' => 'reset']) !!}
 
-                {{--<a href="#!">--}}
-                    {!! Form::button('<i class="fa fa-play right" aria-hidden="true"></i> Aplicar',['class'=>'btn waves-effect waves-light darken-1 tooltipped pagar','data-position'=>'top', 'data-delay'=>'50', 'data-tooltip'=>'Aceptar','type' => 'submit','disabled']) !!}
+                {{--<a href="#!" >--}}
+                    {!! Form::button('<i class="fa fa-play right" aria-hidden="true"></i> Aplicar',['id'=>'pagar','disabled','class'=>'btn waves-effect waves-light darken-1 tooltipped','data-position'=>'top', 'data-delay'=>'50', 'data-tooltip'=>'Aceptar','type'=>'submit']) !!}
                 {{--</a>--}}
             </div>
         </div>
