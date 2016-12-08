@@ -142,6 +142,9 @@ Route::group(['middleware' => 'auth', 'prefix' => 'admin'], function () {
     //enabled, disabled programs
     Route::get('programs/{program}/enable',['as' => 'admin.programs.enable', 'uses'=>'ProgramsController@enable']);
     Route::get('programs/{program}/disable',['as' => 'admin.programs.disable', 'uses'=>'ProgramsController@disable']);
+    
+    //Reportes
+    Route::get('admin/reports/excel',['as' => 'admin.reports.excel', 'uses'=>'ReportesController@getExcel']);
 
 });
 

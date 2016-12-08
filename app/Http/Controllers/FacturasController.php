@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Factura;
+use App\Inscripcion;
 use Illuminate\Http\Request;
-
+use Session;
 use App\Http\Requests;
 
 class FacturasController extends Controller
@@ -15,7 +17,10 @@ class FacturasController extends Controller
      */
     public function index()
     {
-        //
+        $comprobantes=Factura::with('representante','inscripcions')->get();
+        $inscripcion=Inscripcion::all();
+        
+        return view('campamentos.facturas.index', compact('comprobantes','inscripcion'));
     }
 
     /**
@@ -81,6 +86,11 @@ class FacturasController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $factura=Factura::findOrFail($id);
+        $inscripcion=Inscripcion::where('factura_id',$id)->delete();
+
+        $factura->delete;
+        Session::flash('message','Comprobante eliminado');
+        return redirect()->route('admin.facturas.index');
     }
 }

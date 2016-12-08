@@ -1,92 +1,72 @@
 @extends('layouts.admin.index')
 
-@section('title','Inscripciones')
+@section('title','Facturas')
 
 @section('content')
 
     <div class="row">
         <div class="col l8 m8 s">
             @include('alert.success')
-            <h4>Inscripciones</h4>
+            <h4>Comprobantes de Pago</h4>
         </div>
     </div>
 
     <div class="row">
         <div class="col l12 m12 s12">
 
-            <table id="inscripcion_table" class="table table-striped table-bordered table-condensed table-hover highlight responsive-table" cellspacing="0" width="100%">
+            <table id="comprobantes_table" class="table table-striped table-bordered table-condensed table-hover highlight responsive-table" cellspacing="0" width="100%">
                 <thead>
                 <tr>
                     <th>No.</th>
-                    <th>Alumno</th>
-                    <th>CI Al.</th>
-                    <th>Mes</th>
-                    <th>Escenario</th>
-                    <th>Disciplina</th>
-                    <th>Dias</th>
-                    <th>Horarios</th>
-                    <th>Representante</th>
-                    <th>CI Rep.</th>
                     <th>Valor</th>
-                    <th>Comprobante</th>
+                    <th>Descuento</th>
+                    <th>Inscripción</th>
+                    <th>Alumno</th>
+                    <th>Representante</th>
                     <th>Opciones</th>
                 </tr>
                 </thead>
                 <tfoot>
                 <tr>
                     <th class="search-filter">No.</th>
-                    <th>Alumno</th>
-                    <th class="search-filter">CI Al.</th>
-                    <th class="search-filter">Mes</th>
-                    <th class="search-filter">Escenario</th>
-                    <th class="search-filter">Disciplina</th>
-                    <th>Dias</th>
-                    <th>Horarios</th>
-                    <th>Representante</th>
-                    <th>CI Rep.</th>
                     <th>Valor</th>
-                    <th class="search-filter">Comprobante</th>
-                    <th>Opciones</th>
+                    <th>Descuento</th>
+                    <th class="search-filter">Inscripción</th>
+
+                    <th class="search-filter">Nomb Alumno</th>
+                    <th class="search-filter">Representante</th>
+                    <th>Acción</th>
                 </tr>
                 </tfoot>
                 <tbody>
 
-                @foreach ($inscripciones as $insc)
+                @foreach ($comprobantes as $comp)
                     <tr>
-                        <td>{{ sprintf("%'.05d",$insc->id) }}</td>
-                        <td>@if ($insc->alumno_id==0)
-                                {{ $insc->factura->representante->persona->getNombreAttribute() }}
-                            @else
-                                {{ $insc->alumno->persona->getNombreAttribute() }}
-                            @endif
+                        <td>{{ $comp->id }}</td>
+                        <td>$ {{number_format($comp->total,2,'.',' ')}}</td>
+                        <td>$ {{number_format($comp->descuento,2,'.',' ')}}</td>
+                        <td>
+                            @foreach($comp->inscripcions as $insc )
+                            {{$insc->id}}<br>
+                            @endforeach
                         </td>
                         <td>
-                            @if ($insc->alumno_id==0)
-                                {{ $insc->factura->representante->persona->num_doc }}
-                            @else
-                            {{ $insc->alumno->persona->num_doc }}
-                            @endif
+                            @foreach($comp->inscripcions as $insc )
+                                {{$insc->alumno->persona->apellidos . ' '. $insc->alumno->persona->nombres}}<br>
+                            @endforeach
                         </td>
-                        <td>{{ $insc->calendar->program->modulo->modulo }}</td>
-                        <td>{{ $insc->calendar->program->escenario->escenario }}</td>
-                        <td>{{ $insc->calendar->program->disciplina->disciplina }}</td>
-                        <td>{{ $insc->calendar->dia->dia }}</td>
-                        <td>{{ $insc->calendar->horario->start_time}}-{{ $insc->calendar->horario->end_time}}</td>
-                        <td>{{ $insc->factura->representante->persona->getNombreAttribute() }}</td>
-                        <td>{{ $insc->factura->representante->persona->num_doc }}</td>
-                        <td>{{ number_format($insc->factura->total, 2, '.', ' ') }}</td>
-                        <td>{{ $insc->factura->id }}</td>
+                        <td>{{$comp->representante->persona->getNombreAttribute()}}</td>
                         <td>
-                            {!! Form::button('<i class="fa fa-trash-o" ></i>',['class'=>'modal-trigger btn-floating waves-effect waves-light red darken-1','data-target'=>"modal-delete-$insc->id"]) !!}
-                            <a href="{{ route('admin.inscripcions.edit', $insc->id ) }}">
-                                {!! Form::button('<i class="fa fa-pencil-square-o" ></i>',['class'=>'btn-floating waves-effect waves-light teal darken-1']) !!}
-                            </a>
-                            <a href="{{ route('admin.inscripcions.show', $insc->id ) }}">
-                                {!! Form::button('<i class="fa fa-eye"></i>',['class'=>'btn-floating waves-effect waves-light teal darken-1']) !!}
-                            </a>
+                            {!! Form::button('<i class="fa fa-trash-o" ></i>',['class'=>'modal-trigger btn-floating waves-effect waves-light red darken-1','data-target'=>"modal-delete-$comp->id"]) !!}
+                            {{--<a href="{{ route('admin.inscripcions.edit', $comp->id ) }}">--}}
+{{--                                {!! Form::button('<i class="fa fa-pencil-square-o" ></i>',['class'=>'btn-floating waves-effect waves-light teal darken-1']) !!}--}}
+                            {{--</a>--}}
+                            {{--<a href="{{ route('admin.inscripcions.show', $insc->id ) }}">--}}
+{{--                                {!! Form::button('<i class="fa fa-eye"></i>',['class'=>'btn-floating waves-effect waves-light teal darken-1']) !!}--}}
+                            {{--</a>--}}
                         </td>
                     </tr>
-                @include('campamentos.inscripcions.modal-delete')
+                @include('campamentos.facturas.modal-delete')
                 @endforeach
                 </tbody>
             </table><!--end table-responsive-->
@@ -101,13 +81,13 @@
         $(document).ready( function () {
 
             // Agregar inputs de busquedad al datatble
-            $('#inscripcion_table .search-filter').each( function () {
+            $('#comprobantes_table .search-filter').each( function () {
                 var title = $(this).text();
                 $(this).html( '<input type="text" placeholder="'+title+'" />' );
             } );
 
 
-            var table =  $('#inscripcion_table').DataTable({
+            var table =  $('#comprobantes_table').DataTable({
                 "lengthMenu": [[5, 10, 25], [5, 10, 25]],
                 "processing": false,
                 "order" : [0,'desc'],
@@ -136,7 +116,7 @@
                     }
                 },
                 "fnInitComplete":function(){
-                    $('#inscripcion_table').fadeIn();
+                    $('#comprobantes_table').fadeIn();
                 }
             });
 
@@ -155,6 +135,8 @@
             $('select').material_select(); //inicializar el select de materialize
 
         });
+
+
 
     </script>
 @endsection

@@ -60,6 +60,7 @@ class Multiples
         }
 
         $storedCurso['alumno'][$opciones[0]['alumno']['id']]=$opciones[0]['alumno'];//guardar los alumnos por su id
+
         $this->representante=$opciones[0]['representante'];
         $storedCurso['qty']++;//incrementar la cantidad d cursos
 
@@ -91,7 +92,7 @@ class Multiples
         $storedCurso['precio']=$curso->mensualidad*$storedCurso['qty']; //itemCurso=curso->precio*cantidad
 
         $this->cursos[$id]=$storedCurso;//accedo al item sino exite en la coleccion guardo el primer $storedCurso
-
+        
         $this->totalCursos++; //total de cursos en general en la coleccion
 
         $this->totalPrecio+= $curso->mensualidad + $matricula ;//precio total de la  coleccion, con descuentos

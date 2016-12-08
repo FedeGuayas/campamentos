@@ -37,7 +37,7 @@ class Factura extends Model
      * @var array
      */
     protected $fillable = [
-        'pago_id','representante_id','num_fact','descuento','total'
+        'pago_id','representante_id','descuento','total'
     ];
 
     public function representante()

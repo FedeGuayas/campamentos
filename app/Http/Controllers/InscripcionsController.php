@@ -112,7 +112,7 @@ class InscripcionsController extends Controller
     public function store(Request $request)
     {
         
-        if (!Session::has('curso')){
+        if (!Session::has('curso')){//si no hay curso en la session
 
             try {
 
@@ -191,12 +191,9 @@ class InscripcionsController extends Controller
         }
 
 
-
-
-
         //  guardar los cursos de la session
 
-        $user= Auth::user();
+
         $oldCurso=Session::get('curso');//obtengo la variable de la session
         $cart=new Multiples($oldCurso); //creo na instancia de siuclase
 
@@ -219,7 +216,9 @@ class InscripcionsController extends Controller
         $total=$precioTotal-$descuento;
 
         try {
+            DB::beginTransaction();
 
+            $user= Auth::user();
         $pago_id=$request->input('fpago_id');
         $fpago=Pago::findOrFail($pago_id);
         $representante=$cart->representante;
@@ -231,84 +230,32 @@ class InscripcionsController extends Controller
 
         $factura->save();
 
-        foreach ($cursos as $key => $curso){
+        foreach ($cursos as $curso){
+            foreach ($curso['alumno'] as $alumno){
+                $inscripcion=new Inscripcion();
+                $calendar=$curso['curso'];
+                $inscripcion->calendar()->associate($calendar);
+                $inscripcion->factura()->associate($factura);
+                $inscripcion->user()->associate($user);
 
-                if ($curso['qty']>1) { //mas de una inscripcion en un curso
-                    for ($i = 0; $i<$curso['qty'];++$i) { //recorro las incripciones
-                        if (count($curso['alumno'])>1){ //mas de un alumno en la inscripcion
-                            foreach ($curso['alumno'] as $alumno){ //creo una inscripcion x alumno
-                                $inscripcion=new Inscripcion();
-                                $calendar=$curso['curso'];
-
-                                $inscripcion->alumno_id=$alumno->id;
-
-                                $inscripcion->calendar()->associate($calendar);
-                                $inscripcion->factura()->associate($factura);
-                                $inscripcion->user()->associate($user);
-                                $inscripcion->save();
-
-                                Event::fire(new NuevaInscripcion($calendar));
-                            }
-                        }else { //si es solo un alumno una sola inscripcion
-                            $inscripcion=new Inscripcion();
-                            $calendar=$curso['curso'];
-                            $inscripcion->alumno_id=$curso['alumno']['id'];
-                            $inscripcion->calendar()->associate($calendar);
-                            $inscripcion->factura()->associate($factura);
-                            $inscripcion->user()->associate($user);
-                            $inscripcion->save();
-
-                            Event::fire(new NuevaInscripcion($calendar));
-                            $inscripcion->save();
-                        }
-
-
-
-                    }
+                if ($request->input('reservar')=='on'){
+                    $inscripcion->estado='Reservada';
                 }
-
+                $inscripcion->alumno_id=$alumno->id;
+                $inscripcion->save();
+                Event::fire(new NuevaInscripcion($calendar));
+                }
         }
             DB::commit();
 
         }catch(\Exception $e){
-        return redirect()->route('admin.inscripcions.create')->with('message_danger',$e->getMessage());
+            Session::flash('message_danger',$e->getMessage());
+            return redirect()->route('admin.inscripcions.create');
         }
 
-
-
-//        $insc=[];
-//        $calendar=[];
-//        foreach($cursos as $key => $value)
-//        {
-//            if ($value['qty']>1 && $value['alumno']>1){//si existe mas de un alumno en el curso y mas de una inscripcion para el curso
-//                foreach ($value['alumno'] as $alumno_id=>$value){
-//                   $insc[]=[
-//                       'alumno_id'=>$key, //obtengo el id de cada alumno
-//                       'calendar_id'=>$key,
-//                       'cantidad_cupos'=>$value['qty']
-//                   ];
-//
-//                }
-//            }else
-//                $insc[]=[
-//                'alumno_id'=>$key, //obtengo el id de cada alumno
-//                'calendar_id'=>$key,
-//                'cantidad_cupos'=>$value['qty']
-//            ];
-//            var_dump($insc);
-//        }
-
-
-
-
-
-
-
         Session::forget('curso');//limpiando la session, vaciando el carrito
-        return redirect()->route('admin.inscripcions.index')->with('message','Inscripcion satisfactoria');
-
-
-
+        Session::flash('message','Inscripcion satisfactoria');
+        return redirect()->route('admin.inscripcions.index');
 
     }
 
