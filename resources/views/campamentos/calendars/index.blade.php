@@ -45,7 +45,7 @@
                     <th>Días</th>
                     <th>Horario</th>
                     <th>Cupos</th>
-                    <th>Disponibilidad</th>
+                    <th class="search-filter">Disponibilidad</th>
                     <th>Opciones</th>
                 </tr>
                 </tfoot>

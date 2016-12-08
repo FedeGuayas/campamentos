@@ -1,7 +1,7 @@
 <div class="navbar-fixed">
     <!-- Dropdown Structure -->
     <ul id="dropdownUser" class="dropdown-content">
-        <li><a href="">edsdf</a></li>
+        <li><a href="">Hard </a></li>
         <li class="divider"></li>
         @if(Entrust::hasRole(['administrator','planner','signup','invited']) )
             <li><a href="{{route('admin.index')}}">Administración</a></li>

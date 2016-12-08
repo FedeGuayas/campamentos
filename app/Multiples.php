@@ -58,8 +58,13 @@ class Multiples
                 $storedCurso=$this->cursos[$id];//esta linea sobreescribe el $storedCurso,guardo los cursos x po id para acceder despues a ellos por su id
             }
         }
-
-        $storedCurso['alumno'][$opciones[0]['alumno']['id']]=$opciones[0]['alumno'];//guardar los alumnos por su id
+        
+        if ($opciones[0]['alumno']==0){
+            $storedCurso['alumno'][$opciones[0]['alumno']['id']]=$opciones[0]['representante'];
+        }else {
+            $storedCurso['alumno'][$opciones[0]['alumno']['id']]=$opciones[0]['alumno'];//guardar los alumnos por su id    
+        }  
+        
 
         $this->representante=$opciones[0]['representante'];
         $storedCurso['qty']++;//incrementar la cantidad d cursos

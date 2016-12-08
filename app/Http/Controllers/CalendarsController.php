@@ -315,7 +315,7 @@ class CalendarsController extends Controller
         $curso=Calendar::where('id',$id)->with('horario','dia','program')->first(); //obtengo el curso, actual inscripcion
 
         $desc_emp=$request->input('descuento_empleado');
-        $alumno=Alumno::where('id',$request->input('alumno_id'))->with('persona')->first();
+      
         $representante=Representante::where('persona_id',$request->input('representante_id'))->with('persona')->first();
         $matricula=$request->input('matricula');
         
@@ -326,6 +326,12 @@ class CalendarsController extends Controller
             $tipo_desc='familiar';
         if ($multiple=='on')
             $tipo_desc='multiple';
+
+        if ($request->input('adulto')==true){
+            $alumno=0;
+        }else {
+            $alumno=Alumno::where('id',$request->input('alumno_id'))->with('persona')->first();
+        }
 
         $opciones[]=[
             'tipo_desc'=>$tipo_desc,

@@ -18,9 +18,8 @@ class FacturasController extends Controller
     public function index()
     {
         $comprobantes=Factura::with('representante','inscripcions')->get();
-        $inscripcion=Inscripcion::all();
         
-        return view('campamentos.facturas.index', compact('comprobantes','inscripcion'));
+        return view('campamentos.facturas.index', compact('comprobantes'));
     }
 
     /**

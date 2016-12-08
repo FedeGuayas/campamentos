@@ -211,6 +211,8 @@ class InscripcionsController extends Controller
             $desc2=0.5;
         }else  $desc2=0;
 
+
+
         $descuento=$precioTotal*$desc1 + $precioTotal*$desc2;
 
         $total=$precioTotal-$descuento;
@@ -238,10 +240,17 @@ class InscripcionsController extends Controller
                 $inscripcion->factura()->associate($factura);
                 $inscripcion->user()->associate($user);
 
+
                 if ($request->input('reservar')=='on'){
                     $inscripcion->estado='Reservada';
                 }
-                $inscripcion->alumno_id=$alumno->id;
+
+                if ($request->input('adulto')==true){
+                    $inscripcion->alumno_id=0;
+                }else {
+                    $inscripcion->alumno_id=$alumno->id;
+                }
+
                 $inscripcion->save();
                 Event::fire(new NuevaInscripcion($calendar));
                 }

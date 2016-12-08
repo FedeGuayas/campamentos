@@ -5,7 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Queue\SerializesModels;
-
+use Carbon\Carbon;
 class Persona extends Model
 {
     use SoftDeletes;

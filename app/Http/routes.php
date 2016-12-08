@@ -144,7 +144,8 @@ Route::group(['middleware' => 'auth', 'prefix' => 'admin'], function () {
     Route::get('programs/{program}/disable',['as' => 'admin.programs.disable', 'uses'=>'ProgramsController@disable']);
     
     //Reportes
-    Route::get('admin/reports/excel',['as' => 'admin.reports.excel', 'uses'=>'ReportesController@getExcel']);
+    Route::get('/reports/excel',['as' => 'admin.reports.excel', 'uses'=>'ReportesController@getExcel']);
+    Route::get('/reports/pdf/{id}',['as' => 'admin.reports.pdf', 'uses'=>'ReportesController@exportPDF']);
 
 });
 
