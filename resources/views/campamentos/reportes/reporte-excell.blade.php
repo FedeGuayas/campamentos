@@ -5,7 +5,6 @@
 @section('content')
 
     <div class="row">
-
         <div class="col l12 col m6 col s12">
             <h3>
                 Generar Reporte
@@ -15,29 +14,27 @@
     </div>
 
     <div class="row">
-        <div class="col-lg-5">
-            <div class="form-inline">
-                FIltros
-                {{--@include('runner.comprobantes.search')--}}
-            </div>
-        </div>
-        <div class="col-lg-2">
-            exportar excel
-            {{--@include('runner.comprobantes.reportes.exportarComprobantes')--}}
-        </div>
-
-        <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
-
-            {{--@include('runner.comprobantes.searchCedula')--}}
-
+        @include('campamentos.reportes.search')
+        <div class="col-sm-3">
+            {{--<div class="form-group pull-right">--}}
+                {{--{!! Form::label('export','Exportar') !!}--}}
+                @include('campamentos.reportes.export-filter')
+                {{--<a href="{{route('admin.tasks.reports.users.excel')}}"  class="btn btn-success" title="exportar"><i class="fa fa-file-excel-o" aria-hidden="true"></i>--}}
+                {{--</a>--}}
+            {{--</div>--}}
         </div>
 
     </div>
+    <div class="row">
+
+    </div>
+
     <div class="row">
         <div class="col l12">
             <div class="table-responsive">
                 <table class="table table-striped table-bordered table-condensed table-hover">
                     <thead>
+                    <th>Recibo</th>
                     <th>Apellidos</th>
                     <th>Nombres</th>
                     <th>CI</th>
@@ -48,6 +45,9 @@
                     </thead>
                     @foreach ($inscripciones as $insc )
                         <tr>
+                            <td>
+                                {{sprintf("%'.05d",$insc->id)}}
+                            </td>
                             <td>
                                 @if ($insc->alumno_id==0)
                                     {{ $insc->factura->representante->persona->apellidos }}
@@ -88,5 +88,53 @@
 @endsection
 
 @section('scripts')
+
+    <script>
+        $(document).ready(function() {
+
+            //valida el datepicker k no este vacio
+            function checkDate() {
+
+                if ($('.datepicker').val() == '') {
+                    $('.datepicker').addClass('invalid')
+                    $flag=0;
+                } else {
+                    $('.datepicker').removeClass('invalid')
+                    $flag=1;
+                }
+            }
+
+            $('.datepicker').change(function() {
+                checkDate();
+            });
+
+            $('.form_datepicker').submit(function() {
+                checkDate();
+                if ($flag==0){
+                    return false;
+                }else{
+                    return true;
+                }
+            });
+
+
+            $('.datepicker').pickadate({
+                selectMonths: true, // Creates a dropdown to control month
+                selectYears: 5, // Creates a dropdown of 15 years to control year
+                format: 'yyyy/mm/dd'
+            });
+
+        });
+
+        $(document).ready(function() {
+            $("#filtrar").on('click',function(){
+                var exportar=$(".exportar");
+
+                exportar.prop("disabled",false);
+            });
+
+        });
+
+    </script>
 
 @endsection

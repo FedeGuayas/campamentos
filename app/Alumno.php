@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -52,4 +53,11 @@ class Alumno extends Model
     public function inscripcions(){
         return $this->hasMany('App\Inscripcion');
     }
+
+    public function getEdad($fecha_nac)
+    {        $date = explode('-', $fecha_nac);
+        return Carbon::createFromDate($date[0], $date[1], $date[2])->diff(Carbon::now())->format('%y');
+
+    }
+    
 }

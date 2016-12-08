@@ -45,7 +45,9 @@ class Persona extends Model
 
     public function getEdad($fecha_nac)
     {
+        
         $date = explode('-', $this->$fecha_nac);
+
         return Carbon::createFromDate($date[0], $date[1], $date[2])->diff(Carbon::now())->format('%y');
         // return Carbon::createFromDate($date[0],$date[1],$date[2])->diff(Carbon::now())->format('%y years %m months %d days');
 //        return \Carbon\Carbon::parse($this->fecha_nac)->age;
