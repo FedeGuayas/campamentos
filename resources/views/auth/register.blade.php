@@ -16,7 +16,7 @@
                             <div class="form-group{{ $errors->has('first_name') ? ' has-error' : '' }}">
                                 <div class="input-field inline">
                                     <i class="material-icons prefix blue-text">face</i>
-                                    {!! Form::text('first_name',null,['class'=>'validate', 'value'=>"{{ old('first_name')}}"]) !!}
+                                    {!! Form::text('first_name',null,['class'=>'validate', 'value'=>"{{ old('first_name')}}",'style'=>'text-transform:uppercase']) !!}
                                     {!! Form::label('first_name','Nombres') !!}
                                     {{--{!! Form::label('first_name','Nombres',['data-error'=>'wrong', 'data-success'=>'right']) !!}--}}
                                     @if ($errors->has('first_name'))
@@ -30,7 +30,7 @@
                         <div class="col m6 s12 ">
                             <div class="form-group{{ $errors->has('last_name') ? ' has-error' : '' }}">
                                 <div class="input-field">
-                                    {!! Form::text('last_name',null,['class'=>'validate', 'value'=>"{{ old('last_name')}}"]) !!}
+                                    {!! Form::text('last_name',null,['class'=>'validate', 'value'=>"{{ old('last_name')}}",'style'=>'text-transform:uppercase']) !!}
                                     {!! Form::label('last_name','Apellidos') !!}
                                     @if ($errors->has('last_name'))
                                         <span class="help-block">

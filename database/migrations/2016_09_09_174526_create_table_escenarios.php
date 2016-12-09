@@ -15,6 +15,7 @@ class CreateTableEscenarios extends Migration
         Schema::create('escenarios', function (Blueprint $table) {
             $table->increments('id');
             $table->string('escenario',20)->unique();
+            $table->string('codigo',10)->unique();
             $table->timestamps();
             $table->boolean('activated')->default(true);
         });

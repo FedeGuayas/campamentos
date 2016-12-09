@@ -122,6 +122,12 @@ class InscripcionsController extends Controller
                 $program=Program::findOrFail($program_id);
                 $matricula=$program->matricula;
                 $calendar=Calendar::findOrFail($calendar_id);
+
+                if ($calendar->cupos<=$calendar->contador){
+                    Session::flash('message_danger','No hay disponibilidad para el curso');
+                    return redirect()->back();
+                }
+
                 $mensualidad=$calendar->mensualidad;
                 $valor=$request->input('valor');
                 $pago_id=$request->input('fpago_id');
@@ -191,7 +197,19 @@ class InscripcionsController extends Controller
         }
 
 
-        //  guardar los cursos de la session
+        //  guardar los cursos multiples almacenados en la session
+
+        //inscripcion familiar no puede tener menos de dos inscritos
+        if ( $request->input('familiar')==true && Session::get('curso')->totalCursos<2 ){
+            Session::flash('message_danger','No se permiten menos de 2 inscripciones para el grupo Familiar');
+            return redirect()->back();
+        }
+
+        //inscripcion multiples no puede tener menos de 3 inscritos y no puede ser en invierno
+        if ( ($request->input('multiple')==true && Session::get('curso')->totalCursos<3) ||  $request->input('descuento_estacion')=='INVIERNO'){
+            Session::flash('message_danger','No se permiten menos de 3 inscripciones para el grupo Multiple o esta fuera de temporada');
+            return redirect()->back();
+        }
 
 
         $oldCurso=Session::get('curso');//obtengo la variable de la session

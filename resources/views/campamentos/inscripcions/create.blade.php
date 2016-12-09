@@ -41,6 +41,8 @@
                 <div id="detalle"></div>
                 <input type="text" id="cursos_session" hidden
                        value="{{Session::has('curso') ? Session::get('curso')->totalCursos : 0}}">
+                <input type="text" id="cursos_precio_session" hidden
+                       value="{{Session::has('curso') ? Session::get('curso')->totalPrecio : 0}}">
             </div><!--/.card panel-->
         </div><!--/.card col-->
     </div><!--/.row-->
@@ -361,29 +363,41 @@
                     if ($(this).is(':checked')) {
                         $("#multiple").prop("disabled", true);
                         $(".agregar").prop("disabled", false);
-                        $("#pagar").prop('disabled', true);
+//                        $("#pagar").prop('disabled', true);
 
                     } else {
                         $("#multiple").prop("disabled", false);
                         $(".agregar").prop("disabled", true);
-                        $("#pagar").prop("disabled", false);
+//                        $("#pagar").prop("disabled", false);
                     }
                 });
             });
 
             //checkbox inscripcion multiple
             $(document).ready(function () {
+                var select = $('select');
                 $("#multiple").on('change', function () {
                     if ($(this).is(':checked')) {
                         $("#familiar").prop("disabled", true);
                         $(".agregar").prop("disabled", false);
-                        $("#pagar").prop('disabled', true);
+
+//                        $("#pagar").prop('disabled', true);
+//                        $("#representante_id").prop('disabled', true);
+//                        $("#alumno_id").prop('disabled', true);
+//                        $("#representante_id").material_select();
+//                        $("#alumno_id").material_select();
+
                     } else {
                         $("#familiar").prop("disabled", false);
                         $(".agregar").prop("disabled", true);
-                        $("#pagar").prop("disabled", false);
+//                        $("#pagar").prop("disabled", false);
+//                        $("#representante_id").prop('disabled', false);
+//                        $("#alumno_id").prop('disabled', false);
+//                        $("#representante_id").material_select();
+//                        $("#alumno_id").material_select();
                     }
                 });
+//                select.material_select();
             });
 
 
@@ -394,66 +408,66 @@
 //****************CARRITO****************************************//
 
             //agregar cursos al carrito
-            function add_cart_ajax() {
-//             alert($("#add-to-cart").attr("value"));
-                var id = $("#calendar_id").val();
-                var form = $("#form_inscripcion");
-                var data = form.serialize();
-                //agregar id a la ruta dinamicamente
-                var route = $("#add-to-cart").attr('href').replace(':CALENDAR', id);
-                var token = $("input[name=_token]").val();
-
-//               var formData = new FormData(document.getElementById("form_representante"));//se envia tod el form al controlador
-                //formData.append("dato", "valor"); //agregar otros datos a en viar al controlador
-                // formData.append(f.attr("name"), $(this)[0].files[0]);
-                $.ajax({
-                    url: route,
-                    type: "GET",
-                    headers: {'X-CSRF-TOKEN': token},
-//                    contentType: 'application/x-www-form-urlencoded',
-                    data: data,
-                    cache: false,
-                    contentType: false,
-                    processData: false,
-                    success: function (resp) {
-                        alert(resp.message);
-
-                    },
-                    error: function (resp) {
-                        alert("No se pudo realizar la acción");
-                    }
-                });
-            }
+//            function add_cart_ajax() {
+////             alert($("#add-to-cart").attr("value"));
+//                var id = $("#calendar_id").val();
+//                var form = $("#form_inscripcion");
+//                var data = form.serialize();
+//                //agregar id a la ruta dinamicamente
+//                var route = $("#add-to-cart").attr('href').replace(':CALENDAR', id);
+//                var token = $("input[name=_token]").val();
+//
+////               var formData = new FormData(document.getElementById("form_representante"));//se envia tod el form al controlador
+//                //formData.append("dato", "valor"); //agregar otros datos a en viar al controlador
+//                // formData.append(f.attr("name"), $(this)[0].files[0]);
+//                $.ajax({
+//                    url: route,
+//                    type: "GET",
+//                    headers: {'X-CSRF-TOKEN': token},
+////                    contentType: 'application/x-www-form-urlencoded',
+//                    data: data,
+//                    cache: false,
+//                    contentType: false,
+//                    processData: false,
+//                    success: function (resp) {
+//                        alert(resp.message);
+//
+//                    },
+//                    error: function (resp) {
+//                        alert("No se pudo realizar la acción");
+//                    }
+//                });
+//            }
 
             //llamar a funcion add-to-cart
-            $("#add-to-cart").on("click", function (event) {
-                event.preventDefault();
-                add_cart_ajax();
-            });
+//            $("#add-to-cart").on("click", function (event) {
+//                event.preventDefault();
+//                add_cart_ajax();
+//            });
 
 
             //obtener el carrito
-            $("#getCart").on('click', function (event) {
-                event.preventDefault();
-                var route = "{{route('product.shoppingCart')}}";
-                var token = $("input[name=_token]").val();
+            {{--$("#getCart").on('click', function (event) {--}}
+                {{--event.preventDefault();--}}
+                {{--var route = "{{route('product.shoppingCart')}}";--}}
+                {{--var token = $("input[name=_token]").val();--}}
 
-                $.ajax({
-                    url: route,
-                    type: "GET",
-                    headers: {'X-CSRF-TOKEN': token},
-                    contentType: 'application/x-www-form-urlencoded',
-//                       data: {datos},
-                    success: function (resp) {
-                        console.log(resp);
-                        $("#detalle").empty().html(resp);
-                    },
-                    error: function (resp) {
-                        console.log(resp);
-                        $("#detalle").empty().html("!!! No Hay Productos en el Carrito ");
-                    }
-                });
-            });
+                {{--$.ajax({--}}
+                    {{--url: route,--}}
+                    {{--type: "GET",--}}
+                    {{--headers: {'X-CSRF-TOKEN': token},--}}
+                    {{--contentType: 'application/x-www-form-urlencoded',--}}
+{{--//                       data: {datos},--}}
+                    {{--success: function (resp) {--}}
+                        {{--console.log(resp);--}}
+                        {{--$("#detalle").empty().html(resp);--}}
+                    {{--},--}}
+                    {{--error: function (resp) {--}}
+                        {{--console.log(resp);--}}
+                        {{--$("#detalle").empty().html("!!! No Hay Productos en el Carrito ");--}}
+                    {{--}--}}
+                {{--});--}}
+            {{--});--}}
 
         });
 

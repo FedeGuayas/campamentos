@@ -54,7 +54,7 @@
             <ul id="dropdownReportes" class="dropdown-content">
                 <li><a href="{{route('admin.facturas.index')}}" class="waves-effect waves-teal">Facturacion</a></li>
                 <li class="divider"></li>
-                <li><a href="#!" class="waves-effect waves-teal">Cuadre</a></li>
+                <li><a href="{{route('admin.pagos.cuadre')}}" class="waves-effect waves-teal">Cuadre</a></li>
                 <li class="divider"></li>
                 <li><a href="{{route('admin.reports.excel')}}" class="waves-effect waves-teal">Reportes</a></li>
             </ul>

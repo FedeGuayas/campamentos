@@ -14,9 +14,9 @@ class CreatePagosTable extends Migration
     {
         Schema::create('pagos', function (Blueprint $table) {
             $table->increments('id');
-            $table->timestamps();
             $table->string('forma',30);
             $table->string('descripcion',100)->nullable();
+            $table->timestamps();
         });
     }
 

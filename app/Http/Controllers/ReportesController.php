@@ -4,13 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Alumno;
 use App\Calendar;
+use App\Escenario;
 use App\Inscripcion;
 use App\Persona;
 use App\Program;
+use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Yajra\Datatables\Datatables;
 use Maatwebsite\Excel\Facades\Excel;
+use Barryvdh\DomPDF\Facade as PDF;
+use DB;
 
 use App\Http\Requests;
 
@@ -18,6 +22,7 @@ class ReportesController extends Controller
 {
     public function __construct()
     {
+        Carbon::setLocale('es');
         $this->middleware('auth');
 //        $this->middleware(['role:supervisor|administrador']);
     }
@@ -126,7 +131,72 @@ class ReportesController extends Controller
 
     }
 
-    public function exportPDF(Request $requestquest, $id){
-        return dd($id);
+    public function inscripcionPDF($id){
+
+        $inscripcion=Inscripcion::with('factura','calendar','user','alumno')
+            ->where('id',$id)
+            ->first();
+        
+                
+        $fecha_actual =Carbon::now();
+        $month = $fecha_actual->month;
+        $day = $fecha_actual->format('d');
+        $year = $fecha_actual->format('Y');
+        $date = $fecha_actual->format('Y-m-d');
+
+//        $datetime = $fecha_actual->toDateTimeString();
+                        
+        if ($inscripcion->alumno_id==0){//adulto
+            
+            
+            $pdf = PDF::loadView('campamentos.reportes.insc-adulto-pdf', compact('inscripcion','fecha_actual'));
+//        return $pdf->download('ComprobantePago.pdf');//descarga el pdf
+            return $pdf->stream('ComprobantePago');//imprime en pantalla
+                
+        }else {//menor
+            
+            $pdf = PDF::loadView('campamentos.reportes.insc-menor-pdf', compact('inscripcion','fecha_actual'));
+//        return $pdf->download('ComprobantePago.pdf');//descarga el pdf
+            return $pdf->stream('ComprobantePago');//imprime en pantalla
+            
+        }
     }
+
+
+    public function cuadre(Request $request)
+    {
+        $escenarioSelect = ['' => 'Seleccione el escenario'] + Escenario::lists('escenario', 'id')->all();
+        $usuarioSelect = ['' => 'Seleccione el usuario'] + User::select(DB::raw('CONCAT(first_name, " ", last_name) AS nombre'), 'id')->lists('nombre', 'id')->all();
+
+        if ($request) {
+            $fecha = $request->get('fecha');
+            $escenario = $request->get('escenario');
+            $usuario = $request->get('usuario');
+            $cuadre = Inscripcion::
+            join('users as u', 'u.id', '=', 'inscripcions.user_id')
+//                ->join('escenarios as e', 'e.id', '=', 'u.escenario_id')
+                ->join('facturas as f', 'f.id', '=', 'inscripcions.factura_id')
+                ->select('total','u.id as uid', 'inscripcions.created_at as fecha', 'u.first_name','u.last_name')
+                ->where('inscripcions.created_at', 'LIKE', '%' . $fecha . '%')
+//                ->where('e.id', 'LIKE', '%' . $escenario . '%')
+                ->where('u.id', '=', $usuario)
+                ->groupBy('u.id')
+                ->get();
+
+
+            
+
+            $cuadreArray = array();
+            foreach ($cuadre as $c) {
+                $cuadreArray[] = [
+                    'nombre' => $c->first_name.' '.$c->last_name,
+                    'cantidad' => Inscripcion::where('user_id', $c->uid)->where('fecha', 'LIKE', '%' . $fecha . '%')->count(),
+                    'valor' => Inscripcion::where('user_id', $c->uid)->where('fecha', 'LIKE', '%' . $fecha . '%')->sum('total'),
+                ];
+            }
+        }
+        return view('campamentos.reportes.cuadre', compact('escenarioSelect', 'usuarioSelect', 'escenario', 'usuario', 'fecha', 'cuadreArray'));
+    }
+
+
 }

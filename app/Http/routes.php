@@ -146,7 +146,8 @@ Route::group(['middleware' => 'auth', 'prefix' => 'admin'], function () {
     //Reportes
     Route::get('/reports/excel',['as' => 'admin.reports.excel', 'uses'=>'ReportesController@getExcel']);
     Route::get('/reports/excel/export',['as' => 'admin.reports.exportExcel', 'uses'=>'ReportesController@exportExcel']);
-    Route::get('/reports/pdf/{id}',['as' => 'admin.reports.pdf', 'uses'=>'ReportesController@exportPDF']);
+    Route::get('/reports/pdf/{id}',['as' => 'admin.reports.pdf', 'uses'=>'ReportesController@inscripcionPDF']);
+    Route::get('reports/pagos/cuadre', ['as'=>'admin.pagos.cuadre','uses'=>'ReportesController@cuadre']);
 
 });
 
@@ -168,7 +169,7 @@ Route::get('/inscripcions-collections/remove/{id}',['uses'=>'CalendarsController
 
 
 //********** Carrito ****//
-
+/*
 //agregar al carrito
 Route::get('/add-to-card/{id}',['uses'=>'CalendarsController@getAddToCart', 'as'=>'product.addToCart']);
 
@@ -187,4 +188,4 @@ Route::get('/checkout',['uses'=>'CalendarsController@getCheckout','as'=>'checkou
 
 Route::post('/checkout',['uses'=>'ProductController@postCheckout', 'as'=>'checkout','middleware'=>'auth']);
 
-
+*/

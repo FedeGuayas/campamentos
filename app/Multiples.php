@@ -59,7 +59,7 @@ class Multiples
             }
         }
         
-        if ($opciones[0]['alumno']==0){
+        if ($opciones[0]['alumno']==null){
             $storedCurso['alumno'][$opciones[0]['alumno']['id']]=$opciones[0]['representante'];
         }else {
             $storedCurso['alumno'][$opciones[0]['alumno']['id']]=$opciones[0]['alumno'];//guardar los alumnos por su id    

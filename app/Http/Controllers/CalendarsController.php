@@ -315,10 +315,10 @@ class CalendarsController extends Controller
         $curso=Calendar::where('id',$id)->with('horario','dia','program')->first(); //obtengo el curso, actual inscripcion
 
         $desc_emp=$request->input('descuento_empleado');
-      
+        
         $representante=Representante::where('persona_id',$request->input('representante_id'))->with('persona')->first();
         $matricula=$request->input('matricula');
-        
+
         $familiar=$request->input('familiar');//10% familiares
         $multiple=$request->input('multiple');//10% inscripcion en mismo curso 3 meses o mas
 
@@ -328,7 +328,7 @@ class CalendarsController extends Controller
             $tipo_desc='multiple';
 
         if ($request->input('adulto')==true){
-            $alumno=0;
+            $alumno=null;
         }else {
             $alumno=Alumno::where('id',$request->input('alumno_id'))->with('persona')->first();
         }

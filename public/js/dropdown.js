@@ -233,7 +233,12 @@ $("#nivel").change(function (event) {
                 program_id.empty();
                 calendar_id.val(response[0].cID);
                 program_id.val(response[0].program_id);
-                $("#pagar").prop('disabled',false);
+                if ( $("#familiar").is(':checked') && $("#cursos_session").val()<2 ){
+                    $("#pagar").prop('disabled',true);
+                }else{
+                    $("#pagar").prop('disabled',false);
+                }
+
             }else{
                 alert('No hay disponibilidad para ese Curso');
                 $("#valor").removeClass("teal-text");

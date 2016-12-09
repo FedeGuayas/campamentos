@@ -33,8 +33,14 @@ $(document).ready(function () {
             // contentType: 'application/x-www-form-urlencoded',
             data: datos,
             success: function (response) {
-                valor.addClass("teal-text");
-                valor.val(response);
+                if ($("#cursos_session").val()>0){
+                    valor.addClass("teal-text");
+                    valor.val($("#cursos_precio_session").val());
+                }else{
+                    valor.addClass("teal-text");
+                    valor.val(response);
+                }
+
             },
             error: function (response) {
                 valor.removeClass("teal-text");
