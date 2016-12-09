@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateTableEscenarios extends Migration
+class CreateContablesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,12 +12,14 @@ class CreateTableEscenarios extends Migration
      */
     public function up()
     {
-        Schema::create('escenarios', function (Blueprint $table) {
+        Schema::create('contables', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('escenario',30)->unique();
-            $table->string('codigo')->unique();
+            $table->string('cta_ingreso');
+            $table->string('cta_xcobrar');
+            $table->string('cta_anticipo');
+            $table->string('actividad');
+
             $table->timestamps();
-            $table->boolean('activated')->default(true);
         });
     }
 
@@ -28,6 +30,6 @@ class CreateTableEscenarios extends Migration
      */
     public function down()
     {
-        Schema::drop('escenarios');
+        Schema::drop('contables');
     }
 }

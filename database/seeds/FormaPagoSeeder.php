@@ -16,7 +16,7 @@ class FormaPagoSeeder extends Seeder
             'descripcion'=>'Pago en efectivo',
         ]);
         DB::table('pagos')->insert([
-            'forma'=>'Tarjeta de Crédito',
+            'forma'=>'TARJETA DE CREDITO',
             'descripcion'=>'Pago mediante Tarjetas de Credito u Online',
         ]);
     }

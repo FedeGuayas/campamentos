@@ -6,6 +6,8 @@
 
             <!-- Dropdown Usuarios -->
             <ul id="dropdownUser" class="dropdown-content">
+                <li><a href="{!! route('admin.facturas.excel') !!}" class="waves-effect waves-teal">Facturación</a></li>
+                <li class="divider"></li>
                 <li><a href="{!! route('admin.user.profile') !!}" class="waves-effect waves-teal">Perfil</a></li>
                 <li class="divider"></li>
                 <li><a href="{{url('/logout')}}" class="waves-effect waves-teal">Logout</a></li>

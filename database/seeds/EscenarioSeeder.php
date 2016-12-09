@@ -13,27 +13,27 @@ class EscenarioSeeder extends Seeder
     {
         DB::table('escenarios')->insert([
             'escenario'=>'ESTADIO MODELO',
-            'codigo'=>'002-002',
+            'codigo'=>'2002',
             'activated'=>'1',
         ]);
         DB::table('escenarios')->insert([
             'escenario'=>'PISCINA OLIMPICA',
-            'codigo'=>'001-002',
+            'codigo'=>'1002',
             'activated'=>'1',
         ]);
         DB::table('escenarios')->insert([
             'escenario'=>'MIRAFLORES',
-            'codigo'=>'003-002',
+            'codigo'=>'3002',
             'activated'=>'1',
         ]);
         DB::table('escenarios')->insert([
             'escenario'=>'4 MOSQUETEROS',
-            'codigo'=>'005-002',
+            'codigo'=>'5002',
             'activated'=>'1',
         ]);
         DB::table('escenarios')->insert([
-            'escenario'=>'POLIDEPORTIVO',
-            'codigo'=>'004-002',
+            'escenario'=>'POLIDEPORTIVO HUANCAVILCA',
+            'codigo'=>'4002',
             'activated'=>'1',
         ]);
     }

@@ -137,13 +137,13 @@ class ReportesController extends Controller
             ->where('id',$id)
             ->first();
         
-                
+        
+
         $fecha_actual =Carbon::now();
         $month = $fecha_actual->month;
         $day = $fecha_actual->format('d');
         $year = $fecha_actual->format('Y');
         $date = $fecha_actual->format('Y-m-d');
-
 //        $datetime = $fecha_actual->toDateTimeString();
                         
         if ($inscripcion->alumno_id==0){//adulto
