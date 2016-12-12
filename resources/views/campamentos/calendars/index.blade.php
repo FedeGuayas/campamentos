@@ -9,9 +9,9 @@
 @section('content')
     {{--Contenido--}}
     <div class="row">
-        <div class="col l8 m8 s">
+        <div class="col l12 m12 s12">
             @include('alert.success')
-            <h4>Calendario de programas para campamentos</h4>
+            <h4>Cursos de  deportivos</h4>
             {{-- @include('runner.usuarios.search')--}}
         </div>
     </div>
@@ -31,6 +31,8 @@
                     <th>Modulo</th>
                     <th>Días</th>
                     <th>Horario</th>
+                    <th>Edad</th>
+                    <th>Nivel</th>
                     <th>Cupos</th>
                     <th>Disponibilidad</th>
                     <th>Opciones</th>
@@ -44,6 +46,8 @@
                     <th class="search-filter">Modulo</th>
                     <th>Días</th>
                     <th>Horario</th>
+                    <th>Edad</th>
+                    <th>Nivel</th>
                     <th>Cupos</th>
                     <th class="search-filter">Disponibilidad</th>
                     <th>Opciones</th>
@@ -58,6 +62,8 @@
                         <td>{{ $calendar->modulo}}</td>
                         <td>{{ $calendar->dia}}</td>
                         <td>{{ $calendar->start_time.'-'.$calendar->end_time}}</td>
+                        <td>{{ $calendar->init_age.'-'.$calendar->end_age}}</td>
+                        <td>{{ $calendar->nivel}}</td>
                         <td>{{ $calendar->cupos}}</td>
                         <td>
                             @if( ($calendar->cupos - $calendar->contador) <=1)
@@ -67,20 +73,11 @@
                             @endif
                         </td>
                         <td>
-                            {{--@if (($program->activated)===1)--}}
-                                {{--<span class="label label-success">Activo</span>--}}
-                                {{--<a href="{{ route('admin.programs.disable', $program->id)}}">--}}
-                                    {{--{!! Form::button('<i class="fa fa-check" aria-hidden="true"></i>',['class'=>'btn-floating waves-effect waves-light red darken-1']) !!}--}}
-                                {{--</a>--}}
-                            {{--@else--}}
-                                {{--<span class="label label-danger">Inactivo</span>--}}
-                                {{--<a href="{{ route('admin.programs.enable', $program->id)}}">--}}
-                                    {{--{!! Form::button('<i class="tiny fa fa-check" aria-hidden="true"></i>',['class'=>'btn-floating waves-effect waves-light teal darken-1']) !!}--}}
-                                {{--</a>--}}
-                            {{--@endif--}}
+                            @if (Auth::user()->can('edit-user'))
                             <a href="{{ route('admin.calendars.edit', $calendar ) }}">
                                 {!! Form::button('<i class="fa fa-pencil-square-o" ></i>',['class'=>'btn-floating waves-effect waves-light teal darken-1']) !!}
                             </a>
+                                @endif
                         </td>
                         {{--<td>--}}
                             {{--{!! Form::button('<i class="fa fa-trash-o" ></i>',['class'=>'modal-trigger btn-floating waves-effect waves-light red darken-1','data-target'=>"modal-delete-$program->id"]) !!}--}}

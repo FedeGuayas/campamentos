@@ -14,13 +14,12 @@ class CreateTablePrograms extends Migration
     {
         Schema::create('programs', function (Blueprint $table) {
             $table->increments('id');
-            $table->timestamps();
             $table->integer('escenario_id')->unsigned();
             $table->integer('disciplina_id')->unsigned();
             $table->integer('modulo_id')->unsigned();
             $table->double('matricula',5,2)->nullable();
-            $table->integer('cuposT');
             $table->boolean('activated')->default(true);
+            $table->timestamps();
 
             $table->foreign('escenario_id')->references('id')->on('escenarios')
                 ->onUpdate('cascade')->onDelete('cascade');

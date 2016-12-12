@@ -26,12 +26,15 @@
 
             <!-- Dropdown Programacion -->
             <ul id="dropdownProg" class="dropdown-content">
+                @role('planner')
                 <li><a href="{!! route('admin.modulos.index') !!}" class="waves-effect waves-teal">Modulos</a></li>
                 <li class="divider"></li>
                 <li><a href="{!! route('admin.programs.index') !!}" class="waves-effect waves-teal">Programa</a></li>
                 <li class="divider"></li>
-                <li><a href="{!! route('admin.calendars.index') !!}" class="waves-effect waves-teal">Calendario</a></li>
+                @endrole
+                <li><a href="{!! route('admin.calendars.index') !!}" class="waves-effect waves-teal">Cursos</a></li>
                 <li class="divider"></li>
+
             </ul>
 
             <!-- Dropdown Ajustes -->
@@ -54,10 +57,10 @@
             </ul>
             <!-- Dropdown Reportes-->
             <ul id="dropdownReportes" class="dropdown-content">
-                <li><a href="{{route('admin.facturas.index')}}" class="waves-effect waves-teal">Facturacion</a></li>
+                <li><a href="{{route('admin.facturas.index')}}" class="waves-effect waves-teal">Comprobantes</a></li>
                 <li class="divider"></li>
-                <li><a href="{{route('admin.pagos.cuadre')}}" class="waves-effect waves-teal">Cuadre</a></li>
-                <li class="divider"></li>
+                {{--<li><a href="{{route('admin.pagos.cuadre')}}" class="waves-effect waves-teal">Cuadre</a></li>--}}
+                {{--<li class="divider"></li>--}}
                 <li><a href="{{route('admin.reports.excel')}}" class="waves-effect waves-teal">Reportes</a></li>
             </ul>
 

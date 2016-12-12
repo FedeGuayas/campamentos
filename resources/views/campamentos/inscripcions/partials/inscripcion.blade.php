@@ -20,12 +20,12 @@
                     <a class="btn-floating btn-medium teal"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></a>
                     <ul>
                         <li>
-                            <a href="#modal-search" type="button" class="btn-floating waves-effect waves-light darken-1 tooltipped modal-search" data-position="top" data-delay="50" data-tooltip="Buscar"
+                            <a href="#modal-search" type="button" class="btn-floating red waves-effect waves-light tooltipped modal-search" data-position="top" data-delay="50" data-tooltip="Buscar"
                                style="transform: scaleY(0.4) scaleX(0.4) translateY(0px) translateX(40px); opacity: 0;"><i class="fa fa-search"></i>
                             </a>
                         </li>
                         <li>
-                            <a href="#modal-representante" type="button" class="btn-floating  waves-effect waves-light darken-1 tooltipped modal-representante" data-position="top" data-delay="50" data-tooltip="Crear"
+                            <a href="#modal-representante" type="button" class="btn-floating blue waves-effect waves-light tooltipped modal-representante" data-position="top" data-delay="50" data-tooltip="Crear"
                                style="transform: scaleY(0.4) scaleX(0.4) translateY(0px) translateX(40px); opacity: 0;"><i class="fa fa-plus"></i>
                             </a>
                         </li>

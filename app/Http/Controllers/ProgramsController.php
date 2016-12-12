@@ -29,7 +29,7 @@ class ProgramsController extends Controller
             join('escenarios as e','e.id','=','p.escenario_id','as p')
             ->join('disciplinas as d','d.id','=','p.disciplina_id')
             ->join('modulos as m','m.id','=','p.modulo_id')
-            ->select('p.id','e.escenario','d.disciplina','m.modulo','matricula','cuposT','p.activated')
+            ->select('p.id','e.escenario','d.disciplina','m.modulo','matricula','p.activated')
 //            ->where('p.activated',true)
             ->orderBy('e.escenario')->get();
 
@@ -72,16 +72,29 @@ class ProgramsController extends Controller
      */
     public function store(ProgramsStoreRequest $request)
     {
-        $program=new Program;
-        $program->escenario_id=$request->get('escenario');
-        $program->disciplina_id=$request->get('disciplina');
-        $program->modulo_id=$request->get('modulo');
-        $program->matricula=$request->get('matricula');
-        $program->cuposT=$request->get('cuposT');
-        $activated=true;
-        $program->activated=$activated;
-        $program->save();
-        Session::flash('message','Programa creado');
+        try {
+            DB::beginTransaction();
+
+            $program=new Program;
+            $program->escenario_id=$request->get('escenario');
+            $program->disciplina_id=$request->get('disciplina');
+            $program->modulo_id=$request->get('modulo');
+            $program->matricula=$request->get('matricula');
+            $activated=true;
+            $program->activated=$activated;
+            $program->save();
+
+            DB::commit();
+
+            Session::flash('message','Programa creado');
+
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            Session::flash('message_danger', 'Error' . $e->getMessage());
+            return redirect()->route('admin.programs.create');
+        }
+
         return redirect()->route('admin.programs.index');
     }
 
@@ -149,7 +162,6 @@ class ProgramsController extends Controller
         $program->disciplina_id=$request->get('disciplina_id');
         $program->modulo_id=$request->get('modulo_id');
         $program->matricula=$request->get('matricula');
-        $program->cuposT=$request->get('cuposT');
         $program->update();
         Session::flash('message','Programa acualizado');
         return redirect()->route('admin.programs.index');

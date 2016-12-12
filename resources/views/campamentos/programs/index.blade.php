@@ -30,7 +30,6 @@
                     <th>Disciplina</th>
                     <th>Modulo</th>
                     <th>Matricula</th>
-                    <th>Cupos</th>
                     <th>Estado (Hab/Des)</th>
                     <th>Opciones</th>
                 </tr>
@@ -42,7 +41,6 @@
                     <th class="search-filter">Disciplina</th>
                     <th class="search-filter">Modulo</th>
                     <th>Matricula</th>
-                    <th>Cupos</th>
                     <th>Estado (Hab/Des)</th>
                     <th>Opciones</th>
                 </tr>
@@ -55,7 +53,6 @@
                         <td>{{ $program->disciplina }}</td>
                         <td>{{ $program->modulo }}</td>
                         <td>$ {{ number_format($program->matricula, 2, '.', ' ') }}</td>
-                        <td>{{ $program->cuposT }}</td>
                         <td>
                             @if (($program->activated)===1)
                                 <span class="label label-success">Activo</span>

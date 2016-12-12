@@ -27,7 +27,6 @@ class ProgramsStoreRequest extends Request
             'modulo' => 'required',
             'escenario' => 'required',
             'disciplina' => 'required',
-            'cuposT' => 'numeric|min:1|required',
             'matricula'=>'numeric'
         ];
     }

@@ -10,7 +10,7 @@
     <div class="pull-left">
         <table align="left" border="" cellpadding="10" cellspacing="1" style="width:auto; height: auto">
             <tr>
-                <td style="border: solid">REGISTRO # {{$inscripcion->id}}</td>
+                <td style="border: solid">REGISTRO # {{sprintf("%'.05d",$inscripcion->id)}}</td>
 
             </tr>
             <tr>
@@ -102,10 +102,10 @@
                     <tr align="lef" style="width: auto">
                         <th style="width: auto; background-color: rgb(204, 204, 204);">TIPO DE INSCRIPCION</th>
                         <td>
-                            @if($inscripcion->factura->descuento==null || $inscripcion->factura->descuento==0)
-                                IDIVIDUAL
-                            @else
+                            @if( count($inscripcion->factura_id)>1)
                                 MULTIPLE
+                            @else
+                                IDIVIDUAL
                             @endif
                         </td>
                     </tr>

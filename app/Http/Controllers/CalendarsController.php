@@ -43,7 +43,7 @@ class CalendarsController extends Controller
             ->join('escenarios as e','e.id','=','p.escenario_id')
             ->join('modulos as m','m.id','=','p.modulo_id')
             ->join('disciplinas as dis','dis.id','=','p.disciplina_id')
-            ->select('e.escenario','dis.disciplina','m.modulo','d.dia','h.start_time','h.end_time','cupos','contador','mensualidad','c.id')
+            ->select('e.escenario','dis.disciplina','m.modulo','d.dia','h.start_time','h.end_time','cupos','contador','mensualidad','c.id','c.init_age','c.end_age','c.nivel')
             ->where('p.activated',true)
 
             ->get();
@@ -347,13 +347,13 @@ class CalendarsController extends Controller
         $multiples=new Multiples($oldCurso);
         $multiples->addCursos($curso,$curso->id,$opciones);//Agrego este curso a la coleccion de cursos
         //pongo el curso en la session
-        $request->session()->put('curso',$multiples);
-//        dd($request->session()->get('curso'));
+        $request->session()->put('curso',$multiples);//idem a Session::put('curso',$multiples)
+//        dd($request->session()->get('curso')); //idem a Session::get('curso')
         $message='Curso agregado a la colección';
         if ($request->ajax()){
             return response()->json([
                 'message'=>$message,
-                'totalCursos'=>Session::get('curso')->totalCursos,
+                'totalCursos'=>Session::get('curso')->totalCursos,//para agregarlos en el indicador de detalles
             ]);
         }
 
@@ -383,6 +383,11 @@ class CalendarsController extends Controller
         $tipo_descuento=$cursos_coll->tipo_desc;
         $desc_emp=$cursos_coll->desc_empleado;
 
+        $matricula=0;
+        foreach ($cursos as $curso){
+            $matricula+=$curso['matricula'];
+
+        }
 
         if ($tipo_descuento=='familiar' || $tipo_descuento=='multiple'){
             $desc_familiar=0.1;
@@ -392,14 +397,15 @@ class CalendarsController extends Controller
             $desc_empleado=0.5;
         }else  $desc_empleado=0;
 
+
         $descuento=$precioTotal*$desc_familiar + $precioTotal*$desc_empleado;
 
-        $subTotal=$precioTotal;
+        $subTotal=$precioTotal + $matricula;
 
-        $total=$precioTotal-$descuento;
+        $total=$subTotal-$descuento;
 
 //        dd($cursos_coll);
-        return view('campamentos.inscripcions.partials.detalle',['cursos'=>$cursos,'descuento'=>$descuento,'total'=>$total,'tipo_desc'=>$tipo_descuento,'subTotal'=>$subTotal]);
+        return view('campamentos.inscripcions.partials.detalle',['cursos'=>$cursos,'descuento'=>$descuento,'total'=>$total,'tipo_desc'=>$tipo_descuento,'subTotal'=>$subTotal,'empleado'=>$desc_empleado]);
     }
 
     /**

@@ -14,6 +14,7 @@
                 <h5 class="header teal-text text-darken-2">Programas</h5>
                 <div class="card-content ">
                     @include('alert.request')
+                    @include('alert.success')
                     {!! Form::open(['route'=>'admin.programs.store', 'method'=>'POST'])  !!}
                     <div class="col s12">
 
@@ -38,11 +39,10 @@
                             {!! Form::label('matricula','Matricula:') !!}
                             {!! Form::number('matricula',null,['step' => '0.01','min' => '1','class'=>'validate','placeholder'=>'0.00']) !!}
                         </div>
-                        <div class="input-field  col l6 m6 s12">
-                            {!! Form::label('cuposT','Cupos:') !!}
-                            {!! Form::number('cuposT',null,['class'=>'validate' ,'placeholder'=>'0' ,'required']) !!}
-
-                        </div>
+                        {{--<div class="input-field  col l6 m6 s12">--}}
+                            {{--{!! Form::label('cuposT','Cupos:') !!}--}}
+                            {{--{!! Form::number('cuposT',null,['class'=>'validate' ,'placeholder'=>'0' ,'required']) !!}--}}
+                        {{--</div>--}}
 
                     </div>
 

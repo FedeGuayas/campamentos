@@ -139,15 +139,15 @@ class InscripcionsController extends Controller
                 $factura->representante()->associate($representante);
                 $factura->total=$valor;
 
-                if ($request->input('matricula')=='on'){
+                if ($request->input('matricula')=='on'){//aplico matricula
                     $sub=$valor-$matricula;
                     $desc=$mensualidad-$sub;
-                    if ($desc>0){
+                    if ($desc>0){//hay descuento
                         $factura->descuento=$desc;
                     }
                 } else{
                     $desc=$mensualidad-$valor;
-                    if ($desc>0){
+                    if ($desc>0){//hay descuento
                         $factura->descuento=$desc;
                     }
                 }
@@ -211,11 +211,17 @@ class InscripcionsController extends Controller
             return redirect()->back();
         }
 
+        //si es inscripcion variada tiene que estar marcado o familira o multiple
+        if ( Session::get('curso')->totalCursos>0 && ($request->input('familiar')==false && $request->input('multiple')==false)){
+            Session::flash('message_danger','Debe seleccionar Familiar o Multiple, según corresponda');
+            return redirect()->back();
+        }
+
 
         $oldCurso=Session::get('curso');//obtengo la variable de la session
-        $cart=new Multiples($oldCurso); //creo na instancia de siuclase
+        $cart=new Multiples($oldCurso); //creo una instancia de la clase 
 
-        $cursos=$cart->cursos;  //arreglo con los cursos agrupados por curso
+        $cursos=$cart->cursos;  //arreglo con los cursos agrupados por curso Items
 
         $precioTotal=$cart->totalPrecio;
         $tipo_descuento=$cart->tipo_desc;
@@ -228,8 +234,6 @@ class InscripcionsController extends Controller
         if ($desc_emp=='true'){
             $desc2=0.5;
         }else  $desc2=0;
-
-
 
         $descuento=$precioTotal*$desc1 + $precioTotal*$desc2;
 
@@ -250,10 +254,16 @@ class InscripcionsController extends Controller
 
         $factura->save();
 
-        foreach ($cursos as $curso){
-            foreach ($curso['alumno'] as $alumno){
+
+        foreach ($cursos as $curso){//recorro los cursos
+            $calendar=$curso['curso'];
+            if ($calendar->cupos < $calendar->contador+$curso['qty']){//cupos no puede ser menor k la suma
+                Session::flash('message_danger','No hay disponibilidad para el curso');
+                return redirect()->back();
+            }
+            foreach ($curso['alumno'] as $alumno){//por cada alumno en cada curso hago una incripcion
                 $inscripcion=new Inscripcion();
-                $calendar=$curso['curso'];
+
                 $inscripcion->calendar()->associate($calendar);
                 $inscripcion->factura()->associate($factura);
                 $inscripcion->user()->associate($user);

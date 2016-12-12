@@ -14,12 +14,12 @@ class CrateTableFacturas extends Migration
     {
         Schema::create('facturas', function (Blueprint $table) {
             $table->increments('id');
-            $table->timestamps();
             $table->integer('pago_id')->unsigned();
             $table->integer('representante_id')->unsigned();
             $table->double('total',5,2);
             $table->double('descuento',4,2)->nullable();
-
+            $table->timestamps();
+            
             $table->softDeletes();
             $table->foreign('pago_id')->references('id')->on('pagos');
             $table->foreign('representante_id')->references('id')->on('representantes');

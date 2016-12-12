@@ -14,7 +14,6 @@ class CreateTableCalendars extends Migration
     {
         Schema::create('calendars', function (Blueprint $table) {
             $table->increments('id');
-            $table->timestamps();
             $table->integer('program_id')->unsigned();
             $table->integer('dia_id')->unsigned();
             $table->integer('horario_id')->unsigned();
@@ -24,6 +23,7 @@ class CreateTableCalendars extends Migration
             $table->string('nivel',30)->nullable();
             $table->integer('init_age')->nullable();
             $table->integer('end_age')->nullable();
+            $table->timestamps();
 
             $table->foreign('program_id')->references('id')->on('programs')
                 ->onUpdate('cascade')->onDelete('cascade');

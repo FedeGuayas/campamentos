@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Alumno;
 use App\Calendar;
 use App\Escenario;
+use App\Factura;
 use App\Inscripcion;
 use App\Persona;
 use App\Program;
@@ -137,8 +138,6 @@ class ReportesController extends Controller
             ->where('id',$id)
             ->first();
         
-        
-
         $fecha_actual =Carbon::now();
         $month = $fecha_actual->month;
         $day = $fecha_actual->format('d');
@@ -172,26 +171,27 @@ class ReportesController extends Controller
             $fecha = $request->get('fecha');
             $escenario = $request->get('escenario');
             $usuario = $request->get('usuario');
-            $cuadre = Inscripcion::
-            join('users as u', 'u.id', '=', 'inscripcions.user_id')
-//                ->join('escenarios as e', 'e.id', '=', 'u.escenario_id')
-                ->join('facturas as f', 'f.id', '=', 'inscripcions.factura_id')
-                ->select('total','u.id as uid', 'inscripcions.created_at as fecha', 'u.first_name','u.last_name')
+
+
+
+            $inscripciones = Inscripcion::with('factura','calendar','user','alumno')
+
+//
+//                ->select('total','u.id as uid', 'inscripcions.created_at as fecha', 'u.first_name','u.last_name')
                 ->where('inscripcions.created_at', 'LIKE', '%' . $fecha . '%')
-//                ->where('e.id', 'LIKE', '%' . $escenario . '%')
-                ->where('u.id', '=', $usuario)
-                ->groupBy('u.id')
+//                ->where('d', 'LIKE', '%' . $escenario . '%')
+                ->where('user_id', '=', $usuario)
+                ->groupBy('user_id')
                 ->get();
 
+//dd($cuadre);
 
-            
-
-            $cuadreArray = array();
-            foreach ($cuadre as $c) {
+            $cuadreArray = [];
+            foreach ($inscripciones as $insc) {
                 $cuadreArray[] = [
-                    'nombre' => $c->first_name.' '.$c->last_name,
-                    'cantidad' => Inscripcion::where('user_id', $c->uid)->where('fecha', 'LIKE', '%' . $fecha . '%')->count(),
-                    'valor' => Inscripcion::where('user_id', $c->uid)->where('fecha', 'LIKE', '%' . $fecha . '%')->sum('total'),
+                    'nombre' => $insc->user->getNameAttribute(),
+                    'cantidad' => Inscripcion::where('user_id', $insc->user->id)->where('inscripcions.created_at', 'LIKE', '%' . $fecha . '%')->count(),
+                    'valor' => $insc->factura->sum('total'),
                 ];
             }
         }

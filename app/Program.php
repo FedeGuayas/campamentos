@@ -29,7 +29,7 @@ class Program extends Model
      * @var array
      */
     protected $fillable = [
-        'escenario_id','disciplina_id','modulo_id','matricula','cuposT','activated'
+        'escenario_id','disciplina_id','modulo_id','matricula','activated'
     ];
     
     public function escenario(){

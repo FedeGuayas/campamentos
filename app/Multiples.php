@@ -3,7 +3,7 @@
  * Esta clase se utiliza para guardar la cantidad de productos en la sesscion y no hereda de elocuent
  * es un clase normal.
  *
- * Almacena los items en el carrito  de lo que se desea comprar(cantidad, precios, etc)
+ * Almacena los items en el carrito  de lo que se desea comprar(cantidad, precios, etc), no calculo descuentos en esta clase
  */
 
 namespace App;
@@ -21,7 +21,7 @@ class Multiples
 
     public $totalCursos=0; //cantidad total de grupos
 
-    public $totalPrecio=0; //Precio total de la inscripcion (todos los cursos)
+    public $totalPrecio=0; //Precio total de la inscripcion (todos los cursos) no incluye matricula
     
     public $tipo_desc=null;
     
@@ -46,32 +46,32 @@ class Multiples
     public function addCursos($curso,$id,$opciones){ //$id=calendar_id=producto $item=curso completo
         
         //Creo un array de cursos, inicio en 0 xk se ira incrementando, almaceno el precio del curso, el curso, las opciones
-        $storedCurso=['qty'=>0,'precio'=>$curso->mensualidad,'curso'=>$curso, 'matricula'=>0, 'alumno'=>[], 'matricula'=>0];
+        $storedCurso=['qty'=>0,'precio'=>$curso->mensualidad,'curso'=>$curso, 'matricula'=>0, 'alumno'=>[]];
 
         if ($this->cursos){  //compruebo si tengo cursos en la coleccion
 
-            if (array_key_exists($opciones[0]['alumno']['id'],$storedCurso['alumno'])){
-                $storedCurso['alumno']=$storedCurso['alumno'][$opciones[0]['alumno']['id']];//esta linea sobreescribe el $storedCurso,guardo los cursos x po id para acceder despues a ellos por su id
+            if (array_key_exists($opciones[0]['alumno']['id'],$storedCurso['alumno'])){//si existe el alumno
+                //lo guardo  x su id para acceder despues a ellos por su id 
+                $storedCurso['alumno']=$storedCurso['alumno'][$opciones[0]['alumno']['id']];
             }
-            //chequeo si el curso que estoy agregando ahora ($id) , se encuentra entre todos los ursos que tengo en la coleccion
+            //si el curso que estoy agregando ($id) , se encuentra entre todos los cursos que tengo en la coleccion
             if (array_key_exists($id,$this->cursos)){
-                $storedCurso=$this->cursos[$id];//esta linea sobreescribe el $storedCurso,guardo los cursos x po id para acceder despues a ellos por su id
+                $storedCurso=$this->cursos[$id];//guardo los cursos x po id para acceder despues a ellos por su id
             }
         }
         
-        if ($opciones[0]['alumno']==null){
+        if ($opciones[0]['alumno']==null){//adulto
             $storedCurso['alumno'][$opciones[0]['alumno']['id']]=$opciones[0]['representante'];
         }else {
             $storedCurso['alumno'][$opciones[0]['alumno']['id']]=$opciones[0]['alumno'];//guardar los alumnos por su id    
         }  
-        
-
+    
         $this->representante=$opciones[0]['representante'];
         $storedCurso['qty']++;//incrementar la cantidad d cursos
 
         //costo de la matricula si se selecciona
         if (($opciones[0]['set_matricula'])=='on'){
-            $storedCurso['matricula']=$curso->program->matricula;
+            $storedCurso['matricula']+=$curso->program->matricula;
         }
 
         //descuento a empleados
@@ -90,9 +90,7 @@ class Multiples
 //            $desc=0.1;
             $this->tipo_desc=$opciones[0]['tipo_desc'];
         }
-
-
-        $matricula=$storedCurso['matricula'];
+        
 
         $storedCurso['precio']=$curso->mensualidad*$storedCurso['qty']; //itemCurso=curso->precio*cantidad
 
@@ -100,8 +98,7 @@ class Multiples
         
         $this->totalCursos++; //total de cursos en general en la coleccion
 
-        $this->totalPrecio+= $curso->mensualidad + $matricula ;//precio total de la  coleccion, con descuentos
-
+        $this->totalPrecio+= $curso->mensualidad;//precio total de las mensualidades sin descuentos 
 
 //        $descuento= ( $this->totalPrecio * ( $desc + $desc_empleado ) );
        

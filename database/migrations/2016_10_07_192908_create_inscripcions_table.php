@@ -14,7 +14,6 @@ class CreateInscripcionsTable extends Migration
     {
         Schema::create('inscripcions', function (Blueprint $table) {
             $table->increments('id');
-            $table->timestamps();
             $table->integer('calendar_id')->unsigned();
             $table->text('cart')->nullable();//se serializa el objeto cart y se guarda, nulo x las inscrippciones locales
             $table->integer('alumno_id')->unsigned();
@@ -23,6 +22,7 @@ class CreateInscripcionsTable extends Migration
             $table->double('matricula',5,2)->nullable();
             $table->double('mensualidad',5,2);
             $table->enum('estado',['Reservada','Pagada','Cancelado'])->default('Pagada');
+            $table->timestamps();
             
             $table->softDeletes();
 

@@ -51,17 +51,16 @@
                             @endforeach
                         </td>
                         <td>
+                            @if ($insc->alumno_id==0)
+                                {{ $insc->factura->representante->persona->getNombreAttribute() }}
+                            @else
+                                @foreach($comp->inscripcions as $insc )
+                                    {{ $insc->alumno->persona->getNombreAttribute() }}<br>
+                                @endforeach
 
-                                @if ($insc->alumno_id==0)
-                                    {{ $insc->factura->representante->persona->getNombreAttribute() }}
-                                @else
-                                    {{ $insc->alumno->persona->getNombreAttribute() }}
-                                @endif
-                           
+                            @endif
 
-{{--                            @foreach($comp->inscripcions as $insc )--}}
-{{--                                {{$insc->alumno->persona->apellidos . ' '. $insc->alumno->persona->nombres}}<br>--}}
-                            {{--@endforeach--}}
+
                         </td>
                         <td>{{$comp->representante->persona->getNombreAttribute()}}</td>
                         <td>

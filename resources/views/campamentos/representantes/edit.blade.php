@@ -37,10 +37,10 @@
                             {!! Form::select('genero', ['MASCULINO' => 'MASCULINO', 'FEMENINO' => 'FEMENINO'],$representante->persona->genero, ['id'=>'genero','required']) !!}
                             {!! Form::label('genero','Género:') !!}
                         </div>
-                        {{--<div class="form-group col l6 m6 s12">--}}
-                            {{--{!! Form::label('fecha','Fecha de Nacimiento:',['class'=>'label-control']) !!}--}}
-                            {{--{{  Form::date('fecha_nac',$representante->persona->fecha_nac,[ 'class'=>'validate','required']) }}--}}
-                        {{--</div>--}}
+                        <div class="form-group col l6 m6 s12">
+                            {!! Form::label('fecha','Fecha de Nacimiento:',['class'=>'label-control']) !!}
+                            {{  Form::date('fecha_nac',$representante->persona->fecha_nac,[ 'class'=>'validate','required']) }}
+                        </div>
 
                         <div class="input-field col l6 m6 s12">
                             <i class="fa fa-envelope prefix"></i>

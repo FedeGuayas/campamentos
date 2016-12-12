@@ -65,6 +65,7 @@ class RepresentantesController extends Controller
         $out['nombres'] = 'required | max:50';
         $out['apellidos'] = 'required | max:50';
         $out['genero'] = 'required';
+        $out['fecha_nac'] = 'required';
         $out['email'] = 'email|required|unique:personas';
         $out['direccion'] = 'required|max:255';
         $out['telefono'] = 'required|max:15';
@@ -111,6 +112,7 @@ class RepresentantesController extends Controller
             $persona = new Persona;
             $persona->nombres = strtoupper($request->get('nombres'));
             $persona->apellidos = strtoupper($request->get('apellidos'));
+            $persona->fecha_nac = $request->get('fecha_nac');
             $persona->tipo_doc = $request->get('tipo_doc');
             $persona->num_doc = $request->get('num_doc');
             $persona->genero = $request->get('genero');
@@ -200,6 +202,7 @@ class RepresentantesController extends Controller
         $out['nombres'] = 'required | max:50';
         $out['apellidos'] = 'required | max:50';
         $out['genero'] = 'required';
+        $out['fecha_nac'] = 'required';
         $out['email'] = 'email';
         $out['direccion'] = 'max:255';
         $out['telefono'] = 'required|max:15';
@@ -247,6 +250,7 @@ class RepresentantesController extends Controller
 
             $persona->nombres=strtoupper($request->get('nombres'));
             $persona->apellidos=strtoupper($request->get('apellidos'));
+            $persona->fecha_nac = $request->get('fecha_nac');
             $persona->tipo_doc=$request->get('tipo_doc');
             $persona->num_doc=$request->get('num_doc');
             $persona->genero=$request->get('genero');

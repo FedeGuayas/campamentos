@@ -2,7 +2,7 @@
 
     <hr>
 
-    <table>
+    <table class="table table-striped table-condensed table-hover highlight responsive-table" cellspacing="0" width="100%">
         <thead>
         <tr>
             <td>Escenario</td>
@@ -10,9 +10,10 @@
             <td>Modulo</td>
             <td>Alumno</td>
             <td>Costo</td>
-            <td>Cantidad</td>
-            <td>Subtotal</td>
+            <td style="text-align: center">U</td>
+            <td>Costo/U</td>
             <td>Matricula</td>
+            <td>SubTotal</td>
             <td>Accion</td>
         </tr>
         </thead>
@@ -24,14 +25,16 @@
                 <td> {{$curso['curso']['program']['modulo']['modulo']}}</td>
                 <td>
                     @foreach($curso['alumno'] as $alumno)
-                        {{--{{$curso['alumno']['persona']['nombres'].' ' . $curso['alumno']['persona']['apellidos']}}--}}
                         {{$alumno['persona']['nombres'].' ' . $alumno['persona']['apellidos']}}<br>
                     @endforeach
                 </td>
                 <td> $ {{ number_format($curso['curso']['mensualidad'],2,'.',' ')}}</td>
-                <td>{{$curso['qty']}}</td>
+                <td style="text-align: center">{{$curso['qty']}}</td>
                 <td>$ {{ number_format((($curso['curso']['mensualidad'])* $curso['qty']),2,'.',' ')}}</td>
                 <td>$ {{number_format($curso['matricula'],2,'.',' ')}}</td>
+                <td>
+                    $ {{  number_format( (($curso['curso']['mensualidad'])* $curso['qty'])+$curso['matricula'])}}
+                </td>
                 <td>
                     <div class="btn-group">
                         <button type="button" data-toggle="dropdown"
@@ -48,6 +51,12 @@
                 </td>
             </tr>
         @endforeach
+        <tr>
+            <td></td><td></td><td></td><td></td><td></td>
+            <td>DESCUENTO</td>
+            <td><span class="label label-warning"> $ {{ number_format($descuento,2,'.',' ')}}</span></td>
+            <td></td><td></td>
+        </tr>
         </tbody>
 
     </table>
@@ -79,13 +88,19 @@
                 </div>
                 <div class="col l9">
                     <h5>@if($tipo_desc=='familiar')
-                            Inscripción Familiar
+                            10% Inscripción Familiar
                         @endif
                         @if($tipo_desc=='multiple')
-                            Inscripción multiples meses
+                            10% Inscripción multiples meses
                         @endif
                     </h5>
+                    <h5>@if($empleado>0)
+                            50% Empleado
+                        @endif
+                    </h5>
+
                 </div>
+
             </div>
 
             <div class="row">
