@@ -73,11 +73,11 @@
                             @endif
                         </td>
                         <td>
-                            @if (Auth::user()->can('edit-user'))
+                            @if (Auth::user()->hasRole('planner'))
                             <a href="{{ route('admin.calendars.edit', $calendar ) }}">
                                 {!! Form::button('<i class="fa fa-pencil-square-o" ></i>',['class'=>'btn-floating waves-effect waves-light teal darken-1']) !!}
                             </a>
-                                @endif
+                            @endif
                         </td>
                         {{--<td>--}}
                             {{--{!! Form::button('<i class="fa fa-trash-o" ></i>',['class'=>'modal-trigger btn-floating waves-effect waves-light red darken-1','data-target'=>"modal-delete-$program->id"]) !!}--}}

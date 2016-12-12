@@ -80,12 +80,14 @@
                         <td>{{$insc->created_at->diffForHumans()}}</td>
                         <td>{{ $insc->created_at }}</td>
                         <td>
+                            @if ( Entrust::hasRole(['planner', 'administrator']))
                             <a href="{{ route('admin.reserva.cancel', $insc->id ) }}">
                             {!! Form::button('<i class="fa fa-ban" aria-hidden="true"></i>',['class'=>'btn-danger']) !!}
                             </a>
                             <a href="{{ route('admin.reserva.confirm', $insc->id ) }}">
                             {!! Form::button('<i class="fa fa-check" aria-hidden="true"></i>',['class'=>'btn-success']) !!}
                             </a>
+                            @endif
                         </td>
                     </tr>
                 @include('campamentos.inscripcions.modal-delete')

@@ -13,9 +13,11 @@
         <div class="col l8 m8 s">
             @include('alert.success')
                 <h4>Programación para inscripciones</h4>
-                <a href="{{route('admin.programs.create')}}">
-                    {!! Form::button('<i class="fa fa-plus left" aria-hidden="true"></i>',['class'=>'btn tooltipped waves-effect waves-light','data-position'=>'right', 'data-delay'=>'50', 'data-tooltip'=>'Nuevo programa']) !!}
-                </a>
+            @if (Auth::user()->hasRole('planner'));
+            <a href="{{route('admin.programs.create')}}">
+                {!! Form::button('<i class="fa fa-plus left" aria-hidden="true"></i>',['class'=>'btn tooltipped waves-effect waves-light','data-position'=>'right', 'data-delay'=>'50', 'data-tooltip'=>'Nuevo programa']) !!}
+            </a>
+            @endif
             {{-- @include('runner.usuarios.search')--}}
         </div>
     </div>
@@ -67,18 +69,22 @@
                             @endif
                         </td>
                         <td>
+                            @if (Auth::user()->can('delete_program'));
                             {!! Form::button('<i class="fa fa-trash-o" ></i>',['class'=>'modal-trigger btn-floating waves-effect waves-light red darken-1 tooltipped','data-position'=>'top', 'data-delay'=>'50','data-tooltip'=>'Eliminar','data-target'=>"modal-delete-$program->id"]) !!}
                             <a href="{{ route('admin.programs.edit', $program->id ) }}">
                                 {!! Form::button('<i class="fa fa-pencil-square-o" ></i>',['class'=>'btn-floating waves-effect waves-light teal darken-1 tooltipped','data-position'=>'top', 'data-delay'=>'50','data-tooltip'=>'Editar',]) !!}
                             </a>
+                            @endif
                             <a href="{{ route('admin.programs.show', $program->id ) }}">
                                 {!! Form::button('<i class="fa fa-eye"></i>',['class'=>'btn-floating waves-effect waves-light teal darken-1 tooltipped',
                                 'data-position'=>'top', 'data-delay'=>'50', 'data-tooltip'=>'Mostrar',]) !!}
                             </a>
+                            @if (Auth::user()->can('create_calendar'));
                             <a href="{{ route('admin.calendars.create',$program->id) }}">
                             {!! Form::button('<i class="fa fa-calendar-plus-o" aria-hidden="true"></i>',['class'=>'btn-floating waves-effect waves-light teal darken-1 tooltipped',
                             'data-position'=>'top', 'data-delay'=>'50', 'data-tooltip'=>'Calendario',]) !!}
                             </a>
+                            @endif
                         </td>
                     </tr>
                     @include ('campamentos.programs.modal')

@@ -17,8 +17,10 @@
             <ul id="dropdownInsc" class="dropdown-content">
                 <li><a href="{!! route('admin.inscripcions.index') !!}" class="waves-effect waves-teal">Inscripciones</a></li>
                 <li class="divider"></li>
+                @if (Entrust::can('create-inscripcion'))
                 <li><a href="{!! route('admin.inscripcions.create') !!}" class="waves-effect waves-teal">Nueva Inscripcion</a></li>
                 <li class="divider"></li>
+                @endif
                 <li><a href="{!! route('admin.alumnos.index') !!}" class="waves-effect waves-teal">Alumnos</a></li>
                 <li class="divider"></li>
                 <li><a href="{!! route('admin.representantes.index') !!}" class="waves-effect waves-teal">Representantes</a></li>
@@ -39,6 +41,8 @@
 
             <!-- Dropdown Ajustes -->
             <ul id="dropdownConfig" class="dropdown-content">
+                @if(Auth::user()->hasRole(['planner','administrator']))
+                    {{--@role(['planner,administrator'])--}}
                 <li><a href="{!! route('admin.escenarios.index') !!}" class="waves-effect waves-teal">Escenarios</a></li>
                 <li><a href="{!! route('admin.disciplinas.index') !!}" class="waves-effect waves-teal">Disciplinas</a></li>
                 <li><a href="{!! route('admin.horarios.index') !!}" class="waves-effect waves-teal">Horarios</a></li>
@@ -46,12 +50,14 @@
                 <li><a href="{!! route('admin.encuestas.index') !!}" class="waves-effect waves-teal">Encuestas</a></li>
                 <li><a href="{!! route('admin.transportes.index') !!}" class="waves-effect waves-teal">Transportes</a></li>
                 <li><a href="{!! route('admin.fpagos.index') !!}" class="waves-effect waves-teal">Formas Pago</a></li>
+                @endif
+                @role('administrator')
                 <li class="divider"></li>
                 <li><a href="{!! route('admin.users.index') !!}" class="waves-effect waves-teal">Usuarios</a></li>
                 <li><a href="{!! route('admin.roles.index') !!}" class="waves-effect waves-teal">Roles</a></li>
                 <li><a href="{!! route('admin.permissions.index') !!}" class="waves-effect waves-teal">Permisos</a></li>
                 <li><a href="{!! route('persons.import') !!}" class="waves-effect waves-teal">Imp Personas</a></li>
-
+                @endrole
 
 
             </ul>
@@ -91,10 +97,12 @@
                     <li><a class="dropdown-button waves-effect waves-light" href="#!" data-beloworigin="true" data-hover="true" data-constrainwidth="false" data-activates="dropdownReportes">Reportes<i
                                     class="fa fa-bar-chart-o left"></i><i class="fa fa-sort-down right"></i></a></li>
                     <!-- Dropdown Ajustes -->
+                    @if (Entrust::hasRole(['administrator', 'planner']))
                     <li><a class="dropdown-button waves-effect waves-light" href="#!" data-beloworigin="true" data-hover="true" data-constrainwidth="false" data-activates="dropdownConfig">Ajustes<i
                                     class="fa fa-gears left"></i><i class="fa fa-sort-down right"></i></a></li>
+                    @endif
                     <!-- Dropdown Usuarios -->
-                    <li><a class="dropdown-button waves-effect waves-light" href="#!" data-beloworigin="true" data-hover="true" data-constrainwidth="false" data-activates="dropdownUser">Usuario<i
+                    <li><a class="dropdown-button waves-effect waves-light" href="#!" data-beloworigin="true" data-hover="true" data-constrainwidth="false" data-activates="dropdownUser">{{Auth::user()->first_name}}<i
                                     class="fa fa-user left"></i><i class="fa fa-sort-down right"></i></a></li>
 
                 </ul>
@@ -114,6 +122,7 @@
                                     <ul>
                                         <li><a href="#!" class="waves-effect waves-teal">Listar</a></li>
                                         <li class="divider"></li>
+
                                         <li><a href="#!" class="waves-effect waves-teal">Nueva</a></li>
                                         <li class="divider"></li>
                                         <li><a href="#!" class="waves-effect waves-teal">Editar</a></li>

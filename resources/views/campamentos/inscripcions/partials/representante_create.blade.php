@@ -61,10 +61,10 @@
                     {!! Form::textarea('direccion',null,['class'=>'materialize-textarea validate','id'=>'direccion','length'=>'255','style'=>'text-transform:uppercase']) !!}
                     {!! Form::label('direccion','Dirección:') !!}
                 </div>
-                {{--<div class="form-group col l4 m4 s12">--}}
-                    {{--{!! Form::label('fecha','Fecha de Nacimiento:',['class'=>'label-control']) !!}--}}
-                    {{--{{  Form::date('fecha_nac',null,[ 'class'=>'validate','required']) }}--}}
-                {{--</div>--}}
+                <div class="form-group col l4 m4 s12">
+                    {!! Form::label('fecha','Fecha de Nacimiento:',['class'=>'label-control']) !!}
+                    {{  Form::date('fecha_nac',null,[ 'class'=>'validate','required']) }}
+                </div>
 
                 <div class="file-field input-field  col l6 m6 s12">
                     <div class="btn">

@@ -18,6 +18,11 @@ use App\Http\Requests\ProgramsStoreRequest;
 
 class ProgramsController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+    
     /**
      * Display a listing of the resource.
      *
@@ -37,8 +42,6 @@ class ProgramsController extends Controller
         $programs->each(function($programs){
             $programs->calendars;
         });
-
-        
 
         $array = [];
         foreach ($programs as $p) {
@@ -72,6 +75,8 @@ class ProgramsController extends Controller
      */
     public function store(ProgramsStoreRequest $request)
     {
+        if(Auth::user()->hasRole(['planner','administrator'])){
+            
         try {
             DB::beginTransaction();
 
@@ -96,6 +101,8 @@ class ProgramsController extends Controller
         }
 
         return redirect()->route('admin.programs.index');
+        
+        }else return abort(403);
     }
 
     /**
@@ -157,6 +164,8 @@ class ProgramsController extends Controller
      */
     public function update(Request $request, $id)
     {
+        if(Auth::user()->hasRole(['planner','administrator'])){
+            
         $program=Program::findOrFail($id);
         $program->escenario_id=$request->get('escenario_id');
         $program->disciplina_id=$request->get('disciplina_id');
@@ -165,6 +174,8 @@ class ProgramsController extends Controller
         $program->update();
         Session::flash('message','Programa acualizado');
         return redirect()->route('admin.programs.index');
+
+        }else return abort(403);
     }
 
     /**
@@ -175,26 +186,37 @@ class ProgramsController extends Controller
      */
     public function destroy($id)
     {
-        $program=Program::findOrFail($id);
-        $program->delete();
-        Session::flash('message','Programa eliminado');
-        return back();
+        if(Auth::user()->hasRole(['administrator'])){
+        
+            $program=Program::findOrFail($id);
+            $program->delete();
+            Session::flash('message','Programa eliminado');
+            return back();
+        
+        }else return abort(403);  
     }
 
     public function disable(Request $request,$id)
     {
-        $program=Program::findOrFail($id);
-        $program->activated=false;
-        $program->update();
-        return back();
+        if(Auth::user()->hasRole(['planner','administrator'])){
+            $program=Program::findOrFail($id);
+            $program->activated=false;
+            $program->update();
+            return back();
+            
+        }else return abort(403);
     }
 
     public function enable($id)
     {
-        $program=Program::findOrFail($id);
-        $program->activated=true;
-        $program->update();
-        return back();
+        if(Auth::user()->hasRole(['planner','administrator'])){
+            
+            $program=Program::findOrFail($id);
+            $program->activated=true;
+            $program->update();
+            return back();
+
+        }else return abort(403);
     }
 
     /**

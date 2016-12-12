@@ -8,12 +8,20 @@ use App\Persona;
 use App\Representante;
 use Illuminate\Http\Request;
 use DB;
+use Illuminate\Support\Facades\Auth;
 use Session;
 use App\Http\Requests;
 use Illuminate\Support\Facades\Validator;
 
 class AlumnosController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware(['role:administrador'], ['only' => 'destroy']);//eliminar alumnos solo administrador
+//        $this->middleware(['role:supervisor|administrador'],['except'=>['index','userTaskEnd']]);
+//        $this->middleware('administrador', ['only' => 'destroy']);
+    }
 
     /**
      * Display a listing of the resource.
@@ -92,6 +100,7 @@ class AlumnosController extends Controller
      */
     public function store(Request $request)
     {
+        if(Auth::user()->hasRole(['planner','administrator','signup'])){
         $validator = $this->validator($request->all());
         if ($validator->fails()) {
             $this->throwValidationException(
@@ -150,6 +159,7 @@ class AlumnosController extends Controller
 
         Session::flash('message', 'Alumno creado correctamente');
         return redirect()->route('admin.alumnos.index');
+        }else return abort(403);
     }
 
     /**
@@ -186,6 +196,8 @@ class AlumnosController extends Controller
      */
     public function update(Request $request, $id)
     {
+        if(Auth::user()->hasRole(['planner','administrator','signup'])){
+
         $validator = $this->validatorUpdate($request->all());
 
         if ($validator->fails()) {
@@ -239,6 +251,7 @@ class AlumnosController extends Controller
 
         Session::flash('message', 'Alumno '.$alumno->persona-> getNombreAttribute().' actualizado');
         return redirect()->route('admin.alumnos.index');
+        }else return abort(403);
     }
 
     /**

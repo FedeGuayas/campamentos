@@ -28,6 +28,14 @@ use App\Http\Requests\CalendarStoreRequest;
 
 class CalendarsController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+//        $this->middleware(['role:administrador'], ['only' => 'destroy']);//eliminar alumnos solo administrador
+//        $this->middleware(['role:supervisor|administrador'],['except'=>['index','userTaskEnd']]);
+//        $this->middleware('administrador', ['only' => 'destroy']);
+    }
+    
     /**
      * Display a listing of the resource.
      *
@@ -57,7 +65,7 @@ class CalendarsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function create(Request $request)
-    {
+    {            
         $data =   $request->all();
         $program_id=key($data);
         $program=Program::findOrFail($program_id);
@@ -72,6 +80,7 @@ class CalendarsController extends Controller
         $dias=[]+ Dia::lists('dia','id')->all();
         
         return view('campamentos.calendars.create',compact('program','horarios','dias','escenario','disciplina','modulo'));
+        
     }
 
     /**
@@ -82,6 +91,8 @@ class CalendarsController extends Controller
      */
     public function store(CalendarStoreRequest $request)
     {
+        if(Auth::user()->hasRole(['planner','administrator'])){
+            
         $calendar=new Calendar;
         $calendar->program_id=$request->get('program_id');
         $calendar->dia_id=$request->get('dia_id');
@@ -94,6 +105,8 @@ class CalendarsController extends Controller
         $calendar->save();
         
         return redirect()->route('admin.programs.index');
+
+        }else return abort(403);
     }
 
     /**
@@ -138,6 +151,8 @@ class CalendarsController extends Controller
      */
     public function update(Request $request, $id)
     {
+        if(Auth::user()->hasRole(['planner','administrator'])){
+            
         $calendar=Calendar::findOrFail($id);
         $calendar->dia_id=$request->get('dia_id');
         $calendar->horario_id=$request->get('horario_id');
@@ -148,6 +163,8 @@ class CalendarsController extends Controller
         $calendar->nivel=strtoupper($request->get('nivel'));
         $calendar->update();
         return redirect()->route('admin.programs.index');
+        
+        }else return abort(403);
     }
 
     /**
@@ -386,26 +403,22 @@ class CalendarsController extends Controller
         $matricula=0;
         foreach ($cursos as $curso){
             $matricula+=$curso['matricula'];
-
         }
 
-        if ($tipo_descuento=='familiar' || $tipo_descuento=='multiple'){
-            $desc_familiar=0.1;
-        }else  $desc_familiar=0;
-
         if ($desc_emp=='true'){
-            $desc_empleado=0.5;
-        }else  $desc_empleado=0;
-
-
-        $descuento=$precioTotal*$desc_familiar + $precioTotal*$desc_empleado;
+            $desc=0.5;
+            $descuento= $precioTotal*$desc;
+        }else if ($tipo_descuento=='familiar' || $tipo_descuento=='multiple'){
+            $desc=0.1;
+            $descuento=$precioTotal*$desc;
+        }
 
         $subTotal=$precioTotal + $matricula;
 
         $total=$subTotal-$descuento;
 
 //        dd($cursos_coll);
-        return view('campamentos.inscripcions.partials.detalle',['cursos'=>$cursos,'descuento'=>$descuento,'total'=>$total,'tipo_desc'=>$tipo_descuento,'subTotal'=>$subTotal,'empleado'=>$desc_empleado]);
+        return view('campamentos.inscripcions.partials.detalle',['cursos'=>$cursos,'descuento'=>$descuento,'total'=>$total,'tipo_desc'=>$tipo_descuento,'subTotal'=>$subTotal,'empleado'=>$desc]);
     }
 
     /**
@@ -448,6 +461,8 @@ class CalendarsController extends Controller
     }
 
 
+    
+    //Ver para inscripcion online
     /**
      * Realizar el pago online
      * @param Request $request

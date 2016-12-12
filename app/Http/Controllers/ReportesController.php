@@ -30,11 +30,10 @@ class ReportesController extends Controller
 
     public function getExcel(Request $request)
     {
-
+        
         $start = trim($request->get('start'));
         $end = trim($request->get('end'));
         
-
         $inscripciones=Inscripcion::with('factura','calendar','user','alumno')
             ->whereBetween('created_at',[$start, $end])
 //            ->where('created_at','>=',$start)
@@ -53,7 +52,6 @@ class ReportesController extends Controller
 
         $start = trim($request->get('start'));
         $end = trim($request->get('end'));
-
 
         $inscripciones=Inscripcion::with('factura','calendar','user','alumno')
             ->whereBetween('created_at',[$start, $end])

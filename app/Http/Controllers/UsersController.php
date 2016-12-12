@@ -26,9 +26,8 @@ class UsersController extends Controller
     {
         Carbon::setLocale('es');
         $this->middleware('auth');
-//        $this->middleware(['role:supervisor|administrador']);
+        $this->middleware(['role:administrador'], ['only' => ['destroy','update','store','roles','setRoles','index']]);
     }
-
 
     /**
      * Display a listing of the resource.
@@ -52,7 +51,8 @@ class UsersController extends Controller
      */
     public function create()
     {
-
+//        $roles_coll = Role::all();
+//        $roles = $roles_coll->pluck('display_name', 'id');
         return view('campamentos.users.create',compact('roles'));
     }
 
@@ -65,10 +65,11 @@ class UsersController extends Controller
     public function store(Request $request)
     {
         $user=new User;
-        $user->first_name=$request->get('first_name');
-        $user->last_name=$request->get('last_name');
+        $user->first_name=strtoupper($request->get('first_name'));
+        $user->last_name=strtoupper($request->get('last_name'));
         $user->email=$request->get('email');
         $user->password=$request->get('password');
+//        $roles=$request->get('roles');
         $user->activated='1';
         $user->save();
 
@@ -111,7 +112,21 @@ class UsersController extends Controller
     public function update(Request $request, $id)
     {
         $user=User::findOrFail($id);
-        $user->update($request->all());
+        $user->first_name=strtoupper($request->get('first_name'));
+        $user->last_name=strtoupper($request->get('last_name'));
+        $user->email=$request->get('email');
+        $user->password=$request->get('password');
+//        $roles=$request->get('roles');
+//        $user->activated='1';
+//        if ($roles) {
+//            // El usuario marcó checkbox
+//            $user->attachRole($roles);
+//        }
+//        else{
+//            $user->detachRole($roles);
+//        }
+//        $user->update();
+
         $nombre=User::findOrFail($id)->getNameAttribute();
       
         Session::flash('message','Se actualizo el usuario '.$nombre);
@@ -194,8 +209,6 @@ class UsersController extends Controller
         $start = trim($request->get('start'));
         $end = trim($request->get('end'));
         $user=Auth::user();
-
-
 
         $inscripciones=Inscripcion::with('factura','calendar','user','alumno')
             ->whereBetween('created_at',[$start, $end])

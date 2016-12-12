@@ -41,7 +41,7 @@
 
                         {{--<div class="input-field col l6 m6 s12">--}}
                             {{--<h6 class="">Accesos al sistema</h6>--}}
-                        {{--{!! Form::select('roles', $roles,null, ['id'=>'roles_id','multiple']) !!}--}}
+                        {{--{!! Form::select('roles[]', $roles,null, ['id'=>'roles_id','multiple']) !!}--}}
                         {{--{!! Form::label('roles', 'Roles:') !!}--}}
                         {{--</div>--}}
 

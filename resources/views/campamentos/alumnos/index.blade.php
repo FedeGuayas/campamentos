@@ -15,9 +15,11 @@
     <div class="row">
         <div class="col l12 m12 s12">
 
+           @if ( Auth::user()->can('create_alumno'))
                 <a href="{{route('admin.alumnos.create')}}">
                     {!! Form::button('<i class="fa fa-user-plus" ></i>',['class'=>'btn tooltipped waves-effect waves-light','data-position'=>'right', 'data-delay'=>'50', 'data-tooltip'=>'Crear alumno']) !!}
                 </a>
+            @endif
                 {{--<table class="table table-striped table-bordered table-condensed table-hover highlight responsive-table">--}}
             <table id="alumnos_table" class="table table-striped table-bordered table-condensed table-hover highlight responsive-table" cellspacing="0" width="100%" style="display: none"   data-order='[[ 0, "asc" ]]'>
                 <thead>
@@ -49,10 +51,15 @@
                             <td>{{ $al->persona->tipo_doc }}</td>
                             <td>{{ $al->persona->genero }}</td>
                             <td>
-                                {!! Form::button('<i class="fa fa-trash-o" ></i>',['class'=>'modal-trigger btn-floating waves-effect waves-light red darken-1','data-target'=>"modal-delete-$al->id"]) !!}
-                                <a href="{{ route('admin.alumnos.edit', $al->id ) }}">
-                                    {!! Form::button('<i class="fa fa-pencil-square-o" ></i>',['class'=>'btn-floating waves-effect waves-light teal darken-1']) !!}
-                                </a>
+                                @if ( Auth::user()->can('delete_alumno'))
+                                    {!! Form::button('<i class="fa fa-trash-o" ></i>',['class'=>'modal-trigger btn-floating waves-effect waves-light red darken-1','data-target'=>"modal-delete-$al->id"]) !!}
+                                @endif
+
+                                @if ( Auth::user()->can('edit_alumno'))
+                                    <a href="{{ route('admin.alumnos.edit', $al->id ) }}">
+                                        {!! Form::button('<i class="fa fa-pencil-square-o" ></i>',['class'=>'btn-floating waves-effect waves-light teal darken-1']) !!}
+                                    </a>
+                                @endif
                                 <a href="{{ route('admin.alumnos.show', $al->id ) }}">
                                     {!! Form::button('<i class="fa fa-eye"></i>',['class'=>'btn-floating waves-effect waves-light teal darken-1']) !!}
                                 </a>

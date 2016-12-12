@@ -25,6 +25,12 @@ use App\Http\Requests;
 
 class RepresentantesController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware(['role:administrador'], ['only' => 'destroy']);
+    }
+    
     /**
      * Display a listing of the resource.
      *
@@ -100,6 +106,8 @@ class RepresentantesController extends Controller
 
     public function store(Request $request)
     {
+        if(Auth::user()->hasRole(['planner','administrator','signup'])){
+        
         $validator = $this->validator($request->all());
         if ($validator->fails()) {
             $this->throwValidationException(
@@ -165,6 +173,7 @@ class RepresentantesController extends Controller
 
         Session::flash('message', 'Representante creado correctamente');
         return redirect()->route('admin.representantes.index');
+        }else return abort(403);
     }
 
     /**
@@ -177,6 +186,7 @@ class RepresentantesController extends Controller
     {
         $representante=Representante::find($id);
         return view('campamentos.representantes.show',compact('representante'));
+    
     }
 
     /**
@@ -236,6 +246,8 @@ class RepresentantesController extends Controller
      */
     public function update(Request $request, $id)
     {
+        if(Auth::user()->hasRole(['planner','administrator','signup'])){
+            
         $validator = $this->validatorUpdate($request->all());
         if ($validator->fails()) {
             $this->throwValidationException(
@@ -286,6 +298,7 @@ class RepresentantesController extends Controller
 
         Session::flash('message', 'Representante '.$representante->persona-> getNombreAttribute().' actualizado');
         return redirect()->route('admin.representantes.index');
+        }else return abort(403);
     }
 
     /**

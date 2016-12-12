@@ -87,7 +87,8 @@
                     <h5>Conceptos:</h5>
                 </div>
                 <div class="col l9">
-                    <h5>@if($tipo_desc=='familiar')
+                    <h5>
+                        @if($tipo_desc=='familiar')
                             10% Inscripción Familiar
                         @endif
                         @if($tipo_desc=='multiple')

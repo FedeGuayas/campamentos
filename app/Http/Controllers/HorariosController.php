@@ -9,6 +9,12 @@ use App\Http\Requests;
 
 class HorariosController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware(['role:planner|administrator'],['except'=>['index']]);
+    }
+    
     /**
      * Display a listing of the resource.
      *

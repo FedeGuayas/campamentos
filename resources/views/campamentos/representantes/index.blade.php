@@ -12,10 +12,11 @@
         <div class="col l8 m8 s">
             @include('alert.success')
             <h4>Representantes</h4>
+            @if ( Auth::user()->can('create_representante'))
                 <a href="{{route('admin.representantes.create')}}">
                     {!! Form::button('<i class="fa fa-user-plus" ></i>',['class'=>'btn tooltipped waves-effect waves-light','data-position'=>'right', 'data-delay'=>'50', 'data-tooltip'=>'Crear representante']) !!}
                 </a>
-
+            @endif
             {{-- @include('runner.usuarios.search')--}}
         </div>
     </div>
@@ -48,10 +49,14 @@
                                 @endforeach
                             </td>
                             <td>
+                                @if ( Auth::user()->can('delete_representante'))
                                 {!! Form::button('<i class="fa fa-trash-o" ></i>',['class'=>'modal-trigger btn-floating waves-effect waves-light red darken-1','data-target'=>"modal-delete-$rep->id"]) !!}
+                                @endif
+                                @if ( Auth::user()->can('edit_representante'))
                                 <a href="{{ route('admin.representantes.edit', $rep->id ) }}">
                                     {!! Form::button('<i class="fa fa-pencil-square-o" ></i>',['class'=>'btn-floating waves-effect waves-light teal darken-1']) !!}
                                 </a>
+                                @endif
                                 <a href="{{ route('admin.representantes.show', $rep->id ) }}">
                                     {!! Form::button('<i class="fa fa-eye"></i>',['class'=>'btn-floating waves-effect waves-light teal darken-1']) !!}
                                 </a>

@@ -77,16 +77,20 @@
                         <td>{{ number_format($insc->factura->total, 2, '.', ' ') }}</td>
                         <td>{{ $insc->factura->id }}</td>
                         <td>
+                            @if (Entrust::can('edit_inscripcion'));
                             <a href="{{ route('admin.inscripcions.edit', $insc->id ) }}">
                                 {!! Form::button('<i class="fa fa-pencil-square-o fa-2x" ></i>',['class'=>'label waves-effect waves-light teal darken-1']) !!}
                             </a>
+                            @endif
                             <a href="{{ route('admin.inscripcions.show', $insc->id ) }}">
                                 {!! Form::button('<i class="fa fa-eye fa-2x"></i>',['class'=>'label waves-effect waves-light blue darken-1']) !!}
                             </a>
                             <a href="{{  route('admin.reports.pdf',$insc->id ) }}">
                                 {!! Form::button('<i class="fa fa-file-pdf-o fa-2x"></i>',['class'=>'label waves-effect waves-light teal darken-1  orange accent-4']) !!}
                             </a>
+                            @if (Entrust::can('delete_inscripcion'));
                             {!! Form::button('<i class="fa fa-trash-o fa-2x" ></i>',['class'=>'modal-trigger label waves-effect waves-light red darken-1','data-target'=>"modal-delete-$insc->id"]) !!}
+                            @endif
                         </td>
                     </tr>
                 @include('campamentos.inscripcions.modal-delete')

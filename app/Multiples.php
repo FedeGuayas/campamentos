@@ -91,7 +91,6 @@ class Multiples
             $this->tipo_desc=$opciones[0]['tipo_desc'];
         }
         
-
         $storedCurso['precio']=$curso->mensualidad*$storedCurso['qty']; //itemCurso=curso->precio*cantidad
 
         $this->cursos[$id]=$storedCurso;//accedo al item sino exite en la coleccion guardo el primer $storedCurso
