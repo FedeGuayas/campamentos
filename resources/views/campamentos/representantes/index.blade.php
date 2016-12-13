@@ -49,23 +49,22 @@
                                 @endforeach
                             </td>
                             <td>
-                                @if ( Auth::user()->can('delete_representante'))
-                                {!! Form::button('<i class="fa fa-trash-o" ></i>',['class'=>'modal-trigger btn-floating waves-effect waves-light red darken-1','data-target'=>"modal-delete-$rep->id"]) !!}
-                                @endif
                                 @if ( Auth::user()->can('edit_representante'))
                                 <a href="{{ route('admin.representantes.edit', $rep->id ) }}">
-                                    {!! Form::button('<i class="fa fa-pencil-square-o" ></i>',['class'=>'btn-floating waves-effect waves-light teal darken-1']) !!}
+                                    {!! Form::button('<i class="tiny fa fa-pencil-square-o" ></i>',['class'=>'label waves-effect waves-light teal darken-1']) !!}
                                 </a>
                                 @endif
                                 <a href="{{ route('admin.representantes.show', $rep->id ) }}">
-                                    {!! Form::button('<i class="fa fa-eye"></i>',['class'=>'btn-floating waves-effect waves-light teal darken-1']) !!}
+                                    {!! Form::button('<i class="tiny fa fa-eye"></i>',['class'=>'label waves-effect waves-light teal darken-1']) !!}
                                 </a>
+                                    @if ( Auth::user()->can('delete_representante'))
+                                        {!! Form::button('<i class="tiny fa fa-trash-o" ></i>',['class'=>'modal-trigger label waves-effect waves-light red darken-1','data-target'=>"modal-delete-$rep->id"]) !!}
+                                    @endif
                             </td>
                         </tr>
                         @include ('campamentos.representantes.modal')
                     @endforeach
                 </table><!--end table-responsive-->
-              {{ $representantes->render() }}
         </div><!--end div ./col-lg-12. etc-->
     </div><!--end div ./row-->
 

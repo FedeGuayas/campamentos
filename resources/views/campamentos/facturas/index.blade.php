@@ -59,25 +59,18 @@
                                 @endforeach
 
                             @endif
-
-
                         </td>
                         <td>{{$comp->representante->persona->getNombreAttribute()}}</td>
                         <td>
-                            {!! Form::button('<i class="fa fa-trash-o" ></i>',['class'=>'modal-trigger btn-floating waves-effect waves-light red darken-1','data-target'=>"modal-delete-$comp->id"]) !!}
-                            {{--<a href="{{ route('admin.inscripcions.edit', $comp->id ) }}">--}}
-{{--                                {!! Form::button('<i class="fa fa-pencil-square-o" ></i>',['class'=>'btn-floating waves-effect waves-light teal darken-1']) !!}--}}
-                            {{--</a>--}}
-                            {{--<a href="{{ route('admin.inscripcions.show', $insc->id ) }}">--}}
-{{--                                {!! Form::button('<i class="fa fa-eye"></i>',['class'=>'btn-floating waves-effect waves-light teal darken-1']) !!}--}}
-                            {{--</a>--}}
+                            @if ( Auth::user()->hasRole(['administrator']))
+                            {!! Form::button('<i class="tiny fa fa-trash-o" ></i>',['class'=>'modal-trigger label waves-effect waves-light red darken-1','data-target'=>"modal-delete-$comp->id"]) !!}
+                             @endif
                         </td>
                     </tr>
                 @include('campamentos.facturas.modal-delete')
                 @endforeach
                 </tbody>
             </table><!--end table-responsive-->
-{{--            {{ $representantes->render() }}--}}
         </div><!--end div ./col-lg-12. etc-->
     </div><!--end div ./row-->
 

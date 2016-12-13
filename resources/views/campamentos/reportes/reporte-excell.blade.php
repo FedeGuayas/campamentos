@@ -16,12 +16,7 @@
     <div class="row">
         @include('campamentos.reportes.search')
         <div class="col-sm-3">
-            {{--<div class="form-group pull-right">--}}
-                {{--{!! Form::label('export','Exportar') !!}--}}
-                @include('campamentos.reportes.export-filter')
-                {{--<a href="{{route('admin.tasks.reports.users.excel')}}"  class="btn btn-success" title="exportar"><i class="fa fa-file-excel-o" aria-hidden="true"></i>--}}
-                {{--</a>--}}
-            {{--</div>--}}
+            @include('campamentos.reportes.export-filter')
         </div>
 
     </div>
@@ -73,15 +68,10 @@
                             <td>{{ $insc->calendar['program']->escenario->escenario }}</td>
                             <td>{{ $insc->calendar['program']->disciplina->disciplina }}</td>
                             <td>{{ $insc->factura->representante->persona->getNombreAttribute() }}</td>
-
                         </tr>
-                        {{--@include ('runner.comprobantes.modal')--}}
                     @endforeach
                 </table><!--end table-responsive-->
             </div><!-- end div ./table-responsive-->
-{{--            {{ $pagos->appends(['usuario'=>$usuario, 'escenario'=>$escenario, 'fecha'=>$fecha])->links() }}--}}
-            {{--<div class="text-bold text-primary">Total: <span class="bg-blue-active badge"> {{ $pagos->total()}}</span>--}}
-            {{--</div>--}}
         </div><!--end div ./col-lg-12. etc-->
     </div><!--end div ./row-->
 

@@ -12,16 +12,11 @@
         <div class="col l12 m12 s12">
             @include('alert.success')
             <h4>Cursos de  deportivos</h4>
-            {{-- @include('runner.usuarios.search')--}}
         </div>
     </div>
 
     <div class="row">
         <div class="col l12 m12 s12">
-
-            {{--<a href="{{route('admin.programs.create')}}">--}}
-                {{--{!! Form::button('<i class="fa fa-user-plus" ></i>',['class'=>'btn tooltipped waves-effect waves-light','data-position'=>'right', 'data-delay'=>'50', 'data-tooltip'=>'Nuevo programa']) !!}--}}
-            {{--</a>--}}
             <table id="calendar_table" class="table table-striped table-bordered table-condensed table-hover highlight responsive-table" cellspacing="0" width="100%" style="display: none"   data-order='[[ 0, "asc" ]]'>
                 <thead>
                 <tr>
@@ -73,28 +68,16 @@
                             @endif
                         </td>
                         <td>
-                            @if (Auth::user()->hasRole('planner'))
+                            @if (Auth::user()->hasRole(['planner','administrator']))
                             <a href="{{ route('admin.calendars.edit', $calendar ) }}">
-                                {!! Form::button('<i class="fa fa-pencil-square-o" ></i>',['class'=>'btn-floating waves-effect waves-light teal darken-1']) !!}
+                                {!! Form::button('<i class="tiny fa fa-pencil-square-o" ></i>',['class'=>'label  waves-effect waves-light teal darken-1']) !!}
                             </a>
                             @endif
                         </td>
-                        {{--<td>--}}
-                            {{--{!! Form::button('<i class="fa fa-trash-o" ></i>',['class'=>'modal-trigger btn-floating waves-effect waves-light red darken-1','data-target'=>"modal-delete-$program->id"]) !!}--}}
-
-                            {{--<a href="{{ route('admin.programs.show', $program->id ) }}">--}}
-                                {{--{!! Form::button('<i class="fa fa-eye"></i>',['class'=>'btn-floating waves-effect waves-light teal darken-1']) !!}--}}
-                            {{--</a>--}}
-                            {{--<a href="{{ route('admin.calendars.create', $program->id ) }}">--}}
-                            {{--{!! Form::button('<i class="fa fa-calendar left" ></i>',['class'=>'btn-floating waves-effect waves-light teal darken-1']) !!}--}}
-                            {{--</a>--}}
-                        {{--</td>--}}
                     </tr>
-                    {{--@include ('campamentos.programs.modal')--}}
                 @endforeach
                 </tbody>
             </table><!--end table-responsive-->
-            {{--  {{ $usuarios->render() }}--}}
         </div><!--end div ./col-lg-12. etc-->
     </div><!--end div ./row-->
 

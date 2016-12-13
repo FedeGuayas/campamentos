@@ -16,12 +16,12 @@
             </div>
 
             <div class="pull-left" style="position: relative; display: inline-block;">
-                <div class="fixed-action-btn horizontal" style="position: relative; display: inline-block; right: 24px; ">
+                <div class="fixed-action-btn horizontal click-to-toggle" style="position: relative; display: inline-block; right: 24px; ">
                     <a class="btn-floating btn-medium teal"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></a>
                     <ul>
                         <li>
-                            <a href="#modal-search" type="button" class="btn-floating red waves-effect waves-light tooltipped modal-search" data-position="top" data-delay="50" data-tooltip="Buscar"
-                               style="transform: scaleY(0.4) scaleX(0.4) translateY(0px) translateX(40px); opacity: 0;"><i class="fa fa-search"></i>
+                            <a href="#modal-search" type="button" class="btn-floating red waves-effect waves-light tooltipped modal-search" data-position="top" delay="50" data-tooltip="Buscar"
+                              ><i class="fa fa-search"></i>
                             </a>
                         </li>
                         <li>

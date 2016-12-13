@@ -15,9 +15,11 @@
     <div class="row">
         <div class="col s12">
             <div class="">
+                @if ( Auth::user()->hasRole('administrator'))
                 <a href="{{route('admin.roles.create')}}">
                     {!! Form::button('<i class="fa fa-plus" ></i>',['class'=>'btn tooltipped waves-effect waves-light', 'data-position'=>'right','data-delay'=>'50','data-tooltip'=>'Crear Rol']) !!}
                 </a>
+                @endif
                 <table class="table table-striped table-bordered table-condensed table-hover highlight responsive-table">
                     <thead>
                     <th>Id</th>
@@ -37,17 +39,18 @@
                             </td>
 
                             <td>
-                                {!! Form::button('<i class="fa fa-trash-o" ></i>',['class'=>'modal-trigger btn-floating waves-effect waves-light red darken-1','data-target'=>"modal-delete-$rol->id"]) !!}
+                                @if ( Auth::user()->hasRole('administrator'))
                                 <a href="{{ route('admin.roles.edit', $rol->id ) }}">
-                                    {!! Form::button('<i class="fa fa-pencil-square-o" ></i>',['class'=>'btn-floating waves-effect waves-light teal darken-1']) !!}
+                                    {!! Form::button('<i class="tiny fa fa-pencil-square-o" ></i>',['class'=>'label waves-effect waves-light teal darken-1']) !!}
                                 </a>
                                 <a href="{{ route('admin.roles.show', $rol->id ) }}">
-                                    {!! Form::button('<i class="fa fa-eye"></i>',['class'=>'btn-floating waves-effect waves-light teal darken-1']) !!}
+                                    {!! Form::button('<i class="tiny fa fa-eye"></i>',['class'=>'label waves-effect waves-light teal darken-1']) !!}
                                 </a>
                                 <a href="{{ route('admin.roles.permisos',$rol->id  ) }}" class="tooltipped" data-position="top" data-delay="50" data-tooltip="Permisos">
-                                {!! Form::button('<i class="fa fa-key"></i>',['class'=>'btn-floating waves-effect waves-light teal darken-1']) !!}
+                                {!! Form::button('<i class="tiny fa fa-key"></i>',['class'=>'label waves-effect waves-light teal darken-1']) !!}
                                 </a>
-
+                                    {!! Form::button('<i class="tiny fa fa-trash-o" ></i>',['class'=>'modal-trigger label waves-effect waves-light red darken-1','data-target'=>"modal-delete-$rol->id"]) !!}
+                            @endif
                             </td>
                         </tr>
                         @include ('campamentos.roles.modal')

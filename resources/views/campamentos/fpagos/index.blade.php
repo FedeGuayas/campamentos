@@ -15,9 +15,11 @@
     <div class="row">
         <div class="col s12">
             <div class="">
+                @if ( Auth::user()->hasRole(['planner','administrator']))
                 <a href="{{route('admin.fpagos.create')}}">
                     {!! Form::button('<i class="fa fa-plus" ></i>',['class'=>'btn tooltipped waves-effect waves-light', 'data-position'=>'right','data-delay'=>'50','data-tooltip'=>'Crear Forma de Pago']) !!}
                 </a>
+                @endif
                 <table class="table table-striped table-bordered table-condensed table-hover highlight responsive-table">
                     <thead>
                     <th>Id</th>
@@ -31,10 +33,12 @@
                             <td>{{ $fpago->forma }}</td>
                             <td>{{ $fpago->descripcion }}</td>
                             <td>
-                                {!! Form::button('<i class="fa fa-trash-o" ></i>',['class'=>'modal-trigger btn-floating waves-effect waves-light red darken-1','data-target'=>"modal-delete-$fpago->id"]) !!}
+                                @if ( Auth::user()->hasRole(['planner','administrator']))
                                 <a href="{{ route('admin.fpagos.edit', $fpago->id ) }}">
-                                    {!! Form::button('<i class="fa fa-pencil-square-o" ></i>',['class'=>'btn-floating waves-effect waves-light teal darken-1']) !!}
+                                    {!! Form::button('<i class="tiny fa fa-pencil-square-o" ></i>',['class'=>'label waves-effect waves-light teal darken-1']) !!}
                                 </a>
+                                {!! Form::button('<i class="tiny fa fa-trash-o" ></i>',['class'=>'modal-trigger label waves-effect waves-light red darken-1','data-target'=>"modal-delete-$fpago->id"]) !!}
+                                @endif
                             </td>
                         </tr>
                         @include ('campamentos.fpagos.modal')

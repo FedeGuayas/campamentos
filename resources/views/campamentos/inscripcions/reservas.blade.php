@@ -56,34 +56,20 @@
                 @foreach ($inscripciones as $insc)
                     <tr>
                         <td>{{ sprintf("%'.05d",$insc->id) }}</td>
-                        {{--<td>@if ($insc->alumno_id==0)--}}
-                                {{--{{ $insc->factura->representante->persona->getNombreAttribute() }}--}}
-                            {{--@else--}}
-                                {{--{{ $insc->alumno->persona->getNombreAttribute() }}--}}
-                            {{--@endif--}}
-                        {{--</td>--}}
-                        {{--<td>--}}
-                            {{--@if ($insc->alumno_id==0)--}}
-                                {{--{{ $insc->factura->representante->persona->num_doc }}--}}
-                            {{--@else--}}
-                            {{--{{ $insc->alumno->persona->num_doc }}--}}
-                            {{--@endif--}}
-                        {{--</td>--}}
-                        {{--<td>{{ $insc->calendar->program->modulo->modulo }}</td>--}}
                         <td>{{ $insc->calendar->program->escenario->escenario }}</td>
                         <td>{{ $insc->calendar->program->disciplina->disciplina }}</td>
-                        {{--<td>{{ $insc->calendar->dia->dia }}</td>--}}
-                        {{--<td>{{ $insc->calendar->horario->start_time}}-{{ $insc->calendar->horario->end_time}}</td>--}}
                         <td>{{ $insc->factura->representante->persona->getNombreAttribute() }}</td>
                         <td>{{ $insc->factura->representante->persona->num_doc }}</td>
                         <td>$ {{ number_format($insc->factura->total, 2, '.', ' ') }}</td>
                         <td>{{$insc->created_at->diffForHumans()}}</td>
                         <td>{{ $insc->created_at }}</td>
                         <td>
-                            @if ( Entrust::hasRole(['planner', 'administrator']))
+                            @if ( Entrust::can('cancel_reserva'))
                             <a href="{{ route('admin.reserva.cancel', $insc->id ) }}">
                             {!! Form::button('<i class="fa fa-ban" aria-hidden="true"></i>',['class'=>'btn-danger']) !!}
                             </a>
+                            @endif
+                            @if ( Entrust::can('confirm_reserva'))
                             <a href="{{ route('admin.reserva.confirm', $insc->id ) }}">
                             {!! Form::button('<i class="fa fa-check" aria-hidden="true"></i>',['class'=>'btn-success']) !!}
                             </a>
@@ -94,7 +80,6 @@
                 @endforeach
                 </tbody>
             </table><!--end table-responsive-->
-{{--            {{ $representantes->render() }}--}}
         </div><!--end div ./col-lg-12. etc-->
     </div><!--end div ./row-->
 

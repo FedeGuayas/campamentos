@@ -17,8 +17,8 @@
             <ul id="dropdownInsc" class="dropdown-content">
                 <li><a href="{!! route('admin.inscripcions.index') !!}" class="waves-effect waves-teal">Inscripciones</a></li>
                 <li class="divider"></li>
-                @if (Entrust::can('create-inscripcion'))
-                <li><a href="{!! route('admin.inscripcions.create') !!}" class="waves-effect waves-teal">Nueva Inscripcion</a></li>
+                @if (Entrust::can('create_inscripcion'))
+                <li><a href="{!! route('admin.inscripcions.create') !!}" class="waves-effect waves-teal">Nueva</a></li>
                 <li class="divider"></li>
                 @endif
                 <li><a href="{!! route('admin.alumnos.index') !!}" class="waves-effect waves-teal">Alumnos</a></li>
@@ -28,7 +28,7 @@
 
             <!-- Dropdown Programacion -->
             <ul id="dropdownProg" class="dropdown-content">
-                @role('planner')
+                @role(['planner','administrator'])
                 <li><a href="{!! route('admin.modulos.index') !!}" class="waves-effect waves-teal">Modulos</a></li>
                 <li class="divider"></li>
                 <li><a href="{!! route('admin.programs.index') !!}" class="waves-effect waves-teal">Programa</a></li>
@@ -56,7 +56,7 @@
                 <li><a href="{!! route('admin.users.index') !!}" class="waves-effect waves-teal">Usuarios</a></li>
                 <li><a href="{!! route('admin.roles.index') !!}" class="waves-effect waves-teal">Roles</a></li>
                 <li><a href="{!! route('admin.permissions.index') !!}" class="waves-effect waves-teal">Permisos</a></li>
-                <li><a href="{!! route('persons.import') !!}" class="waves-effect waves-teal">Imp Personas</a></li>
+                {{--<li><a href="{!! route('persons.import') !!}" class="waves-effect waves-teal">Imp Personas</a></li>--}}
                 @endrole
 
 
@@ -67,7 +67,7 @@
                 <li class="divider"></li>
                 {{--<li><a href="{{route('admin.pagos.cuadre')}}" class="waves-effect waves-teal">Cuadre</a></li>--}}
                 {{--<li class="divider"></li>--}}
-                <li><a href="{{route('admin.reports.excel')}}" class="waves-effect waves-teal">Reportes</a></li>
+                <li><a href="{{route('admin.reports.excel')}}" class="waves-effect waves-teal">Reporte General</a></li>
             </ul>
 
             <div class="nav-wrapper">
@@ -78,11 +78,10 @@
 
                 <ul class="left hide-on-med-and-down">
 
-                    <li class="active"><a href="#!" class="waves-effect waves-light"><i class="fa fa-1x fa-home left"></i>Home</a></li>
-                    <li><a href="#!" class="waves-effect waves-light"><i class="fa fa-envelope left"></i>Contacto</a></li>
+                    {{--<li class="active"><a href="#!" class="waves-effect waves-light"><i class="fa fa-1x fa-home left"></i>Inicio</a></li>--}}
+                    {{--<li><a href="#!" class="waves-effect waves-light"><i class="fa fa-envelope left"></i>Contacto</a></li>--}}
                     <li>
-                        <a href="{!! route('admin.inscripcions.reservas')!!}" class="waves-effect waves-light"><i class="fa fa-bell-o left"></i>Reservas
-                            <span class="badge materialize-red-text"  data-badge-caption="Nueva">{{ Session::has('reservas') ?  Session::get('reservas') : ''}}</span>
+                        <a href="{!! route('admin.inscripcions.reservas')!!}" class="waves-effect waves-light"><i class="fa fa-bell-o left"></i>Reservas<span class="badge red-text"  data-badge-caption="">{{ Session::has('reservas') ?  Session::get('reservas') : ''}}</span>
                         </a>
                     </li>
 
@@ -104,15 +103,18 @@
                     <!-- Dropdown Usuarios -->
                     <li><a class="dropdown-button waves-effect waves-light" href="#!" data-beloworigin="true" data-hover="true" data-constrainwidth="false" data-activates="dropdownUser">{{Auth::user()->first_name}}<i
                                     class="fa fa-user left"></i><i class="fa fa-sort-down right"></i></a></li>
-
                 </ul>
 
-                {{--Side Bar--}}
+                {{--SIDE BAR--}}
                 <ul id="slide-out" class="side-nav teal lighten-1">
 
                     <li class="active"><a href="#!" class="waves-effect waves-light"><i class="fa fa-2x fa-home"></i></a></li>
-                    <li><a href="#!" class="waves-effect waves-red"><i class="fa fa-2x fa-envelope"></i></a></li>
-                    <li><a href="#!" class="waves-effect waves-red"><i class="fa fa-2x fa-bell-o"></i><span class="new badge red">4</span></a></li>
+                    {{--<li><a href="#!" class="waves-effect waves-red"><i class="fa fa-2x fa-envelope"></i></a></li>--}}
+                    <li>
+                        <a href="{!! route('admin.inscripcions.reservas')!!}" class="waves-effect waves-red"><i class="fa fa-2x fa-bell-o"></i>Reservas<span class="badge red-text"  data-badge-caption="">{{ Session::has('reservas') ?  Session::get('reservas') : ''}}</span>
+                        </a>
+                    </li>
+
                     <li class="no-padding">
                         <ul class="collapsible collapsible-accordion">
                             <li>
@@ -120,16 +122,76 @@
                                     <i class="fa fa-pencil"></i></a>
                                 <div class="collapsible-body">
                                     <ul>
-                                        <li><a href="#!" class="waves-effect waves-teal">Listar</a></li>
+                                        <li><a href="{!! route('admin.inscripcions.index') !!}" class="waves-effect waves-teal">Inscripciones</a></li>
                                         <li class="divider"></li>
+                                        @if (Entrust::can('create_inscripcion'))
+                                        <li><a href="{!! route('admin.inscripcions.create') !!}" class="waves-effect waves-teal">Nueva</a></li>
+                                        <li class="divider"></li>
+                                        @endif
+                                        <li><a href="{!! route('admin.alumnos.index') !!}" class="waves-effect waves-teal">Alumnos</a></li>
+                                        <li class="divider"></li>
+                                        <li><a href="{!! route('admin.representantes.index') !!}" class="waves-effect waves-teal">Representantes</a></li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li>
+                                <a class="collapsible-header waves-effect waves-red">Programación
+                                    <i class="fa fa-calendar left"></i></a>
+                                <div class="collapsible-body">
+                                    <ul>
+                                        @role(['planner','administrator'])
+                                        <li><a href=" {!! route('admin.modulos.index') !!}" class="waves-effect waves-teal">Modulos</a></li>
+                                        <li class="divider"></li>
+                                        <li><a href=" {!! route('admin.programs.index') !!}" class="waves-effect waves-teal">Programa</a></li>
+                                        <li class="divider"></li>
+                                        @endrole
+                                        <li><a href="{!! route('admin.calendars.index') !!}" class="waves-effect waves-teal">Cursos</a></li>
+                                    </ul>
+                                </div>
+                            </li>
 
-                                        <li><a href="#!" class="waves-effect waves-teal">Nueva</a></li>
+                           <li>
+                            <a class="collapsible-header waves-effect waves-red">Reportes
+                                <i class="fa fa-bar-chart-o left"></i></a>
+                            <div class="collapsible-body">
+                                <ul>
+                                    <li><a href="{{route('admin.facturas.index')}}" class="waves-effect waves-teal">Comprobantes</a></li>
+                                    <li class="divider"></li>
+                                    <li><a href="{{route('admin.reports.excel')}}" class="waves-effect waves-teal">Reporte General</a></li>
+                                </ul>
+                            </div>
+                            </li>
+
+                            <li>
+                                @if (Entrust::hasRole(['administrator', 'planner']))
+                                    <a class="collapsible-header waves-effect waves-red">Ajustes
+                                        <i class="fa fa-gears"></i>
+                                    </a>
+                                @endif
+                                <div class="collapsible-body">
+                                    <ul>
+                                        @if(Auth::user()->hasRole(['planner','administrator']))
+                                            <li><a href="#!" class="waves-effect waves-teal">Escenarios</a></li>
+                                            <li class="divider"></li>
+                                            <li><a href="#!" class="waves-effect waves-teal">Disciplinas</a></li>
+                                            <li class="divider"></li>
+                                            <li><a href="#!" class="waves-effect waves-teal">Horarios</a></li>
+                                            <li class="divider"></li>
+                                            <li><a href="#!" class="waves-effect waves-teal">Días</a></li>
+                                            <li class="divider"></li>
+                                            <li><a href="#!" class="waves-effect waves-teal">Encuestas</a></li>
+                                            <li class="divider"></li>
+                                            <li><a href="#!" class="waves-effect waves-teal">Transportes</a></li>
+                                            <li class="divider"></li>
+                                            <li><a href="#!" class="waves-effect waves-teal">Formas Pago</a></li>
+                                        @endif
+                                        @role('administrator')
+                                        <li><a href="#!" class="waves-effect waves-teal">Usuarios</a></li>
                                         <li class="divider"></li>
-                                        <li><a href="#!" class="waves-effect waves-teal">Editar</a></li>
+                                        <li><a href="#!" class="waves-effect waves-teal">Roles</a></li>
                                         <li class="divider"></li>
-                                        <li><a href="#!" class="waves-effect waves-teal">Alumnos</a></li>
-                                        <li class="divider"></li>
-                                        <li><a href="#!" class="waves-effect waves-teal">Representantes</a></li>
+                                        <li><a href="#!" class="waves-effect waves-teal">Permisos</a></li>
+                                        @endrole
                                     </ul>
                                 </div>
                             </li>
@@ -138,43 +200,10 @@
                                     <i class="fa fa-user"></i></a>
                                 <div class="collapsible-body">
                                     <ul>
-                                        <li><a href="#!" class="waves-effect waves-teal">Perfil</a></li>
+                                        <li><a href="{!! route('admin.facturas.excel') !!}" class="waves-effect waves-teal">Facturación</a></li>
+                                        <li><a href="{!! route('admin.user.profile') !!}" class="waves-effect waves-teal">Perfil</a></li>
                                         <li class="divider"></li>
                                         <li><a href="{{url('/logout')}}" class="waves-effect waves-teal">Logout</a></li>
-                                    </ul>
-                                </div>
-                            </li>
-                            <li>
-                                <a class="collapsible-header waves-effect waves-red">Ajustes
-                                    <i class="fa fa-gears"></i></a>
-                                <div class="collapsible-body">
-                                    <ul>
-                                        <li><a href="#!" class="waves-effect waves-teal">Representantes</a></li>
-                                        <li class="divider"></li>
-                                        <li><a href="#!" class="waves-effect waves-teal">Alumnos</a></li>
-                                        <li class="divider"></li>
-                                        <li><a href="#!" class="waves-effect waves-teal">Escenarios</a></li>
-                                        <li class="divider"></li>
-                                        <li><a href="#!" class="waves-effect waves-teal">Disciplinas</a></li>
-                                        <li class="divider"></li>
-                                        <li><a href="#!" class="waves-effect waves-teal">Horarios</a></li>
-                                        <li class="divider"></li>
-                                        <li><a href="{!! route('admin.modulos.index') !!}" class="waves-effect waves-teal">Modulos</a></li>
-                                        <li class="divider"></li>
-                                        <li><a href="#!" class="waves-effect waves-teal">Cupos</a></li>
-                                    </ul>
-                                </div>
-                            </li>
-                            <li>
-                                <a class="collapsible-header waves-effect waves-red">Reportes
-                                    <i class="fa fa-bar-chart-o"></i></a>
-                                <div class="collapsible-body">
-                                    <ul>
-                                        <li><a href="#!" class="waves-effect waves-teal">Facturacion</a></li>
-                                        <li class="divider"></li>
-                                        <li><a href="#!" class="waves-effect waves-teal">Cuadre</a></li>
-                                        <li class="divider"></li>
-                                        <li><a href="#!" class="waves-effect waves-teal">Reportes</a></li>
                                     </ul>
                                 </div>
                             </li>

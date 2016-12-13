@@ -94,8 +94,7 @@
                         @if($tipo_desc=='multiple')
                             10% Inscripción multiples meses
                         @endif
-                    </h5>
-                    <h5>@if($empleado>0)
+                        @if($tipo_desc=='empleado')
                             50% Empleado
                         @endif
                     </h5>

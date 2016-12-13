@@ -12,6 +12,7 @@ use App\Program;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use DB;
+use Illuminate\Support\Facades\Auth;
 use Session;
 
 use App\Http\Requests\ProgramsStoreRequest;

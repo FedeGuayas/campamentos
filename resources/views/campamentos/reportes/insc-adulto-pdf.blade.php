@@ -209,6 +209,8 @@
         </tr>
     </table>
 
+    Oficina: José Mascote 1103 y Luque. Telfs: 2367856 - 2531488. fedeguayas.com.ec. email: fdg@telconet.net
+    Casilla 836 Telegramas y Cables - FEDEGUAYAS. Guayaquil - Ecuador
 </footer>
 
 </body>

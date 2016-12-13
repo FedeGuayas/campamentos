@@ -8,7 +8,6 @@
         <div class="col l8 m8 s">
             @include('alert.success')
             <h4>Formas de Pago</h4>
-            {{-- @include('runner.usuarios.search')--}}
         </div>
     </div>
 

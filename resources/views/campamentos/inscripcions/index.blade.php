@@ -7,6 +7,7 @@
     <div class="row">
         <div class="col l8 m8 s">
             @include('alert.success')
+            @include('alert.request')
             <h4>Inscripciones</h4>
         </div>
     </div>
@@ -77,19 +78,21 @@
                         <td>{{ number_format($insc->factura->total, 2, '.', ' ') }}</td>
                         <td>{{ $insc->factura->id }}</td>
                         <td>
-                            @if (Entrust::can('edit_inscripcion'));
+                            @if (Entrust::can('edit_inscripcion'))
                             <a href="{{ route('admin.inscripcions.edit', $insc->id ) }}">
-                                {!! Form::button('<i class="fa fa-pencil-square-o fa-2x" ></i>',['class'=>'label waves-effect waves-light teal darken-1']) !!}
+                                {!! Form::button('<i class="tiny fa fa-pencil-square-o" ></i>',['class'=>'label waves-effect waves-light teal darken-1']) !!}
                             </a>
                             @endif
                             <a href="{{ route('admin.inscripcions.show', $insc->id ) }}">
-                                {!! Form::button('<i class="fa fa-eye fa-2x"></i>',['class'=>'label waves-effect waves-light blue darken-1']) !!}
+                                {!! Form::button('<i class="tiny fa fa-eye"></i>',['class'=>'label waves-effect waves-light blue darken-1']) !!}
                             </a>
+                            @if (Auth::user()->id==$insc->user_id)
                             <a href="{{  route('admin.reports.pdf',$insc->id ) }}">
-                                {!! Form::button('<i class="fa fa-file-pdf-o fa-2x"></i>',['class'=>'label waves-effect waves-light teal darken-1  orange accent-4']) !!}
+                                {!! Form::button('<i class="tiny fa fa-file-pdf-o"></i>',['class'=>'label waves-effect waves-light teal darken-1  orange accent-4']) !!}
                             </a>
-                            @if (Entrust::can('delete_inscripcion'));
-                            {!! Form::button('<i class="fa fa-trash-o fa-2x" ></i>',['class'=>'modal-trigger label waves-effect waves-light red darken-1','data-target'=>"modal-delete-$insc->id"]) !!}
+                            @endif
+                            @if (Entrust::can('delete_inscripcion'))
+                            {!! Form::button('<i class="tiny fa fa-trash-o" ></i>',['class'=>'modal-trigger label waves-effect waves-light red darken-1','data-target'=>"modal-delete-$insc->id"]) !!}
                             @endif
                         </td>
                     </tr>
@@ -97,7 +100,6 @@
                 @endforeach
                 </tbody>
             </table><!--end table-responsive-->
-{{--            {{ $representantes->render() }}--}}
         </div><!--end div ./col-lg-12. etc-->
     </div><!--end div ./row-->
 

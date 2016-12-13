@@ -53,7 +53,6 @@ class CalendarsController extends Controller
             ->join('disciplinas as dis','dis.id','=','p.disciplina_id')
             ->select('e.escenario','dis.disciplina','m.modulo','d.dia','h.start_time','h.end_time','cupos','contador','mensualidad','c.id','c.init_age','c.end_age','c.nivel')
             ->where('p.activated',true)
-
             ->get();
 
         return view('campamentos.calendars.index',compact('calendars'));
@@ -408,6 +407,7 @@ class CalendarsController extends Controller
         if ($desc_emp=='true'){
             $desc=0.5;
             $descuento= $precioTotal*$desc;
+            $tipo_descuento='empleado';
         }else if ($tipo_descuento=='familiar' || $tipo_descuento=='multiple'){
             $desc=0.1;
             $descuento=$precioTotal*$desc;
@@ -418,7 +418,7 @@ class CalendarsController extends Controller
         $total=$subTotal-$descuento;
 
 //        dd($cursos_coll);
-        return view('campamentos.inscripcions.partials.detalle',['cursos'=>$cursos,'descuento'=>$descuento,'total'=>$total,'tipo_desc'=>$tipo_descuento,'subTotal'=>$subTotal,'empleado'=>$desc]);
+        return view('campamentos.inscripcions.partials.detalle',['cursos'=>$cursos,'descuento'=>$descuento,'total'=>$total,'tipo_desc'=>$tipo_descuento,'subTotal'=>$subTotal]);
     }
 
     /**

@@ -233,17 +233,18 @@ class InscripcionsController extends Controller
 
             $precioTotal = $cart->totalPrecio;
             $tipo_descuento = $cart->tipo_desc;
-            $desc_emp = $cart->desc_empleado;
+            $desc_emp = $cart->desc_empleado;//true o false
 
             if ($tipo_descuento == 'familiar' || $tipo_descuento == 'multiple') {
                 $desc1 = 0.1;
-            } else  $desc1 = 0;
+                $descuento = $precioTotal * $desc1;
+            }
 
             if ($desc_emp == 'true') {
                 $desc2 = 0.5;
+                $descuento = $precioTotal * $desc2;
             } else  $desc2 = 0;
-
-            $descuento = $precioTotal * $desc1 + $precioTotal * $desc2;
+            
 
             $total = $precioTotal - $descuento;
 

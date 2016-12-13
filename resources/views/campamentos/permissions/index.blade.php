@@ -15,9 +15,11 @@
     <div class="row">
         <div class="col s12">
             <div class="">
+                @if ( Auth::user()->hasRole('administrator'))
                 <a href="{{route('admin.permissions.create')}}">
                     {!! Form::button('<i class="fa fa-plus" ></i>',['class'=>'btn waves-effect waves-light']) !!}
                 </a>
+                @endif
                 <table class="table table-striped table-bordered table-condensed table-hover highlight responsive-table">
                     <thead>
                     <th>Id</th>
@@ -33,14 +35,15 @@
                             <td>{{ $per->display_name }}</td>
                             <td>{{ $per->description }}</td>
                             <td>
-                                {!! Form::button('<i class="fa fa-trash-o" ></i>',['class'=>'modal-trigger btn-floating waves-effect waves-light red darken-1','data-target'=>"modal-delete-$per->id"]) !!}
+                                @if ( Auth::user()->hasRole('administrator'))
                                 <a href="{{ route('admin.permissions.edit', $per->id ) }}">
-                                    {!! Form::button('<i class="fa fa-pencil-square-o" ></i>',['class'=>'btn-floating waves-effect waves-light teal darken-1']) !!}
+                                    {!! Form::button('<i class="tiny fa fa-pencil-square-o" ></i>',['class'=>'label waves-effect waves-light teal darken-1']) !!}
                                 </a>
                                 <a href="{{ route('admin.permissions.show', $per->id ) }}">
-                                    {!! Form::button('<i class="fa fa-eye"></i>',['class'=>'btn-floating waves-effect waves-light teal darken-1']) !!}
+                                    {!! Form::button('<i class="fa fa-eye fa-2x"></i>',['class'=>'label waves-effect waves-light teal darken-1']) !!}
+                                    {!! Form::button('<i class="tiny fa fa-trash-o" ></i>',['class'=>'modal-trigger label waves-effect waves-light red darken-1','data-target'=>"modal-delete-$per->id"]) !!}
                                 </a>
-
+                                @endif
                             </td>
                         </tr>
                         @include ('campamentos.permissions.modal')

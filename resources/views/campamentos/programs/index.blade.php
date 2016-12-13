@@ -13,12 +13,11 @@
         <div class="col l8 m8 s">
             @include('alert.success')
                 <h4>Programación para inscripciones</h4>
-            @if (Auth::user()->hasRole('planner'));
+            @if (Auth::user()->hasRole(['planner','administrator']));
             <a href="{{route('admin.programs.create')}}">
                 {!! Form::button('<i class="fa fa-plus left" aria-hidden="true"></i>',['class'=>'btn tooltipped waves-effect waves-light','data-position'=>'right', 'data-delay'=>'50', 'data-tooltip'=>'Nuevo programa']) !!}
             </a>
             @endif
-            {{-- @include('runner.usuarios.search')--}}
         </div>
     </div>
 
@@ -58,30 +57,35 @@
                         <td>
                             @if (($program->activated)===1)
                                 <span class="label label-success">Activo</span>
+                                @if ( Auth::user()->hasRole(['planner','administrator']))
                                 <a href="{{ route('admin.programs.disable', $program->id)}}">
-                                    {!! Form::button('<i class="fa fa-check" aria-hidden="true"></i>',['class'=>'btn-floating  waves-effect waves-light red darken-1']) !!}
+                                    {!! Form::button('<i class="tiny fa fa-check" aria-hidden="true"></i>',['class'=>'label  waves-effect waves-light red darken-1']) !!}
                                 </a>
+                                @endif
                             @else
                                 <span class="label label-danger">Inactivo</span>
+                                @if ( Auth::user()->hasRole(['planner','administrator']))
                                 <a href="{{ route('admin.programs.enable', $program->id)}}">
-                                    {!! Form::button('<i class="tiny fa fa-check" aria-hidden="true"></i>',['class'=>'btn-floating waves-effect waves-light teal darken-1']) !!}
+                                    {!! Form::button('<i class="tiny fa fa-check" aria-hidden="true"></i>',['class'=>'label waves-effect waves-light teal darken-1']) !!}
                                 </a>
+                                @endif
                             @endif
                         </td>
                         <td>
-                            @if (Auth::user()->can('delete_program'));
-                            {!! Form::button('<i class="fa fa-trash-o" ></i>',['class'=>'modal-trigger btn-floating waves-effect waves-light red darken-1 tooltipped','data-position'=>'top', 'data-delay'=>'50','data-tooltip'=>'Eliminar','data-target'=>"modal-delete-$program->id"]) !!}
+                            @if (Auth::user()->can('edit_program'));
                             <a href="{{ route('admin.programs.edit', $program->id ) }}">
-                                {!! Form::button('<i class="fa fa-pencil-square-o" ></i>',['class'=>'btn-floating waves-effect waves-light teal darken-1 tooltipped','data-position'=>'top', 'data-delay'=>'50','data-tooltip'=>'Editar',]) !!}
+                                {!! Form::button('<i class="tiny fa fa-pencil-square-o" ></i>',['class'=>'label waves-effect waves-light teal darken-1 tooltipped','data-position'=>'top', 'data-delay'=>'50','data-tooltip'=>'Editar',]) !!}
                             </a>
                             @endif
                             <a href="{{ route('admin.programs.show', $program->id ) }}">
-                                {!! Form::button('<i class="fa fa-eye"></i>',['class'=>'btn-floating waves-effect waves-light teal darken-1 tooltipped',
-                                'data-position'=>'top', 'data-delay'=>'50', 'data-tooltip'=>'Mostrar',]) !!}
+                                {!! Form::button('<i class="tiny fa fa-eye"></i>',['class'=>'label waves-effect waves-light teal darken-1 tooltipped','data-position'=>'top', 'data-delay'=>'50', 'data-tooltip'=>'Mostrar',]) !!}
                             </a>
+                            @if (Auth::user()->can('delete_program'));
+                                {!! Form::button('<i class="tiny fa fa-trash-o" ></i>',['class'=>'modal-trigger label waves-effect waves-light red darken-1 tooltipped','data-position'=>'top', 'data-delay'=>'50','data-tooltip'=>'Eliminar','data-target'=>"modal-delete-$program->id"]) !!}
+                                @endif
                             @if (Auth::user()->can('create_calendar'));
                             <a href="{{ route('admin.calendars.create',$program->id) }}">
-                            {!! Form::button('<i class="fa fa-calendar-plus-o" aria-hidden="true"></i>',['class'=>'btn-floating waves-effect waves-light teal darken-1 tooltipped',
+                            {!! Form::button('<i class="tiny fa fa-calendar-plus-o" aria-hidden="true"></i>',['class'=>'label waves-effect waves-light teal darken-1 tooltipped',
                             'data-position'=>'top', 'data-delay'=>'50', 'data-tooltip'=>'Calendario',]) !!}
                             </a>
                             @endif
@@ -91,7 +95,6 @@
                 @endforeach
                 </tbody>
             </table><!--end table-responsive-->
-            {{--  {{ $usuarios->render() }}--}}
         </div><!--end div ./col-lg-12. etc-->
     </div><!--end div ./row-->
 
