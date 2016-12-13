@@ -11,7 +11,6 @@
         <table align="left" border="" cellpadding="10" cellspacing="1" style="width:auto; height: auto">
             <tr>
                 <td style="border: solid">REGISTRO # {{sprintf("%'.05d",$inscripcion->id)}}</td>
-
             </tr>
             <tr>
                 <td>COMPROBANTE # {{$inscripcion->factura->id}}</td>
@@ -36,19 +35,15 @@
 </header>
 
 <main style="font-size: 10px;">
-
-    <table cellspacing="0" cellspacing="0" style="width:100%;">
+    <br><br><br>
+    <table cellpadding="1" cellspacing="1" style="width:100%;">
         <tr>
             <td>
                 <p>Datos del Inscrito</p>
-                <table align="center" border="1" cellpadding="1" cellspacing="5" style="width:auto;">
+                <table align="center" border="1" cellpadding="0" cellspacing="0" style=" width: auto;">
                     <tr align="lef" style="width: auto">
-                        <th style="background-color: rgb(204, 204, 204);">APELLIDOS</th>
-                        <td>{{$inscripcion->alumno->persona->apellidos}}</td>
-                    </tr>
-                    <tr align="lef" style="width: auto">
-                        <th style=" background-color: rgb(204, 204, 204);">NOMBRES</th>
-                        <td>{{$inscripcion->alumno->persona->nombres}}</td>
+                        <th style="background-color: rgb(204, 204, 204);">ALUMNO</th>
+                        <td>{{$inscripcion->alumno->persona->apellidos.' '.$inscripcion->alumno->persona->nombres}}</td>
                     </tr>
                     <tr align="lef" style="width: auto">
                         <th style="background-color: rgb(204, 204, 204);">FECHA DE NACIMIENTO</th>
@@ -66,14 +61,10 @@
             </td>
             <td>
                 <p>Datos del representante</p>
-                <table align="center" border="1" cellpadding="1" cellspacing="5" style=" width: auto;">
+                <table align="center" border="1" cellpadding="0" cellspacing="0" style=" width: auto;">
                     <tr align="lef" style="width: auto">
-                        <th style="background-color: rgb(204, 204, 204);">APELLIDOS</th>
-                        <td>{{$inscripcion->factura->representante->persona->apellidos}}</td>
-                    </tr>
-                    <tr align="lef" style="width: auto">
-                        <th style=" background-color: rgb(204, 204, 204);">NOMBRES</th>
-                        <td>{{$inscripcion->factura->representante->persona->nombres}}</td>
+                        <th style="background-color: rgb(204, 204, 204);">REPRESENTANTE</th>
+                        <td>{{$inscripcion->factura->representante->persona->apellidos.' '.$inscripcion->factura->representante->persona->nombres}}</td>
                     </tr>
                     <tr align="lef" style="width: auto">
                         <th style="background-color: rgb(204, 204, 204);">DIRECCION</th>
@@ -93,7 +84,7 @@
         <tr>
             <td>
                 <p>Datos del curso</p>
-                <table align="center" border="1" cellpadding="1" cellspacing="5" style="width:auto;">
+                <table align="center" border="1" cellpadding="0" cellspacing="0" style="width:auto;">
                     <tr align="lef" style="width: auto">
                         <th style="width: auto; background-color: rgb(204, 204, 204);">ESCENARIO</th>
                         <td>{{$inscripcion->calendar->program->escenario->escenario}}</td>
@@ -118,7 +109,7 @@
             </td>
             <td>
                 <p>Datos sobre la inscripción</p>
-                <table align="center" border="1" cellpadding="1" cellspacing="5" style="width:auto;">
+                <table align="center" border="1" cellpadding="0" cellspacing="0" style="width:auto;">
                     <tr align="lef" style="width: auto">
                         <th style="width: auto; background-color: rgb(204, 204, 204);">TIPO DE INSCRIPCION</th>
                         <td>
@@ -156,7 +147,9 @@
         </tr>
     </table>
 </main>
-<br>
+
+<br><br>
+
 <footer style="font-size: 10px">
     <table align="center" border="0" cellspacing="0"  style="width:80%; font-style: italic; text-align : justify; ">
         <tr>
@@ -172,7 +165,9 @@
             </td>
         </tr>
     </table>
-    <br>
+
+    <br><br>
+
     <table align="center" border="1" cellpadding="10" cellspacing="10" style="width:90%; text-align : justify; ">
         <tr>
             <td>
@@ -235,8 +230,13 @@
         </tr>
     </table>
 
+    <br><br>
+
+<p style="font-size: 9px; color: #0a568c; text-align: center;">
     Oficina: José Mascote 1103 y Luque. Telfs: 2367856 - 2531488. fedeguayas.com.ec. email: fdg@telconet.net
     Casilla 836 Telegramas y Cables - FEDEGUAYAS. Guayaquil - Ecuador
+</p>
+
 </footer>
 
 </body>
