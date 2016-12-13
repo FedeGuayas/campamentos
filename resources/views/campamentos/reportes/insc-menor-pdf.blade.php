@@ -148,7 +148,7 @@
     </table>
 </main>
 
-<br><br>
+<br>
 
 <footer style="font-size: 10px">
     <table align="center" border="0" cellspacing="0"  style="width:80%; font-style: italic; text-align : justify; ">
@@ -166,7 +166,7 @@
         </tr>
     </table>
 
-    <br><br>
+    <br>
 
     <table align="center" border="1" cellpadding="10" cellspacing="10" style="width:90%; text-align : justify; ">
         <tr>
@@ -232,8 +232,8 @@
 
     <br><br>
 
-<p style="font-size: 9px; color: #0a568c; text-align: center;">
-    Oficina: José Mascote 1103 y Luque. Telfs: 2367856 - 2531488. fedeguayas.com.ec. email: fdg@telconet.net
+<p style="font-size: 12px; color: #0a568c; text-align: center;">
+    Oficina: José Mascote 1103 y Luque. Telfs: 2367856 - 2531488. fedeguayas.com.ec. email: fdg@telconet.net <br>
     Casilla 836 Telegramas y Cables - FEDEGUAYAS. Guayaquil - Ecuador
 </p>
 

@@ -12,6 +12,7 @@ use App\Events\EncuestaRespondida;
 use App\Persona;
 use App\Representante;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Response;
 use Session;

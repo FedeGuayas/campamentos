@@ -47,12 +47,12 @@ class PermissionSeeder extends Seeder
             'description'=>'Crear Nuevo programa',
         ]);
         DB::table('permissions')->insert([
-            'name'=>'edit_programa',
+            'name'=>'edit_program',
             'display_name'=>'Editar programa',
             'description'=>'Edita programa',
         ]);
         DB::table('permissions')->insert([
-            'name'=>'delete_programa',
+            'name'=>'delete_program',
             'display_name'=>'Eliminar programa',
             'description'=>'Elimira programa',
         ]);

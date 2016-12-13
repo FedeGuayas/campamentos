@@ -47,13 +47,13 @@
                 </div>
                 <div class="input-field  col l3 m3 s6">
                     <i class="fa fa-phone prefix"></i>
-                    {!! Form::text('phone',null,['class'=>'validate','id'=>'phone']) !!}
-                    {!! Form::label('phone','Teléfono1:*') !!}
+                    {!! Form::text('telefono',null,['class'=>'validate','id'=>'telefono']) !!}
+                    {!! Form::label('telefono','Teléfono1:*') !!}
                 </div>
                 <div class="input-field  col l3 m3 s6">
                     <i class="fa fa-phone prefix"></i>
-                    {!! Form::text('telefono',null,['class'=>'validate','id'=>'telefono']) !!}
-                    {!! Form::label('telefono','Teléfono2:') !!}
+                    {!! Form::text('phone',null,['class'=>'validate','id'=>'phone']) !!}
+                    {!! Form::label('phone','Teléfono2:') !!}
                 </div>
 
                 <div class="input-field  col l7 m7 s12">
