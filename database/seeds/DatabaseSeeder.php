@@ -20,5 +20,6 @@ class DatabaseSeeder extends Seeder
         $this->call(HorariosSeeder::class);
         $this->call(DatosContablesSeeder::class);
         $this->call(PermissionSeeder::class);
+        $this->call(FormaPagoSeeder::class);
     }
 }

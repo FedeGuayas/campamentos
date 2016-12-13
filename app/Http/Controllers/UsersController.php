@@ -26,7 +26,7 @@ class UsersController extends Controller
     {
         Carbon::setLocale('es');
         $this->middleware('auth');
-        $this->middleware(['role:administrador'], ['only' => ['destroy','update','store','roles','setRoles','index']]);
+        $this->middleware(['role:administrator'], ['only' => ['destroy','update','store','roles','setRoles','index']]);
     }
 
     /**

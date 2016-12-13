@@ -18,7 +18,7 @@ class AlumnosController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware(['role:administrador'], ['only' => 'destroy']);//eliminar alumnos solo administrador
+        $this->middleware(['role:administrator'], ['only' => 'destroy']);//eliminar alumnos solo administrador
 //        $this->middleware(['role:supervisor|administrador'],['except'=>['index','userTaskEnd']]);
 //        $this->middleware('administrador', ['only' => 'destroy']);
     }
