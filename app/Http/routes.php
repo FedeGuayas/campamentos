@@ -47,7 +47,7 @@ Route::group(['middleware' => 'auth', 'prefix' => 'admin'], function () {
     //obtener las disciplina para un escenario  para select dinamico
     Route::get('inscripcions/disciplinas/{escenario_id}','ProgramsController@getDisciplinas');
     //obtener los dias para un programa, data defien al programa(esc,disc,modulo)
-    Route::get('inscripcions/dias{data?}',['uses'=>'CalendarsController@getDias','as'=>'program.getDias']);
+    Route::get('inscripcions/dias/{data?}',['uses'=>'CalendarsController@getDias','as'=>'program.getDias']);
     //obtener los horarios para el dia
     Route::get('inscripcions/horario/{data?}','CalendarsController@getHorario');
     //obtener los niveles para el dia y horario

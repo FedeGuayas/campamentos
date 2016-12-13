@@ -27,7 +27,7 @@ $(document).ready(function () {
         }
         // var token = $("input[name=_token]").val();
         $.ajax({
-            url: "costo/",
+            url: "costo",
             type: "GET",
             // headers: {'X-CSRF-TOKEN': token},
             // contentType: 'application/x-www-form-urlencoded',
@@ -80,7 +80,7 @@ $(document).ready(function (event) {
             matricula:  matricula.prop("checked")
         }
         $.ajax({
-            url: "costo/",
+            url: "costo",
             type: "GET",
             // headers: {'X-CSRF-TOKEN': token},
             // contentType: 'application/x-www-form-urlencoded',

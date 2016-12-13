@@ -376,29 +376,6 @@ class InscripcionsController extends Controller
                 ->where('disciplina_id', $disciplina_id)
                 ->where('modulo_id', $modulo_id)->first();
 
-            if ($request->input('matricula') == 'true') {
-                $mat = $matricula->matricula;
-            } else $mat = 0;
-
-            if ($request->input('descuento_familiar') == 'true') {
-                $desc_familiar = 0.1; //10%
-            } else $desc_familiar = 0;
-
-            if ($request->input('descuento_empleado') == 'true') {
-                $desc_empleado = 0.5; //50%
-            } else $desc_empleado = 0;
-
-            if ($request->input('descuento_estacion') == 'VERANO') {
-                //condiciones para verano 10% ins de mas de un representado inscrito o 10% un inscrito en una disciplina mas de 3 meses
-                if ($request->input('descuento_multiple') == 'true') {
-                    $desc_multiple = 0.1; //10%
-                } else $desc_multiple = 0;
-
-            } elseif ($request->input('descuento_estacion') == 'INVIERNO') {
-                //condiciones para invierno ... Dewcuento del 10% para inscripciones en mas de 3 meses en el mismo curso
-                $desc_multiple = 0;
-            }
-
             //Al seleccionar el nivel
             $dia_id = $request->get('dia_id');
             $horario_id = $request->get('horario_id');
@@ -415,12 +392,23 @@ class InscripcionsController extends Controller
                 ->where('id', $nivel)
                 ->where('horario_id', $horario_id)->first();
 
-
             $mes = $mensualidad->mensualidad;
 
-            $descuentos = ($mes * $desc_empleado) + ($mes * $desc_multiple) + ($mes * $desc_familiar);
 
-            $precio = $mat + ($mes - ($descuentos));
+            if ($request->input('descuento_empleado') == 'true') {
+                $desc = 0.5; //50%
+                $descuento =$mes * $desc;
+            } else if ( $request->input('descuento_familiar') == 'true' ||
+                ( ($request->input('descuento_multiple') == 'true') && ($request->input('descuento_estacion') == 'VERANO') ) ){
+                $desc = 0.1; //10%
+                $descuento =$mes * $desc;
+            }else  $descuento=0;
+
+            if ($request->input('matricula') == 'true') {
+                $mat = $matricula->matricula;
+            } else $mat = 0;
+
+            $precio = $mat + $mes - $descuento;
 
             return response(number_format($precio, 2, '.', ' '));
         }

@@ -107,7 +107,7 @@ $("#disciplina_id").change(function (event) {
     }
     // var token = $("input[name=_token]").val();
     $.ajax({
-        url: "dias/",
+        url: "dias",
         type: "GET",
         // headers: {'X-CSRF-TOKEN': token},
         // contentType: 'application/x-www-form-urlencoded',
@@ -144,7 +144,7 @@ $("#dia_id").change(function (event) {
     }
     // var token = $("input[name=_token]").val();
     $.ajax({
-        url: "horario/",
+        url: "horario",
         type: "GET",
         // headers: {'X-CSRF-TOKEN': token},
         // contentType: 'application/x-www-form-urlencoded',
@@ -181,7 +181,7 @@ $("#horario_id").change(function (event) {
     }
     // var token = $("input[name=_token]").val();
     $.ajax({
-        url: "nivel/",
+        url: "nivel",
         type: "GET",
         // headers: {'X-CSRF-TOKEN': token},
         // contentType: 'application/x-www-form-urlencoded',
@@ -221,7 +221,7 @@ $("#nivel").change(function (event) {
     }
     // var token = $("input[name=_token]").val();
     $.ajax({
-        url: "curso/",
+        url: "curso",
         type: "GET",
         // headers: {'X-CSRF-TOKEN': token},
         // contentType: 'application/x-www-form-urlencoded',

@@ -36,107 +36,99 @@
 </header>
 
 <main style="font-size: 10px;">
-    <br><br>
+
     <p>Datos del Inscrito</p>
-    <table align="center" border="1" cellpadding="0" cellspacing="0" style="width:60%;">
-        <tr align="lef" style="width: auto">
-            <th style="background-color: rgb(204, 204, 204);">ALUMNO</th>
+    <table align="center" border="0" cellpadding="2" cellspacing="0" style=" width: 70%; ">
+        <tr>
+            <th align="left" style="width: 130px;">ALUMNO</th>
             <td>{{$inscripcion->factura->representante->persona->apellidos.' '.$inscripcion->factura->representante->persona->nombres}}</td>
         </tr>
-        <tr align="lef" style="width: auto">
-            <th style="background-color: rgb(204, 204, 204);">EDAD</th>
+        <tr>
+            <th align="left">EDAD</th>
             <td>{{$inscripcion->factura->representante->getEdad($inscripcion->factura->representante->persona->fecha_nac)}}</td>
         </tr>
-        <tr align="lef" style="width: auto">
-            <th style="background-color: rgb(204, 204, 204);">SEXO</th>
+        <tr>
+            <th align="left">SEXO</th>
             <td>{{$inscripcion->factura->representante->persona->genero}}</td>
         </tr>
-        <tr align="lef" style="width: auto">
-            <th style="background-color: rgb(204, 204, 204);">DIRECCION</th>
+        <tr>
+            <th align="left">DIRECCION</th>
             <td>{{$inscripcion->factura->representante->persona->direccion}}</td>
         </tr>
-        <tr align="lef" style="width: auto">
-            <th style="background-color: rgb(204, 204, 204);">TEEFONO</th>
+        <tr>
+            <th align="left">TEEFONO</th>
             <td>{{$inscripcion->factura->representante->persona->telefono}}</td>
         </tr>
-        <tr align="lef" style="width: auto">
-            <th style="background-color: rgb(204, 204, 204);">CORREO ELECTRONICO</th>
+        <tr>
+            <th align="left">CORREO ELECTRONICO</th>
             <td>{{$inscripcion->factura->representante->persona->email}}</td>
         </tr>
     </table>
 
-    <br>
-
-    <table cellspacing="0" cellspacing="0" style="width:100%;">
+    <p>Datos del curso</p>
+    <table align="center" border="0" cellpadding="2" cellspacing="0" style=" width: 70%; ">
         <tr>
-            <td>
-                <p>Datos del curso</p>
-                <table align="center" border="1" cellpadding="1" cellspacing="0" style="width:auto;">
-                    <tr align="lef" style="width: auto">
-                        <th style="width: auto; background-color: rgb(204, 204, 204);">ESCENARIO</th>
-                        <td>{{$inscripcion->calendar->program->escenario->escenario}}</td>
-                    </tr>
-                    <tr align="lef" style="width: auto">
-                        <th style="width: auto;  background-color: rgb(204, 204, 204);">DISCIPLINA</th>
-                        <td>{{$inscripcion->calendar->program->disciplina->disciplina}}</td>
-                    </tr>
-                    <tr align="lef" style="width: auto">
-                        <th style="width: auto; background-color: rgb(204, 204, 204);">DIAS</th>
-                        <td>{{$inscripcion->calendar->dia->dia}}</td>
-                    </tr>
-                    <tr align="lef" style="width: auto">
-                        <th style="width: auto; background-color: rgb(204, 204, 204);">HORARIO</th>
-                        <td>{{$inscripcion->calendar->horario->start_time.'-' .$inscripcion->calendar->horario->end_time }}</td>
-                    </tr>
-                    <tr align="lef" style="width: auto">
-                        <th style="width: auto; background-color: rgb(204, 204, 204);">MODULO</th>
-                        <td>{{$inscripcion->calendar->program->modulo->modulo}}</td>
-                    </tr>
-                </table>
-            </td>
-            <td>
-                <p>Datos sobre la inscripción</p>
-                <table align="center" border="1" cellpadding="1" cellspacing="0" style="width:auto;">
-                    <tr align="lef" style="width: auto">
-                        <th style="width: auto; background-color: rgb(204, 204, 204);">TIPO DE INSCRIPCION</th>
-                        <td>
-                            @if( count($inscripcion->factura_id)>1)
-                                MULTIPLE
-                            @else
-                                IDIVIDUAL
-                            @endif
-                        </td>
-                    </tr>
-                    <tr align="lef" style="width: auto">
-                        <th style="width: auto;  background-color: rgb(204, 204, 204);">APLICA DESCUENTO</th>
-                        <td>
-                            @if($inscripcion->factura->descuento==null || $inscripcion->factura->descuento==0)
-                                NO
-                            @else
-                                SI
-                            @endif
-                        </td>
-                    </tr>
-                    <tr align="lef" style="width: auto">
-                        <th style="width: auto; background-color: rgb(204, 204, 204);">FORMA DE PAGO</th>
-                        <td>{{$inscripcion->factura->pago->forma}}</td>
-                    </tr>
-                    <tr align="lef" style="width: auto">
-                        <th style="width: auto; background-color: rgb(204, 204, 204);">USUARIO</th>
-                        <td>{{$inscripcion->user->getNameAttribute()}}</td>
-                    </tr>
-                    <tr align="lef" style="width: auto">
-                        <th style="width: auto; background-color: rgb(204, 204, 204);">CANCELADO</th>
-                        <td>$ {{number_format($inscripcion->factura->total,2,'.',' ')}}</td>
-                    </tr>
-                </table>
-            </td>
+            <th align="left" style="width: 130px;">ESCENARIO</th>
+            <td>{{$inscripcion->calendar->program->escenario->escenario}}</td>
+        </tr>
+        <tr>
+            <th align="left">DISCIPLINA</th>
+            <td>{{$inscripcion->calendar->program->disciplina->disciplina}}</td>
+        </tr>
+        <tr>
+            <th align="left">DIAS</th>
+            <td>{{$inscripcion->calendar->dia->dia}}</td>
+        </tr>
+        <tr>
+            <th align="left">HORARIO</th>
+            <td>{{$inscripcion->calendar->horario->start_time.'-' .$inscripcion->calendar->horario->end_time }}</td>
+        </tr>
+        <tr>
+            <th align="left">MODULO</th>
+            <td>{{$inscripcion->calendar->program->modulo->modulo}}</td>
         </tr>
     </table>
+
+    <p>Datos sobre la inscripción</p>
+    <table align="center" border="0" cellpadding="2" cellspacing="0" style=" width: 70%; ">
+        <tr>
+            <th align="left" style="width: 130px;">TIPO DE INSCRIPCION</th>
+            <td>
+                @if( count($inscripcion->factura_id)>1)
+                    MULTIPLE
+                @else
+                    IDIVIDUAL
+                @endif
+            </td>
+        </tr>
+        <tr>
+            <th align="left">APLICA DESCUENTO</th>
+            <td>
+                @if($inscripcion->factura->descuento==null || $inscripcion->factura->descuento==0)
+                    NO
+                @else
+                    SI
+                @endif
+            </td>
+        </tr>
+        <tr>
+            <th align="left">FORMA DE PAGO</th>
+            <td>{{$inscripcion->factura->pago->forma}}</td>
+        </tr>
+        <tr>
+            <th align="left">USUARIO</th>
+            <td>{{$inscripcion->user->getNameAttribute()}}</td>
+        </tr>
+        <tr>
+            <th align="left">CANCELADO</th>
+            <td>$ {{number_format($inscripcion->factura->total,2,'.',' ')}}</td>
+        </tr>
+    </table>
+
 </main>
 
-<footer style="font-size: 10px">
-    <br><br>
+<footer style="font-size: 9px">
+    <br>
     <table align="center" border="0" cellspacing="0" style="width:80%; font-style: italic; text-align : justify; ">
         <tr>
             <td>
@@ -212,7 +204,7 @@
 
     <br><br><br>
 
-    <p style="font-size: 12px; color: #0a568c; text-align: center;">
+    <p style="font-size: 12px; color: #0a568c; text-align: center; position: fixed; left: 0px; bottom: -150px; right: 0px; height: 150px;">
         Oficina: José Mascote 1103 y Luque. Telfs: 2367856 - 2531488. fedeguayas.com.ec. email: fdg@telconet.net <br>
         Casilla 836 Telegramas y Cables - FEDEGUAYAS. Guayaquil - Ecuador
     </p>
