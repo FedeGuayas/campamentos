@@ -39,11 +39,10 @@
                             {!! Form::password('password',['class'=>'validate']) !!}
                         </div>
 
-                        {{--<div class="input-field col l6 m6 s12">--}}
-                            {{--<h6 class="">Accesos al sistema</h6>--}}
-                        {{--{!! Form::select('roles[]', $roles,null, ['id'=>'roles_id','multiple']) !!}--}}
-                        {{--{!! Form::label('roles', 'Roles:') !!}--}}
-                        {{--</div>--}}
+                        <div class="input-field col l6 m6 s12">
+                            {!! Form::select('escenario_id', $escenarios,null, ['id'=>'escenario_id','placeholder'=>'Seleccione ...']) !!}
+                            {!! Form::label('escenario_id', 'Punto cobro:*') !!}
+                        </div>
 
                     </div>
                     {!! Form::button('Actualizar<i class="fa fa-play right"></i>', ['class'=>'btn waves-effect waves-light','type' => 'submit']) !!}

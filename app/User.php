@@ -34,7 +34,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'first_name', 'last_name', 'email', 'password',
+        'first_name', 'last_name', 'email', 'password','pto_cobro'
     ];
 
     /**
@@ -74,5 +74,10 @@ class User extends Authenticatable
     public function inscripcion()
     {
         return $this->belongsTo('App\Inscripcion');
+    }
+
+    public function escenario()
+    {
+        return $this->belongsTo('App\Escenario');
     }
 }

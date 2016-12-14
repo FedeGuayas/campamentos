@@ -24,6 +24,7 @@
                     <th>Usuario</th>
                     <th>Email</th>
                     <th>Roles</th>
+                    <th>Pto Cobro</th>
                     <th>Opciones</th>
                     </thead>
                     @foreach ($usuarios as $user)
@@ -35,6 +36,9 @@
                                     {{ $role->display_name }}<br>
 
                                 @endforeach
+                            </td>
+                            <td>
+                                {{$user->escenario['escenario']}}
                             </td>
                             <td>
                                 @if ( Auth::user()->hasRole('administrator'))

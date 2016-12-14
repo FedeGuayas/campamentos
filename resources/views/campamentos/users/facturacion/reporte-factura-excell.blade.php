@@ -68,7 +68,10 @@
                                 {{ $insc->calendar->program->escenario->escenario}}
                             </td>
                             <td>
-                                {{ $insc->calendar->program->escenario->codigo}}
+                                @if(is_null($insc->user->escenario_id))
+                                @else
+                                    {{ $insc->user->escenario->codigo}}
+                                @endif
                             </td>
                             <td>
                                 {{ $insc->factura->total}}

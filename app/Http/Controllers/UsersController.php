@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Alumno;
 use App\Contable;
+use App\Escenario;
 use App\Inscripcion;
 use App\Role;
 use App\User;
@@ -51,9 +52,9 @@ class UsersController extends Controller
      */
     public function create()
     {
-//        $roles_coll = Role::all();
-//        $roles = $roles_coll->pluck('display_name', 'id');
-        return view('campamentos.users.create',compact('roles'));
+        $escenarios_coll = Escenario::all();
+        $escenarios= $escenarios_coll->pluck('escenario', 'id');
+        return view('campamentos.users.create',compact('escenarios'));
     }
 
     /**
@@ -64,13 +65,17 @@ class UsersController extends Controller
      */
     public function store(Request $request)
     {
+
         $user=new User;
+        $escenario=Escenario::where('id',$request->get('escenario_id'))->first();
         $user->first_name=strtoupper($request->get('first_name'));
         $user->last_name=strtoupper($request->get('last_name'));
         $user->email=$request->get('email');
+//        $user->escenario_id=$request->get('escenario_id');
         $user->password=$request->get('password');
 //        $roles=$request->get('roles');
         $user->activated='1';
+        $user->escenario()->associate($escenario);
         $user->save();
 
         Session::flash('message', 'Usuario creado correctamente');
@@ -98,8 +103,10 @@ class UsersController extends Controller
     public function edit($id)
     {
         $user=User::findOrFail($id);
+        $escenarios_coll = Escenario::all();
+        $escenarios= $escenarios_coll->pluck('escenario', 'id');
 //        $roles= [''=>'Seleccione roles'] + Role::lists('display_name', 'id')->all();
-        return view('campamentos.users.edit',compact('user','roles'));
+        return view('campamentos.users.edit',compact('user','roles','escenarios'));
     }
 
     /**
@@ -112,6 +119,7 @@ class UsersController extends Controller
     public function update(Request $request, $id)
     {
         $user=User::findOrFail($id);
+        $escenario=Escenario::where('id',$request->get('escenario_id'))->first();
         $user->first_name=strtoupper($request->get('first_name'));
         $user->last_name=strtoupper($request->get('last_name'));
         $user->email=$request->get('email');
@@ -125,7 +133,8 @@ class UsersController extends Controller
 //        else{
 //            $user->detachRole($roles);
 //        }
-//        $user->update();
+        $user->escenario()->associate($escenario);
+        $user->update();
 
         $nombre=User::findOrFail($id)->getNameAttribute();
       
@@ -274,7 +283,7 @@ class UsersController extends Controller
                 'Valor'=> $insc->factura->total,
                 'Iva'=> 'S',
                 'DIRECCION'=> $insc->factura->representante->persona->direccion,
-                'division'=> $insc->calendar->program->escenario->codigo,
+                'division'=> $insc->user->escenario->codigo,
                 'TipoCli'=> '1',
                 'actividad'=> '1',
                 'codvend'=> '',

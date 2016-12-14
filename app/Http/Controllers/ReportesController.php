@@ -38,9 +38,9 @@ class ReportesController extends Controller
             ->whereBetween('created_at',[$start, $end])
 //            ->where('created_at','>=',$start)
 //            ->where('created_at','<=',$end)
+            ->whereNull('cart')//inscripciones internas sin las online
             ->orderBy('created_at')
             ->get();
-
 
 
 //        dd($inscripciones);
@@ -57,16 +57,20 @@ class ReportesController extends Controller
             ->whereBetween('created_at',[$start, $end])
 //            ->where('created_at','>=',$start)
 //            ->where('created_at','<=',$end)
+            ->whereNull('cart')
             ->orderBy('created_at')
             ->get();
 
         
 
         $arrayExp[] = ['Recibo','Apellidos_Alumno','Nombres_Alumno','Edad','Género','Apellidos_Representante','Nombres_Representante',
-            'Modulo','Escenario','Disciplina','Dias','Horario','Comprobante','Valor','Descuento','Estado','Fecha_Insc','Forma_Pago','Usuario'];
+            'Modulo','Escenario','Disciplina','Dias','Horario','Comprobante','Valor','Descuento','Estado','Fecha_Insc','Forma_Pago','Usuario','Pto Cobro'];
 
         foreach ($inscripciones as $insc) {
-            
+
+            if (is_null($insc->user->escenario_id)){
+                $pto_cobro='';
+            }else $pto_cobro=$insc->user->escenario->escenario;
 
             if ($insc->alumno_id == 0) {
                 $al_apell=$insc->factura->representante->persona->apellidos;
@@ -103,10 +107,7 @@ class ReportesController extends Controller
                 'fecha_insc' =>  $insc->created_at,
                 'fpago' => $insc->factura->pago->forma,
                 'usuario' => $insc->user->getNameAttribute(),
-
-
-
-//                'trabajador' => $task->user->getFullNameAttribute(),
+                'pto_cobro' => $pto_cobro,
 
             ];
         }
