@@ -163,7 +163,7 @@ class ReportesController extends Controller
     public function cuadre(Request $request)
     {
         $escenarioSelect = ['' => 'Seleccione el escenario'] + Escenario::lists('escenario', 'id')->all();
-        $usuarioSelect = ['' => 'Seleccione el usuario'] + User::select(DB::raw('CONCAT(first_name, " ", last_name) AS nombre'), 'id')->lists('nombre', 'id')->all();
+//        $usuarioSelect = ['' => 'Seleccione el usuario'] + User::select(DB::raw('CONCAT(first_name, " ", last_name) AS nombre'), 'id')->lists('nombre', 'id')->all();
 
         if ($request) {
             $fecha = $request->get('fecha');
@@ -171,27 +171,28 @@ class ReportesController extends Controller
             $usuario = $request->get('usuario');
 
 
-
-            $inscripciones = Inscripcion::with('factura','calendar','user','alumno')
-
-//
-//                ->select('total','u.id as uid', 'inscripcions.created_at as fecha', 'u.first_name','u.last_name')
-                ->where('inscripcions.created_at', 'LIKE', '%' . $fecha . '%')
-//                ->where('d', 'LIKE', '%' . $escenario . '%')
-                ->where('user_id', '=', $usuario)
-                ->groupBy('user_id')
+            $cuadre = DB::table('inscripcions as i')
+                ->join('facturas as f', 'f.id', '=', 'i.factura_id')
+                ->join('users as u', 'u.id', '=', 'i.user_id')
+                ->select('f.total','i.factura_id', 'i.user_id as uid','i.created_at as fecha', 'u.first_name','u.last_name')
+//                ->where('inscripcions.created_at', 'LIKE', '%' . $fecha . '%')
+//                ->where('u.id','=', $usuario)
+                ->groupBy('uid')
                 ->get();
-
-//dd($cuadre);
+          
 
             $cuadreArray = [];
-            foreach ($inscripciones as $insc) {
+            foreach ($cuadre as $c) {
+
                 $cuadreArray[] = [
-                    'nombre' => $insc->user->getNameAttribute(),
-                    'cantidad' => Inscripcion::where('user_id', $insc->user->id)->where('inscripcions.created_at', 'LIKE', '%' . $fecha . '%')->count(),
-                    'valor' => $insc->factura->sum('total'),
+                    'nombre' => $c->first_name.' '.$c->last_name,
+                    'cantidad' => Inscripcion::where('user_id', $c->uid)->where('created_at', 'LIKE', '%' . $fecha . '%')->count(),
+                    'valor' => Factura::where('id', $c->factura_id)->where('created_at', 'LIKE', '%' . $fecha . '%')->sum('total'),
                 ];
             }
+            
+
+
         }
         return view('campamentos.reportes.cuadre', compact('escenarioSelect', 'usuarioSelect', 'escenario', 'usuario', 'fecha', 'cuadreArray'));
     }

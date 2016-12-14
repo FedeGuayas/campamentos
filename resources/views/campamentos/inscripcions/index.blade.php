@@ -78,7 +78,7 @@
                         <td>{{ number_format($insc->factura->total, 2, '.', ' ') }}</td>
                         <td>{{ $insc->factura->id }}</td>
                         <td>
-                            @if (Entrust::can('edit_inscripcion'))
+                            @if ( (Entrust::can('edit_inscripcion') && (Auth::user()->id==$insc->user_id)) || Entrust::hasRole('administrator') )
                             <a href="{{ route('admin.inscripcions.edit', $insc->id ) }}">
                                 {!! Form::button('<i class="tiny fa fa-pencil-square-o" ></i>',['class'=>'label waves-effect waves-light teal darken-1']) !!}
                             </a>
@@ -86,7 +86,7 @@
                             <a href="{{ route('admin.inscripcions.show', $insc->id ) }}">
                                 {!! Form::button('<i class="tiny fa fa-eye"></i>',['class'=>'label waves-effect waves-light blue darken-1']) !!}
                             </a>
-                            @if (Auth::user()->id==$insc->user_id)
+                            @if (Auth::user()->id==$insc->user_id ||  Entrust::hasRole('administrator'))
                             <a href="{{  route('admin.reports.pdf',$insc->id ) }}">
                                 {!! Form::button('<i class="tiny fa fa-file-pdf-o"></i>',['class'=>'label waves-effect waves-light teal darken-1  orange accent-4']) !!}
                             </a>

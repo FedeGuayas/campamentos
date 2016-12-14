@@ -65,8 +65,8 @@
             <ul id="dropdownReportes" class="dropdown-content">
                 <li><a href="{{route('admin.facturas.index')}}" class="waves-effect waves-teal">Comprobantes</a></li>
                 <li class="divider"></li>
-                {{--<li><a href="{{route('admin.pagos.cuadre')}}" class="waves-effect waves-teal">Cuadre</a></li>--}}
-                {{--<li class="divider"></li>--}}
+                <li><a href="{{route('admin.pagos.cuadre')}}" class="waves-effect waves-teal">Cuadre</a></li>
+                <li class="divider"></li>
                 <li><a href="{{route('admin.reports.excel')}}" class="waves-effect waves-teal">Reporte General</a></li>
             </ul>
 
@@ -157,6 +157,7 @@
                                 <ul>
                                     <li><a href="{{route('admin.facturas.index')}}" class="waves-effect waves-teal">Comprobantes</a></li>
                                     <li class="divider"></li>
+                                    <li><a href="{{route('admin.pagos.cuadre')}}" class="waves-effect waves-teal">Cuadre</a></li>
                                     <li><a href="{{route('admin.reports.excel')}}" class="waves-effect waves-teal">Reporte General</a></li>
                                 </ul>
                             </div>
