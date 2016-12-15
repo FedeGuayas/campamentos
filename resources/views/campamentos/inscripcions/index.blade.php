@@ -28,8 +28,7 @@
                     <th>Horarios</th>
                     <th>Representante</th>
                     <th>CI Rep.</th>
-                    <th>Valor</th>
-                    <th>Comprobante</th>
+                    <th>Nivel</th>
                     <th>Opciones</th>
                 </tr>
                 </thead>
@@ -45,8 +44,7 @@
                     <th>Horarios</th>
                     <th>Representante</th>
                     <th>CI Rep.</th>
-                    <th>Valor</th>
-                    <th class="search-filter">Comprobante</th>
+                    <th>Nivel</th>
                     <th>Opciones</th>
                 </tr>
                 </tfoot>
@@ -75,8 +73,8 @@
                         <td>{{ $insc->calendar->horario->start_time}}-{{ $insc->calendar->horario->end_time}}</td>
                         <td>{{ $insc->factura->representante->persona->getNombreAttribute() }}</td>
                         <td>{{ $insc->factura->representante->persona->num_doc }}</td>
-                        <td>{{ number_format($insc->factura->total, 2, '.', ' ') }}</td>
-                        <td>{{ $insc->factura->id }}</td>
+                        <td>{{ $insc->calendar->nivel}}</td>
+
                         <td>
                             @if ( (Entrust::can('edit_inscripcion') && (Auth::user()->id==$insc->user_id)) || Entrust::hasRole('administrator') )
                             <a href="{{ route('admin.inscripcions.edit', $insc->id ) }}">

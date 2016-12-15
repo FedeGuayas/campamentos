@@ -47,6 +47,7 @@
                 <li><a href="{!! route('admin.disciplinas.index') !!}" class="waves-effect waves-teal">Disciplinas</a></li>
                 <li><a href="{!! route('admin.horarios.index') !!}" class="waves-effect waves-teal">Horarios</a></li>
                 <li><a href="{!! route('admin.dias.index') !!}" class="waves-effect waves-teal">Días</a></li>
+                <li><a href="{!! route('admin.profesors.index') !!}" class="waves-effect waves-teal">Profesores</a></li>
                 <li><a href="{!! route('admin.encuestas.index') !!}" class="waves-effect waves-teal">Encuestas</a></li>
                 <li><a href="{!! route('admin.transportes.index') !!}" class="waves-effect waves-teal">Transportes</a></li>
                 <li><a href="{!! route('admin.fpagos.index') !!}" class="waves-effect waves-teal">Formas Pago</a></li>
@@ -179,6 +180,8 @@
                                             <li><a href="#!" class="waves-effect waves-teal">Horarios</a></li>
                                             <li class="divider"></li>
                                             <li><a href="#!" class="waves-effect waves-teal">Días</a></li>
+                                            <li class="divider"></li>
+                                            <li><a href="{!! route('admin.profesors.index') !!}" class="waves-effect waves-teal">Profesores</a></li>
                                             <li class="divider"></li>
                                             <li><a href="#!" class="waves-effect waves-teal">Encuestas</a></li>
                                             <li class="divider"></li>

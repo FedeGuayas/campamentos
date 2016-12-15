@@ -64,7 +64,7 @@ class ReportesController extends Controller
         
 
         $arrayExp[] = ['Recibo','Apellidos_Alumno','Nombres_Alumno','Edad','Género','Apellidos_Representante','Nombres_Representante',
-            'Modulo','Escenario','Disciplina','Dias','Horario','Comprobante','Valor','Descuento','Estado','Fecha_Insc','Forma_Pago','Usuario','Pto Cobro'];
+            'Modulo','Escenario','Disciplina','Dias','Horario','Comprobante','Valor','Descuento','Estado','Fecha_Insc','Forma_Pago','Usuario','Pto Cobro','Profesor'];
 
         foreach ($inscripciones as $insc) {
 
@@ -108,6 +108,7 @@ class ReportesController extends Controller
                 'fpago' => $insc->factura->pago->forma,
                 'usuario' => $insc->user->getNameAttribute(),
                 'pto_cobro' => $pto_cobro,
+                'profe'=> $insc->calendar->profesor->getNameAttribute(),
 
             ];
         }
@@ -116,8 +117,8 @@ class ReportesController extends Controller
 
             $excel->sheet('Insc General', function ($sheet) use ($arrayExp) {
 
-                $sheet->setBorder('A1:S1','thin', 'thin', 'thin', 'thin');
-                $sheet->cells('A1:S1', function($cells){
+                $sheet->setBorder('A1:U1','thin', 'thin', 'thin', 'thin');
+                $sheet->cells('A1:U1', function($cells){
                    $cells->setBackground('#F5F5F5');
                     $cells->setFontWeight('bold');
                     $cells->setAlignment('center');

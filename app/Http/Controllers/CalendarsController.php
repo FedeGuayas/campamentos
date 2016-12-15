@@ -8,6 +8,7 @@ use App\Cart;
 use App\Dia;
 use App\Disciplina;
 use App\Escenario;
+use App\Profesor;
 use Event;
 use App\Events\NuevaInscripcion;
 use App\Factura;
@@ -51,7 +52,9 @@ class CalendarsController extends Controller
             ->join('escenarios as e','e.id','=','p.escenario_id')
             ->join('modulos as m','m.id','=','p.modulo_id')
             ->join('disciplinas as dis','dis.id','=','p.disciplina_id')
-            ->select('e.escenario','dis.disciplina','m.modulo','d.dia','h.start_time','h.end_time','cupos','contador','mensualidad','c.id','c.init_age','c.end_age','c.nivel')
+            ->join('profesors as pro','pro.id','=','c.profesor_id')
+            ->select('e.escenario','dis.disciplina','m.modulo','d.dia','h.start_time','h.end_time','cupos','contador',
+                'mensualidad','c.id','c.init_age','c.end_age','c.nivel','pro.nombres','pro.apellidos')
             ->where('p.activated',true)
             ->get();
 
@@ -77,8 +80,9 @@ class CalendarsController extends Controller
        
         $horarios=[] + Horario::select(DB::raw('CONCAT(start_time, " - ", end_time) AS horario'), 'id')->lists('horario','id')->all();
         $dias=[]+ Dia::lists('dia','id')->all();
+        $profesores=[] + Profesor::select(DB::raw('CONCAT(nombres, " ", apellidos) AS nombre'), 'id')->lists('nombre','id')->all();
         
-        return view('campamentos.calendars.create',compact('program','horarios','dias','escenario','disciplina','modulo'));
+        return view('campamentos.calendars.create',compact('program','horarios','dias','escenario','disciplina','modulo','profesores'));
         
     }
 
@@ -101,6 +105,8 @@ class CalendarsController extends Controller
         $calendar->init_age=$request->get('init_age');
         $calendar->end_age=$request->get('end_age');
         $calendar->nivel=strtoupper($request->get('nivel'));
+        $profe=Profesor::where('id',$request->get('profesor_id'))->first();
+        $calendar->profesor()->associate($profe);
         $calendar->save();
         
         return redirect()->route('admin.programs.index');
@@ -137,8 +143,9 @@ class CalendarsController extends Controller
         $modulo=Modulo::findOrFail($modulo_id);
         $horarios=[] + Horario::select(DB::raw('CONCAT(start_time, " - ", end_time) AS horario'), 'id')->lists('horario','id')->all();
         $dias=[]+ Dia::lists('dia','id')->all();
+        $profesores=[] + Profesor::select(DB::raw('CONCAT(nombres, " ", apellidos) AS nombre'), 'id')->lists('nombre','id')->all();
 
-        return view('campamentos.calendars.edit',compact('calendar','horarios','dias','escenario','disciplina','modulo'));
+        return view('campamentos.calendars.edit',compact('calendar','horarios','dias','escenario','disciplina','modulo','profesores'));
     }
 
     /**
@@ -160,6 +167,8 @@ class CalendarsController extends Controller
         $calendar->init_age=$request->get('init_age');
         $calendar->end_age=$request->get('end_age');
         $calendar->nivel=strtoupper($request->get('nivel'));
+        $profe=Profesor::where('id',$request->get('profesor_id'))->first();
+        $calendar->profesor()->associate($profe);
         $calendar->update();
         return redirect()->route('admin.programs.index');
         

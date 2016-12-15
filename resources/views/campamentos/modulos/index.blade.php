@@ -38,7 +38,7 @@
                             <td>{{ $modulo->fin }}</td>
 
                             <td>
-                                @if (($modulo->activated)===1)
+                                @if (($modulo->activated)=='1')
                                     <span class="label label-success">Activo</span>
                                     <a href="{{ route('admin.modulos.disable', $modulo->id)}}">
                                         {!! Form::button('<i class="tiny fa fa-check" aria-hidden="true"></i>',['class'=>'label waves-effect waves-light red darken-1']) !!}

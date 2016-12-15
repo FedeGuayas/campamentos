@@ -68,6 +68,10 @@
                             {!! Form::label('end_age','Edad final:') !!}
                             {!! Form::number('end_age',null,['class'=>'validate','required']) !!}
                         </div>
+                        <div class="input-field col l4 m4 s12 ">
+                            {!! Form::select('profesor_id',$profesores,null, ['id'=>'profesor_id','placeholder' => 'Seleccione profesor...']) !!}
+                            {!! Form::label('profesor_id', 'Profesor:') !!}
+                        </div>
 
                     </div>
 

@@ -29,7 +29,8 @@ class CalendarStoreRequest extends Request
             'horario_id'=> 'required',
             'nivel'=> 'required',
             'cupos' => 'numeric|min:1',
-            'mensualidad'=>'numeric|required'
+            'mensualidad'=>'numeric|required',
+            'profesor_id'=> 'required',
         ];
     }
 }

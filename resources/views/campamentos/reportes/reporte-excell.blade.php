@@ -37,6 +37,7 @@
                     <th>Escenario</th>
                     <th>Disciplina</th>
                     <th>Representante</th>
+                    <th>Profesor</th>
                     </thead>
                     @foreach ($inscripciones as $insc )
                         <tr>
@@ -68,6 +69,7 @@
                             <td>{{ $insc->calendar['program']->escenario->escenario }}</td>
                             <td>{{ $insc->calendar['program']->disciplina->disciplina }}</td>
                             <td>{{ $insc->factura->representante->persona->getNombreAttribute() }}</td>
+                            <td>{{ $insc->calendar->profesor->getNameAttribute() }}</td>
                         </tr>
                     @endforeach
                 </table><!--end table-responsive-->

@@ -118,6 +118,7 @@ Route::group(['middleware' => 'auth', 'prefix' => 'admin'], function () {
     Route::resource('descuentos', 'DescuentosController');
     Route::resource('facturas', 'FacturasController');
     Route::resource('inscripcions', 'InscripcionsController');
+    Route::resource('profesors', 'ProfesorsController');
 
     //enabled, disabled modulos
     Route::get('modulos/{modulo}/enable',['as' => 'admin.modulos.enable', 'uses'=>'ModulosController@enable']);

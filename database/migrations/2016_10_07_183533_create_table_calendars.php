@@ -15,6 +15,7 @@ class CreateTableCalendars extends Migration
         Schema::create('calendars', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('program_id')->unsigned();
+            $table->integer('profesor_id')->unsigned();
             $table->integer('dia_id')->unsigned();
             $table->integer('horario_id')->unsigned();
             $table->integer('cupos');

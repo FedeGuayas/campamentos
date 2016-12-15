@@ -26,36 +26,36 @@
 
 <main style="font-size: 10px;">
 
-    <table align="center" border="0" cellpadding="5" cellspacing="0" style=" width: 700px; ">
+    <table align="center" border="0" cellpadding="1" cellspacing="0" style=" width: 700px; ">
         <tr>
-            <th style="text-decoration: underline">DATOS DEL INSCRITO</th>
-            <th style="text-decoration: underline">DATOS DEL REPRESENTANTE</th>
+            <th align="left" style="text-decoration: underline; width: 350px;">DATOS DEL INSCRITO</th>
+            <th align="left" style="text-decoration: underline;">DATOS DEL REPRESENTANTE</th>
         </tr>
         <tr>
             <td>
-                <table align="center" border="0" cellpadding="2" cellspacing="0" style=" width: 400px; ">
+                <table align="left" border="0" cellpadding="0" cellspacing="0" style=" width: 349px; ">
                     <tr>
-                        <th align="right" style="width: 130px;">ALUMNO:</th>
+                        <th align="left" style="width: 130px;">ALUMNO:</th>
                         <td>{{$inscripcion->alumno->persona->apellidos.' '.$inscripcion->alumno->persona->nombres}}</td>
                     </tr>
                     <tr>
-                        <th align="right">FECHA DE NACIMIENTO:</th>
+                        <th align="left">FECHA DE NACIMIENTO:</th>
                         <td>{{$inscripcion->alumno->persona->fecha_nac}}</td>
                     </tr>
                     <tr>
-                        <th align="right">EDAD:</th>
+                        <th align="left">EDAD:</th>
                         <td>{{$inscripcion->alumno->getEdad($inscripcion->alumno->persona->fecha_nac)}}</td>
                     </tr>
                     <tr>
-                        <th align="right">SEXO:</th>
+                        <th align="left">SEXO:</th>
                         <td>{{$inscripcion->alumno->persona->genero}}</td>
                     </tr>
                 </table>
             </td>
             <td>
-                <table align="" border="0" cellpadding="2" cellspacing="0" style=" width: 400px; ">
+                <table align="right" border="0" cellpadding="0" cellspacing="0" style=" width: 349px; ">
                     <tr>
-                        <th align="right" style="width: 130px;">REPRESENTANTE:</th>
+                        <th align="left" style="width: 130px;">REPRESENTANTE:</th>
                         <td>{{$inscripcion->factura->representante->persona->apellidos.' '.$inscripcion->factura->representante->persona->nombres}}</td>
                     </tr>
                     {{--<tr>--}}
@@ -75,40 +75,42 @@
         </tr>
     </table>
 
-    <table align="center" border="0" cellpadding="5" cellspacing="0" style=" width: 700px; ">
+    <br><br><br><br><br><br><br>
+
+    <table align="center" border="0" cellpadding="1" cellspacing="0" style=" width: 700px; ">
         <tr>
-            <th style="text-decoration: underline">DATOS DEL CURSO</th>
-            <th style="text-decoration: underline">DATOS SOBRE LA INSCRIPCION</th>
+            <th align="left" style="text-decoration: underline; width: 350px;">DATOS DEL CURSO</th>
+            <th align="left" style="text-decoration: underline;">DATOS DE LA INSCRIPCION</th>
         </tr>
         <tr>
             <td>
-                <table align="center" border="0" cellpadding="2" cellspacing="0" style=" width: 400px;">
+                <table align="left" border="0" cellpadding="0" cellspacing="0" style=" width: 349px; ">
                     <tr>
-                        <th align="right"  style="width: 130px;">MODULO:</th>
+                        <th align="left"  style="width: 130px;">MODULO:</th>
                         <td>{{$inscripcion->calendar->program->modulo->modulo}}</td>
                     </tr>
                     <tr >
-                        <th align="right">ESCENARIO:</th>
+                        <th align="left">ESCENARIO:</th>
                         <td>{{$inscripcion->calendar->program->escenario->escenario}}</td>
                     </tr>
                     <tr >
-                        <th align="right">DISCIPLINA:</th>
+                        <th align="left">DISCIPLINA:</th>
                         <td>{{$inscripcion->calendar->program->disciplina->disciplina}}</td>
                     </tr>
                     <tr >
-                        <th align="right">DIAS:</th>
+                        <th align="left">DIAS:</th>
                         <td>{{$inscripcion->calendar->dia->dia}}</td>
                     </tr>
                     <tr >
-                        <th align="right">HORARIO:</th>
+                        <th align="left">HORARIO:</th>
                         <td>{{$inscripcion->calendar->horario->start_time.'-' .$inscripcion->calendar->horario->end_time }}</td>
                     </tr>
                 </table>
             </td>
             <td>
-                <table align="center" border="0" cellpadding="2" cellspacing="0" style=" width: 400px;">
+                <table align="right" border="0" cellpadding="0" cellspacing="0" style=" width: 349px; ">
                     <tr >
-                        <th align="right">APLICA DESCUENTO:</th>
+                        <th align="left" style="width: 130px;">APLICA DESCUENTO:</th>
                         <td>
                             @if($inscripcion->factura->descuento==null || $inscripcion->factura->descuento==0)
                                 NO
@@ -118,7 +120,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <th align="right" style="width: 130px;">TIPO DE INSCRIPCION:</th>
+                        <th align="left" >TIPO DE INSCRIPCION:</th>
                         <td>
                             @if($inscripcion->factura->descuento==null || $inscripcion->factura->descuento==0)
                                 INDIVIDUAL
@@ -129,15 +131,15 @@
                     </tr>
 
                     <tr >
-                        <th align="right">FORMA DE PAGO:</th>
+                        <th align="left">FORMA DE PAGO:</th>
                         <td>{{$inscripcion->factura->pago->forma}}</td>
                     </tr>
                     <tr >
-                        <th align="right">USUARIO:</th>
+                        <th align="left">USUARIO:</th>
                         <td>{{$inscripcion->user->getNameAttribute()}}</td>
                     </tr>
                     <tr >
-                        <th align="right">CANCELADO:</th>
+                        <th align="left">CANCELADO:</th>
                         <td>$ {{number_format($inscripcion->factura->total,2,'.',' ')}}</td>
                     </tr>
                 </table>
@@ -146,7 +148,7 @@
     </table>
 </main>
 
-<br>
+<br><br><br><br><br><br>
 
 <footer style="font-size: 12px">
     <table align="center" border="0" cellspacing="0" style="width:80%; font-style: italic; text-align : justify; ">
@@ -167,6 +169,7 @@
         </tr>
     </table>
 
+    <br><br>
 
     <table align="center" border="1" cellpadding="10" cellspacing="10" style="width:90%; text-align : justify; ">
         <tr>

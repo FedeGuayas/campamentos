@@ -46,7 +46,7 @@ $("#modulo_id").change(function (event) {
     var desc_est=$("#descuento_estacion");
 
     $.get("escenarios/" + event.target.value + "", function (response, state) {
-        console.log(response);
+        //console.log(response);
         escenario.find("option:gt(0)").remove();
         escenario.addClass("teal-text");
         // escenario.empty();
@@ -114,7 +114,6 @@ $("#disciplina_id").change(function (event) {
         data: datos,
         success: function (response) {
             // console.log(response);
-
             //     dia.empty();
             dia.find("option:gt(0)").remove();
             dia.addClass("teal-text");
@@ -227,12 +226,12 @@ $("#nivel").change(function (event) {
         // contentType: 'application/x-www-form-urlencoded',
         data: datos,
         success: function (response) {
-            console.log(response);
-            if (response[0].cupos >response[0].contador){
+            //console.log(response);
+            if (parseFloat(response[0].cupos) > parseFloat(response[0].contador)){
                 calendar_id.empty();
                 program_id.empty();
-                calendar_id.val(response[0].cID);
-                program_id.val(response[0].program_id);
+                calendar_id.val(response[0].cID);//curso
+                program_id.val(response[0].program_id);//programa
                 if ( $("#familiar").is(':checked') && $("#cursos_session").val()<2 ){
                     $("#pagar").prop('disabled',true);
                 }else{

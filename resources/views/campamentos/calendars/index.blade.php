@@ -30,6 +30,7 @@
                     <th>Nivel</th>
                     <th>Cupos</th>
                     <th>Disponibilidad</th>
+                    <th>Profesor</th>
                     <th>Opciones</th>
                 </tr>
                 </thead>
@@ -45,6 +46,7 @@
                     <th>Nivel</th>
                     <th>Cupos</th>
                     <th class="search-filter">Disponibilidad</th>
+                    <th class="search-filter">Profesor</th>
                     <th>Opciones</th>
                 </tr>
                 </tfoot>
@@ -66,6 +68,9 @@
                             @else
                                 <span class="label label-success">{{ $calendar->cupos - $calendar->contador }}</span>
                             @endif
+                        </td>
+                        <td>
+                            {{ $calendar->nombres.' '.$calendar->apellidos}}
                         </td>
                         <td>
                             @if (Auth::user()->hasRole(['planner','administrator']))

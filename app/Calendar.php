@@ -51,4 +51,9 @@ class Calendar extends Model
     {
         return $this->hasMany('App\Inscripcion');
     }
+
+    public function profesor()
+    {
+        return $this->belongsTo('App\Profesor');
+    }
 }
