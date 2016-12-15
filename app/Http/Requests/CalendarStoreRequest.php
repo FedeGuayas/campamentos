@@ -27,6 +27,7 @@ class CalendarStoreRequest extends Request
             'program_id'=> 'required',
             'dia_id'=> 'required',
             'horario_id'=> 'required',
+            'nivel'=> 'required',
             'cupos' => 'numeric|min:1',
             'mensualidad'=>'numeric|required'
         ];

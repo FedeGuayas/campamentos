@@ -7,140 +7,148 @@
 <body>
 
 <header>
-    <div class="pull-left">
-        <table align="left" border="" cellpadding="10" cellspacing="1" style="width:auto; height: auto">
+    <div class="header">
+        <table align="" border="0" cellpadding="0" cellspacing="0" style=" width: 100%; position: fixed; left: 0px; top: -30px; right: 0px;">
+            <thead>
             <tr>
-                <td style="border: solid">REGISTRO # {{sprintf("%'.05d",$inscripcion->id)}}</td>
+                <th style="width: 160px; text-decoration: underline; ">REGISTRO # {{sprintf("%'.05d",$inscripcion->id)}}</th>
+                <th style=" text-decoration: underline;">COMPROBANTE # {{$inscripcion->factura->id}}</th>
+                <th style="width:200px; height: 20px"><img alt="LOGO" src="img/camp/fdg-logo.png" style="width: 200px; height: 100px; "/>
+                </th>
             </tr>
-            <tr>
-                <td>COMPROBANTE # {{$inscripcion->factura->id}}</td>
-            </tr>
+            </thead>
         </table>
+        <br><br><br>
+        <p style="text-align: center;"><span>INSCRIPCION EN CAMPAMENTOS DEPORTIVOS FEDEGUAYAS</span></p>
     </div>
-    <div class="">
-        <table align="right" border="0" cellpadding="1" cellspacing="1" style="width: 200px; height: 100px; ">
-            <tr>
-                <th><img alt="LOGO" src="img/camp/fdg-logo.png" style="width: 200px; height: 100px; "/></th>
-            </tr>
-        </table>
-    </div>
-    <br><br><br><br><br>
-    <div class="">
-        <table align="center" border="0" cellpadding="0" cellspacing="1" style="width:auto; height: auto">
-            <tr>
-                <td style=""><span>INSCRIPCION EN CAMPAMENTOS DEPORTIVOS FEDEGUAYAS</span></td>
-            </tr>
-        </table>
-    </div>
+
 </header>
 
 <main style="font-size: 10px;">
-    <p>Datos del Inscrito</p>
-    <table align="center" border="0" cellpadding="2" cellspacing="0" style=" width: 70%; ">
-        <tr>
-            <th align="left" style="width: 130px;">ALUMNO</th>
-            <td>{{$inscripcion->alumno->persona->apellidos.' '.$inscripcion->alumno->persona->nombres}}</td>
-        </tr>
-        <tr>
-            <th align="left">FECHA DE NACIMIENTO</th>
-            <td>{{$inscripcion->alumno->persona->fecha_nac}}</td>
-        </tr>
-        <tr>
-            <th align="left">EDAD</th>
-            <td>{{$inscripcion->alumno->getEdad($inscripcion->alumno->persona->fecha_nac)}}</td>
-        </tr>
-        <tr>
-            <th align="left">SEXO</th>
-            <td>{{$inscripcion->alumno->persona->genero}}</td>
-        </tr>
-    </table>
 
-    <p>Datos del representante</p>
-    <table align="center" border="0" cellpadding="2" cellspacing="0" style=" width: 70%; ">
+    <table align="center" border="0" cellpadding="5" cellspacing="0" style=" width: 700px; ">
         <tr>
-            <th align="left" style="width: 130px;">REPRESENTANTE</th>
-            <td>{{$inscripcion->factura->representante->persona->apellidos.' '.$inscripcion->factura->representante->persona->nombres}}</td>
-        </tr>
-        <tr>
-            <th align="left">DIRECCION</th>
-            <td>{{$inscripcion->factura->representante->persona->direccion}}</td>
+            <th style="text-decoration: underline">DATOS DEL INSCRITO</th>
+            <th style="text-decoration: underline">DATOS DEL REPRESENTANTE</th>
         </tr>
         <tr>
-            <th align="left">TEEFONO</th>
-            <td>{{$inscripcion->factura->representante->persona->telefono}}</td>
-        </tr>
-        <tr>
-            <th align="left">CORREO ELECTRONICO</th>
-            <td>{{$inscripcion->factura->representante->persona->email}}</td>
-        </tr>
-    </table>
-
-
-    <p>Datos del curso</p>
-    <table align="center" border="0" cellpadding="2" cellspacing="0" style=" width: 70%; ">
-        <tr >
-            <th align="left" style="width: 130px;">ESCENARIO</th>
-            <td>{{$inscripcion->calendar->program->escenario->escenario}}</td>
-        </tr>
-        <tr >
-            <th align="left">DISCIPLINA</th>
-            <td>{{$inscripcion->calendar->program->disciplina->disciplina}}</td>
-        </tr>
-        <tr >
-            <th align="left">DIAS</th>
-            <td>{{$inscripcion->calendar->dia->dia}}</td>
-        </tr>
-        <tr >
-            <th align="left">HORARIO</th>
-            <td>{{$inscripcion->calendar->horario->start_time.'-' .$inscripcion->calendar->horario->end_time }}</td>
-        </tr>
-        <tr >
-            <th align="left">MODULO</th>
-            <td>{{$inscripcion->calendar->program->modulo->modulo}}</td>
-        </tr>
-    </table>
-
-    <p>Datos sobre la inscripción</p>
-    <table align="center" border="0" cellpadding="2" cellspacing="0" style=" width: 70%; ">
-        <tr>
-            <th align="left" style="width: 130px;">TIPO DE INSCRIPCION</th>
             <td>
-                @if( count($inscripcion->factura_id)>1)
-                    MULTIPLE
-                @else
-                    IDIVIDUAL
-                @endif
+                <table align="center" border="0" cellpadding="2" cellspacing="0" style=" width: 400px; ">
+                    <tr>
+                        <th align="right" style="width: 130px;">ALUMNO:</th>
+                        <td>{{$inscripcion->alumno->persona->apellidos.' '.$inscripcion->alumno->persona->nombres}}</td>
+                    </tr>
+                    <tr>
+                        <th align="right">FECHA DE NACIMIENTO:</th>
+                        <td>{{$inscripcion->alumno->persona->fecha_nac}}</td>
+                    </tr>
+                    <tr>
+                        <th align="right">EDAD:</th>
+                        <td>{{$inscripcion->alumno->getEdad($inscripcion->alumno->persona->fecha_nac)}}</td>
+                    </tr>
+                    <tr>
+                        <th align="right">SEXO:</th>
+                        <td>{{$inscripcion->alumno->persona->genero}}</td>
+                    </tr>
+                </table>
+            </td>
+            <td>
+                <table align="" border="0" cellpadding="2" cellspacing="0" style=" width: 400px; ">
+                    <tr>
+                        <th align="right" style="width: 130px;">REPRESENTANTE:</th>
+                        <td>{{$inscripcion->factura->representante->persona->apellidos.' '.$inscripcion->factura->representante->persona->nombres}}</td>
+                    </tr>
+                    {{--<tr>--}}
+                        {{--<th align="left">DIRECCION</th>--}}
+                        {{--<td>{{$inscripcion->factura->representante->persona->direccion}}</td>--}}
+                    {{--</tr>--}}
+                    {{--<tr>--}}
+                        {{--<th align="left">TEEFONO</th>--}}
+                        {{--<td>{{$inscripcion->factura->representante->persona->telefono}}</td>--}}
+                    {{--</tr>--}}
+                    {{--<tr>--}}
+                        {{--<th align="left">CORREO ELECTRONICO</th>--}}
+                        {{--<td>{{$inscripcion->factura->representante->persona->email}}</td>--}}
+                    {{--</tr>--}}
+                </table>
             </td>
         </tr>
-        <tr >
-            <th align="left">APLICA DESCUENTO</th>
-            <td>
-                @if($inscripcion->factura->descuento==null || $inscripcion->factura->descuento==0)
-                    NO
-                @else
-                    SI
-                @endif
-            </td>
-        </tr>
-        <tr >
-            <th align="left">FORMA DE PAGO</th>
-            <td>{{$inscripcion->factura->pago->forma}}</td>
-        </tr>
-        <tr >
-            <th align="left">USUARIO</th>
-            <td>{{$inscripcion->user->getNameAttribute()}}</td>
-        </tr>
-        <tr >
-            <th align="left">CANCELADO</th>
-            <td>$ {{number_format($inscripcion->factura->total,2,'.',' ')}}</td>
-        </tr>
     </table>
 
+    <table align="center" border="0" cellpadding="5" cellspacing="0" style=" width: 700px; ">
+        <tr>
+            <th style="text-decoration: underline">DATOS DEL CURSO</th>
+            <th style="text-decoration: underline">DATOS SOBRE LA INSCRIPCION</th>
+        </tr>
+        <tr>
+            <td>
+                <table align="center" border="0" cellpadding="2" cellspacing="0" style=" width: 400px;">
+                    <tr>
+                        <th align="right"  style="width: 130px;">MODULO:</th>
+                        <td>{{$inscripcion->calendar->program->modulo->modulo}}</td>
+                    </tr>
+                    <tr >
+                        <th align="right">ESCENARIO:</th>
+                        <td>{{$inscripcion->calendar->program->escenario->escenario}}</td>
+                    </tr>
+                    <tr >
+                        <th align="right">DISCIPLINA:</th>
+                        <td>{{$inscripcion->calendar->program->disciplina->disciplina}}</td>
+                    </tr>
+                    <tr >
+                        <th align="right">DIAS:</th>
+                        <td>{{$inscripcion->calendar->dia->dia}}</td>
+                    </tr>
+                    <tr >
+                        <th align="right">HORARIO:</th>
+                        <td>{{$inscripcion->calendar->horario->start_time.'-' .$inscripcion->calendar->horario->end_time }}</td>
+                    </tr>
+                </table>
+            </td>
+            <td>
+                <table align="center" border="0" cellpadding="2" cellspacing="0" style=" width: 400px;">
+                    <tr >
+                        <th align="right">APLICA DESCUENTO:</th>
+                        <td>
+                            @if($inscripcion->factura->descuento==null || $inscripcion->factura->descuento==0)
+                                NO
+                            @else
+                                SI
+                            @endif
+                        </td>
+                    </tr>
+                    <tr>
+                        <th align="right" style="width: 130px;">TIPO DE INSCRIPCION:</th>
+                        <td>
+                            @if($inscripcion->factura->descuento==null || $inscripcion->factura->descuento==0)
+                                INDIVIDUAL
+                            @else
+                               INSCRIPCION, {{$inscripcion->factura->descuentos->descripcion}}
+                            @endif
+                        </td>
+                    </tr>
+
+                    <tr >
+                        <th align="right">FORMA DE PAGO:</th>
+                        <td>{{$inscripcion->factura->pago->forma}}</td>
+                    </tr>
+                    <tr >
+                        <th align="right">USUARIO:</th>
+                        <td>{{$inscripcion->user->getNameAttribute()}}</td>
+                    </tr>
+                    <tr >
+                        <th align="right">CANCELADO:</th>
+                        <td>$ {{number_format($inscripcion->factura->total,2,'.',' ')}}</td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
 </main>
 
 <br>
 
-<footer style="font-size: 9px">
+<footer style="font-size: 12px">
     <table align="center" border="0" cellspacing="0" style="width:80%; font-style: italic; text-align : justify; ">
         <tr>
             <td>
@@ -163,7 +171,7 @@
     <table align="center" border="1" cellpadding="10" cellspacing="10" style="width:90%; text-align : justify; ">
         <tr>
             <td>
-                <p>Guayaquil, {{$fecha_actual->day}} de {{$fecha_actual->month}} del {{$fecha_actual->year}}</p>
+                <p>Guayaquil, {{$fecha_actual->day}} de {{$month}} del {{$fecha_actual->year}}</p>
 
                 <p align="center"><span><strong>CARTA DE AUTORIZACION Y COMPROMISO</strong></span></p>
 
@@ -226,7 +234,7 @@
 
     <br><br>
 
-    <p style="font-size: 12px; color: #0a568c; text-align: center; position: fixed; left: 0px; bottom: -150px; right: 0px; height: 150px;">
+    <p style="font-size: 12px; color: #0a568c; text-align: center; position: fixed; left: 0px; bottom: -180px; right: 0px; height: 150px;">
         Oficina: José Mascote 1103 y Luque. Telfs: 2367856 - 2531488. fedeguayas.com.ec. email: fdg@telconet.net <br>
         Casilla 836 Telegramas y Cables - FEDEGUAYAS. Guayaquil - Ecuador
     </p>

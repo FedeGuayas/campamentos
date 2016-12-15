@@ -52,7 +52,7 @@ class Factura extends Model
 
     public function descuentos()
     {
-        return $this->hasMany('App\Descuento');
+        return $this->hasOne('App\Descuento');
     }
 
     public function inscripcions()

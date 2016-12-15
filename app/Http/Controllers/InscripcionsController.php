@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Calendar;
+use App\Descuento;
 use App\Events\NuevaInscripcion;
 use App\Factura;
 use App\Inscripcion;
@@ -117,6 +118,7 @@ class InscripcionsController extends Controller
      */
     public function store(Request $request)
     {
+
         if (Auth::user()->hasRole(['planner', 'administrator', 'signup'])) {
 
 
@@ -161,6 +163,14 @@ class InscripcionsController extends Controller
                     }
 
                     $factura->save();
+
+                    if ($request->input('descuento_empleado') == 'true') {
+                        $descuentos=new Descuento();
+                        $descuentos->factura()->associate($factura);
+                        $descuentos->descripcion='DESCUENTO EMPLEADO';
+                        $descuentos->valor=$factura->descuento;
+                        $descuentos->save();
+                    }
 
                     //inscripcion
                     $user = $request->user();
@@ -243,7 +253,7 @@ class InscripcionsController extends Controller
             if ($desc_emp == 'true') {
                 $desc2 = 0.5;
                 $descuento = $precioTotal * $desc2;
-            } else  $desc2 = 0;
+            }
             
 
             $total = $precioTotal - $descuento;
@@ -262,6 +272,22 @@ class InscripcionsController extends Controller
                 $factura->descuento = $descuento;
 
                 $factura->save();
+
+                $descuentos=new Descuento();
+                $descuentos->factura()->associate($factura);
+                $descuentos->valor=$descuento;
+                if ($tipo_descuento == 'familiar') {
+                    $descuentos->descripcion='DESCUENTO FAMILIAR';
+                    $descuentos->save();
+                }
+                if ($tipo_descuento == 'multiple') {
+                    $descuentos->descripcion='DESCUENTO MULTIPLE';
+                    $descuentos->save();
+                }
+                if ($desc_emp == 'true') {
+                    $descuentos->descripcion='DESCUENTO EMPLEADO';
+                    $descuentos->save();
+                }
 
 
                 foreach ($cursos as $curso) {//recorro los cursos

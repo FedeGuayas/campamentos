@@ -249,9 +249,9 @@ class ProgramsController extends Controller
 //            $categoria = ['' => 'Seleccione la categoría'] + Categoria::lists('categoria', 'id')->all();
 //            $escenar = $escenarios->pluck('escenario', 'escenario_id');
 
-            if ($mes>=4 && $mes<=12)
+            if ($mes>=5 && $mes<=12)
                 $estacion='VERANO';
-            elseif ($mes>=1 && $mes<2)
+            elseif ($mes>=1 && $mes<3)
                 $estacion='VERANO';
             else
                 $estacion='INVIERNO';

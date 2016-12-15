@@ -155,7 +155,7 @@ $("#dia_id").change(function (event) {
             horario.find("option:gt(0)").remove();
             horario.addClass("teal-text");
             for (i = 0; i < response.length; i++) {
-                horario.append('<option value="' + response[i].horario_id + '">' + response[i].start_time + ' ' + response[i].end_time + ' ( ' + response[i].init_age + ' - ' + response[i].end_age + ') </option>');
+                horario.append('<option value="' + response[i].horario_id + '">' + response[i].start_time + ' ' + response[i].end_time + ' ( ' + response[i].init_age + ' - ' + response[i].end_age + ' años ) </option>');
             }
             horario.material_select();
         },

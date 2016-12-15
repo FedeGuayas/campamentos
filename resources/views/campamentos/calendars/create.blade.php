@@ -56,17 +56,17 @@
                             {!! Form::number('cupos',null,['class'=>'validate' ,'placeholder'=>'0']) !!}
                         </div>
                         <div class="input-field  col l4 m4 s12">
-                            {!! Form::text('nivel',null,['class'=>'validate','style'=>'text-transform:uppercase']) !!}
+                            {!! Form::select('nivel',['BASICO' => 'BASICO', 'INTERMEDIO' => 'INTERMEDIO', 'AVANZADO' => 'AVANZADO'],null,['placeholder' => 'Seleccione...','id'=>'nivel']) !!}
                             {!! Form::label('nivel','Nivel:') !!}
                         </div>
 
                         <div class="range-field  col l4 m4 s12">
                             {!! Form::label('init_age','Edad inicial:') !!}
-                            {!! Form::number('init_age',null,['class'=>'validate']) !!}
+                            {!! Form::number('init_age',null,['class'=>'validate','required']) !!}
                         </div>
                         <div class="range-field  col l4 m4 s12">
                             {!! Form::label('end_age','Edad final:') !!}
-                            {!! Form::number('end_age',null,['class'=>'validate']) !!}
+                            {!! Form::number('end_age',null,['class'=>'validate','required']) !!}
                         </div>
 
                     </div>

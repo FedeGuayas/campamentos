@@ -135,25 +135,27 @@ class ReportesController extends Controller
 
         $inscripcion=Inscripcion::with('factura','calendar','user','alumno')
             ->where('id',$id)
+            ->withCount('factura')
             ->first();
-        
+        setlocale(LC_TIME, 'es');
         $fecha_actual =Carbon::now();
-        $month = $fecha_actual->month;
+        $month = $fecha_actual->formatLocalized('%B');//mes en español
         $day = $fecha_actual->format('d');
         $year = $fecha_actual->format('Y');
         $date = $fecha_actual->format('Y-m-d');
-//        $datetime = $fecha_actual->toDateTimeString();
+       
+      
                         
         if ($inscripcion->alumno_id==0){//adulto
             
             
-            $pdf = PDF::loadView('campamentos.reportes.insc-adulto-pdf', compact('inscripcion','fecha_actual'));
+            $pdf = PDF::loadView('campamentos.reportes.insc-adulto-pdf', compact('inscripcion','fecha_actual','month'));
 //        return $pdf->download('ComprobantePago.pdf');//descarga el pdf
             return $pdf->stream('ComprobantePago');//imprime en pantalla
                 
         }else {//menor
             
-            $pdf = PDF::loadView('campamentos.reportes.insc-menor-pdf', compact('inscripcion','fecha_actual'));
+            $pdf = PDF::loadView('campamentos.reportes.insc-menor-pdf', compact('inscripcion','fecha_actual','month'));
 //        return $pdf->download('ComprobantePago.pdf');//descarga el pdf
             return $pdf->stream('ComprobantePago');//imprime en pantalla
             
