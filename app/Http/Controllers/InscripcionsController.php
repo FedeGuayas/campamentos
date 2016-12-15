@@ -296,9 +296,11 @@ class InscripcionsController extends Controller
                         Session::flash('message_danger', 'No hay disponibilidad para el curso');
                         return redirect()->back();
                     }
+
                     foreach ($curso['alumno'] as $alumno) {//por cada alumno en cada curso hago una incripcion
                         $inscripcion = new Inscripcion();
-
+                        $inscripcion->mensualidad=$calendar->mensualidad;
+//                        $inscripcion->matricula=$curso['matricula'];
                         $inscripcion->calendar()->associate($calendar);
                         $inscripcion->factura()->associate($factura);
                         $inscripcion->user()->associate($user);

@@ -16,14 +16,12 @@
                 <table class="table table-striped table-bordered table-condensed table-hover">
                     <thead>
                     <th>Usuarios</th>
-                    <th>Inscripciones</th>
                     <th>Valor</th>
                     </thead>
                     @foreach ($cuadreArray as $c )
                         <tr>
                             <td>{{ $c['nombre'] }}</td>
-                            <td>{{ $c['cantidad'] }}</td>
-                            <td>{{ $c['valor'] }}</td>
+                            <td>$ {{number_format($c['valor'],2,'.',' ')}}</td>
                         </tr>
                    @endforeach
                 </table><!--end table-responsive-->

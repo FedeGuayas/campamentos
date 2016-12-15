@@ -5,7 +5,7 @@
             {!! Form::date('fecha',$fecha,['class'=>'datepicker']) !!}
         </div>
         <div class="input-field col s3 ">
-            {{Form::select('escenario',$escenarioSelect,$escenario,['class'=>'form-control']) }}
+            {{Form::select('escenario',$escenarioSelect,$escenario,['id'=>'escenario']) }}
         </div>
 
         <div class="input-field col s3 ">

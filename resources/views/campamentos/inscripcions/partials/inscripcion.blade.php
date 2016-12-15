@@ -78,15 +78,15 @@
                     {!! Form::label('disciplina_id', 'Disciplinas:*') !!}
                 </div>
             </div>
-        </div>
-
-        <div class="row">
-            <div class="col l3">
+            <div class="col l4">
                 <div class="input-field">
                     {!! Form::select('dia_id', ['placeholder'=>'Seleccione ...'],null, ['id'=>'dia_id']) !!}
                     {!! Form::label('dia_id', 'Dias:*') !!}
                 </div>
             </div>
+        </div>
+
+        <div class="row">
             <div class="col l4">
                 <div class="input-field">
                     {!! Form::select('horario_id', ['placeholder'=>'Seleccione ...'],null, ['id'=>'horario_id']) !!}
@@ -97,15 +97,15 @@
                 {!! Form::select('nivel',['placeholder' => 'Seleccione...'],null,['class'=>'validate','id'=>'nivel']) !!}
                 {!! Form::label('nivel','Nivel:') !!}
             </div>
-        </div>
-
-        <div class="row">
-            <div class="col l2">
+            <div class="col l3">
                 <div class="input-field">
                     {!! Form::select('fpago_id',$fpagos,null, ['placeholder'=>'Seleccione ...'], ['id'=>'fpago_id']) !!}
                     {!! Form::label('fpago_id', 'Forma de pago:*') !!}
                 </div>
             </div>
+        </div>
+
+        <div class="row">
             <div class="col l2">
                 <div class="input-field">
                     {!! Form::checkbox('familiar',null,false,['id'=>'familiar']) !!}

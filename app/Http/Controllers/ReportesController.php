@@ -28,6 +28,12 @@ class ReportesController extends Controller
 //        $this->middleware(['role:supervisor|administrador']);
     }
 
+
+    /**
+     * Vista para Reporte general
+     * @param Request $request
+     * @return mixed
+     */
     public function getExcel(Request $request)
     {
         
@@ -47,7 +53,11 @@ class ReportesController extends Controller
 
         return view('campamentos.reportes.reporte-excell',compact('inscripciones','start','end'));
     }
-    
+
+    /**
+     * Exportar Reporte General a excel
+     * @param Request $request
+     */
     public function exportExcel(Request $request){
 
         $start = trim($request->get('start'));
@@ -132,6 +142,7 @@ class ReportesController extends Controller
 
     }
 
+    //comprobantes de inscripciones
     public function inscripcionPDF($id){
 
         $inscripcion=Inscripcion::with('factura','calendar','user','alumno')
@@ -171,27 +182,33 @@ class ReportesController extends Controller
 
         if ($request) {
             $fecha = $request->get('fecha');
+            $fecha=new Carbon($fecha);
+            $fecha=$fecha->toDateString();
             $escenario = $request->get('escenario');
             $usuario = $request->get('usuario');
 
 
-            $cuadre = DB::table('inscripcions as i')
-                ->join('facturas as f', 'f.id', '=', 'i.factura_id')
+            $cuadre = Factura::
+                join('inscripcions as i', 'i.factura_id', '=', 'facturas.id')
                 ->join('users as u', 'u.id', '=', 'i.user_id')
-                ->select('f.total','i.factura_id', 'i.user_id as uid','i.created_at as fecha', 'u.first_name','u.last_name')
-//                ->where('inscripcions.created_at', 'LIKE', '%' . $fecha . '%')
-//                ->where('u.id','=', $usuario)
-                ->groupBy('uid')
+                ->select('total','factura_id', 'i.user_id as uid', 'u.first_name','u.last_name','u.escenario_id')
+                ->where('facturas.created_at', 'like', '%' . $fecha . '%')
+                ->where('u.escenario_id', $escenario)
+//                ->groupBy('uid')
                 ->get();
-          
+
+
+
+
+
 
             $cuadreArray = [];
             foreach ($cuadre as $c) {
 
                 $cuadreArray[] = [
                     'nombre' => $c->first_name.' '.$c->last_name,
-                    'cantidad' => Inscripcion::where('user_id', $c->uid)->where('created_at', 'LIKE', '%' . $fecha . '%')->count(),
-                    'valor' => Factura::where('id', $c->factura_id)->where('created_at', 'LIKE', '%' . $fecha . '%')->sum('total'),
+//                    'total'=>$c,
+                    'valor' => $c->sum('total'),
                 ];
             }
             
