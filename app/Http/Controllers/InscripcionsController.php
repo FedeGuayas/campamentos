@@ -52,7 +52,7 @@ class InscripcionsController extends Controller
     {
         $inscripciones = Inscripcion::where('estado', 'Reservada')->with('factura', 'calendar', 'user', 'alumno')->get();
         $reservas = $inscripciones->count();
-
+        
         Session::put('reservas', $reservas);
 //        dd(Session::get('reservas'));
         return view('campamentos.inscripcions.reservas', ['inscripciones' => $inscripciones]);

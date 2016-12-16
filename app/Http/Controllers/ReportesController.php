@@ -197,11 +197,7 @@ class ReportesController extends Controller
 //                ->groupBy('uid')
                 ->get();
 
-
-
-
-
-
+            
             $cuadreArray = [];
             foreach ($cuadre as $c) {
 

@@ -17,14 +17,9 @@
             <table id="inscripcion_table" class="table table-striped table-bordered table-condensed table-hover highlight responsive-table" cellspacing="0" width="100%">
                 <thead>
                 <tr>
-                    <th>No.</th>
-                    {{--<th>Alumno</th>--}}
-                    {{--<th>CI Al.</th>--}}
-                    {{--<th>Mes</th>--}}
+                    <th >No.</th>
                     <th>Escenario</th>
                     <th>Disciplina</th>
-                    {{--<th>Dias</th>--}}
-                    {{--<th>Horarios</th>--}}
                     <th>Representante</th>
                     <th>CI Rep.</th>
                     <th>Valor</th>
@@ -36,13 +31,8 @@
                 <tfoot>
                 <tr>
                     <th class="search-filter">No.</th>
-                    {{--<th>Alumno</th>--}}
-                    {{--<th class="search-filter">CI Al.</th>--}}
-                    {{--<th class="search-filter">Mes</th>--}}
                     <th class="search-filter">Escenario</th>
                     <th class="search-filter">Disciplina</th>
-                    {{--<th>Dias</th>--}}
-                    {{--<th>Horarios</th>--}}
                     <th>Representante</th>
                     <th>CI Rep.</th>
                     <th>Valor</th>
@@ -62,7 +52,7 @@
                         <td>{{ $insc->factura->representante->persona->num_doc }}</td>
                         <td>$ {{ number_format($insc->factura->total, 2, '.', ' ') }}</td>
                         <td>{{$insc->created_at->diffForHumans()}}</td>
-                        <td>{{ $insc->created_at }}</td>
+                        <td>{{ $insc->created_at->addDay() }}</td>
                         <td>
                             @if ( Entrust::can('cancel_reserva'))
                             <a href="{{ route('admin.reserva.cancel', $insc->id ) }}">

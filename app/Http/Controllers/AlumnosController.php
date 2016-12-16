@@ -134,6 +134,7 @@ class AlumnosController extends Controller
      */
     public function store(Request $request)
     {
+
         if(Auth::user()->hasRole(['planner','administrator','signup'])){
         $validator = $this->validator($request->all());
         if ($validator->fails()) {
@@ -151,12 +152,17 @@ class AlumnosController extends Controller
             $persona->num_doc=$request->get('num_doc');
             $persona->genero=$request->get('genero');
             $persona->fecha_nac=$request->get('fecha_nac');
-            $persona->direccion=strtoupper($request->get('direccion'));
+//            $persona->direccion=strtoupper($request->get('direccion'));
             $persona->save();
 
             $alumno=new Alumno;
 
-            $representante=Representante::where('persona_id',$request->get('persona_id'))->first();
+            if ($request->ajax()){
+                $representante=Representante::where('id',$request->get('persona_id'))->first();
+            }else{
+                $representante=Representante::where('persona_id',$request->get('persona_id'))->first();
+            }
+
             $alumno->persona()->associate($persona);
             $alumno->representante()->associate($representante);
 
@@ -177,6 +183,7 @@ class AlumnosController extends Controller
 
             $alumno->save();
 
+
             DB::commit();
 
             if ($request->ajax()){
@@ -189,6 +196,8 @@ class AlumnosController extends Controller
 
         } catch (\Exception $e) {
             DB::rollback();
+            Session::flash('message_danger', $e->getMessage());
+            return redirect()->back('admin.alumnos.index');
         }
 
         Session::flash('message', 'Alumno creado correctamente');

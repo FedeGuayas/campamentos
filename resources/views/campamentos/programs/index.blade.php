@@ -55,7 +55,7 @@
                         <td>{{ $program->modulo }}</td>
                         <td>$ {{ number_format($program->matricula, 2, '.', ' ') }}</td>
                         <td>
-                            @if (($program->activated)===1)
+                            @if (($program->activated)=='1')
                                 <span class="label label-success">Activo</span>
                                 @if ( Auth::user()->hasRole(['planner','administrator']))
                                 <a href="{{ route('admin.programs.disable', $program->id)}}">

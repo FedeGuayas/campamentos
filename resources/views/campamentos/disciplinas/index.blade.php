@@ -31,7 +31,7 @@
                             <td>{{ $dis->id }}</td>
                             <td>{{ $dis->disciplina }}</td>
                             <td>
-                                @if (($dis->activated)===1)
+                                @if (($dis->activated)==='1')
                                     <span class="label label-success">Activo</span>
                                     <a href="{{ route('admin.disciplinas.disable', $dis->id)}}">
                                         {!! Form::button('<i class="tiny fa fa-check" aria-hidden="true"></i>',['class'=>'label waves-effect waves-light red darken-1']) !!}

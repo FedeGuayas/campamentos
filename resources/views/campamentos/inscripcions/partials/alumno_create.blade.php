@@ -5,6 +5,8 @@
             <div class="card-content ">
                 @include('alert.request')
                 {!! Form::open(['class'=>'form_noEnter', 'id'=>'form_alumno']) !!}
+                {{--seleccionada en representente, es id_persona--}}
+                {!! Form::hidden('persona_id',null,['id'=>'persona_id']) !!}
                 <div id="mensaje-success" class="alert alert-success alert-dismissible" role="alert" style="display: none">
                     <button type="button" class="close" data-dismiss="alert" aria-labelledby="Close"><span aria-hidden="true">&times;</span></button>
                     <li><strong id="msj-succes"></strong></li>
@@ -18,13 +20,6 @@
 
                 <div class="col s12">
 
-                    {{--<div class="input-field col l8 m8 s10">--}}
-                        {{--{!! Form::text('representate',null,['class'=>'validate','required','placeholder'=>'Representante', 'id'=>'representante','disabled']) !!}--}}
-                        {!! Form::hidden('persona_id',null,['id'=>'persona_id']) !!}
-                    {{--</div>--}}
-                    {{--<div class="input-field col l2 m2 s1 offset-l1 ">--}}
-                        {{--{!! Form::button('<i class="fa fa-search" aria-hidden="true"></i>',['class'=>'btn waves-effect waves-light darken-1 modal-search' ,'data-target'=>'modal-search' ]) !!}--}}
-                    {{--</div>--}}
 
                     <div class="input-field col l6 m6 s12 ">
                         <i class="fa fa-user prefix"></i>

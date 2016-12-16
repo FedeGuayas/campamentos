@@ -213,6 +213,8 @@ class RepresentantesController extends Controller
 
         } catch (\Exception $e) {
             DB::rollback();
+            Session::flash('message_danger', $e->getMessage());
+            return redirect()->back('admin.representantes.index');
         }
 
         Session::flash('message', 'Representante creado correctamente');

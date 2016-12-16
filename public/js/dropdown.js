@@ -132,6 +132,8 @@ $("#disciplina_id").change(function (event) {
 //cargar horarios al seleccionar el dia,  paso todos los parametros pa determinar el programa al k pertenecen
 $("#dia_id").change(function (event) {
     var horario=$("#horario_id");
+    var alumno_id=$("#alumno_id").val();
+    var representante_id=$("#representante_id").val();
     var escenario_id=$("#escenario_id").val();
     var disciplina_id=$("#disciplina_id").val();
     var modulo_id=$("#modulo_id").val();
@@ -139,7 +141,9 @@ $("#dia_id").change(function (event) {
         escenario:escenario_id,
         disciplina:disciplina_id,
         modulo:modulo_id,
-        dia_id:event.target.value,
+        alumno_id:alumno_id,
+        representante_id:representante_id,
+        dia_id:event.target.value
     }
     // var token = $("input[name=_token]").val();
     $.ajax({
@@ -149,12 +153,12 @@ $("#dia_id").change(function (event) {
         // contentType: 'application/x-www-form-urlencoded',
         data: datos,
         success: function (response) {
-            // console.log(response);
+            console.log(response);
             // horario.empty();
             horario.find("option:gt(0)").remove();
             horario.addClass("teal-text");
-            for (i = 0; i < response.length; i++) {
-                horario.append('<option value="' + response[i].horario_id + '">' + response[i].start_time + ' ' + response[i].end_time + ' ( ' + response[i].init_age + ' - ' + response[i].end_age + ' años ) </option>');
+            for (i = 0; i < response.horario.length; i++) {
+                horario.append('<option value="' + response.horario[i].horario_id + '">' + response.horario[i].start_time + ' ' + response.horario[i].end_time + ' ( ' + response.horario[i].init_age + ' - ' + response.horario[i].end_age + ' años ) </option>');
             }
             horario.material_select();
         },

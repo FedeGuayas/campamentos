@@ -9,6 +9,7 @@ use App\Dia;
 use App\Disciplina;
 use App\Escenario;
 use App\Profesor;
+use Carbon\Carbon;
 use Event;
 use App\Events\NuevaInscripcion;
 use App\Factura;
@@ -220,6 +221,15 @@ class CalendarsController extends Controller
                 ->where('disciplina_id',$disciplina_id)
                 ->where('modulo_id',$modulo_id)->first();
 
+            if ($request->input('alumno_id')=='null' || !$request->input('alumno_id')){
+                $representante=Representante::where('id',$request->input('representante_id'))->with('persona')->first();
+                $edad=$representante->getEdad($representante->persona->fecha_nac);
+
+            }else {
+                $alumno=Alumno::where('id',$request->input('alumno_id'))->with('persona')->first();
+                $edad=$alumno->getEdad($alumno->persona->fecha_nac);
+            }
+
             $horario=Calendar::
                 join('horarios as h','h.id','=','c.horario_id','as c')
                 ->join('dias as d','d.id','=','c.dia_id')
@@ -227,9 +237,20 @@ class CalendarsController extends Controller
                     'h.id as hID','c.dia_id','c.horario_id','c.nivel', 'c.init_age','c.end_age')
                 ->where('program_id',$program->id)
                 ->where('c.dia_id',$dia_id)
-                ->where('h.activated',true)->get()->toArray();
+                ->where(function ($query) use ($edad) {
+                    $query->where('c.init_age', '<=', $edad)
+                        ->where('c.end_age', '>=', $edad);
+                })
+                ->where('h.activated',true)
+                ->get()
+                ->toArray();
 
-            return response($horario);
+
+
+
+
+
+            return response(['horario'=>$horario,'edad'=>$edad]);
         }
     }
 
