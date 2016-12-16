@@ -24,46 +24,48 @@
     <div class="row">
         <div class="col l12 m12 s12">
 
-                <table id="representante_tabl" class="table table-striped table-bordered table-condensed table-hover highlight responsive-table" cellspacing="0" width="100%">
+            <table id="representante_table" class="table table-striped table-bordered table-condensed table-hover highlight responsive-table" cellspacing="0" width="100%" style="display: none"   data-order='[[ 0, "asc" ]]'>
                     <thead>
-                    <th>Id</th>
-                    <th>Nombres y Apellidos</th>
-                    <th>CI</th>
-                    <th>Alumno</th>
-                    <th>CI</th>
-                    <th>Opciones</th>
+                        <th width="40">Id</th>
+                        <th width="130">Nombres</th>
+                        <th width="130">Apellidos</th>
+                        <th width="70">CI</th>
+                        <th width="220">Alumno</th>
+                        <th width="70">CI</th>
+                        <th width="70">Opciones</th>
                     </thead>
-                    @foreach ($representantes as $rep)
-                        <tr>
-                            <td>{{ $rep->id }}</td>
-                            <td>{{ $rep->persona->getNombreAttribute() }}</td>
-                            <td>{{ $rep->persona->num_doc }}</td>
-                            <td>
-                                @foreach ($rep->alumnos as $alumno)
-                                    {{ $alumno->persona->getNombreAttribute() }}<br>
-                                @endforeach
-                            </td>
-                            <td>
-                                @foreach ($rep->alumnos as $alumno)
-                                    {{ $alumno->persona->num_doc }}<br>
-                                @endforeach
-                            </td>
-                            <td>
-                                @if ( Auth::user()->can('edit_representante'))
-                                <a href="{{ route('admin.representantes.edit', $rep->id ) }}">
-                                    {!! Form::button('<i class="tiny fa fa-pencil-square-o" ></i>',['class'=>'label waves-effect waves-light teal darken-1']) !!}
-                                </a>
-                                @endif
-                                <a href="{{ route('admin.representantes.show', $rep->id ) }}">
-                                    {!! Form::button('<i class="tiny fa fa-eye"></i>',['class'=>'label waves-effect waves-light teal darken-1']) !!}
-                                </a>
-                                    @if ( Auth::user()->can('delete_representante'))
-                                        {!! Form::button('<i class="tiny fa fa-trash-o" ></i>',['class'=>'modal-trigger label waves-effect waves-light red darken-1','data-target'=>"modal-delete-$rep->id"]) !!}
-                                    @endif
-                            </td>
-                        </tr>
-                        @include ('campamentos.representantes.modal')
-                    @endforeach
+                    <tfoot>
+                    <tr>
+                        <th>Id</th>
+                        <th>Nombres</th>
+                        <th>Apellidos</th>
+                        <th>CI</th>
+                        <th>Alumno</th>
+                        <th>CI</th>
+                        <th>Opciones</th>
+                    </tr>
+                    </tfoot>
+                    {{--@foreach ($representantes as $rep)--}}
+                        {{--<tr>--}}
+                            {{--<td>{{ $rep->id }}</td>--}}
+                            {{--<td>{{ $rep->persona->getNombreAttribute() }}</td>--}}
+                            {{--<td>{{ $rep->persona->num_doc }}</td>--}}
+                            {{--<td>--}}
+                                {{--@foreach ($rep->alumnos as $alumno)--}}
+                                    {{--{{ $alumno->persona->getNombreAttribute() }}<br>--}}
+                                {{--@endforeach--}}
+                            {{--</td>--}}
+                            {{--<td>--}}
+                                {{--@foreach ($rep->alumnos as $alumno)--}}
+                                    {{--{{ $alumno->persona->num_doc }}<br>--}}
+                                {{--@endforeach--}}
+                            {{--</td>--}}
+                            {{--<td>--}}
+
+                            {{--</td>--}}
+                        {{--</tr>--}}
+                        {{--@include ('campamentos.representantes.modal')--}}
+                    {{--@endforeach--}}
                 </table><!--end table-responsive-->
         </div><!--end div ./col-lg-12. etc-->
     </div><!--end div ./row-->
@@ -75,8 +77,20 @@
         $(document).ready( function () {
 
             var table =  $('#representante_table').DataTable({
-                "lengthMenu": [[10, 25], [10, 25]],
-                "processing": false,
+                lengthMenu: [[10, 25], [10, 25]],
+                processing: true,
+                stateSave: true,
+                serverSide:true,
+                ajax: '{{route('admin.representantes')}}',
+                columns: [
+                    {data: 'id', name: 'representantes.id'},
+                    {data: 'persona.nombres', name: 'persona.nombres'},
+                    {data: 'persona.apellidos', name: 'persona.apellidos'},
+                    {data: 'persona.num_doc', name: 'persona.num_doc'},
+                    {data: 'nombres', name: 'alumnos.nombres'},
+                    {data: 'ci', name: 'alumnos.ci'},
+                    {data: 'actions', name: 'actions'}
+                ],
                 "language":{
                     "decimal":        "",
                     "emptyTable":     "No se encontraron datos en la tabla",
@@ -103,6 +117,19 @@
                 },
                 "fnInitComplete":function(){
                     $('#representante_table').fadeIn();
+
+
+                    table.columns().every(function () {
+                        var column = this;
+
+                        var input = document.createElement("input");
+                        $(input).appendTo($(column.footer()).empty())
+                                .on('keyup change', function () {
+                                    column.search($(this).val(), false, false, true).draw();
+                                });
+
+                    });
+
                 }
             });
 

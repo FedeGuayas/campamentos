@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Response;
 use Session;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
-
+use Yajra\Datatables\Datatables;
 use DB;
 
 
@@ -39,11 +39,54 @@ class RepresentantesController extends Controller
      */
     public function index(Request $request)
     {
-        if ($request){
-            $representantes=Representante::with('persona')->paginate(10);
+        return view('campamentos.representantes.index');
+    }
+
+
+    /**
+     * Obtener el listado de todos los representante para datatables con ajax
+     * @param Request $request
+     * @return mixed
+     */
+    public function getAll(Request $request)
+    {
+        if ($request->ajax()){
+
+            $representantes = Representante::with('persona','alumnos')->selectRaw('distinct representantes.*');
+
+
+            $action_buttons = ' @if ( Auth::user()->can(\'edit_representante\'))
+                                <a href="{{ route(\'admin.representantes.edit\', [$id] ) }}">
+                                    {!! Form::button(\'<i class="tiny fa fa-pencil-square-o" ></i>\',[\'class\'=>\'label waves-effect waves-light teal darken-1\']) !!}
+                                </a>
+                                @endif
+                                <a href="{{ route(\'admin.representantes.show\',[$id] ) }}">
+                                    {!! Form::button(\'<i class="tiny fa fa-eye"></i>\',[\'class\'=>\'label waves-effect waves-light teal darken-1\']) !!}
+                                </a>
+                                    @if ( Auth::user()->can(\'delete_representante\'))
+                                        {!! Form::button(\'<i class="tiny fa fa-trash-o" ></i>\',[\'class\'=>\'modal-trigger label waves-effect waves-light red darken-1\',\'data-target\'=>"modal-delete-[$id]"]) !!}
+                                    @endif';
+
+
+            return Datatables::of($representantes)
+
+                ->addColumn('actions', $action_buttons)
+
+                ->addColumn('nombres', function (Representante $representante) {
+                    return $representante->alumnos->map(function($alumno) {
+                        return ($alumno->persona->nombres.' '.$alumno->persona->apellidos);
+                    })->implode('<br>');
+                })
+                ->addColumn('ci', function (Representante $representante) {
+                    return $representante->alumnos->map(function($alumno) {
+                        return ($alumno->persona->num_doc);
+                    })->implode('<br>');
+                })
+
+                ->make(true);
         }
- 
-        return view('campamentos.representantes.index', compact('representantes'));
+
+        return view('campamentos.alumnos.index');
     }
 
   

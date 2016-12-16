@@ -99,6 +99,11 @@ Route::group(['middleware' => 'auth', 'prefix' => 'admin'], function () {
     //confirmar reserva
     Route::get('/inscripcions/reserva/{id}/confirm',['as' => 'admin.reserva.confirm', 'uses'=>'InscripcionsController@reservaConfirm']);
 
+    //obtener todos los alumnos y representantes para el datatables con ajax
+    Route::get('/alumnos/get',['as' => 'admin.alumnos', 'uses'=>'AlumnosController@getAll']);
+    Route::get('/representantes/get',['as' => 'admin.representantes', 'uses'=>'RepresentantesController@getAll']);
+    
+
     Route::resource('users', 'UsersController');
     Route::resource('roles', 'RolesController');
     Route::resource('permissions', 'PermissionsController');

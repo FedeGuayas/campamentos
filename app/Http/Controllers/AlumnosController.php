@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use Session;
 use App\Http\Requests;
 use Illuminate\Support\Facades\Validator;
+use Yajra\Datatables\Datatables;
 
 class AlumnosController extends Controller
 {
@@ -30,12 +31,47 @@ class AlumnosController extends Controller
      */
     public function index(Request $request)
     {
-        if ($request){
-            $alumnos=Alumno::with('persona')->get();
-        }
-
-        return view('campamentos.alumnos.index', compact('alumnos'));
+        return view('campamentos.alumnos.index');
     }
+
+    /**
+     * Obtener el listado de todos los alumnos para datatables con ajax
+     * @param Request $request
+     * @return mixed
+     */
+    public function getAll(Request $request)
+    {
+        if ($request->ajax()){
+            //        $alumnos=Alumno::with('persona')->take(10);
+            $alumnos = Alumno::with('persona')->selectRaw('distinct alumnos.*');
+
+
+            $action_buttons =
+                '@if ( Auth::user()->can(\'edit_alumno\'))
+                 <a href="{{ route(\'admin.alumnos.edit\', [$id] ) }}">
+                 {!! Form::button(\'<i class="tiny fa fa-pencil-square-o" ></i>\',[\'class\'=>\'label waves-effect waves-light teal darken-1\']) !!}
+                 </a>
+                 @endif
+                 <a href="{{ route(\'admin.alumnos.show\',[$id] ) }}">
+                {!! Form::button(\'<i class="tiny fa fa-eye"></i>\',[\'class\'=>\'label waves-effect waves-light teal darken-1\']) !!}
+                 </a>
+                 @if ( Auth::user()->can(\'delete_alumno\'))
+                 {!! Form::button(\'<i class="tiny fa fa-trash-o" ></i>\',[\'class\'=>\'modal-trigger label waves-effect waves-light red darken-1\',\'data-target\'=>"modal-delete-[$id]"]) !!}
+                 @endif
+                 ';
+            
+            return Datatables::of($alumnos)
+                ->addColumn('actions', $action_buttons)
+                
+                ->make(true);
+        }
+        
+        return view('campamentos.alumnos.index');
+    }
+
+
+
+
 
     /**
      * Show the form for creating a new resource.
