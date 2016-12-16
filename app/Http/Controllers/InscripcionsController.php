@@ -26,7 +26,7 @@ class InscripcionsController extends Controller
 {
     public function __construct()
     {
-        Carbon::setLocale('es');
+        Carbon::setLocale('es'); //fechas en español
         $this->middleware('auth');
         $this->middleware(['role:administrador'], ['only' => ['destroy', 'update']]);
     }
@@ -127,18 +127,18 @@ class InscripcionsController extends Controller
                 try {
 
                     DB::beginTransaction();
-                    $calendar_id = $request->input('calendar_id');
-                    $program_id = $request->input('program_id');
+                    $calendar_id = $request->input('calendar_id'); //curso
+                    $program_id = $request->input('program_id'); //programa
                     $program = Program::findOrFail($program_id);
-                    $matricula = $program->matricula;
+                    $matricula = $program->matricula; //matricula del curso
                     $calendar = Calendar::findOrFail($calendar_id);
 
-                    if ($calendar->cupos <= $calendar->contador) {
+                    if ($calendar->cupos <= $calendar->contador) { 
                         Session::flash('message_danger', 'No hay disponibilidad para el curso');
                         return redirect()->back();
                     }
 
-                    $mensualidad = $calendar->mensualidad;
+                    $mensualidad = $calendar->mensualidad;//mensualidad del curso
                     $valor = $request->input('valor');
                     $pago_id = $request->input('fpago_id');
 
@@ -147,15 +147,15 @@ class InscripcionsController extends Controller
                     $factura = new Factura();
                     $factura->pago()->associate($fpago);
                     $factura->representante()->associate($representante);
-                    $factura->total = $valor;
+                    $factura->total = $valor; //costo de la inscripcion
 
-                    if ($request->input('matricula') == 'on') {//aplico matricula
+                    if ($request->input('matricula') == 'on') {//pago matricula
                         $sub = $valor - $matricula;
                         $desc = $mensualidad - $sub;
                         if ($desc > 0) {//hay descuento
                             $factura->descuento = $desc;
                         }
-                    } else {
+                    } else { //no pago matricula
                         $desc = $mensualidad - $valor;
                         if ($desc > 0) {//hay descuento
                             $factura->descuento = $desc;
@@ -173,25 +173,25 @@ class InscripcionsController extends Controller
                     }
 
                     //inscripcion
-                    $user = $request->user();
+                    $user = $request->user();//usuario logueado
 
                     $inscripcion = new Inscripcion();
                     $inscripcion->calendar()->associate($calendar);
                     $inscripcion->factura()->associate($factura);
                     $inscripcion->user()->associate($user);
 
-                    if ($request->input('adulto') == true) {
-                        $inscripcion->alumno_id = 0;
+                    if ($request->input('adulto') == true) { //si es una inscripcion para adulto
+                        $inscripcion->alumno_id = 0; //le voy a asignara al id del alumno 0 en la tabla de inscripcion
                     } else {
-                        $inscripcion->alumno_id = $request->input('alumno_id');
+                        $inscripcion->alumno_id = $request->input('alumno_id'); //sino el id del input del form
                     }
 
-                    if ($request->input('matricula') == true) {
-                        $inscripcion->matricula = $matricula;
+                    if ($request->input('matricula') == true) { //si va a pagar matricula
+                        $inscripcion->matricula = $matricula; //le asigno el valor 
                     }
 
-                    if ($request->input('reservar') == 'on') {
-                        $inscripcion->estado = 'Reservada';
+                    if ($request->input('reservar') == 'on') { //si va a reservar
+                        $inscripcion->estado = 'Reservada'; //el estado de la reserva sera 'Reservada'
                     }
                     $inscripcion->mensualidad = $mensualidad;
 
@@ -200,12 +200,12 @@ class InscripcionsController extends Controller
                     DB::commit();
 
                     //aumentar contadores
-                    Event::fire(new NuevaInscripcion($calendar));
+                    Event::fire(new NuevaInscripcion($calendar));//al guardar correctamenta la inscripcion llamao al evento de aumentar contador
 
                     Session::flash('message', 'Inscripción satisfactoria');
 
 
-                } catch (\Exception $e) {
+                } catch (\Exception $e) { //en caso de error viro al estado anterior
                     DB::rollback();
                     Session::flash('message_danger', 'Error' . $e->getMessage());
                     return redirect()->route('admin.inscripcions.index');
@@ -215,7 +215,7 @@ class InscripcionsController extends Controller
             }
 
 
-            //  guardar los cursos multiples almacenados en la session
+            //Existen cursos Multiples almacenados en la Session, asi k los almaceno todos
 
             //inscripcion familiar no puede tener menos de dos inscritos
             if ($request->input('familiar') == true && Session::get('curso')->totalCursos < 2) {
@@ -245,25 +245,25 @@ class InscripcionsController extends Controller
             $tipo_descuento = $cart->tipo_desc;
             $desc_emp = $cart->desc_empleado;//true o false
 
-            if ($tipo_descuento == 'familiar' || $tipo_descuento == 'multiple') {
+            if ($tipo_descuento == 'familiar' || $tipo_descuento == 'multiple') {//si el descunto es familiar o multiple
                 $desc1 = 0.1;
-                $descuento = $precioTotal * $desc1;
+                $descuento = $precioTotal * $desc1; //descuento aplicado a la mensualidad total
             }
 
-            if ($desc_emp == 'true') {
+            if ($desc_emp == 'true') { //en caso de empleado
                 $desc2 = 0.5;
-                $descuento = $precioTotal * $desc2;
+                $descuento = $precioTotal * $desc2; //descuento aplicado a la mensualidad total
             }
             
 
-            $total = $precioTotal - $descuento;
+            $total = $precioTotal - $descuento; //total con descuentos aplicados
 
             try {
                 DB::beginTransaction();
 
-                $user = Auth::user();
+                $user = Auth::user(); //usuario autenticado
                 $pago_id = $request->input('fpago_id');
-                $fpago = Pago::findOrFail($pago_id);
+                $fpago = Pago::findOrFail($pago_id); //forma de pago
                 $representante = $cart->representante;
                 $factura = new Factura();
                 $factura->pago()->associate($fpago);
@@ -271,11 +271,12 @@ class InscripcionsController extends Controller
                 $factura->total = $total;
                 $factura->descuento = $descuento;
 
-                $factura->save();
+                $factura->save(); //se guarda una sola factura 
 
                 $descuentos=new Descuento();
                 $descuentos->factura()->associate($factura);
                 $descuentos->valor=$descuento;
+                
                 if ($tipo_descuento == 'familiar') {
                     $descuentos->descripcion='DESCUENTO FAMILIAR';
                     $descuentos->save();
@@ -288,10 +289,9 @@ class InscripcionsController extends Controller
                     $descuentos->descripcion='DESCUENTO EMPLEADO';
                     $descuentos->save();
                 }
-
-
-                foreach ($cursos as $curso) {//recorro los cursos
-                    $calendar = $curso['curso'];
+                
+                foreach ($cursos as $curso) {//recorro los cursos dentro de la coleccion (carrito)
+                    $calendar = $curso['curso']; //1 curso dentro del item (storedCurso) de cursos 
                     if ($calendar->cupos < $calendar->contador + $curso['qty']) {//cupos no puede ser menor k la suma
                         Session::flash('message_danger', 'No hay disponibilidad para el curso');
                         return redirect()->back();
@@ -304,8 +304,7 @@ class InscripcionsController extends Controller
                         $inscripcion->calendar()->associate($calendar);
                         $inscripcion->factura()->associate($factura);
                         $inscripcion->user()->associate($user);
-
-
+                        
                         if ($request->input('reservar') == 'on') {
                             $inscripcion->estado = 'Reservada';
                         }
@@ -343,7 +342,7 @@ class InscripcionsController extends Controller
      */
     public function show($id)
     {
-        return ('Vista generakl de la inscripcion');
+        return ('Ahh ahh ahh no implementado Sorry');
     }
 
     /**
@@ -354,7 +353,7 @@ class InscripcionsController extends Controller
      */
     public function edit($id)
     {
-        return ('formulario editar inscripcion');
+        return ('Ahh ahh ahh no implementado Sorry');
     }
 
     /**
@@ -367,7 +366,7 @@ class InscripcionsController extends Controller
     public function update(Request $request, $id)
     {
         if(Auth::user()->hasRole(['planner','administrator','signup'])) {
-            return ('inscripcion editada');
+            return ('Ahh ahh ahh no implementado Sorry');
         }else return abort(403);
         
     }
@@ -380,12 +379,12 @@ class InscripcionsController extends Controller
      */
     public function destroy($id)
     {
-        return ('inscripcion eliminada');
+        return ('Ahh ahh ahh no implementado Sorry');
     }
 
 
     /**
-     * Remove the specified resource from storage.
+     *  Actualizacion del costo del curso
      *
      * @param  int $id
      * @return \Illuminate\Http\Response
@@ -399,7 +398,7 @@ class InscripcionsController extends Controller
             $disciplina_id = $request->get('disciplina');
             $modulo_id = $request->get('modulo');
             $matricula = Program::
-            select('matricula')
+                select('matricula')
                 ->where('escenario_id', $escenario_id)
                 ->where('disciplina_id', $disciplina_id)
                 ->where('modulo_id', $modulo_id)->first();
@@ -408,10 +407,12 @@ class InscripcionsController extends Controller
             $dia_id = $request->get('dia_id');
             $horario_id = $request->get('horario_id');
             $nivel = $request->get('nivel'); //me trae el id del calendario(curso)
+            
             //programa
             $program = Program::where('escenario_id', $escenario_id)
                 ->where('disciplina_id', $disciplina_id)
                 ->where('modulo_id', $modulo_id)->first();
+            
             //costo de la mensualidad para el curso
             $mensualidad = Calendar::
             select('mensualidad')
@@ -421,8 +422,7 @@ class InscripcionsController extends Controller
                 ->where('horario_id', $horario_id)->first();
 
             $mes = $mensualidad->mensualidad;
-
-
+            
             if ($request->input('descuento_empleado') == 'true') {
                 $desc = 0.5; //50%
                 $descuento =$mes * $desc;

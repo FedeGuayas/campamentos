@@ -20,8 +20,6 @@ class AlumnosController extends Controller
     {
         $this->middleware('auth');
         $this->middleware(['role:administrator'], ['only' => 'destroy']);//eliminar alumnos solo administrador
-//        $this->middleware(['role:supervisor|administrador'],['except'=>['index','userTaskEnd']]);
-//        $this->middleware('administrador', ['only' => 'destroy']);
     }
 
     /**

@@ -32,9 +32,7 @@ class CalendarsController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-//        $this->middleware(['role:administrador'], ['only' => 'destroy']);//eliminar alumnos solo administrador
-//        $this->middleware(['role:supervisor|administrador'],['except'=>['index','userTaskEnd']]);
-//        $this->middleware('administrador', ['only' => 'destroy']);
+        $this->middleware(['role:administrator'], ['only' => 'destroy']);//eliminar cursos solo administrador
     }
     
     /**
@@ -94,7 +92,7 @@ class CalendarsController extends Controller
      */
     public function store(CalendarStoreRequest $request)
     {
-        if(Auth::user()->hasRole(['planner','administrator'])){
+        if(Auth::user()->hasRole(['planner','administrator'])){//administrador y planificador solo pueden crear cursos
             
         $calendar=new Calendar;
         $calendar->program_id=$request->get('program_id');
@@ -113,17 +111,7 @@ class CalendarsController extends Controller
 
         }else return abort(403);
     }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
+    
 
     /**
      * Show the form for editing the specified resource.
@@ -157,7 +145,7 @@ class CalendarsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        if(Auth::user()->hasRole(['planner','administrator'])){
+        if(Auth::user()->hasRole(['planner','administrator'])){//solo pueden modificar los cursos el planificador y el administrador
             
         $calendar=Calendar::findOrFail($id);
         $calendar->dia_id=$request->get('dia_id');
@@ -187,7 +175,7 @@ class CalendarsController extends Controller
     }
 
     /**
-     *  Obtener los dias para un programa  para select dinamico
+     *  Obtener los dias para un programa  con select dinamico
      * @param Request $request
      * @param $id
      * @return mixed
@@ -323,12 +311,10 @@ class CalendarsController extends Controller
             return response($curso);
         }
     }
-    
-
-    
+        
     /*****PRODUCTO venta del curso*****/
     /**
-     * Adicionar Cursos a arreglo multiple al dar en el boton de +
+     * Adicionar Cursos a la clase Multiple al dar en el boton de (+)
      *
      * @param Request $request
      * @param $id
@@ -339,13 +325,14 @@ class CalendarsController extends Controller
        
         $curso=Calendar::where('id',$id)->with('horario','dia','program')->first(); //obtengo el curso, actual inscripcion
 
-        $desc_emp=$request->input('descuento_empleado');
+        $desc_emp=$request->input('descuento_empleado'); //si es empleado o no, true or false
         
         $representante=Representante::where('persona_id',$request->input('representante_id'))->with('persona')->first();
-        $matricula=$request->input('matricula');
+        
+        $matricula=$request->input('matricula'); //true or false
 
-        $familiar=$request->input('familiar');//10% familiares
-        $multiple=$request->input('multiple');//10% inscripcion en mismo curso 3 meses o mas
+        $familiar=$request->input('familiar');//on or off,  10% familiares
+        $multiple=$request->input('multiple');//on or off, 10% inscripcion en mismo curso 3 meses o mas
 
         if ($familiar=='on')
             $tipo_desc='familiar';
@@ -370,7 +357,7 @@ class CalendarsController extends Controller
         $oldCurso=Session::has('curso') ? Session::get('curso') : null;
         //creo una instancia de la coleccion de cursos
         $multiples=new Multiples($oldCurso);
-        $multiples->addCursos($curso,$curso->id,$opciones);//Agrego este curso a la coleccion de cursos
+        $multiples->addCursos($curso,$curso->id,$opciones);//Agrego este curso a la coleccion de cursos o carrito
         //pongo el curso en la session
         $request->session()->put('curso',$multiples);//idem a Session::put('curso',$multiples)
 //        dd($request->session()->get('curso')); //idem a Session::get('curso')
@@ -378,7 +365,7 @@ class CalendarsController extends Controller
         if ($request->ajax()){
             return response()->json([
                 'message'=>$message,
-                'totalCursos'=>Session::get('curso')->totalCursos,//para agregarlos en el indicador de detalles
+                'totalCursos'=>Session::get('curso')->totalCursos,//para agregarlos en el indicador al lado de Detalles
             ]);
         }
 
@@ -387,44 +374,44 @@ class CalendarsController extends Controller
     }
 
     /**
-     * Mostrar el detalle de la coleccion de cursos
+     * Mostrar el detalle (carrito) de la coleccion de cursos
      *
      * @param Request $request
      * @return mixed
      */
     public function getCursos(Request $request)
     {
-
 //        Session::forget('curso');
         if (!Session::has('curso')){
 
             return view('campamentos.inscripcions.create');
         }
-        $oldCurso=Session::get('curso');
+        $oldCurso=Session::get('curso');//obtengo el curso que tenga en la session
+        
         $cursos_coll=new Multiples($oldCurso);
 
-        $cursos=$cursos_coll->cursos;
-        $precioTotal=$cursos_coll->totalPrecio;
-        $tipo_descuento=$cursos_coll->tipo_desc;
-        $desc_emp=$cursos_coll->desc_empleado;
+        $cursos=$cursos_coll->cursos; //objeto curso dentro del arreglo
+        $precioTotal=$cursos_coll->totalPrecio; //suma de todas las mensualidades de los cursos en el carrito
+        $tipo_descuento=$cursos_coll->tipo_desc; //si es decuento familiar o multiple
+        $desc_emp=$cursos_coll->desc_empleado; //si es des por empleado
 
         $matricula=0;
         foreach ($cursos as $curso){
-            $matricula+=$curso['matricula'];
+            $matricula+=$curso['matricula']; //costo de la matricula en caso que aplique
         }
 
         if ($desc_emp=='true'){
-            $desc=0.5;
-            $descuento= $precioTotal*$desc;
+            $desc=0.5; //50% empleado
+            $descuento= $precioTotal*$desc; //mensualidadTotal*desc_empleado 
             $tipo_descuento='empleado';
         }else if ($tipo_descuento=='familiar' || $tipo_descuento=='multiple'){
-            $desc=0.1;
-            $descuento=$precioTotal*$desc;
+            $desc=0.1; //10% desc
+            $descuento=$precioTotal*$desc; //mensualidadTotal*desc
         }
 
-        $subTotal=$precioTotal + $matricula;
+        $subTotal=$precioTotal + $matricula; //mensualidadTotal + matriculas
 
-        $total=$subTotal-$descuento;
+        $total=$subTotal-$descuento; //total aplicado los descuentos
 
 //        dd($cursos_coll);
         return view('campamentos.inscripcions.partials.detalle',['cursos'=>$cursos,'descuento'=>$descuento,'total'=>$total,'tipo_desc'=>$tipo_descuento,'subTotal'=>$subTotal]);
@@ -436,14 +423,17 @@ class CalendarsController extends Controller
      * @return mixed
      */
     public function getRestarUno($id){
+        
         $oldCurso=Session::has('curso') ? Session::get('curso') : null;
+        
         $curso=new Multiples($oldCurso);
-        $curso->restarUno($id);
+        
+        $curso->restarUno($id);//restarUno($id), metodo de la clase Multiple
 
-        if (count($curso->cursos)>0){
-            Session::put('curso',$curso);
+        if (count($curso->cursos)>0){ //si quedan cursos en el carrito
+            Session::put('curso',$curso); //lo pngo en la session
         }else{
-            Session::forget('curso');
+            Session::forget('curso'); //sino limpio la session
         }
         return redirect()->route('admin.inscripcions.create'); 
     }
@@ -457,9 +447,12 @@ class CalendarsController extends Controller
      */
 
     public function getRestarCurso($id){
+        
         $oldCurso=Session::has('curso') ? Session::get('curso') : null;
+        
         $curso=new Multiples($oldCurso);
-        $curso->restarTodos($id);
+        
+        $curso->restarTodos($id); //restarTodos($id), metodo de la clase Multiple
 
         if (count($curso->cursos)>0){
             Session::put('curso',$curso);
@@ -521,9 +514,6 @@ class CalendarsController extends Controller
 
 
 
-
-
-
 //    /**
 //     * Obtengo la vista para la facturacion y hacer el pago
 //     *
@@ -541,9 +531,6 @@ class CalendarsController extends Controller
 //        return view('shop.checkout',['total'=>$total]);
 //    }
 //
-
-
-
 
 
 //    /**

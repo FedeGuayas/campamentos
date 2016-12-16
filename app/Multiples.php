@@ -23,7 +23,7 @@ class Multiples
 
     public $totalPrecio=0; //Precio total de la inscripcion (todos los cursos) no incluye matricula
     
-    public $tipo_desc=null;
+    public $tipo_desc=null; 
     
     public $desc_empleado=null;
 
@@ -43,27 +43,25 @@ class Multiples
         }
     }
 
-    public function addCursos($curso,$id,$opciones){ //$id=calendar_id=producto $item=curso completo
+    public function addCursos($curso,$id,$opciones){ //agregar cursos a la coleccion (carrito)
         
-        //Creo un array de cursos, inicio en 0 xk se ira incrementando, almaceno el precio del curso, el curso, las opciones
+        //Creo un array de cursos, inicio en 0 xk se ira incrementando, almaceno el precio del curso, el curso, precio de matricula y el alumno
         $storedCurso=['qty'=>0,'precio'=>$curso->mensualidad,'curso'=>$curso, 'matricula'=>0, 'alumno'=>[]];
 
-        if ($this->cursos){  //compruebo si tengo cursos en la coleccion
+        if ($this->cursos){  //compruebo si tengo cursos en el carrito
 
-            if (array_key_exists($opciones[0]['alumno']['id'],$storedCurso['alumno'])){//si existe el alumno
-                //lo guardo  x su id para acceder despues a ellos por su id 
-                $storedCurso['alumno']=$storedCurso['alumno'][$opciones[0]['alumno']['id']];
+            if (array_key_exists($opciones[0]['alumno']['id'],$storedCurso['alumno'])){//si existe el alumno por su id en en arreglo,
+                $storedCurso['alumno']=$storedCurso['alumno'][$opciones[0]['alumno']['id']];//lo guardo  x su id para acceder despues a ellos por su id 
             }
-            //si el curso que estoy agregando ($id) , se encuentra entre todos los cursos que tengo en la coleccion
-            if (array_key_exists($id,$this->cursos)){
-                $storedCurso=$this->cursos[$id];//guardo los cursos x po id para acceder despues a ellos por su id
+            if (array_key_exists($id,$this->cursos)){//si el curso que estoy agregando ($id) , se encuentra entre todos los cursos que tengo en la coleccion
+                $storedCurso=$this->cursos[$id];//guardo los cursos x su id para acceder despues a ellos por su id
             }
         }
         
         if ($opciones[0]['alumno']==null){//adulto
-            $storedCurso['alumno'][$opciones[0]['alumno']['id']]=$opciones[0]['representante'];
+            $storedCurso['alumno'][$opciones[0]['alumno']['id']]=$opciones[0]['representante'];//el alumno sera el representante
         }else {
-            $storedCurso['alumno'][$opciones[0]['alumno']['id']]=$opciones[0]['alumno'];//guardar los alumnos por su id    
+            $storedCurso['alumno'][$opciones[0]['alumno']['id']]=$opciones[0]['alumno'];//sino guardo los alumnos por su id    
         }  
     
         $this->representante=$opciones[0]['representante'];
@@ -74,9 +72,9 @@ class Multiples
             $storedCurso['matricula']+=$curso->program->matricula;
         }
 
-        //descuento a empleados
+        //si se aplicara o no descuento a empleados, esto quedo para pruebas xk no implemente los desceuntos dentro de esta clase
         if (($opciones[0]['desc_emp'])=='true'){
-            $this->desc_empleado=$opciones[0]['desc_emp'];
+            $this->desc_empleado=$opciones[0]['desc_emp']; 
         }
 
         //descuento para familiares
@@ -98,21 +96,18 @@ class Multiples
         $this->totalCursos++; //total de cursos en general en la coleccion
 
         $this->totalPrecio+= $curso->mensualidad;//precio total de las mensualidades sin descuentos 
-
-//        $descuento= ( $this->totalPrecio * ( $desc + $desc_empleado ) );
-       
-//        $this->descuento=$descuento;
+        
 
     }
 
     public function restarUno($id) {
 
-        $this->cursos[$id]['qty']--;
-        $this->cursos[$id]['precio'] -= $this->cursos[$id]['curso']['mensualidad'];
-        $this->totalCursos--;
-        $this->totalPrecio -= $this->cursos[$id]['curso']['mensualidad'];
-        if ($this->cursos[$id]['qty']<=0){
-            unset($this->cursos[$id]);//destrulle la variable y todos su elementos para que no haya precios ni cantidades negativas
+        $this->cursos[$id]['qty']--; //decremento la cantidad
+        $this->cursos[$id]['precio'] -= $this->cursos[$id]['curso']['mensualidad']; //resto el precio de la mensualidad para los mismos items
+        $this->totalCursos--; //decremento la cantidad de cursos en el carrito
+        $this->totalPrecio -= $this->cursos[$id]['curso']['mensualidad']; //resto el precio del general
+        if ($this->cursos[$id]['qty']<=0){ //sino quedan cursos 
+            unset($this->cursos[$id]);//destrullo la variable y todos su elementos para que no haya precios ni cantidades negativas
         }
 
     }

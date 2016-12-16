@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Descuento;
 use App\Factura;
 use App\Inscripcion;
 use Illuminate\Http\Request;
@@ -93,7 +94,8 @@ class FacturasController extends Controller
     {
         $factura=Factura::findOrFail($id);
         $inscripcion=Inscripcion::where('factura_id',$id)->delete();
-
+        $descuento=Descuento::where('factura_id',$id)->delete();
+        
         $factura->delete;
         Session::flash('message','Comprobante eliminado');
         return redirect()->route('admin.facturas.index');

@@ -42,23 +42,22 @@
                 </tr>
                 </tfoot>
 
-                {{--<div class="preloader-wrapper big active hidden">--}}
-                    {{--<div class="spinner-layer spinner-blue">--}}
-                        {{--<div class="circle-clipper left">--}}
-                            {{--<div class="circle"></div>--}}
-                        {{--</div><div class="gap-patch">--}}
-                            {{--<div class="circle"></div>--}}
-                        {{--</div><div class="circle-clipper right">--}}
-                            {{--<div class="circle"></div>--}}
-                        {{--</div>--}}
-                    {{--</div>--}}
-                {{--</div>--}}
-
 {{--                        @include ('campamentos.alumnos.modal')--}}
-
 
                 </table><!--end table-responsive-->
 
+
+                {{--<div class="preloader-wrapper big active hidden">--}}
+                {{--<div class="spinner-layer spinner-blue">--}}
+                {{--<div class="circle-clipper left">--}}
+                {{--<div class="circle"></div>--}}
+                {{--</div><div class="gap-patch">--}}
+                {{--<div class="circle"></div>--}}
+                {{--</div><div class="circle-clipper right">--}}
+                {{--<div class="circle"></div>--}}
+                {{--</div>--}}
+                {{--</div>--}}
+                {{--</div>--}}
 
 
         </div><!--end div ./col-lg-12. etc-->
