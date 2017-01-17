@@ -4,44 +4,13 @@
 
 //V1 OK
 
-
-//cargar alumnos del representante
-$("#representante_id").change(function (event) {
-    var alumno=$("#alumno_id");
-    var fact_nombres=$(".fact_nombres")
-    var fact_email=$(".fact_email");
-    var fact_phone=$(".fact_phone");
-    var fact_direccion=$(".fact_direccion");
-    var descuento_empleado=$("#descuento_empleado");
-
-    $.get("alumnos/" + event.target.value + "", function (response, state) {
-        //actualizar datos de vista de factura
-        
-        fact_nombres.val(response.representante.persona.nombres+ ' '+response.representante.persona.apellidos).addClass("teal-text");
-        fact_email.val(response.representante.persona.email).addClass("teal-text");
-        fact_phone.val(response.representante.persona.telefono).addClass("teal-text");
-        fact_direccion.val(response.representante.persona.direccion).addClass("teal-text");
-
-        //descuento de empleado
-        descuento_empleado.val(response.descuento_empleado);
-
-        //cargar alumno en select
-        alumno.find("option:gt(0)").remove();
-        alumno.addClass("teal-text");
-        $.each(response.alumnos, function(i, al) {
-                alumno.append('<option value="' + al.aID + '">' + al.nombres + ' ' + al.apellidos + '</option>');
-        });
-            alumno.material_select();
-
-
-    });
-});
-
 //cargar escenarios al seleccionar el modulo
 $("#modulo_id").change(function (event) {
     var escenario=$("#escenario_id");
     var estacion=$("#estacion");
     var multiple=$(".multiple");
+    var inscripcion=$("#inscripcion_id");
+
     var desc_est=$("#descuento_estacion");
 
     $.get("escenarios/" + event.target.value + "", function (response, state) {
@@ -59,20 +28,13 @@ $("#modulo_id").change(function (event) {
         estacion.addClass("teal-text");
         estacion.fadeIn();
         estacion.val('CAMPAMENTOS DE '+ response.estacion+'');
-
-       //mostrar u ocultar el checkbox de descunto del 10% insc multiple
-        if (response.estacion==='VERANO'){
-            multiple.show();
-        }else{
-            multiple.hide();
-            multiple.prop('checked',false);
-        }
+        inscripcion.val(response.inscripcion);
 
         escenario.material_select();
 
-        //descuento de estacion (verano o invierno)
+        //descuento de estacion
         desc_est.val(response.estacion);
-        
+
     });
 });
 
@@ -129,6 +91,7 @@ $("#disciplina_id").change(function (event) {
 
 //cargar horarios al seleccionar el dia,  paso todos los parametros pa determinar el programa al k pertenecen
 $("#dia_id").change(function (event) {
+    console.log($("#alumno_id").val());
     var horario=$("#horario_id");
     var alumno_id=$("#alumno_id").val();
     var representante_id=$("#representante_id").val();
@@ -228,7 +191,7 @@ $("#nivel").change(function (event) {
         // contentType: 'application/x-www-form-urlencoded',
         data: datos,
         success: function (response) {
-            //console.log(response);
+            console.log(response);
             if (parseFloat(response[0].cupos) > parseFloat(response[0].contador)){
                 calendar_id.empty();
                 program_id.empty();

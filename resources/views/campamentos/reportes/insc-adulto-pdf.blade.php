@@ -11,21 +11,22 @@
         <table align="" border="0" cellpadding="0" cellspacing="0" style=" width: 100%; position: fixed; left: 0px; top: -30px; right: 0px;">
             <thead>
             <tr>
-                <th style="width: 160px; text-decoration: underline; ">REGISTRO # {{sprintf("%'.05d",$inscripcion->id)}}</th>
-                <th style=" text-decoration: underline;">COMPROBANTE # {{$inscripcion->factura->id}}</th>
-                <th style="width:200px; height: 20px"><img alt="LOGO" src="img/camp/fdg-logo.png" style="width: 200px; height: 100px; "/>
+                <th style="width: 160px; text-decoration: underline; text-align: left;">REGISTRO # {{sprintf("%'.05d",$inscripcion->id)}}</th>
+                {{--<th style=" text-decoration: underline;">COMPROBANTE # {{$inscripcion->factura->id}}</th>--}}
+                <th style="width:200px; height: 20px; text-align: right;"><img alt="LOGO" src="img/camp/fdg-logo.png" style="width: 200px; height: 100px; "/>
                 </th>
             </tr>
             </thead>
         </table>
-        <br><br><br>
-        <p style="text-align: center;"><span>INSCRIPCION EN CAMPAMENTOS DEPORTIVOS FEDEGUAYAS</span></p>
+        <br><br>
+        <p style="text-align: center;"><span><b>MODULO:</b></span> {{$inscripcion->calendar->program->modulo->modulo}}. <span><b> COMPROBANTE # </b></span>{{$inscripcion->factura->id}}  </p>
+        <p style="text-align: center;"><span><b>INSCRIPCION EN CAMPAMENTOS DEPORTIVOS FEDEGUAYAS</b></span></p>
     </div>
 </header>
 
-<main style="font-size: 10px;">
+<main style="font-size: 14px;">
 
-    <table align="center" border="0" cellpadding="5" cellspacing="0" style=" width: 400px; ">
+    <table align="center" border="0" cellpadding="2" cellspacing="0" style=" width: 720px; ">
         <tr>
             <th align="left" style="text-decoration: underline">DATOS DEL INSCRITO</th>
         </tr>
@@ -53,7 +54,7 @@
                        <td>{{$inscripcion->factura->representante->persona->telefono}}</td>
                    </tr>
                    <tr>
-                       <th align="left">CORREO ELECTRONICO:</th>
+                       <th align="left">CORREO:</th>
                        <td>{{$inscripcion->factura->representante->persona->email}}</td>
                    </tr>
                </table>
@@ -63,20 +64,16 @@
 
     <br>
 
-    <table align="center" border="0" cellpadding="5" cellspacing="0" style=" width: 700px; ">
+    <table align="center" border="0" cellpadding="2" cellspacing="0" style=" width: 720px; ">
         <tr>
-            <th align="left" style="text-decoration: underline">DATOS DEL CURSO</th>
+            <th align="left" style="text-decoration: underline; width: 350px;">DATOS DEL CURSO</th>
             <th align="left" style="text-decoration: underline">DATOS SOBRE LA INSCRIPCION</th>
         </tr>
         <tr>
             <td>
-                <table align="center" border="0" cellpadding="2" cellspacing="0" style=" width: 400px;">
+                <table align="center" border="0" cellpadding="0" cellspacing="0" style=" width: 100%;">
                     <tr>
-                        <th align="left">MODULO:</th>
-                        <td>{{$inscripcion->calendar->program->modulo->modulo}}</td>
-                    </tr>
-                    <tr>
-                        <th align="left"  style="width: 130px;">ESCENARIO:</th>
+                        <th align="left"  style="width: 100px;">ESCENARIO:</th>
                         <td>{{$inscripcion->calendar->program->escenario->escenario}}</td>
                     </tr>
                     <tr>
@@ -95,9 +92,9 @@
                 </table>
             </td>
             <td>
-                <table align="center" border="0" cellpadding="2" cellspacing="0" style=" width: 400px;">
+                <table align="center" border="0" cellpadding="0" cellspacing="0" style=" width: 349px;">
                     <tr>
-                        <th align="left" >APLICA DESCUENTO:</th>
+                        <th align="left" style="width: 30px;" >DESCUENTO:</th>
                         <td>
                             @if($inscripcion->factura->descuento==null || $inscripcion->factura->descuento==0)
                                 NO
@@ -107,7 +104,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <th align="left" style="width: 130px;">TIPO DE INSCRIPCION:</th>
+                        <th align="left">INSCRIPCION:</th>
                         <td>
                             @if($inscripcion->factura->descuento==null || $inscripcion->factura->descuento==0)
                                 INDIVIDUAL
@@ -129,6 +126,14 @@
                         <th align="left">CANCELADO:</th>
                         <td>$ {{number_format($inscripcion->factura->total,2,'.',' ')}}</td>
                     </tr>
+                    <tr>
+                        <th align="left">MODULO:</th>
+                        <td>{{$inscripcion->calendar->program->modulo->modulo}}</td>
+                    </tr>
+                    <tr>
+                        <th align="left"  style="width: 130px;">FECHA:</th>
+                        <td>{{$inscripcion->created_at}}</td>
+                    </tr>
                 </table>
             </td>
         </tr>
@@ -140,7 +145,7 @@
 
 <footer style="font-size: 12px">
     <br>
-    <table align="center" border="0" cellspacing="0" style="width:80%; font-style: italic; text-align : justify; ">
+    <table align="center" border="0" cellspacing="0" style="width:100%; font-style: italic; text-align : justify; ">
         <tr>
             <td>
                 <p>
@@ -157,8 +162,8 @@
             </td>
         </tr>
     </table>
-
-    <table align="center" border="1" cellpadding="10" cellspacing="10" style="width:90%; text-align : justify; ">
+    <hr>
+    <table align="center" border="0" cellpadding="0" cellspacing="0" style="width:100%; text-align : justify; ">
         <tr>
             <td>
                 <p>Guayaquil, {{$fecha_actual->day}} de {{$month}} del {{$fecha_actual->year}}</p>
@@ -204,8 +209,8 @@
 
                 <p align="center">
                     FIRMA <br>
-                    Nombre:<br>
-                    CI:
+                    Nombre: {{$inscripcion->factura->representante->persona->getNombreAttribute()}}<br>
+                    CI: {{$inscripcion->factura->representante->persona->num_doc}}
                 </p>
             </td>
         </tr>

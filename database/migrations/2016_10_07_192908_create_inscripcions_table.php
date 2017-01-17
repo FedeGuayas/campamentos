@@ -22,6 +22,7 @@ class CreateInscripcionsTable extends Migration
             $table->double('matricula',5,2)->nullable();
             $table->double('mensualidad',5,2);
             $table->enum('estado',['Reservada','Pagada','Cancelado'])->default('Pagada');
+            $table->integer('user_edit')->unsigned()->nullable();
             $table->timestamps();
             
             $table->softDeletes();
@@ -29,6 +30,7 @@ class CreateInscripcionsTable extends Migration
             $table->foreign('calendar_id')->references('id')->on('calendars');
 //            $table->foreign('alumno_id')->references('id')->on('alumnos');
             $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('user_edit')->references('id')->on('users');
             $table->foreign('factura_id')->references('id')->on('facturas');
         });
     }

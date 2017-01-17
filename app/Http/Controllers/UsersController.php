@@ -321,10 +321,8 @@ class UsersController extends Controller
 
                 $sheet->setColumnFormat(array(
 
-                    'B' => '0',
                     'E' => '0',
                     'F' => 'dd/mm/yy',
-                    'I' => '0',
                     'N' => '0',
                     'O' => '0',
                     'P' => '0',
@@ -333,7 +331,8 @@ class UsersController extends Controller
                     'AA' => '0',
                     'AB' => '0',
                     'AC' => '0',
-                    'AF' => '#,##0.00_-',
+//                    'AF' => '#,##0.00_-',
+                    'AF' => '0',
 
                 ));
 

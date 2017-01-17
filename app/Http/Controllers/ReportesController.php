@@ -9,6 +9,7 @@ use App\Factura;
 use App\Inscripcion;
 use App\Persona;
 use App\Program;
+use App\Representante;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -48,9 +49,6 @@ class ReportesController extends Controller
             ->orderBy('created_at')
             ->get();
 
-
-//        dd($inscripciones);
-
         return view('campamentos.reportes.reporte-excell',compact('inscripciones','start','end'));
     }
 
@@ -71,8 +69,6 @@ class ReportesController extends Controller
             ->orderBy('created_at')
             ->get();
 
-        
-
         $arrayExp[] = ['Recibo','Apellidos_Alumno','Nombres_Alumno','Edad','Género','Apellidos_Representante','Nombres_Representante',
             'Modulo','Escenario','Disciplina','Dias','Horario','Comprobante','Valor','Descuento','Estado','Fecha_Insc','Forma_Pago','Usuario','Pto Cobro','Profesor'];
 
@@ -85,7 +81,10 @@ class ReportesController extends Controller
             if ($insc->alumno_id == 0) {
                 $al_apell=$insc->factura->representante->persona->apellidos;
                 $al_nomb=$insc->factura->representante->persona->nombres;
-                $al_edad='Adulto';
+
+                $al=Representante::where('id',$insc->factura->representante_id)->first();
+                $fecha_nac=$insc->factura->representante->persona->fecha_nac;
+                $al_edad=$al->getEdad($fecha_nac);
                 $genero=$insc->factura->representante->persona->genero;
             } else{
                 $al_apell=$insc->alumno->persona->apellidos;
@@ -150,17 +149,14 @@ class ReportesController extends Controller
             ->withCount('factura')
             ->first();
         setlocale(LC_TIME, 'es');
-        $fecha_actual =Carbon::now();
+        $fecha_actual = Carbon::now();
         $month = $fecha_actual->formatLocalized('%B');//mes en español
         $day = $fecha_actual->format('d');
         $year = $fecha_actual->format('Y');
         $date = $fecha_actual->format('Y-m-d');
-       
-      
-                        
+
         if ($inscripcion->alumno_id==0){//adulto
-            
-            
+
             $pdf = PDF::loadView('campamentos.reportes.insc-adulto-pdf', compact('inscripcion','fecha_actual','month'));
 //        return $pdf->download('ComprobantePago.pdf');//descarga el pdf
             return $pdf->stream('ComprobantePago');//imprime en pantalla

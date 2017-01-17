@@ -18,6 +18,7 @@ class CreateDescuentosTable extends Migration
             $table->string('descripcion',30);
             $table->double('valor',4,2);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

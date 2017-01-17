@@ -29,6 +29,7 @@
                     <th>Representante</th>
                     <th>CI Rep.</th>
                     <th>Nivel</th>
+                    <th>Comprobante</th>
                     <th>Opciones</th>
                 </tr>
                 </thead>
@@ -45,6 +46,7 @@
                     <th>Representante</th>
                     <th>CI Rep.</th>
                     <th>Nivel</th>
+                    <th>Comprobante</th>
                     <th>Opciones</th>
                 </tr>
                 </tfoot>
@@ -74,16 +76,16 @@
                         <td>{{ $insc->factura->representante->persona->getNombreAttribute() }}</td>
                         <td>{{ $insc->factura->representante->persona->num_doc }}</td>
                         <td>{{ $insc->calendar->nivel}}</td>
-
+                        <td>{{ $insc->factura_id}}</td>
                         <td>
-                            @if ( (Entrust::can('edit_inscripcion') && (Auth::user()->id==$insc->user_id)) || Entrust::hasRole('administrator') )
+                           {{-- @if ( ( Entrust::can('edit_inscripcion') ) || Entrust::hasRole('administrator') )
                             <a href="{{ route('admin.inscripcions.edit', $insc->id ) }}">
                                 {!! Form::button('<i class="tiny fa fa-pencil-square-o" ></i>',['class'=>'label waves-effect waves-light teal darken-1']) !!}
                             </a>
-                            @endif
-                            <a href="{{ route('admin.inscripcions.show', $insc->id ) }}">
+                            @endif--}}
+                            {{--<a href="{{ route('admin.inscripcions.show', $insc->id ) }}">
                                 {!! Form::button('<i class="tiny fa fa-eye"></i>',['class'=>'label waves-effect waves-light blue darken-1']) !!}
-                            </a>
+                            </a>--}}
                             @if (Auth::user()->id==$insc->user_id ||  Entrust::hasRole('administrator'))
                             <a href="{{  route('admin.reports.pdf',$insc->id ) }}">
                                 {!! Form::button('<i class="tiny fa fa-file-pdf-o"></i>',['class'=>'label waves-effect waves-light teal darken-1  orange accent-4']) !!}

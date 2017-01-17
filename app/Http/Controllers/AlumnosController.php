@@ -106,8 +106,8 @@ class AlumnosController extends Controller
 //        $out['telefono'] = 'max:15';
         $out['tipo_doc'] = 'required';
         $out['num_doc'] = 'required';
-        $out['foto_ced'] = 'required|image|max:1000';
-        $out['foto'] = 'required|image|max:150';
+        $out['foto_ced'] = 'image|max:1000';
+        $out['foto'] = 'image|max:150';
 
 
 

@@ -40,8 +40,10 @@ Route::group(['middleware' => 'auth', 'prefix' => 'admin'], function () {
         return view('layouts.admin.index');
     }]);
 
-    //*****SELECT DINAMICOS para inscripcion****//
+    //*****SELECT DINAMICOS para crear inscripcion****//
 
+    //obtener los alumnos de un trabajador
+    Route::get('inscripcions/alumnos/{representante_id}','RepresentantesController@getAlumnos');
     //obtener los escenarios para un modulo  para select dinamico
     Route::get('inscripcions/escenarios/{modulo_id}','ProgramsController@getEscenarios');
     //obtener las disciplina para un escenario  para select dinamico
@@ -54,11 +56,28 @@ Route::group(['middleware' => 'auth', 'prefix' => 'admin'], function () {
     Route::get('inscripcions/nivel/{data?}','CalendarsController@getNivel');
     //obtener ontener el id del calendario o curso
     Route::get('inscripcions/curso/{data?}','CalendarsController@getCurso');
-    //obtener los alumnos de un trabajador
-    Route::get('inscripcions/alumnos/{representante_id}','RepresentantesController@getAlumnos');
-
     //*****Actualizar costo de inscripcion****//
     Route::get('inscripcions/costo/{data?}','InscripcionsController@costoUpdate');
+
+
+    //*****SELECT DINAMICOS para editar inscripcion****//
+    
+    //obtener los escenarios para un modulo de la inscripcion seleecionada
+    Route::get('inscripcions/{insc}/escenarios/{modulo_id}','ProgramsController@updateEscenarios');
+    //obtener las disciplina para un escenario  para select dinamico
+    Route::get('inscripcions/{insc}/disciplinas/{escenario_id}','ProgramsController@updateDisciplinas');
+    //obtener los dias para un programa, data defien al programa(esc,disc,modulo)
+    Route::get('inscripcions/{insc}/dias/{data?}',['uses'=>'CalendarsController@updateDias','as'=>'program.updateDias']);
+    //obtener los horarios para el dia
+    Route::get('inscripcions/{insc}/horario/{data?}','CalendarsController@updateHorario');
+    //obtener los niveles para el dia y horario
+    Route::get('inscripcions/{insc}/nivel/{data?}','CalendarsController@updateNivel');
+    //obtener ontener el id del calendario o curso
+    Route::get('inscripcions/{insc}/curso/{data?}','CalendarsController@updateCurso');
+    //*****Actualizar costo de inscripcion****//
+    Route::get('inscripcions/{insc}/costo/{data?}','InscripcionsController@costoUpdate');
+    
+
     
     //******** Importar personas de archivo excel********//
     Route::get('/persons/import', ['as'=>'persons.import','uses'=>'ImportController@getPersonas']);

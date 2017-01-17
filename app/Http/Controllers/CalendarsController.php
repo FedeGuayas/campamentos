@@ -202,6 +202,34 @@ class CalendarsController extends Controller
         }
     }
 
+
+    /**
+     *  Obtener los dias para un programa  con select dinamico para editar inscripcion
+     * @param Request $request
+     * @param $id
+     * @return mixed
+     */
+    public function updateDias(Request $request){
+        if ($request->ajax()){
+
+            $escenario_id=$request->get('escenario');
+            $disciplina_id=$request->get('disciplina');
+            $modulo_id=$request->get('modulo');
+
+            $program=Program::where('escenario_id',$escenario_id)
+                ->where('disciplina_id',$disciplina_id)
+                ->where('modulo_id',$modulo_id)->first();
+
+            $dias=Calendar::
+            join('dias as d','d.id','=','c.dia_id','as c')
+                ->select('d.dia as dias','d.activated','c.id as cID','d.id as dID',
+                    'c.dia_id','c.horario_id','c.nivel','c.program_id')
+                ->where('program_id',$program->id)
+                ->where('d.activated',true)->groupBy('dID')->get()->toArray();
+            return response($dias);
+        }
+    }
+    
     /**
      * Obtener horarios para los dias
      *
@@ -210,6 +238,7 @@ class CalendarsController extends Controller
      * @return mixed
      */
     public function getHorario(Request $request){
+
         if ($request->ajax()){
 
             $escenario_id=$request->get('escenario');
@@ -222,7 +251,7 @@ class CalendarsController extends Controller
                 ->where('modulo_id',$modulo_id)->first();
 
             if ($request->input('alumno_id')=='null' || !$request->input('alumno_id')){
-                $representante=Representante::where('id',$request->input('representante_id'))->with('persona')->first();
+                $representante=Representante::where('persona_id',$request->input('representante_id'))->with('persona')->first();
                 $edad=$representante->getEdad($representante->persona->fecha_nac);
 
             }else {
@@ -244,16 +273,60 @@ class CalendarsController extends Controller
                 ->where('h.activated',true)
                 ->get()
                 ->toArray();
+            
+            return response(['horario'=>$horario,'edad'=>$edad]);
+        }
+    }
 
 
+    /**
+     * Obtener horarios para los dias para editar inscripcion
+     *
+     * @param Request $request
+     * @param $id
+     * @return mixed
+     */
+    public function updateHorario(Request $request){
 
+        if ($request->ajax()){
 
+            $escenario_id=$request->get('escenario');
+            $disciplina_id=$request->get('disciplina');
+            $modulo_id=$request->get('modulo');
+            $dia_id=$request->get('dia_id');
+
+            $program=Program::where('escenario_id',$escenario_id)
+                ->where('disciplina_id',$disciplina_id)
+                ->where('modulo_id',$modulo_id)->first();
+
+            if ($request->input('alumno_id')=='null' || !$request->input('alumno_id')){
+                $representante=Representante::where('persona_id',$request->input('representante_id'))->with('persona')->first();
+                $edad=$representante->getEdad($representante->persona->fecha_nac);
+
+            }else {
+                $alumno=Alumno::where('id',$request->input('alumno_id'))->with('persona')->first();
+                $edad=$alumno->getEdad($alumno->persona->fecha_nac);
+            }
+
+            $horario=Calendar::
+            join('horarios as h','h.id','=','c.horario_id','as c')
+                ->join('dias as d','d.id','=','c.dia_id')
+                ->select('h.start_time as start_time','h.end_time as end_time','h.activated','c.id as cID',
+                    'h.id as hID','c.dia_id','c.horario_id','c.nivel', 'c.init_age','c.end_age')
+                ->where('program_id',$program->id)
+                ->where('c.dia_id',$dia_id)
+                ->where(function ($query) use ($edad) {
+                    $query->where('c.init_age', '<=', $edad)
+                        ->where('c.end_age', '>=', $edad);
+                })
+                ->where('h.activated',true)
+                ->get()
+                ->toArray();
 
 
             return response(['horario'=>$horario,'edad'=>$edad]);
         }
     }
-
 
     /**
      * Obtener los niveles
@@ -294,6 +367,46 @@ class CalendarsController extends Controller
         }
     }
 
+
+    /**
+     * Obtener los niveles para editar inscripcion
+     *
+     * @param Request $request
+     * @param $id
+     * @return mixed
+     */
+    public function updateNivel(Request $request){
+        if ($request->ajax()){
+
+            $escenario_id=$request->get('escenario');
+            $disciplina_id=$request->get('disciplina');
+            $modulo_id=$request->get('modulo');
+            $dia_id=$request->get('dia_id');
+            $horario_id=$request->get('horario_id');
+
+            $program=Program::where('escenario_id',$escenario_id)
+                ->where('disciplina_id',$disciplina_id)
+                ->where('modulo_id',$modulo_id)->first();
+
+            $nivel=Calendar::
+            where('program_id',$program->id)
+                ->where('dia_id',$dia_id)
+                ->where('horario_id',$horario_id)->get()->toArray();
+
+            $nivezxcvzxvcl=Calendar::
+            join('horarios as h','h.id','=','c.horario_id','as c')
+                ->join('dias as d','d.id','=','c.dia_id')
+                ->select('c.id as cID','c.dia_id','c.horario_id','c.nivel')
+
+                ->where('c.dia_id',$dia_id)
+                ->where('c.horario_id',$horario_id)
+                ->get()->toArray();
+            
+            return response($nivel);
+        }
+    }
+
+
     /**
      * Obtener el curso o calendario del formulario de inscripcion
      *
@@ -328,6 +441,44 @@ class CalendarsController extends Controller
                 ->where('c.horario_id',$horario_id)
                 ->get()->toArray();
 
+
+            return response($curso);
+        }
+    }
+
+    /**
+     * Obtener el curso o calendario del formulario para editar la inscripcion
+     *
+     * @param Request $request
+     * @param $id
+     * @return mixed
+     */
+    public function updateCurso(Request $request){
+        if ($request->ajax()){
+
+            $escenario_id=$request->get('escenario');
+            $disciplina_id=$request->get('disciplina');
+            $modulo_id=$request->get('modulo');
+            $dia_id=$request->get('dia_id');
+            $horario_id=$request->get('horario_id');
+            $calendar_id=$request->get('nivel');//xk en el value del select de nivel estoy pasando el calenadr_id
+
+            $program=Program::where('escenario_id',$escenario_id)
+                ->where('disciplina_id',$disciplina_id)
+                ->where('modulo_id',$modulo_id)->first();
+
+            $calendar=Calendar::findOrFail($calendar_id);
+
+            $curso=Calendar::
+            join('horarios as h','h.id','=','c.horario_id','as c')
+                ->join('dias as d','d.id','=','c.dia_id')
+                ->select('c.id as cID','c.program_id','c.cupos','c.contador')
+                ->where('c.program_id',$program->id)
+                ->where('c.id',$calendar_id)
+                ->where('c.dia_id',$dia_id)
+                ->where('cupos','>','contador')
+                ->where('c.horario_id',$horario_id)
+                ->get()->toArray();
 
             return response($curso);
         }

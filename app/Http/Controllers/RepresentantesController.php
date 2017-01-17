@@ -29,7 +29,7 @@ class RepresentantesController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware(['role:administrador'], ['only' => 'destroy']);
+        $this->middleware(['role:administrator'], ['only' => 'destroy']);
     }
     
     /**
@@ -122,8 +122,8 @@ class RepresentantesController extends Controller
         $out['phone'] = 'max:15';
         $out['tipo_doc'] = 'required';
         $out['num_doc'] = 'required';
-        $out['foto_ced'] = 'required|image|max:1000';
-        $out['foto'] = 'required|image|max:150';
+        $out['foto_ced'] = 'image|max:1000';
+        $out['foto'] = 'image|max:150';
        
 
         //Hacer validación condicional dependiendo del tipo de documento a utilizar.
