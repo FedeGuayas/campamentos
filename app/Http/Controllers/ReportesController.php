@@ -37,10 +37,10 @@ class ReportesController extends Controller
      */
     public function getExcel(Request $request)
     {
-        
+
         $start = trim($request->get('start'));
         $end = trim($request->get('end'));
-        
+
         $inscripciones=Inscripcion::with('factura','calendar','user','alumno')
             ->whereBetween('created_at',[$start, $end])
 //            ->where('created_at','>=',$start)
@@ -160,13 +160,13 @@ class ReportesController extends Controller
             $pdf = PDF::loadView('campamentos.reportes.insc-adulto-pdf', compact('inscripcion','fecha_actual','month'));
 //        return $pdf->download('ComprobantePago.pdf');//descarga el pdf
             return $pdf->stream('ComprobantePago');//imprime en pantalla
-                
+
         }else {//menor
-            
+
             $pdf = PDF::loadView('campamentos.reportes.insc-menor-pdf', compact('inscripcion','fecha_actual','month'));
 //        return $pdf->download('ComprobantePago.pdf');//descarga el pdf
             return $pdf->stream('ComprobantePago');//imprime en pantalla
-            
+
         }
     }
 
@@ -183,31 +183,51 @@ class ReportesController extends Controller
             $escenario = $request->get('escenario');
             $usuario = $request->get('usuario');
 
-
             $cuadre = Factura::
                 join('inscripcions as i', 'i.factura_id', '=', 'facturas.id')
                 ->join('users as u', 'u.id', '=', 'i.user_id')
-                ->select('total','factura_id', 'i.user_id as uid', 'u.first_name','u.last_name','u.escenario_id')
+                ->select('total','factura_id', 'i.user_id as uid', 'u.first_name','u.last_name','u.escenario_id', 'i.created_at','i.id')
                 ->where('facturas.created_at', 'like', '%' . $fecha . '%')
                 ->where('u.escenario_id', $escenario)
 //                ->groupBy('uid')
                 ->get();
 
-            
-            $cuadreArray = [];
+            $group=[];
+            //crear array agrupando por el nombre de usuario  y agregar los valores de las facturas
             foreach ($cuadre as $c) {
-
-                $cuadreArray[] = [
-                    'nombre' => $c->first_name.' '.$c->last_name,
-//                    'total'=>$c,
-                    'valor' => $c->sum('total'),
-                ];
+                $user= $c->first_name.' '.$c->last_name;
+                $i=$c->total;
+                $group[$user][] = [
+                    "Nombre"=>$user,
+                    "factura"=>$i];
             }
-            
 
+
+            //sumar columnas para total por usuario y Total general
+            $cuadreArray = [];
+            $precioFinal = 0;
+            foreach($group as $nombre=> $fact){
+                $precioGrupo = 0;
+                foreach($group[$nombre] as $r){
+                    //acumulados
+                    $precioGrupo += $r['factura'];
+                    //totales Finales
+                    $precioFinal += $r['factura'];
+                }
+                $cuadreArray []= [
+                    "factura"=>$precioGrupo,
+                    "nombre"=>$nombre,
+                ];
+//                $group[$nombre]['acumulados'] = ["factura"=>$precioGrupo ];
+            }
+//            $group['TotalesFinales'] = array("factura"=>$precioFinal);
+            $total=[
+                "total"=>$precioFinal
+            ];
 
         }
-        return view('campamentos.reportes.cuadre', compact('escenarioSelect', 'usuarioSelect', 'escenario', 'usuario', 'fecha', 'cuadreArray'));
+        return view('campamentos.reportes.cuadre', compact('escenarioSelect', 'usuarioSelect', 'escenario', 'usuario',
+            'fecha', 'cuadreArray','total'));
     }
 
 

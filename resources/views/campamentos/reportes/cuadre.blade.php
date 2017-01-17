@@ -21,9 +21,13 @@
                     @foreach ($cuadreArray as $c )
                         <tr>
                             <td>{{ $c['nombre'] }}</td>
-                            <td>$ {{number_format($c['valor'],2,'.',' ')}}</td>
+                            <td>$ {{number_format($c['factura'],2,'.',' ')}}</td>
                         </tr>
                    @endforeach
+                    <tr>
+                        <th>Total</th>
+                        <th>$ {{number_format($total['total'],2,'.',' ')}}</th>
+                    </tr>
                 </table><!--end table-responsive-->
             </div><!-- end div ./table-responsive-->
         </div><!--end div ./col-lg-12. etc-->
