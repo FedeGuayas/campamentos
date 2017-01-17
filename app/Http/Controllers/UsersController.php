@@ -339,7 +339,7 @@ class UsersController extends Controller
                 $sheet->fromArray($arrayExp,null,'A1',false,false);
 
             });
-        })->export('xlsx');
+        })->export('xls');
 
     }
 

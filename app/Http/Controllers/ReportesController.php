@@ -189,7 +189,7 @@ class ReportesController extends Controller
                 ->select('total','factura_id', 'i.user_id as uid', 'u.first_name','u.last_name','u.escenario_id', 'i.created_at','i.id')
                 ->where('facturas.created_at', 'like', '%' . $fecha . '%')
                 ->where('u.escenario_id', $escenario)
-//                ->groupBy('uid')
+                ->groupBy('factura_id')
                 ->get();
 
             $group=[];
