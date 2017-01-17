@@ -45,7 +45,7 @@ class DisciplinasController extends Controller
     public function store(Request $request)
     {
         $disciplina=new Disciplina;
-        $disciplina->disciplina=$request->get('disciplina');
+        $disciplina->disciplina=strtoupper($request->get('disciplina'));
         $disciplina->activated=true;
 
         $disciplina->save();

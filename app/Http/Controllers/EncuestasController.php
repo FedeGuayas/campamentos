@@ -50,7 +50,7 @@ class EncuestasController extends Controller
     public function store(Request $request)
     {
         $encuesta=new Encuesta;
-        $encuesta->encuesta=$request->get('encuesta');
+        $encuesta->encuesta=strtoupper($request->get('encuesta'));
         $encuesta->save();
 
         Session::flash('message', 'Encuesta creada correctamente');

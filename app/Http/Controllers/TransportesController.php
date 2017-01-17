@@ -48,7 +48,7 @@ class TransportesController extends Controller
     public function store(Request $request)
     {
         $transporte=new Transporte;
-        $transporte->destino=$request->get('destino');
+        $transporte->destino=strtoupper($request->get('destino'));
         $transporte->save();
 
         Session::flash('message','Transporte creado correctamente');

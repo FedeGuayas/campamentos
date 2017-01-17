@@ -15,7 +15,7 @@
 
                         <div class="input-field col s12 ">
                             {!! Form::label('destino','Destino:') !!}
-                            {!! Form::text('destino',null,['class'=>'validate']) !!}
+                            {!! Form::text('destino',null,['class'=>'validate','style'=>'text-transform:uppercase']) !!}
                         </div>
 
                     </div>

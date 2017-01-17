@@ -46,7 +46,7 @@ class EscenariosController extends Controller
     public function store(EscenariosStoreRequest $request)
     {
         $escenario= new Escenario;
-        $escenario->escenario=$request->get('escenario');
+        $escenario->escenario=strtoupper($request->get('escenario'));
         $escenario->save();
 
         Session::flash('message','Escenario creado correctamente');

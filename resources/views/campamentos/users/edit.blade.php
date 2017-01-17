@@ -15,12 +15,12 @@
                         <div class="input-field col l6 m6 s12 ">
                             <i class="fa fa-user prefix"></i>
                             {!! Form::label('first_name','Nombres:*') !!}
-                            {!! Form::text('first_name',null,['class'=>'validate']) !!}
+                            {!! Form::text('first_name',null,['class'=>'validate','style'=>'text-transform:uppercase']) !!}
                         </div>
 
                         <div class="input-field col l6 m6 s12">
                             {!! Form::label('last_name','Apellidos:*') !!}
-                            {!! Form::text('last_name',null,['class'=>'validate']) !!}
+                            {!! Form::text('last_name',null,['class'=>'validate','style'=>'text-transform:uppercase']) !!}
                         </div>
 
                     </div>
