@@ -31,7 +31,7 @@
                         <th width="130">Apellidos</th>
                         <th width="70">CI</th>
                         <th width="220">Alumno</th>
-                        <th width="70">CI</th>
+                        <th width="70">CI. A</th>
                         <th width="70">Opciones</th>
                     </thead>
                     <tfoot>
@@ -41,7 +41,7 @@
                         <th>Apellidos</th>
                         <th>CI</th>
                         <th>Alumno</th>
-                        <th>CI</th>
+                        <th>CI. A</th>
                         <th>Opciones</th>
                     </tr>
                     </tfoot>
@@ -87,9 +87,9 @@
                     {data: 'persona.nombres', name: 'persona.nombres'},
                     {data: 'persona.apellidos', name: 'persona.apellidos'},
                     {data: 'persona.num_doc', name: 'persona.num_doc'},
-                    {data: 'nombres', name: 'alumnos.nombres'},
-                    {data: 'ci', name: 'alumnos.ci'},
-                    {data: 'actions', name: 'actions'}
+                    {data: 'nombres', name: 'alumnos.nombres',orderable: false, searchable: false},
+                    {data: 'ci', name: 'alumnos.ci',orderable: false, searchable: false},
+                    {data: 'actions', name: 'actions',orderable: false, searchable: false}
                 ],
                 "language":{
                     "decimal":        "",
