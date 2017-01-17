@@ -13,7 +13,7 @@
             <tr>
                 <th style="width: 160px; text-decoration: underline; text-align: left;">REGISTRO # {{sprintf("%'.05d",$inscripcion->id)}}</th>
                 {{--<th style=" text-decoration: underline;">COMPROBANTE # {{$inscripcion->factura->id}}</th>--}}
-                <th style="width:200px; height: 20px; text-align: right;"><img alt="LOGO" src="img/camp/fdg-logo.png" style="width: 200px; height: 100px; "/>
+                <th style="width:200px; height: 20px; text-align: right;"><img alt="LOGO" src="img/camp/fdg-logo.png" style="width: 200px; height: 80px; "/>
                 </th>
             </tr>
             </thead>
@@ -144,7 +144,7 @@
 </main>
 
 <footer style="font-size: 12px">
-    <br>
+
     <table align="center" border="0" cellspacing="0" style="width:100%; font-style: italic; text-align : justify; ">
         <tr>
             <td>
