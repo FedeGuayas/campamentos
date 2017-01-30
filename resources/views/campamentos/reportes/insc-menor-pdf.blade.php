@@ -139,10 +139,10 @@
                         <th align="left">CANCELADO:</th>
                         <td>$ {{number_format($inscripcion->factura->total,2,'.',' ')}}</td>
                     </tr>
-                    <tr>
-                        <th align="left"  style="width: 130px;">MODULO:</th>
-                        <td>{{$inscripcion->calendar->program->modulo->modulo}}</td>
-                    </tr>
+                    {{--<tr>--}}
+                        {{--<th align="left"  style="width: 130px;">MODULO:</th>--}}
+                        {{--<td>{{$inscripcion->calendar->program->modulo->modulo}}</td>--}}
+                    {{--</tr>--}}
                     <tr>
                         <th align="left"  style="width: 130px;">FECHA:</th>
                         <td>{{$inscripcion->created_at}}</td>

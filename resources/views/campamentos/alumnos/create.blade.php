@@ -67,7 +67,7 @@
                                 {!! Form::file('foto_ced') !!}
                             </div>
                             <div class="file-path-wrapper">
-                                {!! Form::text('foto_ced',null,['class'=>'file-path validate','placeholder'=>'Foto-Cedula','required']) !!}
+                                {!! Form::text('foto_ced',null,['class'=>'file-path validate','placeholder'=>'Foto-Cedula']) !!}
                             </div>
                         </div>
                         <div class="file-field input-field  col l6 m6 s12">
@@ -76,7 +76,7 @@
                                 {!! Form::file('foto') !!}
                             </div>
                             <div class="file-path-wrapper">
-                                {!! Form::text('foto',null,['class'=>'file-path validate','placeholder'=>'Foto','required']) !!}
+                                {!! Form::text('foto',null,['class'=>'file-path validate','placeholder'=>'Foto']) !!}
                             </div>
                         </div>
 
