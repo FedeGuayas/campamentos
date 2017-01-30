@@ -171,6 +171,7 @@ Route::group(['middleware' => 'auth', 'prefix' => 'admin'], function () {
     //Reportes
     Route::get('/reports/excel',['as' => 'admin.reports.excel', 'uses'=>'ReportesController@getExcel']);
     Route::get('/reports/excel/export',['as' => 'admin.reports.exportExcel', 'uses'=>'ReportesController@exportExcel']);
+    Route::get('/reports/personalizado',['as' => 'admin.reports.personalizado', 'uses'=>'ReportesController@getPersonal']);
     Route::get('/reports/pdf/{id}',['as' => 'admin.reports.pdf', 'uses'=>'ReportesController@inscripcionPDF']);
     Route::get('reports/pagos/cuadre', ['as'=>'admin.pagos.cuadre','uses'=>'ReportesController@cuadre']);
 

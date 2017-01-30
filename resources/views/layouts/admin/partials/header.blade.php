@@ -69,6 +69,7 @@
                 <li><a href="{{route('admin.pagos.cuadre')}}" class="waves-effect waves-teal">Cuadre</a></li>
                 <li class="divider"></li>
                 <li><a href="{{route('admin.reports.excel')}}" class="waves-effect waves-teal">Reporte General</a></li>
+                <li><a href="{{route('admin.reports.personalizado')}}" class="waves-effect waves-teal">Reporte Personalizado</a></li>
             </ul>
 
             <div class="nav-wrapper">

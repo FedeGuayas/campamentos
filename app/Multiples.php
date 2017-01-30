@@ -28,6 +28,8 @@ class Multiples
     public $desc_empleado=null;
 
     public $representante=null;
+
+    public $totalMatricula=0;
    
     
     //agregar al constructor xk hay k estar sobreescribiendo cada ves k se adiciona un producto
@@ -40,6 +42,7 @@ class Multiples
             $this->representante=$oldCurso->representante;
             $this->tipo_desc=$oldCurso->tipo_desc;
             $this->desc_empleado=$oldCurso->desc_empleado;
+            $this->totalMatricula=$oldCurso->totalMatricula;
         }
     }
 
@@ -89,12 +92,14 @@ class Multiples
             $this->tipo_desc=$opciones[0]['tipo_desc'];
         }
         
-        $storedCurso['precio']=$curso->mensualidad*$storedCurso['qty']; //itemCurso=curso->precio*cantidad
+        $storedCurso['precio']=($curso->mensualidad*$storedCurso['qty']); //itemCurso=curso->precio*cantidad
 
         $this->cursos[$id]=$storedCurso;//accedo al item sino exite en la coleccion guardo el primer $storedCurso
         
         $this->totalCursos++; //total de cursos en general en la coleccion
 
+        $this->totalMatricula+= $storedCurso['matricula']; //total de matricula
+        
         $this->totalPrecio+= $curso->mensualidad;//precio total de las mensualidades sin descuentos 
         
 

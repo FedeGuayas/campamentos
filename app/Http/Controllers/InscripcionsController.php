@@ -243,6 +243,7 @@ class InscripcionsController extends Controller
             $cursos = $cart->cursos;  //arreglo con los cursos agrupados por curso Items
 
             $precioTotal = $cart->totalPrecio;
+            $matriculaT=$cart->totalMatricula;
             $tipo_descuento = $cart->tipo_desc;
             $desc_emp = $cart->desc_empleado;//true o false
 
@@ -257,7 +258,7 @@ class InscripcionsController extends Controller
             }
             
 
-            $total = $precioTotal - $descuento; //total con descuentos aplicados
+            $total = ($precioTotal - $descuento) + $matriculaT; //total con descuentos aplicados
 
             try {
                 DB::beginTransaction();
@@ -301,7 +302,7 @@ class InscripcionsController extends Controller
                     foreach ($curso['alumno'] as $alumno) {//por cada alumno en cada curso hago una incripcion
                         $inscripcion = new Inscripcion();
                         $inscripcion->mensualidad=$calendar->mensualidad;
-//                        $inscripcion->matricula=$curso['matricula'];
+                        $inscripcion->matricula=$curso['matricula'];
                         $inscripcion->calendar()->associate($calendar);
                         $inscripcion->factura()->associate($factura);
                         $inscripcion->user()->associate($user);
