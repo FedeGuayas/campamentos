@@ -78,6 +78,7 @@
                     <h5>Descuento:</h5>
                 </div>
                 <div class="col l9">
+                    <input type="text" id="descuento_factura" hidden  value="{{$descuento}}">
                     <h5><span class="label label-warning"> $ {{ number_format($descuento,2,'.',' ')}}</span></h5>
                 </div>
             </div>
@@ -109,6 +110,7 @@
                 </div>
                 <div class="col l9">
                     <h5>
+                        <input type="text" id="total_factura" hidden  value="{{$total}}">
                         <span class="label label-primary"> ${{number_format($total,2,'.',' ')}}</span>
                     </h5>
                 </div>

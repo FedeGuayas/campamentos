@@ -217,6 +217,10 @@ class UsersController extends Controller
 
         $start = trim($request->get('start'));
         $end = trim($request->get('end'));
+        $start=new Carbon($start);
+        $start=$start->toDateString();
+        $end=new Carbon($end);
+        $end=$end->toDateString();
         $user=Auth::user();
 
         $inscripciones=Inscripcion::with('factura','calendar','user','alumno')
@@ -260,8 +264,6 @@ class UsersController extends Controller
 
         foreach ($inscripciones as $insc) {
 
-
-
             if ($insc->alumno_id == 0) {
 
             } else{
@@ -274,34 +276,35 @@ class UsersController extends Controller
                 'codigo'=>'',
                 'nombre'=> $insc->factura->representante->persona->getNombreAttribute(),
                 'nombrecomercial'=> $insc->factura->representante->persona->getNombreAttribute(),
-                'RUC'=> $insc->factura->representante->persona->num_doc,
+                'RUC'=> (int)$insc->factura->representante->persona->num_doc,
+//                'Fecha'=> $insc->factura->created_at->format('d/m/Y'),
                 'Fecha'=> $insc->factura->created_at->format('d/m/Y'),
                 'Referencia'=> 'INSCRIPCION CAMPAMENTOS'.'-'. $insc->calendar->program->disciplina->disciplina.'-'.$insc->calendar->program->escenario->escenario,
                 'Comentario'=> $insc->factura->id,
                 'CtaIngreso'=> '6252499006133',
-                'Cantidad'=> '1',
-                'Valor'=> $insc->factura->total,
+                'Cantidad'=> 1,
+                'Valor'=> (float)$insc->factura->total,
                 'Iva'=> 'S',
                 'DIRECCION'=> $insc->factura->representante->persona->direccion,
-                'division'=> $insc->user->escenario->codigo,
-                'TipoCli'=> '1',
-                'actividad'=> '1',
+                'division'=> (int)$insc->user->escenario->codigo,
+                'TipoCli'=> 1,
+                'actividad'=> 1,
                 'codvend'=> '',
                 'recaudador'=> '',
                 'formadepago'=> $insc->factura->pago->forma,
                 'estado'=> 'A',
-                'diasplazo'=> '1',
-                'precio'=> '1',
-                'telefono'=> $insc->factura->representante->persona->telefono,
+                'diasplazo'=> 1,
+                'precio'=> 1,
+                'telefono'=> (string)$insc->factura->representante->persona->telefono,
                 'fax'=> '',
                 'celular'=> '',
                 'e_mail'=> $insc->factura->representante->persona->email,
-                'pais'=> '1',
-                'provincia'=> '1',
-                'ciudad'=> '4',
+                'pais'=> 1,
+                'provincia'=> 1,
+                'ciudad'=> 4,
                 'CtaxCob'=> '1110101001',
-                'CtaxAnt'=> '2120307999',
-                'cupo'=> '500,00',
+                'CtaxAnt'=> '210307999',
+                'cupo'=> 500,
                 'empresasri'=> 'PERSONAS NO OBLIGADAS A LLEVAR CONTABILIDAD, FACTURA',
 
             ];
@@ -320,9 +323,14 @@ class UsersController extends Controller
 //                });
 
                 $sheet->setColumnFormat(array(
-
+                    'A'=>'General',
+                    'B'=>'General',
+                    'C'=>'General',
+                    'D'=>'General',
                     'E' => '0',
-                    'F' => 'dd/mm/yy',
+                    'F' => '0',
+                    'I'=>'@',
+                    'K'=>'#,##0.00_-',
                     'N' => '0',
                     'O' => '0',
                     'P' => '0',
@@ -331,15 +339,16 @@ class UsersController extends Controller
                     'AA' => '0',
                     'AB' => '0',
                     'AC' => '0',
-//                    'AF' => '#,##0.00_-',
-                    'AF' => '0',
+                    'AF' => '#,##0.00_-',
+                    'AD'=>'General',
+                    'AE'=>'General',
 
                 ));
 
                 $sheet->fromArray($arrayExp,null,'A1',false,false);
 
             });
-        })->export('xls');
+        })->export('xlsx');
 
     }
 

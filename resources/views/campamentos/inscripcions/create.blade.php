@@ -109,6 +109,11 @@
                 }
             });
 
+            //deshabilitar boton de enviar al dar submit
+            $("#form_inscripcion").submit(function() {
+                $("#pagar").prop("disabled",true);
+            });
+
             //buscar representante
             $("#Buscar").on('click', function (event) {
                 event.preventDefault();
@@ -253,10 +258,12 @@
                 });
             }
 
+            $(document).ready(function () {
             //llamar a funcion crear alumno
             $("#alumno_create").on("click", function (event) {
                 event.preventDefault();
                 crear_alumno_ajax();
+            });
             });
 
 

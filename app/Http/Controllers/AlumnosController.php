@@ -54,16 +54,18 @@ class AlumnosController extends Controller
                 {!! Form::button(\'<i class="tiny fa fa-eye"></i>\',[\'class\'=>\'label waves-effect waves-light teal darken-1\']) !!}
                  </a>
                  @if ( Auth::user()->can(\'delete_alumno\'))
-                 {!! Form::button(\'<i class="tiny fa fa-trash-o" ></i>\',[\'class\'=>\'modal-trigger label waves-effect waves-light red darken-1\',\'data-target\'=>"modal-delete-[$id]"]) !!}
+                <a href="{{ route(\'admin.alumnos.destroy\',[$id] ) }}">
+                 {!! Form::button(\'<i class="tiny fa fa-trash-o" ></i>\',[\'class\'=>\'label waves-effect waves-light red darken-1\']) !!}
+                </a>
                  @endif
                  ';
-            
+            //{!! Form::button('<i class="tiny fa fa-trash-o" ></i>',['class'=>'modal-trigger label waves-effect waves-light red darken-1','data-target'=>"modal-delete-[$id]"]) !!}
             return Datatables::of($alumnos)
                 ->addColumn('actions', $action_buttons)
-                
+
                 ->make(true);
         }
-        
+
         return view('campamentos.alumnos.index');
     }
 
@@ -302,13 +304,14 @@ class AlumnosController extends Controller
      */
     public function destroy($id)
     {
+        dd($id);
         $alumno=Alumno::findOrFail($id);
         $persona=$alumno->persona;
 
         $persona->alumnos()->delete();
         $persona->delete();
 
-        return back();
+        return redirect()->route('admin.alumnos.index');
     }
 
     

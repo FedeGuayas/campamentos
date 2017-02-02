@@ -89,7 +89,7 @@
                     {data: 'persona.num_doc', name: 'persona.num_doc'},
                     {data: 'persona.tipo_doc', name: 'persona.tipo_doc', orderable: false, searchable: false},
                     {data: 'persona.genero', name: 'persona.genero', orderable: false, searchable: false},
-                    {data: 'actions', name: 'actions',orderable: false, searchable: false}
+                    {data: 'actions', name: 'opciones',orderable: false, searchable: false}
                 ],
                 "language":{
                     "decimal":        ",",

@@ -98,7 +98,7 @@ class Multiples
         
         $this->totalCursos++; //total de cursos en general en la coleccion
 
-        $this->totalMatricula+= $storedCurso['matricula']; //total de matricula
+        $this->totalMatricula= $storedCurso['matricula']; //total de matricula
         
         $this->totalPrecio+= $curso->mensualidad;//precio total de las mensualidades sin descuentos 
         

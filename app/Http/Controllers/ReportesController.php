@@ -4,10 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Alumno;
 use App\Calendar;
+use App\Disciplina;
 use App\Escenario;
 use App\Factura;
+use App\Horario;
 use App\Inscripcion;
+use App\Modulo;
 use App\Persona;
+use App\Profesor;
 use App\Program;
 use App\Representante;
 use App\User;
@@ -37,10 +41,14 @@ class ReportesController extends Controller
      */
     public function getExcel(Request $request)
     {
-
         $start = trim($request->get('start'));
         $end = trim($request->get('end'));
 
+        $start=new Carbon($start);
+        $start=$start->toDateString();
+        $end=new Carbon($end);
+        $end=$end->toDateString();
+        
         $inscripciones=Inscripcion::with('factura','calendar','user','alumno')
             ->whereBetween('created_at',[$start, $end])
 //            ->where('created_at','>=',$start)
@@ -69,7 +77,7 @@ class ReportesController extends Controller
             ->orderBy('created_at')
             ->get();
 
-        $arrayExp[] = ['Recibo','Apellidos_Alumno','Nombres_Alumno','Edad','Género','Apellidos_Representante','Nombres_Representante',
+        $arrayExp[] = ['Recibo','Apellidos_Alumno','Nombres_Alumno','Edad','Género','Representante','Cedeula Rep','Telefono','Correo','Direccion',
             'Modulo','Escenario','Disciplina','Dias','Horario','Comprobante','Valor','Descuento','Estado','Fecha_Insc','Forma_Pago','Usuario','Pto Cobro','Profesor'];
 
         foreach ($inscripciones as $insc) {
@@ -102,8 +110,13 @@ class ReportesController extends Controller
                 'al_nomb' => $al_nomb,
                 'al_edad' => $al_edad,
                 'al_genero' => $genero,
-                'rep_apell' => $insc->factura->representante->persona->apellidos,
-                'rep_nomb' => $insc->factura->representante->persona->nombres,
+//                'rep_apell' => $insc->factura->representante->persona->apellidos,
+//                'rep_nomb' => $insc->factura->representante->persona->nombres,
+                'representante' => $insc->factura->representante->persona->getNombreAttribute(),
+                'ced_representante'=>$insc->factura->representante->persona->num_doc,
+                'tel_representante'=>$insc->factura->representante->persona->telefono,
+                'email_representante'=>$insc->factura->representante->persona->email,
+                'direccion_representante'=>$insc->factura->representante->persona->direccion,
                 'modulo' => $insc->calendar->program->modulo->modulo,
                 'escenario' => $insc->calendar->program->escenario->escenario,
                 'disciplina' => $insc->calendar->program->disciplina->disciplina,
@@ -138,7 +151,6 @@ class ReportesController extends Controller
 
             });
         })->export('xlsx');
-
     }
 
     //comprobantes de inscripciones
@@ -228,6 +240,48 @@ class ReportesController extends Controller
         }
         return view('campamentos.reportes.cuadre', compact('escenarioSelect', 'usuarioSelect', 'escenario', 'usuario',
             'fecha', 'cuadreArray','total'));
+    }
+
+
+    /**
+     * Vista para generar  Reporte Personalizado
+     * @param Request $request
+     * @return mixed
+     */
+    public function getPersonal(Request $request)
+    {
+        $start = trim($request->get('start'));
+        $end = trim($request->get('end'));
+
+        $start=new Carbon($start);
+        $start=$start->toDateString();
+        $end=new Carbon($end);
+        $end=$end->toDateString();
+
+        $escenarioSelect = ['' => 'Seleccione el escenario'] + Escenario::lists('escenario', 'id')->all();
+        $escenario = $request->get('escenario');
+        $moduloSelect=['' => 'Seleccione el modulo'] + Modulo::lists('modulo', 'id')->all();
+        $modulo = $request->get('modulo');
+        $disciplinaSelect=['' => 'Seleccione la disciplina'] + Disciplina::lists('disciplina', 'id')->all();
+        $disciplina = $request->get('disciplina');
+        $horarioSelect=['' => 'Seleccione horario'] + Horario::select(DB::raw('CONCAT(start_time, " - ", end_time) AS horario' ), 'id')->orderBy('start_time')->lists('horario','id')->all();
+        $horario = $request->get('horario');
+        $entrenadorSelect=['' => 'Seleccione entrenador'] + Profesor::select(DB::raw('CONCAT(nombres, " ", apellidos) AS entrenador'), 'id')->orderBy('nombres')-> lists('entrenador', 'id')->all();
+        $entrenador = $request->get('entrenador');
+        $sexo = $request->get('sexo');
+        
+        $inscripciones=Inscripcion::with('factura','calendar','user','alumno')
+            ->whereBetween('created_at',[$start, $end])
+//            ->where('created_at','>=',$start)
+//            ->where('created_at','<=',$end)
+            ->whereNull('cart')//inscripciones internas sin las online
+//            ->where('escenario','like','%'.$escenario.'%')
+            ->orderBy('created_at')
+            ->get();
+
+        return view('campamentos.reportes.reporte-personalizado',compact('inscripciones','start','end','escenarioSelect',
+            'escenario','moduloSelect','modulo','disciplinaSelect','disciplina','horarioSelect','horario','entrenadorSelect',
+            'entrenador','sexo'));
     }
 
 

@@ -242,9 +242,9 @@ class InscripcionsController extends Controller
 
             $cursos = $cart->cursos;  //arreglo con los cursos agrupados por curso Items
 
-            $precioTotal = $cart->totalPrecio;
-            $matriculaT=$cart->totalMatricula;
-            $tipo_descuento = $cart->tipo_desc;
+            $precioTotal = $cart->totalPrecio;//precio unitario del curso sin matricula
+            $matriculaT=$cart->totalMatricula; //precio total de la matricula
+            $tipo_descuento = $cart->tipo_desc; //tipo de desceunto aplicado
             $desc_emp = $cart->desc_empleado;//true o false
 
             if ($tipo_descuento == 'familiar' || $tipo_descuento == 'multiple') {//si el descunto es familiar o multiple
@@ -257,8 +257,7 @@ class InscripcionsController extends Controller
                 $descuento = $precioTotal * $desc2; //descuento aplicado a la mensualidad total
             }
             
-
-            $total = ($precioTotal - $descuento) + $matriculaT; //total con descuentos aplicados
+            $total = ($precioTotal+ $matriculaT) - $descuento; //total con descuentos aplicados
 
             try {
                 DB::beginTransaction();
@@ -302,7 +301,7 @@ class InscripcionsController extends Controller
                     foreach ($curso['alumno'] as $alumno) {//por cada alumno en cada curso hago una incripcion
                         $inscripcion = new Inscripcion();
                         $inscripcion->mensualidad=$calendar->mensualidad;
-                        $inscripcion->matricula=$curso['matricula'];
+                        $inscripcion->matricula=$curso['matricula']/$curso['qty'];
                         $inscripcion->calendar()->associate($calendar);
                         $inscripcion->factura()->associate($factura);
                         $inscripcion->user()->associate($user);

@@ -117,7 +117,7 @@
 
 
             var table =  $('#inscripcion_table').DataTable({
-                "lengthMenu": [[5, 10, 25], [5, 10, 25]],
+                "lengthMenu": [[25,10,5], [25,10,5]],
                 "processing": false,
                 "order" : [0,'desc'],
                 "language":{
@@ -159,7 +159,7 @@
                 } );
             } );
 
-            $("select").val('5'); //seleccionar valor por defecto del select
+            $("select").val('25'); //seleccionar valor por defecto del select
             $('select').addClass("browser-default"); //agregar una clase de materializecss de esta forma ya no se pierde el select de numero de registros.
             $('select').material_select(); //inicializar el select de materialize
 
