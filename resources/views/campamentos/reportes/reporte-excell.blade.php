@@ -1,25 +1,23 @@
 @extends('layouts.admin.index')
 
-@section('title','Facturas')
+@section('title','Reportes')
 
 @section('content')
 
     <div class="row">
         <div class="col l12 col m6 col s12">
-            <h3>
-                Generar Reporte
-            </h3>
+            <h5>
+                Generar Reporte por Periodo de Inscripción
+            </h5>
             @include('alert.success')
         </div>
     </div>
 
     <div class="row">
         @include('campamentos.reportes.search')
-        <div class="col-sm-3">
-            @include('campamentos.reportes.export-filter')
-        </div>
-
+        @include('campamentos.reportes.export-filter')
     </div>
+    <hr>
     <div class="row">
 
     </div>
@@ -74,6 +72,7 @@
                     @endforeach
                 </table><!--end table-responsive-->
             </div><!-- end div ./table-responsive-->
+            {{ $inscripciones->appends(['start'=>$start,'end'=>$end])->links() }}
         </div><!--end div ./col-lg-12. etc-->
     </div><!--end div ./row-->
 

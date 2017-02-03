@@ -66,10 +66,10 @@
             <ul id="dropdownReportes" class="dropdown-content">
                 <li><a href="{{route('admin.facturas.index')}}" class="waves-effect waves-teal">Comprobantes</a></li>
                 <li class="divider"></li>
-                <li><a href="{{route('admin.pagos.cuadre')}}" class="waves-effect waves-teal">Cuadre</a></li>
+                <li><a href="{{route('admin.pagos.cuadre')}}" class="waves-effect waves-teal">Cuadre Diario</a></li>
                 <li class="divider"></li>
-                <li><a href="{{route('admin.reports.excel')}}" class="waves-effect waves-teal">Reporte General</a></li>
-                <li><a href="{{route('admin.reports.personalizado')}}" class="waves-effect waves-teal">Reporte Personalizado</a></li>
+                <li><a href="{{route('admin.reports.excel')}}" class="waves-effect waves-teal">Período Insc.</a></li>
+                <li><a href="{{route('admin.reports.personalizado')}}" class="waves-effect waves-teal">Personalizado</a></li>
             </ul>
 
             <div class="nav-wrapper">
@@ -159,8 +159,11 @@
                                 <ul>
                                     <li><a href="{{route('admin.facturas.index')}}" class="waves-effect waves-teal">Comprobantes</a></li>
                                     <li class="divider"></li>
-                                    <li><a href="{{route('admin.pagos.cuadre')}}" class="waves-effect waves-teal">Cuadre</a></li>
-                                    <li><a href="{{route('admin.reports.excel')}}" class="waves-effect waves-teal">Reporte General</a></li>
+                                    <li><a href="{{route('admin.pagos.cuadre')}}" class="waves-effect waves-teal">Cuadre Diario</a></li>
+                                    <li><a href="{{route('admin.reports.excel')}}" class="waves-effect waves-teal">Período Insc.</a></li>
+                                    <li class="divider"></li>
+                                    <li><a href="{{route('admin.reports.excel')}}" class="waves-effect waves-teal">Período Insc.</a></li>
+                                    <li><a href="{{route('admin.reports.personalizado')}}" class="waves-effect waves-teal">Personalizado</a></li>
                                 </ul>
                             </div>
                             </li>

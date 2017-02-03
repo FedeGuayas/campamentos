@@ -55,7 +55,7 @@ class ReportesController extends Controller
 //            ->where('created_at','<=',$end)
             ->whereNull('cart')//inscripciones internas sin las online
             ->orderBy('created_at')
-            ->get();
+            ->paginate(10);
 
         return view('campamentos.reportes.reporte-excell',compact('inscripciones','start','end'));
     }
@@ -250,17 +250,17 @@ class ReportesController extends Controller
      */
     public function getPersonal(Request $request)
     {
-        $start = trim($request->get('start'));
-        $end = trim($request->get('end'));
-
-        $start=new Carbon($start);
-        $start=$start->toDateString();
-        $end=new Carbon($end);
-        $end=$end->toDateString();
+//        $start = trim($request->get('start'));
+//        $end = trim($request->get('end'));
+//
+//        $start=new Carbon($start);
+//        $start=$start->toDateString();
+//        $end=new Carbon($end);
+//        $end=$end->toDateString();
 
         $escenarioSelect = ['' => 'Seleccione el escenario'] + Escenario::lists('escenario', 'id')->all();
         $escenario = $request->get('escenario');
-        $moduloSelect=['' => 'Seleccione el modulo'] + Modulo::lists('modulo', 'id')->all();
+        $moduloSelect=['' => 'Seleccione el modulo *'] + Modulo::lists('modulo', 'id')->all();
         $modulo = $request->get('modulo');
         $disciplinaSelect=['' => 'Seleccione la disciplina'] + Disciplina::lists('disciplina', 'id')->all();
         $disciplina = $request->get('disciplina');
@@ -278,20 +278,20 @@ class ReportesController extends Controller
             ->join('disciplinas', 'disciplinas.id', '=', 'programs.disciplina_id')
             ->join('horarios', 'horarios.id', '=', 'calendars.horario_id')
             ->join('profesors', 'profesors.id', '=', 'calendars.profesor_id')
-            ->whereBetween('inscripcions.created_at',[$start, $end])
+//            ->whereBetween('inscripcions.created_at',[$start, $end])
 //            ->where('inscripcions.created_at','like','%'.$start.'%')
 //            ->where('inscripcions.created_at','like','%'.$end.'%')
             ->whereNull('cart')//inscripciones internas sin las online
-            ->where('modulos.id','like','%'.$modulo.'%')
+            ->where('modulos.id',$modulo)
             ->where('escenarios.id','like','%'.$escenario.'%')
             ->where('disciplinas.id','like','%'.$disciplina.'%')
             ->where('horarios.id','like','%'.$horario.'%')
             ->where('profesors.id','like','%'.$entrenador.'%')
 //            ->where('sexo','like','%'.$sexo.'%')
             ->orderBy('inscripcions.created_at')
-            ->paginate(2);
+            ->paginate(10);
 
-        return view('campamentos.reportes.reporte-personalizado',compact('inscripciones','start','end','escenarioSelect',
+        return view('campamentos.reportes.reporte-personalizado',compact('inscripciones','escenarioSelect',
             'escenario','moduloSelect','modulo','disciplinaSelect','disciplina','horarioSelect','horario','entrenadorSelect',
             'entrenador','sexo'));
     }
@@ -299,13 +299,13 @@ class ReportesController extends Controller
 
     public function exportPersonal(Request $request){
 
-        $start = trim($request->get('start'));
-        $end = trim($request->get('end'));
-
-        $start=new Carbon($start);
-        $start=$start->toDateString();
-        $end=new Carbon($end);
-        $end=$end->toDateString();
+//        $start = trim($request->get('start'));
+//        $end = trim($request->get('end'));
+//
+//        $start=new Carbon($start);
+//        $start=$start->toDateString();
+//        $end=new Carbon($end);
+//        $end=$end->toDateString();
 
         $escenarioSelect = ['' => 'Seleccione el escenario'] + Escenario::lists('escenario', 'id')->all();
         $escenario = $request->get('escenario');
@@ -327,11 +327,11 @@ class ReportesController extends Controller
             ->join('disciplinas', 'disciplinas.id', '=', 'programs.disciplina_id')
             ->join('horarios', 'horarios.id', '=', 'calendars.horario_id')
             ->join('profesors', 'profesors.id', '=', 'calendars.profesor_id')
-            ->whereBetween('inscripcions.created_at',[$start, $end])
+//            ->whereBetween('inscripcions.created_at',[$start, $end])
 //            ->where('inscripcions.created_at','like','%'.$start.'%')
 //            ->where('inscripcions.created_at','like','%'.$end.'%')
             ->whereNull('cart')//inscripciones internas sin las online
-            ->where('modulos.id','like','%'.$modulo.'%')
+            ->where('modulos.id',$modulo)
             ->where('escenarios.id','like','%'.$escenario.'%')
             ->where('disciplinas.id','like','%'.$disciplina.'%')
             ->where('horarios.id','like','%'.$horario.'%')

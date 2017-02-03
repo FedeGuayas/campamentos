@@ -6,9 +6,9 @@
 
     <div class="row">
         <div class="col l12 col m6 col s12">
-            <h3>
-                Generar Reporte Personalizado
-            </h3>
+            <h5>
+                Generar Reporte Personalizado (filtre y luego exporte)
+            </h5>
             @include('alert.success')
         </div>
     </div>
@@ -36,27 +36,22 @@
             {{--{!! Form::select('sexo', ['MASCULINO' => 'MASCULINO', 'FEMENINO' => 'FEMENINO'],'null', ['placeholder' => 'Sexo...','id'=>'sexo']) !!}--}}
         {{--</div>--}}
 
+        {{--<div class="input-field col s2 ">--}}
+            {{--{!! Form::label('start','Desde:') !!}--}}
+            {{--{!! Form::date('start',$start,['class'=>'datepicker']) !!}--}}
+        {{--</div>--}}
+        {{--<div class="input-field col s2 ">--}}
+            {{--{!! Form::label('end','Hasta:') !!}--}}
+            {{--{!! Form::date('end',$end,['class'=>'datepicker']) !!}--}}
+        {{--</div>--}}
 
-        <div class="input-field col s2 ">
-            {!! Form::label('start','Desde:') !!}
-            {!! Form::date('start',$start,['class'=>'datepicker']) !!}
-        </div>
-        <div class="input-field col s2 ">
-            {!! Form::label('end','Hasta:') !!}
-            {!! Form::date('end',$end,['class'=>'datepicker']) !!}
-        </div>
-
-        <div class="col s3">
-
-            {!! Form::button('Filtrar <i class="fa fa-search left"></i>',['class'=>'btn', 'type'=>'submit','id'=>'filtrar']) !!}
+        <div class="col s1 offset-s7">
+            {!! Form::button('<i class="fa fa-search left"></i>',['class'=>'btn-floating waves-effect waves-light blue darken-2 tooltipped','data-position'=>'top', 'data-delay'=>'50','data-tooltip'=>'Filtrar', 'type'=>'submit','id'=>'filtrar']) !!}
         </div>
         {!!form::close()!!}
 
         {!! Form::open (['route' => 'admin.reports.exportPersonalizado','method' => 'GET'])!!}
-        <div class="col s3">
             @include('campamentos.reportes.export-personalizado')
-        </div>
-
         {!! Form::close() !!}
     </div>
 
@@ -111,7 +106,7 @@
                     @endforeach
                 </table><!--end table-responsive-->
             </div><!-- end div ./table-responsive-->
-            {{ $inscripciones->appends(['modulo'=>$modulo,'escenario'=>$escenario,'start'=>$start,'end'=>$end,'disciplina'=>$disciplina,
+            {{ $inscripciones->appends(['modulo'=>$modulo,'escenario'=>$escenario,'disciplina'=>$disciplina,
             'horario'=>$horario,'entrenador'=>$entrenador])->links() }}
         </div><!--end div ./col-lg-12. etc-->
     </div><!--end div ./row-->
