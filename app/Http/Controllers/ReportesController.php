@@ -48,7 +48,7 @@ class ReportesController extends Controller
         $start=$start->toDateString();
         $end=new Carbon($end);
         $end=$end->toDateString();
-        
+
         $inscripciones=Inscripcion::with('factura','calendar','user','alumno')
             ->whereBetween('created_at',[$start, $end])
 //            ->where('created_at','>=',$start)
@@ -104,6 +104,8 @@ class ReportesController extends Controller
                 $genero=$insc->alumno->persona->genero;
             }
 
+            $cont_comp=Inscripcion::where('factura_id',$insc->factura_id)->count();
+
             $arrayExp[] = [
                 'recibo' => $insc->id,
                 'al_apell' => $al_apell,
@@ -123,7 +125,7 @@ class ReportesController extends Controller
                 'dias' => $insc->calendar->dia->dia,
                 'horario' => $insc->calendar->horario->start_time.'-'.$insc->calendar->horario->end_time,
                 'comprobante' =>  $insc->factura->id,
-                'valor' =>  $insc->factura->total,
+                'valor' =>  round(($insc->factura->total)/$cont_comp,3),
                 'descuento' =>  $insc->factura->descuento,
                 'estado' =>  $insc->estado,
                 'fecha_insc' =>  $insc->created_at,
@@ -141,7 +143,7 @@ class ReportesController extends Controller
 
                 $sheet->setBorder('A1:U1','thin', 'thin', 'thin', 'thin');
                 $sheet->cells('A1:U1', function($cells){
-                   $cells->setBackground('#F5F5F5');
+                    $cells->setBackground('#F5F5F5');
                     $cells->setFontWeight('bold');
                     $cells->setAlignment('center');
 
@@ -196,7 +198,7 @@ class ReportesController extends Controller
             $usuario = $request->get('usuario');
 
             $cuadre = Factura::
-                join('inscripcions as i', 'i.factura_id', '=', 'facturas.id')
+            join('inscripcions as i', 'i.factura_id', '=', 'facturas.id')
                 ->join('users as u', 'u.id', '=', 'i.user_id')
                 ->select('total','factura_id', 'i.user_id as uid', 'u.first_name','u.last_name','u.escenario_id', 'i.created_at','i.id')
                 ->where('facturas.created_at', 'like', '%' . $fecha . '%')
@@ -269,7 +271,7 @@ class ReportesController extends Controller
         $entrenadorSelect=['' => 'Seleccione entrenador'] + Profesor::select(DB::raw('CONCAT(nombres, " ", apellidos) AS entrenador'), 'id')->orderBy('nombres')-> lists('entrenador', 'id')->all();
         $entrenador = $request->get('entrenador');
         $sexo = $request->get('sexo');
-        
+
         $inscripciones=Inscripcion::with('factura','calendar','user','alumno')
             ->join('calendars', 'calendars.id', '=', 'inscripcions.calendar_id')
             ->join('programs', 'programs.id', '=', 'calendars.program_id')
@@ -367,6 +369,8 @@ class ReportesController extends Controller
                 $genero=$insc->alumno->persona->genero;
             }
 
+            $cont_comp=Inscripcion::where('factura_id',$insc->factura_id)->count();
+
             $arrayExp[] = [
                 'recibo' => $insc->id,
                 'al_apell' => $al_apell,
@@ -384,7 +388,7 @@ class ReportesController extends Controller
                 'dias' => $insc->calendar->dia->dia,
                 'horario' => $insc->calendar->horario->start_time.'-'.$insc->calendar->horario->end_time,
                 'comprobante' =>  $insc->factura->id,
-                'valor' =>  $insc->factura->total,
+                'valor' =>  round(($insc->factura->total)/$cont_comp,3),
                 'descuento' =>  $insc->factura->descuento,
                 'estado' =>  $insc->estado,
                 'fecha_insc' =>  $insc->factura->created_at,
