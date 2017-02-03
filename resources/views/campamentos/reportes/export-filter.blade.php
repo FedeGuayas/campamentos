@@ -12,9 +12,7 @@
         </div>
     </div>
     <div class="col s2 pull-right ">
-        <a href="{{route('admin.reports.exportExcel')}}">
-            {!! Form::button('Exportar <i class="fa fa-file-excel-o fa-2x" ></i>',['class'=>'btn exportar btn-xs waves-effect waves-light teal darken-1 tooltipped','data-position'=>'top', 'data-delay'=>'50','data-tooltip'=>'Exportar', 'type'=>'submit']) !!}
-        </a>
+        {!! Form::button('Exportar <i class="fa fa-file-excel-o fa-2x" ></i>',['class'=>'btn exportar btn-xs waves-effect waves-light teal darken-1 tooltipped','data-position'=>'top', 'data-delay'=>'50','data-tooltip'=>'Exportar', 'type'=>'submit']) !!}
     </div>
 </div>
 {!! Form::close() !!}

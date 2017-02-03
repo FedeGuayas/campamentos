@@ -135,7 +135,7 @@ class ReportesController extends Controller
             ];
         }
 
-        Excel::create('Reporte_Campamentos - '.Carbon::now().'', function ($excel) use ($arrayExp) {
+        Excel::create('Reporte_General_Campamentos- '.Carbon::now().'', function ($excel) use ($arrayExp) {
 
             $excel->sheet('Insc General', function ($sheet) use ($arrayExp) {
 
@@ -271,18 +271,151 @@ class ReportesController extends Controller
         $sexo = $request->get('sexo');
         
         $inscripciones=Inscripcion::with('factura','calendar','user','alumno')
-            ->whereBetween('created_at',[$start, $end])
-//            ->where('created_at','>=',$start)
-//            ->where('created_at','<=',$end)
+            ->join('calendars', 'calendars.id', '=', 'inscripcions.calendar_id')
+            ->join('programs', 'programs.id', '=', 'calendars.program_id')
+            ->join('modulos', 'modulos.id', '=', 'programs.modulo_id')
+            ->join('escenarios', 'escenarios.id', '=', 'programs.escenario_id')
+            ->join('disciplinas', 'disciplinas.id', '=', 'programs.disciplina_id')
+            ->join('horarios', 'horarios.id', '=', 'calendars.horario_id')
+            ->join('profesors', 'profesors.id', '=', 'calendars.profesor_id')
+            ->whereBetween('inscripcions.created_at',[$start, $end])
+//            ->where('inscripcions.created_at','like','%'.$start.'%')
+//            ->where('inscripcions.created_at','like','%'.$end.'%')
             ->whereNull('cart')//inscripciones internas sin las online
-//            ->where('escenario','like','%'.$escenario.'%')
-            ->orderBy('created_at')
-            ->get();
+            ->where('modulos.id','like','%'.$modulo.'%')
+            ->where('escenarios.id','like','%'.$escenario.'%')
+            ->where('disciplinas.id','like','%'.$disciplina.'%')
+            ->where('horarios.id','like','%'.$horario.'%')
+            ->where('profesors.id','like','%'.$entrenador.'%')
+//            ->where('sexo','like','%'.$sexo.'%')
+            ->orderBy('inscripcions.created_at')
+            ->paginate(2);
 
         return view('campamentos.reportes.reporte-personalizado',compact('inscripciones','start','end','escenarioSelect',
             'escenario','moduloSelect','modulo','disciplinaSelect','disciplina','horarioSelect','horario','entrenadorSelect',
             'entrenador','sexo'));
     }
+
+
+    public function exportPersonal(Request $request){
+
+        $start = trim($request->get('start'));
+        $end = trim($request->get('end'));
+
+        $start=new Carbon($start);
+        $start=$start->toDateString();
+        $end=new Carbon($end);
+        $end=$end->toDateString();
+
+        $escenarioSelect = ['' => 'Seleccione el escenario'] + Escenario::lists('escenario', 'id')->all();
+        $escenario = $request->get('escenario');
+        $moduloSelect=['' => 'Seleccione el modulo'] + Modulo::lists('modulo', 'id')->all();
+        $modulo = $request->get('modulo');
+        $disciplinaSelect=['' => 'Seleccione la disciplina'] + Disciplina::lists('disciplina', 'id')->all();
+        $disciplina = $request->get('disciplina');
+        $horarioSelect=['' => 'Seleccione horario'] + Horario::select(DB::raw('CONCAT(start_time, " - ", end_time) AS horario' ), 'id')->orderBy('start_time')->lists('horario','id')->all();
+        $horario = $request->get('horario');
+        $entrenadorSelect=['' => 'Seleccione entrenador'] + Profesor::select(DB::raw('CONCAT(nombres, " ", apellidos) AS entrenador'), 'id')->orderBy('nombres')-> lists('entrenador', 'id')->all();
+        $entrenador = $request->get('entrenador');
+        $sexo = $request->get('sexo');
+
+        $inscripciones=Inscripcion::with('factura','calendar','user','alumno')
+            ->join('calendars', 'calendars.id', '=', 'inscripcions.calendar_id')
+            ->join('programs', 'programs.id', '=', 'calendars.program_id')
+            ->join('modulos', 'modulos.id', '=', 'programs.modulo_id')
+            ->join('escenarios', 'escenarios.id', '=', 'programs.escenario_id')
+            ->join('disciplinas', 'disciplinas.id', '=', 'programs.disciplina_id')
+            ->join('horarios', 'horarios.id', '=', 'calendars.horario_id')
+            ->join('profesors', 'profesors.id', '=', 'calendars.profesor_id')
+            ->whereBetween('inscripcions.created_at',[$start, $end])
+//            ->where('inscripcions.created_at','like','%'.$start.'%')
+//            ->where('inscripcions.created_at','like','%'.$end.'%')
+            ->whereNull('cart')//inscripciones internas sin las online
+            ->where('modulos.id','like','%'.$modulo.'%')
+            ->where('escenarios.id','like','%'.$escenario.'%')
+            ->where('disciplinas.id','like','%'.$disciplina.'%')
+            ->where('horarios.id','like','%'.$horario.'%')
+            ->where('profesors.id','like','%'.$entrenador.'%')
+//            ->where('sexo','like','%'.$sexo.'%')
+            ->orderBy('inscripcions.created_at')
+            ->get();
+
+        $arrayExp[] = ['Recibo','Apellidos_Alumno','Nombres_Alumno','Edad','Género','Representante','Cedeula Rep','Telefono','Correo','Direccion',
+            'Modulo','Escenario','Disciplina','Dias','Horario','Comprobante','Valor','Descuento','Estado','Fecha_Insc','Forma_Pago','Usuario','Pto Cobro','Profesor'];
+
+        foreach ($inscripciones as $insc) {
+
+            if (is_null($insc->user->escenario_id)){
+                $pto_cobro='';
+            }else $pto_cobro=$insc->user->escenario->escenario;
+
+            if ($insc->alumno_id == 0) {
+                $al_apell=$insc->factura->representante->persona->apellidos;
+                $al_nomb=$insc->factura->representante->persona->nombres;
+
+                $al=Representante::where('id',$insc->factura->representante_id)->first();
+                $fecha_nac=$insc->factura->representante->persona->fecha_nac;
+                $al_edad=$al->getEdad($fecha_nac);
+                $genero=$insc->factura->representante->persona->genero;
+            } else{
+                $al_apell=$insc->alumno->persona->apellidos;
+                $al_nomb=$insc->alumno->persona->nombres;
+
+                $al=Alumno::where('id',$insc->alumno_id)->first();
+                $fecha_nac=$al->persona->fecha_nac;
+                $al_edad=$al->getEdad($fecha_nac);
+                $genero=$insc->alumno->persona->genero;
+            }
+
+            $arrayExp[] = [
+                'recibo' => $insc->id,
+                'al_apell' => $al_apell,
+                'al_nomb' => $al_nomb,
+                'al_edad' => $al_edad,
+                'al_genero' => $genero,
+                'representante' => $insc->factura->representante->persona->getNombreAttribute(),
+                'ced_representante'=>$insc->factura->representante->persona->num_doc,
+                'tel_representante'=>$insc->factura->representante->persona->telefono,
+                'email_representante'=>$insc->factura->representante->persona->email,
+                'direccion_representante'=>$insc->factura->representante->persona->direccion,
+                'modulo' => $insc->calendar->program->modulo->modulo,
+                'escenario' => $insc->calendar->program->escenario->escenario,
+                'disciplina' => $insc->calendar->program->disciplina->disciplina,
+                'dias' => $insc->calendar->dia->dia,
+                'horario' => $insc->calendar->horario->start_time.'-'.$insc->calendar->horario->end_time,
+                'comprobante' =>  $insc->factura->id,
+                'valor' =>  $insc->factura->total,
+                'descuento' =>  $insc->factura->descuento,
+                'estado' =>  $insc->estado,
+                'fecha_insc' =>  $insc->factura->created_at,
+                'fpago' => $insc->factura->pago->forma,
+                'usuario' => $insc->user->getNameAttribute(),
+                'pto_cobro' => $pto_cobro,
+                'profe'=> $insc->calendar->profesor->getNameAttribute(),
+
+            ];
+        }
+
+
+        Excel::create('Reporte_Personalizado_Campamentos - '.Carbon::now().'', function ($excel) use ($arrayExp) {
+
+            $excel->sheet('Insc General', function ($sheet) use ($arrayExp) {
+
+                $sheet->setBorder('A1:X1','thin', 'thin', 'thin', 'thin');
+                $sheet->cells('A1:X1', function($cells){
+                    $cells->setBackground('#F5F5F5');
+                    $cells->setFontWeight('bold');
+                    $cells->setAlignment('center');
+
+                });
+
+                $sheet->fromArray($arrayExp,null,'A1',false,false);
+
+            });
+        })->export('xlsx');
+    }
+
+
 
 
 }

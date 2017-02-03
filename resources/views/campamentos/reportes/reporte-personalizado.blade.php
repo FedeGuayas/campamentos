@@ -1,6 +1,6 @@
 @extends('layouts.admin.index')
 
-@section('title','Facturas')
+@section('title','Reportes')
 
 @section('content')
 
@@ -14,6 +14,7 @@
     </div>
 
     <div class="row">
+        {!! Form::open (['route' => 'admin.reports.personalizado','method' => 'GET', 'class'=>'form_datepicker' ])!!}
 
         <div class="input-field col s3 ">
             {{Form::select('modulo',$moduloSelect,$modulo,['id'=>'modulo']) }}
@@ -31,9 +32,9 @@
         <div class="input-field col s3 ">
             {{Form::select('entrenador',$entrenadorSelect,$entrenador,['id'=>'entrenador']) }}
         </div>
-        <div class="input-field col s3 ">
-            {!! Form::select('sexo', ['MASCULINO' => 'MASCULINO', 'FEMENINO' => 'FEMENINO'],'null', ['placeholder' => 'Sexo...','id'=>'sexo']) !!}
-        </div>
+        {{--<div class="input-field col s3 ">--}}
+            {{--{!! Form::select('sexo', ['MASCULINO' => 'MASCULINO', 'FEMENINO' => 'FEMENINO'],'null', ['placeholder' => 'Sexo...','id'=>'sexo']) !!}--}}
+        {{--</div>--}}
 
 
         <div class="input-field col s2 ">
@@ -45,26 +46,18 @@
             {!! Form::date('end',$end,['class'=>'datepicker']) !!}
         </div>
 
-        <div class="col-sm-3">
-            {!! Form::open (['route' => 'admin.reports.excel','method' => 'GET', 'class'=>'form_datepicker' ])!!}
-            <p>Periodo de Inscripcion:</p>
-            <div class="input-field col s2 ">
-                {!! Form::label('start','Desde:') !!}
-                {!! Form::date('start',$start,['class'=>'datepicker']) !!}
-            </div>
-            <div class="input-field col s2 ">
-                {!! Form::label('end','Hasta:') !!}
-                {!! Form::date('end',$end,['class'=>'datepicker']) !!}
-            </div>
-            <div class="col s3">
-                {!! Form::button('Filtrar <i class="fa fa-search left"></i>',['class'=>'btn', 'type'=>'submit','id'=>'filtrar']) !!}
-            </div>
-            {!!form::close()!!}
+        <div class="col s3">
 
+            {!! Form::button('Filtrar <i class="fa fa-search left"></i>',['class'=>'btn', 'type'=>'submit','id'=>'filtrar']) !!}
+        </div>
+        {!!form::close()!!}
 
-            @include('campamentos.reportes.export-filter')
+        {!! Form::open (['route' => 'admin.reports.exportPersonalizado','method' => 'GET'])!!}
+        <div class="col s3">
+            @include('campamentos.reportes.export-personalizado')
         </div>
 
+        {!! Form::close() !!}
     </div>
 
     <hr>
@@ -74,8 +67,8 @@
                 <table class="table table-striped table-bordered table-condensed table-hover">
                     <thead>
                     <th>Recibo</th>
-                    <th>Apellidos</th>
-                    <th>Nombres</th>
+                    <th>Alumno App</th>
+                    <th>Alumno Nomb</th>
                     <th>CI</th>
                     <th>Modulo</th>
                     <th>Escenario</th>
@@ -118,6 +111,8 @@
                     @endforeach
                 </table><!--end table-responsive-->
             </div><!-- end div ./table-responsive-->
+            {{ $inscripciones->appends(['modulo'=>$modulo,'escenario'=>$escenario,'start'=>$start,'end'=>$end,'disciplina'=>$disciplina,
+            'horario'=>$horario,'entrenador'=>$entrenador])->links() }}
         </div><!--end div ./col-lg-12. etc-->
     </div><!--end div ./row-->
 
