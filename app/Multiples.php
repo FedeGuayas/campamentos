@@ -28,9 +28,7 @@ class Multiples
     public $desc_empleado=null;
 
     public $representante=null;
-
-    public $totalMatricula=0;
-   
+       
     
     //agregar al constructor xk hay k estar sobreescribiendo cada ves k se adiciona un producto
     public function __construct($oldCurso)
@@ -42,7 +40,6 @@ class Multiples
             $this->representante=$oldCurso->representante;
             $this->tipo_desc=$oldCurso->tipo_desc;
             $this->desc_empleado=$oldCurso->desc_empleado;
-            $this->totalMatricula=$oldCurso->totalMatricula;
         }
     }
 
@@ -61,18 +58,18 @@ class Multiples
             }
         }
         
-        if ($opciones[0]['alumno']==null){//adulto
-            $storedCurso['alumno'][$opciones[0]['alumno']['id']]=$opciones[0]['representante'];//el alumno sera el representante
-        }else {
-            $storedCurso['alumno'][$opciones[0]['alumno']['id']]=$opciones[0]['alumno'];//sino guardo los alumnos por su id    
-        }  
-    
+//        if ($opciones[0]['alumno']===null || $opciones[0]['alumno']==''){//adulto
+//            $storedCurso['alumno'][$opciones[0]['alumno']['id']]=$opciones[0]['representante'];//el alumno sera el representante
+//        }else {
+           $storedCurso['alumno'][$opciones[0]['alumno']['id']]=$opciones[0]['alumno'];//sino guardo los alumnos por su id
+//        }
+
         $this->representante=$opciones[0]['representante'];
         $storedCurso['qty']++;//incrementar la cantidad d cursos
 
         //costo de la matricula si se selecciona
         if (($opciones[0]['set_matricula'])=='on'){
-            $storedCurso['matricula']+=$curso->program->matricula;
+            $storedCurso['matricula'] += $curso->program->matricula;
         }
 
         //si se aplicara o no descuento a empleados, esto quedo para pruebas xk no implemente los desceuntos dentro de esta clase
@@ -98,11 +95,8 @@ class Multiples
         
         $this->totalCursos++; //total de cursos en general en la coleccion
 
-        $this->totalMatricula= $storedCurso['matricula']; //total de matricula
-        
         $this->totalPrecio+= $curso->mensualidad;//precio total de las mensualidades sin descuentos 
         
-
     }
 
     public function restarUno($id) {

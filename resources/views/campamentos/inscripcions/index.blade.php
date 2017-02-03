@@ -86,11 +86,11 @@
                             {{--<a href="{{ route('admin.inscripcions.show', $insc->id ) }}">
                                 {!! Form::button('<i class="tiny fa fa-eye"></i>',['class'=>'label waves-effect waves-light blue darken-1']) !!}
                             </a>--}}
-                            @if (Auth::user()->id==$insc->user_id ||  Entrust::hasRole('administrator'))
+                            {{--@if (Auth::user()->id==$insc->user_id ||  Entrust::hasRole('administrator'))--}}
                             <a href="{{  route('admin.reports.pdf',$insc->id ) }}">
                                 {!! Form::button('<i class="tiny fa fa-file-pdf-o"></i>',['class'=>'label waves-effect waves-light teal darken-1  orange accent-4']) !!}
                             </a>
-                            @endif
+                            {{--@endif--}}
                             @if (Entrust::can('delete_inscripcion'))
                             {!! Form::button('<i class="tiny fa fa-trash-o" ></i>',['class'=>'modal-trigger label waves-effect waves-light red darken-1','data-target'=>"modal-delete-$insc->id"]) !!}
                             @endif

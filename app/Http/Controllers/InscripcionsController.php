@@ -119,7 +119,7 @@ class InscripcionsController extends Controller
      */
     public function store(Request $request)
     {
-
+        
         if (Auth::user()->hasRole(['planner', 'administrator', 'signup'])) {
 
 
@@ -242,8 +242,7 @@ class InscripcionsController extends Controller
 
             $cursos = $cart->cursos;  //arreglo con los cursos agrupados por curso Items
 
-            $precioTotal = $cart->totalPrecio;//precio unitario del curso sin matricula
-            $matriculaT=$cart->totalMatricula; //precio total de la matricula
+            $precioTotal = $cart->totalPrecio;//precio unitario de la compra de los cursos sin matricula
             $tipo_descuento = $cart->tipo_desc; //tipo de desceunto aplicado
             $desc_emp = $cart->desc_empleado;//true o false
 
@@ -256,8 +255,13 @@ class InscripcionsController extends Controller
                 $desc2 = 0.5;
                 $descuento = $precioTotal * $desc2; //descuento aplicado a la mensualidad total
             }
+
+            $matricula=0;
+            foreach ($cursos as $curso){
+                $matricula+=$curso['matricula']; //costo de la matricula
+            }
             
-            $total = ($precioTotal+ $matriculaT) - $descuento; //total con descuentos aplicados
+            $total = ($precioTotal+ $matricula) - $descuento; //total con descuentos aplicados
 
             try {
                 DB::beginTransaction();
@@ -265,7 +269,9 @@ class InscripcionsController extends Controller
                 $user = Auth::user(); //usuario autenticado
                 $pago_id = $request->input('fpago_id');
                 $fpago = Pago::findOrFail($pago_id); //forma de pago
+                
                 $representante = $cart->representante;
+               
                 $factura = new Factura();
                 $factura->pago()->associate($fpago);
                 $factura->representante()->associate($representante);
@@ -290,6 +296,7 @@ class InscripcionsController extends Controller
                     $descuentos->descripcion='DESCUENTO EMPLEADO';
                     $descuentos->save();
                 }
+
                 
                 foreach ($cursos as $curso) {//recorro los cursos dentro de la coleccion (carrito)
                     $calendar = $curso['curso']; //1 curso dentro del item (storedCurso) de cursos 
@@ -297,7 +304,7 @@ class InscripcionsController extends Controller
                         Session::flash('message_danger', 'No hay disponibilidad para el curso');
                         return redirect()->back();
                     }
-
+                                        
                     foreach ($curso['alumno'] as $alumno) {//por cada alumno en cada curso hago una incripcion
                         $inscripcion = new Inscripcion();
                         $inscripcion->mensualidad=$calendar->mensualidad;
@@ -310,7 +317,7 @@ class InscripcionsController extends Controller
                             $inscripcion->estado = 'Reservada';
                         }
 
-                        if ($request->input('adulto') == true) {
+                        if ($alumno->id==$representante->id) {//adulto por tanto el rep =alumno
                             $inscripcion->alumno_id = 0;
                         } else {
                             $inscripcion->alumno_id = $alumno->id;

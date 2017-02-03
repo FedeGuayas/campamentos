@@ -512,7 +512,7 @@ class CalendarsController extends Controller
             $tipo_desc='multiple';
 
         if ($request->input('adulto')==true){
-            $alumno=null;
+            $alumno=$representante;
         }else {
             $alumno=Alumno::where('id',$request->input('alumno_id'))->with('persona')->first();
         }
@@ -540,9 +540,8 @@ class CalendarsController extends Controller
                 'totalCursos'=>Session::get('curso')->totalCursos,//para agregarlos en el indicador al lado de Detalles
             ]);
         }
-
             return redirect()->route('admin.inscripcions.create');
-
+        
     }
 
     /**
