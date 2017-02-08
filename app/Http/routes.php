@@ -32,7 +32,7 @@ Route::get('user/activation/{token}', 'Auth\AuthController@activateUser')->name(
 
 /*OK*/
 /*Route group admin, and login is forces by middeware auth*/
-Route::group(['middleware' => 'auth', 'prefix' => 'admin'], function () {
+Route::group(['middleware' => ['auth','role:administrator|signup|planner|supervisor'], 'prefix' => 'admin'], function () {
 //Route::group(['prefix' => 'admin'], function () {
 
     //borrar

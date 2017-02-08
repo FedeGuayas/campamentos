@@ -3,7 +3,7 @@
     <ul id="dropdownUser" class="dropdown-content">
         <li><a href="">Hard </a></li>
         <li class="divider"></li>
-        @if(Entrust::hasRole(['administrator','planner','signup','invited']) )
+        @if(Entrust::hasRole(['administrator','planner','signup','supervisor']) )
             <li><a href="{{route('admin.index')}}">Administración</a></li>
         @endif
         <div class="divider"></div>
