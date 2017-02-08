@@ -1,4 +1,4 @@
-{!! Form::open (['route' => 'admin.reports.export-credenciales','method' => 'GET'])!!}
+{!! Form::open (['route' => 'admin.reports.export-credenciales','method' => 'GET', 'target'=>'_blank'])!!}
 <div class="hidden">
     {!! Form::text('start',$start,['class'=>'validate',  'id'=>'start']) !!}
     {!! Form::text('end',$end,['class'=>'validate', 'id'=>'end']) !!}

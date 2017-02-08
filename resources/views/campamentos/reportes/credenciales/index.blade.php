@@ -30,9 +30,7 @@
         </div>
         {!!form::close()!!}
 
-        {!! Form::open (['route' => 'admin.reports.export-credenciales','method' => 'GET'])!!}
-            @include('campamentos.reportes.credenciales.export-credenciales')
-        {!! Form::close() !!}
+        @include('campamentos.reportes.credenciales.export-credenciales')
     </div>
 
     <hr>
