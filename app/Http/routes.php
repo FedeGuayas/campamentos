@@ -175,6 +175,8 @@ Route::group(['middleware' => 'auth', 'prefix' => 'admin'], function () {
     Route::get('/reports/excel/export/custom',['as' => 'admin.reports.exportPersonalizado', 'uses'=>'ReportesController@exportPersonal']);
     Route::get('/reports/pdf/{id}',['as' => 'admin.reports.pdf', 'uses'=>'ReportesController@inscripcionPDF']);
     Route::get('reports/pagos/cuadre', ['as'=>'admin.pagos.cuadre','uses'=>'ReportesController@cuadre']);
+    Route::get('/reports/credenciales',['as' => 'admin.reports.credenciales', 'uses'=>'ReportesController@getCredenciales']);
+    Route::get('/reports/credenciales/export',['as' => 'admin.reports.export-credenciales', 'uses'=>'ReportesController@exportCredenciales']);
 
     //facturacion diaria usuario
     Route::get('/user/facturas/excel',['as' => 'admin.facturas.excel', 'uses'=>'UsersController@getFacturaExcel']);

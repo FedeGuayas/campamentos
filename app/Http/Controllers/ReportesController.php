@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Alumno;
 use App\Calendar;
+use App\Dia;
 use App\Disciplina;
 use App\Escenario;
 use App\Factura;
@@ -16,11 +17,14 @@ use App\Program;
 use App\Representante;
 use App\User;
 use Carbon\Carbon;
+use Dompdf\Dompdf;
 use Illuminate\Http\Request;
 use Yajra\Datatables\Datatables;
 use Maatwebsite\Excel\Facades\Excel;
 use Barryvdh\DomPDF\Facade as PDF;
 use DB;
+use Session;
+
 
 use App\Http\Requests;
 
@@ -155,7 +159,11 @@ class ReportesController extends Controller
         })->export('xlsx');
     }
 
-    //comprobantes de inscripciones
+    /**
+     * Comprovantes de inscripcion en pdf
+     * @param $id
+     * @return mixed
+     */
     public function inscripcionPDF($id){
 
         $inscripcion=Inscripcion::with('factura','calendar','user','alumno')
@@ -184,7 +192,11 @@ class ReportesController extends Controller
         }
     }
 
-
+    /**
+     * Mostrar el cuadre diarrio de las ventas de los usuarios
+     * @param Request $request
+     * @return mixed
+     */
     public function cuadre(Request $request)
     {
         $escenarioSelect = ['' => 'Seleccione el escenario'] + Escenario::lists('escenario', 'id')->all();
@@ -252,14 +264,6 @@ class ReportesController extends Controller
      */
     public function getPersonal(Request $request)
     {
-//        $start = trim($request->get('start'));
-//        $end = trim($request->get('end'));
-//
-//        $start=new Carbon($start);
-//        $start=$start->toDateString();
-//        $end=new Carbon($end);
-//        $end=$end->toDateString();
-
         $escenarioSelect = ['' => 'Seleccione el escenario'] + Escenario::lists('escenario', 'id')->all();
         $escenario = $request->get('escenario');
         $moduloSelect=['' => 'Seleccione el modulo *'] + Modulo::lists('modulo', 'id')->all();
@@ -268,6 +272,8 @@ class ReportesController extends Controller
         $disciplina = $request->get('disciplina');
         $horarioSelect=['' => 'Seleccione horario'] + Horario::select(DB::raw('CONCAT(start_time, " - ", end_time) AS horario' ), 'id')->orderBy('start_time')->lists('horario','id')->all();
         $horario = $request->get('horario');
+        $diaSelect=['' => 'Seleccione dia'] + Dia::orderBy('dia')->lists('dia','id')->all();
+        $dia = $request->get('dia');
         $entrenadorSelect=['' => 'Seleccione entrenador'] + Profesor::select(DB::raw('CONCAT(nombres, " ", apellidos) AS entrenador'), 'id')->orderBy('nombres')-> lists('entrenador', 'id')->all();
         $entrenador = $request->get('entrenador');
         $sexo = $request->get('sexo');
@@ -280,6 +286,7 @@ class ReportesController extends Controller
             ->join('disciplinas', 'disciplinas.id', '=', 'programs.disciplina_id')
             ->join('horarios', 'horarios.id', '=', 'calendars.horario_id')
             ->join('profesors', 'profesors.id', '=', 'calendars.profesor_id')
+            ->join('dias', 'dias.id', '=', 'calendars.dia_id')
 //            ->whereBetween('inscripcions.created_at',[$start, $end])
 //            ->where('inscripcions.created_at','like','%'.$start.'%')
 //            ->where('inscripcions.created_at','like','%'.$end.'%')
@@ -289,25 +296,22 @@ class ReportesController extends Controller
             ->where('disciplinas.id','like','%'.$disciplina.'%')
             ->where('horarios.id','like','%'.$horario.'%')
             ->where('profesors.id','like','%'.$entrenador.'%')
+            ->where('dias.id','like','%'.$dia.'%')
 //            ->where('sexo','like','%'.$sexo.'%')
             ->orderBy('inscripcions.created_at')
             ->paginate(10);
 
         return view('campamentos.reportes.reporte-personalizado',compact('inscripciones','escenarioSelect',
             'escenario','moduloSelect','modulo','disciplinaSelect','disciplina','horarioSelect','horario','entrenadorSelect',
-            'entrenador','sexo'));
+            'entrenador','sexo','diaSelect','dia'));
     }
 
-
+    /**
+     * Reporte en excel filtrado con modulo obligatorio
+     * @param Request $request
+     */
     public function exportPersonal(Request $request){
 
-//        $start = trim($request->get('start'));
-//        $end = trim($request->get('end'));
-//
-//        $start=new Carbon($start);
-//        $start=$start->toDateString();
-//        $end=new Carbon($end);
-//        $end=$end->toDateString();
 
         $escenarioSelect = ['' => 'Seleccione el escenario'] + Escenario::lists('escenario', 'id')->all();
         $escenario = $request->get('escenario');
@@ -317,6 +321,8 @@ class ReportesController extends Controller
         $disciplina = $request->get('disciplina');
         $horarioSelect=['' => 'Seleccione horario'] + Horario::select(DB::raw('CONCAT(start_time, " - ", end_time) AS horario' ), 'id')->orderBy('start_time')->lists('horario','id')->all();
         $horario = $request->get('horario');
+        $diaSelect=['' => 'Seleccione dia'] + Dia::orderBy('dia')->lists('dia','id')->all();
+        $dia = $request->get('dia');
         $entrenadorSelect=['' => 'Seleccione entrenador'] + Profesor::select(DB::raw('CONCAT(nombres, " ", apellidos) AS entrenador'), 'id')->orderBy('nombres')-> lists('entrenador', 'id')->all();
         $entrenador = $request->get('entrenador');
         $sexo = $request->get('sexo');
@@ -329,6 +335,7 @@ class ReportesController extends Controller
             ->join('disciplinas', 'disciplinas.id', '=', 'programs.disciplina_id')
             ->join('horarios', 'horarios.id', '=', 'calendars.horario_id')
             ->join('profesors', 'profesors.id', '=', 'calendars.profesor_id')
+            ->join('dias', 'dias.id', '=', 'calendars.dia_id')
 //            ->whereBetween('inscripcions.created_at',[$start, $end])
 //            ->where('inscripcions.created_at','like','%'.$start.'%')
 //            ->where('inscripcions.created_at','like','%'.$end.'%')
@@ -338,6 +345,7 @@ class ReportesController extends Controller
             ->where('disciplinas.id','like','%'.$disciplina.'%')
             ->where('horarios.id','like','%'.$horario.'%')
             ->where('profesors.id','like','%'.$entrenador.'%')
+            ->where('dias.id','like','%'.$dia.'%')
 //            ->where('sexo','like','%'.$sexo.'%')
             ->orderBy('inscripcions.created_at')
             ->get();
@@ -421,5 +429,45 @@ class ReportesController extends Controller
 
 
 
+    /**
+     * Vista para generar  Credenciales de los alumnos
+     * @param Request $request
+     * @return mixed
+     */
+    public function getCredenciales(Request $request)
+    {
+        $start = trim($request->get('start'));
+        $end = trim($request->get('end'));
+        
+        $inscripciones=Inscripcion::with('factura','calendar','user','alumno')
+            ->whereBetween('inscripcions.id',[$start, $end])
+            ->whereNull('cart')//inscripciones internas sin las online
+//            ->orderBy('inscripcions.created_at')
+            ->paginate(8);
+
+        return view('campamentos.reportes.credenciales.index',compact('inscripciones','start','end'));
+    }
+
+    /**
+     * Exportar Credenciales de Alumnos para imprimirlas
+     * @param $id
+     * @return mixed
+     */
+    public function exportCredenciales(Request $request){
+
+        $start = trim($request->get('start'));
+        $end = trim($request->get('end'));
+
+        $inscripciones=Inscripcion::with('factura','calendar','user','alumno')
+            ->whereBetween('inscripcions.id',[$start, $end])
+            ->whereNull('cart')//inscripciones internas sin las online
+//            ->orderBy('inscripcions.created_at')
+            ->get();
+
+        $pdf = PDF::loadView('campamentos.reportes.credenciales.credenciales-pdf',compact('inscripciones'))->setPaper('letter','landscape');
+        return $pdf->stream('Credenciales');//imprime en pantalla
+//return view('campamentos.reportes.credenciales.credenciales-pdf',compact('start','end','inscripciones'));
+
+    }
 
 }

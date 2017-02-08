@@ -32,6 +32,9 @@
         <div class="input-field col s3 ">
             {{Form::select('entrenador',$entrenadorSelect,$entrenador,['id'=>'entrenador']) }}
         </div>
+        <div class="input-field col s3 ">
+            {{Form::select('dia',$diaSelect,$dia,['id'=>'dia']) }}
+        </div>
         {{--<div class="input-field col s3 ">--}}
             {{--{!! Form::select('sexo', ['MASCULINO' => 'MASCULINO', 'FEMENINO' => 'FEMENINO'],'null', ['placeholder' => 'Sexo...','id'=>'sexo']) !!}--}}
         {{--</div>--}}
@@ -68,6 +71,7 @@
                     <th>Modulo</th>
                     <th>Escenario</th>
                     <th>Disciplina</th>
+                    <th>Días</th>
                     <th>Representante</th>
                     <th>Profesor</th>
                     </thead>
@@ -100,6 +104,7 @@
                             <td>{{$insc->calendar->program->modulo->modulo}}</td>
                             <td>{{ $insc->calendar['program']->escenario->escenario }}</td>
                             <td>{{ $insc->calendar['program']->disciplina->disciplina }}</td>
+                            <td>{{ $insc->calendar->dia->dia }}</td>
                             <td>{{ $insc->factura->representante->persona->getNombreAttribute() }}</td>
                             <td>{{ $insc->calendar->profesor->getNameAttribute() }}</td>
                         </tr>
@@ -107,7 +112,7 @@
                 </table><!--end table-responsive-->
             </div><!-- end div ./table-responsive-->
             {{ $inscripciones->appends(['modulo'=>$modulo,'escenario'=>$escenario,'disciplina'=>$disciplina,
-            'horario'=>$horario,'entrenador'=>$entrenador])->links() }}
+            'horario'=>$horario,'entrenador'=>$entrenador,'dia'=>$dia])->links() }}
         </div><!--end div ./col-lg-12. etc-->
     </div><!--end div ./row-->
 

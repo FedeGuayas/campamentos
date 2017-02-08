@@ -1,0 +1,34 @@
+/*body {
+    width: 1cm;
+}
+*/
+
+.credencial_img{
+    width: 230px;
+    height: 322px;
+    background: url(../img/camp/credencial_240x325.png) no-repeat;
+   border: solid;
+    border-color:#090c29;
+    text-align: center;
+    display:inline-block;
+    padding: 0;
+    margin: 0;
+}
+
+th {
+    font-weight: bold;
+    text-align: left;
+
+}
+
+td {
+    text-decoration: underline;
+}
+
+/*salto de pagina en el pdf*/
+.page-break {
+    page-break-after: always;
+}
+
+
+

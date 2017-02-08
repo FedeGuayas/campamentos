@@ -61,9 +61,9 @@ class ProgramsController extends Controller
      */
     public function create()
     {
-        $modulos=[] + Modulo::where('activated','1')->orderBy('inicio', 'asc')->lists('modulo', 'id')->all();
-        $escenarios=[] + Escenario::where('activated','1')->lists('escenario', 'id')->all();
-        $disciplinas=[] + Disciplina::lists('disciplina', 'id')->all();
+        $modulos=[] + Modulo::where('activated','1')->orderBy('modulo')->lists('modulo', 'id')->all();
+        $escenarios=[] + Escenario::where('activated','1')->orderBy('escenario')->lists('escenario', 'id')->all();
+        $disciplinas=[] + Disciplina::where('activated','1')->orderBy('disciplina')->lists('disciplina', 'id')->all();
       
         return view('campamentos.programs.create',compact('escenarios','disciplinas','modulos'));
     }
@@ -122,9 +122,9 @@ class ProgramsController extends Controller
         $end=new Carbon($modulo->fin);
 
         $estacion='';
-        if (($start->month >=4) && ($start->month <= 12))
+        if (($start->month >=5) && ($start->month <= 12))
             $estacion='Verano';
-        elseif (($start->month >=1) && ($start->month < 2))
+        elseif (($start->month >=1) && ($start->month < 3))
             $estacion='Verano';
         else
             $estacion='Invierno';
@@ -249,7 +249,7 @@ class ProgramsController extends Controller
 //            $categoria = ['' => 'Seleccione la categoría'] + Categoria::lists('categoria', 'id')->all();
 //            $escenar = $escenarios->pluck('escenario', 'escenario_id');
 
-            if ($mes>=5 && $mes<=12)
+                     if ($mes>=5 && $mes<=12)
                 $estacion='VERANO';
             elseif ($mes>=1 && $mes<3)
                 $estacion='VERANO';
@@ -259,6 +259,7 @@ class ProgramsController extends Controller
             return response()->json([
                 'escenarios'=>$escenarios,
                 'estacion'=>$estacion,
+
             ]);
         }
     }
