@@ -153,12 +153,17 @@ $("#dia_id").change(function (event) {
         success: function (response) {
             // console.log(response);
             // horario.empty();
-            horario.find("option:gt(0)").remove();
-            horario.addClass("teal-text");
-            for (i = 0; i < response.horario.length; i++) {
-                horario.append('<option value="' + response.horario[i].horario_id + '">' + response.horario[i].start_time + ' ' + response.horario[i].end_time + ' ( ' + response.horario[i].init_age + ' - ' + response.horario[i].end_age + ' años ) </option>');
+
+            if (response.horario.length<=0){
+                alert('La edad del alumno es '+ response.edad +'. No cumple con el rango para el curso.' );
+            }else{
+                horario.find("option:gt(0)").remove();
+                horario.addClass("teal-text");
+                for (i = 0; i < response.horario.length; i++) {
+                    horario.append('<option value="' + response.horario[i].horario_id + '">' + response.horario[i].start_time + ' ' + response.horario[i].end_time + ' ( ' + response.horario[i].init_age + ' - ' + response.horario[i].end_age + ' años ) </option>');
+                }
+                horario.material_select();
             }
-            horario.material_select();
         },
         error: function (response) {
             // console.log(response);

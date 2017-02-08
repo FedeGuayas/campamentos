@@ -178,6 +178,7 @@ class RepresentantesController extends Controller
             $encuesta = Encuesta::find($encuesta_id);
 
             $representante = new Representante;
+
             $representante->persona()->associate($persona);
             $representante->encuesta()->associate($encuesta);
 
@@ -206,7 +207,7 @@ class RepresentantesController extends Controller
             if ($request->ajax()) {
                 return response()->json([
                     'message' => 'Representante creado correctamente',
-                    'representante_id' => $representante->id,
+                    'persona_id' => $persona->id,//porque el id de persona es el necesario al almacenar la inscripcion
                     'nombre' => $persona->getNombreAttribute(),
                 ]);
             }

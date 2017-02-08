@@ -6,7 +6,6 @@
                 @include('alert.request')
                 {!! Form::open(['class'=>'form_noEnter', 'id'=>'form_alumno']) !!}
                 {{--seleccionada en representente, es id_persona--}}
-                {!! Form::hidden('persona_id',null,['id'=>'persona_id']) !!}
                 <div id="mensaje-success" class="alert alert-success alert-dismissible" role="alert" style="display: none">
                     <button type="button" class="close" data-dismiss="alert" aria-labelledby="Close"><span aria-hidden="true">&times;</span></button>
                     <li><strong id="msj-succes"></strong></li>

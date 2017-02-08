@@ -149,7 +149,7 @@
                                     console.log("Checkbox " + $(this).prop("id") + " (" + $(this).val() + ") => Deseleccionado");
                                     representante_id.find("option:gt(0)").remove();//elimino las opciones menos la primera
                                     representante_id.removeClass("teal-text");
-                                    $("#persona_id").empty();
+//                                    $("#persona_id").empty();
                                 }
                                 representante_id.material_select();
                             });
@@ -167,7 +167,7 @@
             function crear_representante_ajax() {
                 var route = "{{route('admin.representantes.store')}}";
                 var token = $("input[name=_token]").val();
-                var representante_id = $("#representante_id");
+//                var representante_id = $("#representante_id");
                 var formData = new FormData(document.getElementById("form_representante"));//se envia tod el form al controlador
                 //formData.append("dato", "valor"); //agregar otros datos a en viar al controlador
                 // formData.append(f.attr("name"), $(this)[0].files[0]);
@@ -182,15 +182,16 @@
                     processData: false,
 //                    data:$("#form_representante").serialize(),
                     success: function (resp) {
-                        var id = resp.representante_id;
+//                        console.log(resp);
+                        var id = resp.persona_id;
                         var name = resp.nombre;
+                        var representante_id = $("#representante_id");
                         $("#form_representante").trigger("reset");//limpio el form
                         $("#msj-rep-succes").html(resp.message)
                         $("#mensaje-rep-success").fadeIn();
                         representante_id.append('<option value="' + id + '">' + name + '</option>');
                         representante_id.addClass("teal-text");
-                        representante_id.material_select()
-//                        $("#persona_id").val(id);
+                        representante_id.material_select();
                     },
                     error: function (resp) {
                         //console.log(resp.responseJSON)
@@ -202,7 +203,6 @@
                         $("#mensaje-rep-error").fadeIn();
                         representante_id.removeClass("teal-text");
                         representante_id.find("option:gt(0)").remove();
-                        $("#persona_id").empty();
                     }
 
                 });
@@ -232,20 +232,18 @@
                     processData: false,
 //                    data:$("#form_representante").serialize(),
                     success: function (resp) {
+                        console.log(resp);
                         var id = resp.alumno_id;
                         var name = resp.nombre;
                         $("#form_alumno").trigger("reset");//limpio el form
                         $("#msj-succes").html(resp.message)
                         $("#mensaje-success").fadeIn();
-                        $("#alumno_id").val(resp.nombre);
-                        $("#persona_id").val(resp.persona_id);
-                        $("#representante").addClass("teal-text");
                         alumno_id.append('<option value="' + id + '">' + name + '</option>');
                         alumno_id.addClass("teal-text");
                         alumno_id.material_select();
                     },
                     error: function (resp) {
-                        //console.log(resp.responseJSON)
+                        console.log(resp.responseJSON)
                         var errors = '';
                         $.each(resp.responseJSON, function (ind, elem) {
                             errors += elem + '<br>';
@@ -254,6 +252,7 @@
                         $("#mensaje-error").fadeIn();
                         alumno_id.removeClass("teal-text");
                         alumno_id.find("option:gt(0)").remove();
+                        $("#alumno_id").empty();
                     }
                 });
             }

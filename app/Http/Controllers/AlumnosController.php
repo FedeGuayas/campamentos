@@ -143,7 +143,6 @@ class AlumnosController extends Controller
         }
         try {
             DB::beginTransaction();
-
             $persona=new Persona;
             $persona->nombres=strtoupper($request->get('nombres'));
             $persona->apellidos=strtoupper($request->get('apellidos'));
@@ -151,16 +150,12 @@ class AlumnosController extends Controller
             $persona->num_doc=$request->get('num_doc');
             $persona->genero=$request->get('genero');
             $persona->fecha_nac=$request->get('fecha_nac');
-//            $persona->direccion=strtoupper($request->get('direccion'));
+
             $persona->save();
 
             $alumno=new Alumno;
-
-            if ($request->ajax()){
-                $representante=Representante::where('id',$request->get('persona_id'))->first();
-            }else{
-                $representante=Representante::where('persona_id',$request->get('persona_id'))->first();
-            }
+             
+            $representante=Representante::where('persona_id',$request->get('persona_id'))->first();
 
             $alumno->persona()->associate($persona);
             $alumno->representante()->associate($representante);
@@ -186,6 +181,7 @@ class AlumnosController extends Controller
             DB::commit();
 
             if ($request->ajax()){
+                
                 return response()->json([
                     'message'=>'Alumno creado correctamente',
                     'alumno_id'=>$alumno->id,
@@ -194,9 +190,10 @@ class AlumnosController extends Controller
             }
 
         } catch (\Exception $e) {
+            
             DB::rollback();
-            Session::flash('message_danger', $e->getMessage());
-            return redirect()->back('admin.alumnos.index');
+                Session::flash('message_danger', $e->getMessage());
+                return redirect()->back('admin.alumnos.index');
         }
 
         Session::flash('message', 'Alumno creado correctamente');
