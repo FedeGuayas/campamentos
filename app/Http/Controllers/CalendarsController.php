@@ -34,6 +34,7 @@ class CalendarsController extends Controller
     {
         $this->middleware('auth');
         $this->middleware(['role:administrator'], ['only' => 'destroy']);//eliminar cursos solo administrador
+        $this->middleware(['role:planner|supervisor|administrator'], ['only' => 'update']);//eliminar cursos
     }
     
     /**

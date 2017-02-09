@@ -197,7 +197,18 @@ Route::get('/inscripcions-collections/reduce/{id}',['uses'=>'CalendarsController
 Route::get('/inscripcions-collections/remove/{id}',['uses'=>'CalendarsController@getRestarCurso','as'=>'inscripciones.restarTodo']);
 
 
+//*************Usuarios Online****//
 
+/*Route group user is forces by middeware auth*/
+Route::group(['middleware' => ['auth','role:register'], 'prefix' => 'user'], function () {
+
+    //vista para editar la contraseña del perfil de usuario
+    Route::get('/password/edit', ['uses' => 'UsersController@getPasswordEdit','as' => 'user.password.edit']);
+    //actualizar la contraseña del perfil de usuario
+    Route::put('{user}/profile/pass/edit', ['uses' => 'UsersController@postPassword','as' => 'user.password.update']);
+    //actualizar la contraseña del perfil de usuario
+    Route::put('{user}/edit', ['uses' => 'UsersController@updateOnline','as' => 'user.update']);
+});
 
 
 //********** Carrito ****//

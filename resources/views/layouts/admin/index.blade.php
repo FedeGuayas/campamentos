@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
 
-    <title>@yield('title','Default') | Panel Administración</title>
+    <title>@yield('title',' Panel Administración')</title>
 
         <!-- Font Awesome -->
     {!! Html::style('css/font-awesome.min.css') !!}

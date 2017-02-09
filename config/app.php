@@ -162,6 +162,7 @@ return [
         Yajra\Datatables\DatatablesServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
         Barryvdh\DomPDF\ServiceProvider::class,
+        'App\Providers\ValidatorServiceProvider',
 
     ],
 

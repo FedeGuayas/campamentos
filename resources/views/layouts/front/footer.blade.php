@@ -31,12 +31,14 @@
     <!--Call to action-->
     <div class="page-footer call-to-action">
         <ul>
-            <li><img class="img-responsive" src="{{asset('../img/camp/fdg-footer.png')}}" alt="" style="max-height: 100px"></li>
+            <li><img class="img-responsive" src="{{asset('img/camp/fdg-footer.png')}}" alt="" style="max-height: 100px"></li>
+            @if (Auth::guest())
             <li>
                 <h5 class="h5-responsive white-text text-lighten-3">Entre e inscribase en nuestros campamentos</h5>
             </li>
-            <li><a href="#modal-login" class="waves-effect waves-light btn blue darken-3"><i class="material-icons right">input</i>Entrar</a>
+            <li><a href="{{url('/login')}}" class="waves-effect waves-light btn blue darken-3"><i class="material-icons right">input</i>Entrar</a>
             </li>
+            @endif
         </ul>
     </div>
     <!--/.Call to action-->

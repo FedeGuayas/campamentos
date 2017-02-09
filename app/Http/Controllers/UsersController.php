@@ -15,7 +15,8 @@ use Illuminate\Support\Facades\Redirect;
 use Session;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
-
+use App\Http\Requests\ChangePasswordRequest;
+use App\Http\Requests\UserUpdateOnlineRequest;
 use App\Http\Requests;
 
 
@@ -198,7 +199,7 @@ class UsersController extends Controller
 
 
     /**
-     * Mostrar el perfi de usuario
+     * Mostrar el perfi del usuario backend
      */
     public function showProfile()
     {
@@ -352,6 +353,54 @@ class UsersController extends Controller
 
     }
 
+    
+    //****************USUARIOS ONLINE******************************//
+    
+    /**
+     * Cargar el form para editar la contraseña del usuarioonline
+     * @param Request $request
+     * @return mixed
+     */
+    public function getPasswordEdit(Request $request){
 
+        $user=$request->user();
+
+        return view('online.users.profile.pass-edit',['user'=>$user]);
+    }
+
+    /**
+     * Cambio de contraseña de usuario online
+     *
+     * @param ChangePasswordRequest $request
+     * @param User $user
+     * @return mixed
+     */
+    public function postPassword(ChangePasswordRequest $request,User $user){
+
+        $new_pass=$request->password_new;
+        $user->password = $new_pass;
+        $user->update();
+        return redirect()->back()->with('message','Contraseña Actualizada');
+    }
+
+    public function updateOnline(UserUpdateOnlineRequest $request, $id)
+    {
+        $user=User::findOrFail($id);
+        $user->first_name=strtoupper($request->get('first_name'));
+        $user->last_name=strtoupper($request->get('last_name'));
+
+        if ($request->hasFile('avatar')) {
+            $file = $request->file('avatar');
+            $name='user_avatar_'.$user->id.'.'.$file->getClientOriginalExtension();
+            $path=public_path().'/dist/img/users/avatar/';//ruta donde se guardara
+            $file->move($path,$name);//lo copio a $path con el nombre $name
+            $user->avatar=$name;//ahora se guarda  en el atributo avatar el nombre de la imagen
+
+        }
+        
+        $user->update();
+
+        return redirect()->back()->with('message','Se actualizaron sus datos de usuario');
+    }
 
 }

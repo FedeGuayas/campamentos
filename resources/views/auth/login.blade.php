@@ -1,6 +1,6 @@
 @extends('layouts.front.master-plane')
 @section('title','Login')
-@section('content')
+@section('body')
     <br><br><br>
     <div class="container">
         <div class="row">

@@ -1,123 +1,112 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"/>
-    <title>@yield('title')</title>
+@extends('layouts.front.master-plane')
 
-    <!-- CSS  -->
+@section('body')
 
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <header>
+        {{--Nav--}}
+        @include('layouts.front.navUp')
+    </header>
 
-    {!! Html::style('css/font-awesome.min.css') !!}
-    {!! Html::style('css/bootstrap.min.css') !!}
-    {!! Html::style('css/bootstrap-social.css') !!}
-    {!! Html::style('landing/css/style.css') !!}
-    {!! Html::style('landing/css/materialize.css') !!}
+    <div class="container">
+        <div class="row">
+            <div class="col l12">
+                <h5 class="page-header">@yield('encabezado')</h5>
+            </div><!-- /.col l12 -->
+        </div>  <!-- /.row -->
+        <div class="row">
+            <main>
+                {{--Contenido--}}
+                @yield('content')
+            </main>
+        </div><!-- /.row -->
+    </div>
 
-    {!! Html::style('landing/css/animate.css') !!}
+    <footer>
+        {{--FOOTER--}}
+        @include('layouts.front.footer')
+    </footer>
 
-</head>
-<body>
-<a href="#" class="back-to-top waves-effect waves-light btn btn-floating wow slideInUp">Subir</a>
-<header>
-    @include('layouts.front.nav')
-</header>
+@section('scripts')
+    <script>
+        $(document).ready(function () {
 
+            //        combo
+            $('select').material_select();
 
-<main>
-    @yield('content')
-
-            <!--Seccion: Contacto-->
-    @include('layouts.front.contact')
-            <!--Section: Contact-->
-</main>
-
-<footer>
-{{--FOOTER--}}
-@include('layouts.front.footer')
-</footer>
-
-        <!--  Scripts-->
-<script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-{!! Html::script('landing/js/materialize.js') !!}
-{!! Html::script('landing/js/init.js') !!}
-{!! Html::script('landing/js/wow.js') !!}
-        <!--Google Maps-->
-<script src="http://maps.google.com/maps/api/js"></script>
+            {{--Boton dropdown--}}
+            $(".dropdown-button").dropdown();
 
 
+            $('.button-collapse').sideNav(
+                    {
+                        menuWidth: 240, // Default is 240
+                        edge: 'left', // Choose the horizontal origin
+                        closeOnClick: true // Closes side-nav on <a> clicks, useful for Angular/Meteor
+                    }
+            );
 
 
-<script>
-    //     Inicializar las ani,aciones
-    new WOW().init();
-
-    //Inicicio del slider
-    $(document).ready(function(){
-        $('.slider').slider({full_width: true});
+            $('.fixed-action-btn').openFAB();
+            $('.fixed-action-btn').closeFAB();
 
 
-        //           the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
-        $('#modal-login').modal({
-            dismissible: false, // Modal can be dismissed by clicking outside of the modal
-            opacity: .5, // Opacity of modal background
-            in_duration: 300, // Transition in duration
-            out_duration: 200, // Transition out duration
-//                       starting_top: '4%', // Starting top style attribute
-//                       ending_top: '10%', // Ending top style attribute
-//                       ready: function(modal, trigger) { // Callback for Modal open. Modal and trigger parameters available.
-//                            alert("Ready");
-//                            console.log(modal, trigger);
-//                       },
-//                       complete: function() { alert('Closed'); } // Callback for Modal close
-        });
-
-    });
-
-    // SideNav init
-    $(".button-collapse").sideNav();
-
-    function init_map() {
-        var var_location = new google.maps.LatLng(-2.190098, -79.892341);
-        var var_mapoptions = {
-            center: var_location,
-            zoom: 14
-        };
-        var var_marker = new google.maps.Marker({
-            position: var_location,
-            map: var_map,
-            title: "FDGuayas"
-        });
-        var var_map = new google.maps.Map(document.getElementById("map-container"),
-                var_mapoptions);
-        var_marker.setMap(var_map);
-    }
-    google.maps.event.addDomListener(window, 'load', init_map);
+            $('.collapsible').collapsible({
+                accordion: false // A setting that changes the collapsible behavior to expandable instead of the default accordion style
+            });
 
 
+            // para ventana modal de eliminar
+            $('.modal-trigger').leanModal({
+                        dismissible: true, // Modal can be dismissed by clicking outside of the modal
+                        opacity: .5, // Opacity of modal background
+                        in_duration: 300, // Transition in duration
+                        out_duration: 200, // Transition out duration
+                        starting_top: '4%', // Starting top style attribute
+                        ending_top: '10%', // Ending top style attribute
+                    }
+            );
 
-    $(document).ready(function(){
-        var $backToTop = $(".back-to-top");
-        $backToTop.hide();
+            //modal respositive
+            $(".modal").width($(".modal").width());
+            $(".modal").height($(".modal").height());
 
-        $(window).on('scroll', function() {
-            if ($(this).scrollTop() > 300) { /* back to top will appear after the user scrolls 100 pixels */
-                $backToTop.fadeIn();
-            } else {
-                $backToTop.fadeOut();
+            //tooltips
+            $('.tooltipped').tooltip({delay: 50});
+
+            //valida el datepicker k no este vacio
+            function checkDate() {
+                var flag = 0;
+                if ($('.datepicker').val() == '') {
+                    $('.datepicker').addClass('invalid')
+                    $flag = 0;
+                } else {
+                    $('.datepicker').removeClass('invalid')
+                    $flag = 1;
+                }
             }
+
+            $('.datepicker').change(function () {
+                checkDate();
+            });
+
+            $('#form_datepicker').submit(function () {
+                checkDate();
+                if ($flag == 0) {
+                    return false;
+                } else {
+                    return true;
+                }
+            });
+
+            $('.datepicker').pickadate({
+                selectMonths: true, // Creates a dropdown to control month
+                selectYears: 50 // Creates a dropdown of 15 years to control year
+                //            format: 'dd/mm/yyyy'
+            });
+
         });
+    </script>
 
-        $backToTop.on('click', function(e) {
-            $("html, body").animate({scrollTop: 0}, 500);
+@endsection
 
-        });
-    })
-
-</script>
-
-
-
-</body>
-</html>
+@endsection

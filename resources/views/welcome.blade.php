@@ -1,7 +1,12 @@
-@extends('layouts.front.master')
+@extends('layouts.front.master-plane')
 
-@section('title','Campamentos Deportivos')
-@section('content')
+@section('title','Bienvenidos')
+
+@section('body')
+    @include('layouts.front.navWelcome')
+
+    <a href="#" class="back-to-top waves-effect waves-light btn btn-floating wow slideInUp">Subir</a>
+
 
     {{--Banner imagen Parallax--}}
     <div id="index-banner" class="parallax-container banner-content flex-center">
@@ -13,6 +18,7 @@
                 <div class="row center">
                     <h5 class="header col s12 light wow fadeIn" data-wow-delay="1s">La mejor opción para ejercitar y disfrutar en familia.</h5>
                 </div>
+
                @if (Auth::guest())
                 <div class="row center">
                     <a href="{{url('/login')}}" class="waves-effect waves-light btn btn-large teal lighten-1 wow flipInX" data-wow-delay="1.5s"><i class="material-icons right">input</i>Entrar</a>
@@ -196,8 +202,6 @@
         </div>
     </div>
 
-
-
     <div class="parallax-container valign-wrapper">
         <div class="section no-pad-bot">
             <div class="container">
@@ -209,5 +213,34 @@
         <div class="parallax"><img src="{{asset('img/camp/nadador-min.jpg')}}" alt="Unsplashed background img 3"></div>
     </div>
 
+    @include('layouts.front.contact')
+
+
+
+    @include('layouts.front.footer')
+@endsection
+
+@section('scripts')
+    <script src="http://maps.google.com/maps/api/js"></script>
+    <script>
+
+        function init_map() {
+            var var_location = new google.maps.LatLng(-2.190098, -79.892341);
+            var var_mapoptions = {
+                center: var_location,
+                zoom: 14
+            };
+            var var_marker = new google.maps.Marker({
+                position: var_location,
+                map: var_map,
+                title: "FDGuayas"
+            });
+            var var_map = new google.maps.Map(document.getElementById("map-container"),
+                    var_mapoptions);
+            var_marker.setMap(var_map);
+        }
+        google.maps.event.addDomListener(window, 'load', init_map);
+
+    </script>
 
 @endsection
