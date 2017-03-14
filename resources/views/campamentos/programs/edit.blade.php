@@ -15,7 +15,7 @@
                 <div class="card-content ">
                     @include('alert.request')
                     @include('alert.success')
-                    {!! Form::model($program,['route'=>['admin.programs.update',$program->id], 'method'=>'PUT']) !!}
+                    {!! Form::model($program,['route'=>['admin.programs.update',$program->id], 'method'=>'PUT','files'=>'true']) !!}
                     <div class="col s12">
 
                         <div class="input-field col offset-l6 6 m6 s12 ">
@@ -39,9 +39,22 @@
                             {!! Form::label('matricula','Matricula:') !!}
                             {!! Form::number('matricula',null,['step' => '0.01','class'=>'validate','placeholder'=>'0.00']) !!}
                         </div>
+
+                        <div class="file-field input-field  col l4 m6 s6">
+                            @if ($program->imagen=='NULL')
+                                <i class="fa fa-2x fa-image prefix" aria-hidden="true"></i>
+                                {!! Form::text('imagen','Imagen',['class'=>'file-path validate']) !!}
+                                {!! Form::file('imagen') !!}
+                            @else
+                                <i class="fa fa-2x fa-image prefix" aria-hidden="true"></i>
+                                {!! Form::text('imagen',null,['class'=>'file-path validate']) !!}
+                                {!! Form::file('imagen') !!}
+                                <img src="{{ asset('img/camp/disciplinas/'.$program->imagen)}}" style='max-width: 100px' class="img-thumbnail">
+                            @endif
+                        </div>
                         {{--<div class="input-field  col l6 m6 s12">--}}
-                            {{--{!! Form::label('cuposT','Cupos:') !!}--}}
-                            {{--{!! Form::number('cuposT',null,['class'=>'validate' ,'placeholder'=>'0' ,'required']) !!}--}}
+                        {{--{!! Form::label('cuposT','Cupos:') !!}--}}
+                        {{--{!! Form::number('cuposT',null,['class'=>'validate' ,'placeholder'=>'0' ,'required']) !!}--}}
                         {{--</div>--}}
 
                     </div>
@@ -49,7 +62,8 @@
                 </div>
                 {!! Form::button('Actualizar<i class="fa fa-wrench right" aria-hidden="true"></i>', ['class'=>'btn waves-effect waves-light','type' => 'submit']) !!}
                 {!! Form::button('Cancelar<i class="fa fa-close right"></i>',['class'=>'btn waves-effect waves-light red darken-1','type' => 'reset']) !!}
-                <a href="{{ route('admin.programs.index') }}" class="tooltipped" data-position="bottom" data-delay="50" data-tooltip="Regresar">
+                <a href="{{ route('admin.programs.index') }}" class="tooltipped" data-position="bottom" data-delay="50"
+                   data-tooltip="Regresar">
                     {!! Form::button('<i class="fa fa-undo"></i>',['class'=>'btn waves-effect waves-light darken-1']) !!}
                 </a>
                 {!! Form::close() !!}

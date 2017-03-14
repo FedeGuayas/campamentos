@@ -46,7 +46,7 @@
                                 <th>Cupos</th>
                                 <th>Cont.</th>
                                 <th>Disp.</th>
-                                <th>Modificar</th>
+                                <th>opcion</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -68,7 +68,8 @@
                                     </td>
                                     <td>
                                         <a class="label label-warning"
-                                           href="{{ route('admin.calendars.edit',$calendar->id) }}">Edit</a>
+                                           href="{{ route('admin.calendars.edit',$calendar->id) }}">Edit
+                                        </a>
                                     </td>
                                 </tr>
                             @endforeach

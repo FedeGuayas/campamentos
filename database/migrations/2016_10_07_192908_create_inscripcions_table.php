@@ -17,6 +17,7 @@ class CreateInscripcionsTable extends Migration
             $table->integer('calendar_id')->unsigned();
             $table->text('cart')->nullable();//se serializa el objeto cart y se guarda, nulo x las inscrippciones locales
             $table->integer('alumno_id')->unsigned();
+            $table->integer('escenario_id')->unsigned()->nullable();//pto_cobro, nulo para las online
             $table->integer('user_id')->unsigned();
             $table->integer('factura_id')->unsigned();
             $table->double('matricula',5,2)->nullable();

@@ -80,4 +80,9 @@ class User extends Authenticatable
     {
         return $this->belongsTo('App\Escenario');
     }
+
+    public function representantes()
+    {
+        return $this->hasMany('App\Representante');
+    }
 }

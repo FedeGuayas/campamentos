@@ -24,7 +24,7 @@
     <div class="row">
         <div class="col l12 m12 s12">
 
-            <table id="representante_table" class="table table-striped table-bordered table-condensed table-hover highlight responsive-table" cellspacing="0" width="100%" style="display: none"   data-order='[[ 0, "asc" ]]'>
+            <table id="representante_table" class="table table-striped table-bordered table-condensed table-hover highlight responsive-table" cellspacing="0" width="100%" style="display: none"   data-order='[[ 0, "desc" ]]'>
                     <thead>
                         <th width="40">Id</th>
                         <th width="130">Nombres</th>
@@ -45,27 +45,6 @@
                         <th>Opciones</th>
                     </tr>
                     </tfoot>
-                    {{--@foreach ($representantes as $rep)--}}
-                        {{--<tr>--}}
-                            {{--<td>{{ $rep->id }}</td>--}}
-                            {{--<td>{{ $rep->persona->getNombreAttribute() }}</td>--}}
-                            {{--<td>{{ $rep->persona->num_doc }}</td>--}}
-                            {{--<td>--}}
-                                {{--@foreach ($rep->alumnos as $alumno)--}}
-                                    {{--{{ $alumno->persona->getNombreAttribute() }}<br>--}}
-                                {{--@endforeach--}}
-                            {{--</td>--}}
-                            {{--<td>--}}
-                                {{--@foreach ($rep->alumnos as $alumno)--}}
-                                    {{--{{ $alumno->persona->num_doc }}<br>--}}
-                                {{--@endforeach--}}
-                            {{--</td>--}}
-                            {{--<td>--}}
-
-                            {{--</td>--}}
-                        {{--</tr>--}}
-                        {{--@include ('campamentos.representantes.modal')--}}
-                    {{--@endforeach--}}
                 </table><!--end table-responsive-->
         </div><!--end div ./col-lg-12. etc-->
     </div><!--end div ./row-->

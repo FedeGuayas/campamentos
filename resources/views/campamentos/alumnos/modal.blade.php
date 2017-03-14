@@ -1,5 +1,5 @@
     <div id="modal-delete-{{ [$id] }}" class="modal modal-fixed-footer" style="height: 45%">
-        {!! Form::open(['route'=>['admin.alumnos.destroy',[$id]],'method'=>'delete']) !!}
+        {!! Form::open(['route'=>['admin.alumnos.delete',[$id]],'method'=>'delete']) !!}
         <div class="modal-content">
             <div>
                  <h3>Eliminar Alumno<i class="fa fa-warning waves-red darken-4 materialize-red-text right medium"></i></h3>

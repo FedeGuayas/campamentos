@@ -54,7 +54,8 @@ class AlumnosController extends Controller
                 {!! Form::button(\'<i class="tiny fa fa-eye"></i>\',[\'class\'=>\'label waves-effect waves-light teal darken-1\']) !!}
                  </a>
                  @if ( Auth::user()->can(\'delete_alumno\'))
-                <a href="{{ route(\'admin.alumnos.destroy\',[$id] ) }}">
+                <a href="{{ route(\'admin.alumnos.delete\',[$id] ) }}" onclick="
+return confirm(\'Seguro que desea borrar al alumno?\')">
                  {!! Form::button(\'<i class="tiny fa fa-trash-o" ></i>\',[\'class\'=>\'label waves-effect waves-light red darken-1\']) !!}
                 </a>
                  @endif
@@ -266,14 +267,14 @@ class AlumnosController extends Controller
 
             if ($request->hasFile('foto_ced')) {
                 $file = $request->file('foto_ced');
-                $name='alumno_ced_'.time().'.'.$file->getClientOriginalExtension();
+                $name='alumno_ced_'.$alumno->id.'.'.$file->getClientOriginalExtension();
                 $path=public_path().'/dist/img/alumnos/cedula/';//ruta donde se guardara
                 $file->move($path,$name);//lo copio a $path con el nombre $name
                 $alumno->foto_ced=$name;//ahora se guarda  en el atributo foto_ced la imagen
             }
             if ($request->hasFile('foto')) {
                 $file = $request->file('foto');
-                $name='alumno_perfil_'.time().'.'.$file->getClientOriginalExtension();
+                $name='alumno_perfil_'.$alumno->id.'.'.$file->getClientOriginalExtension();
                 $path=public_path().'/dist/img/alumnos/perfil/';//ruta donde se guardara
                 $file->move($path,$name);//lo copio a $path con el nombre $name
                 $alumno->foto=$name;//ahora se guarda  en el atributo foto_ced la imagen
@@ -301,7 +302,7 @@ class AlumnosController extends Controller
      */
     public function destroy($id)
     {
-        dd($id);
+        dd('eliminar'.$id);//no eliminar hasta mejorar y guardar en la tabla de inscripcion el id persona del alumno
         $alumno=Alumno::findOrFail($id);
         $persona=$alumno->persona;
 

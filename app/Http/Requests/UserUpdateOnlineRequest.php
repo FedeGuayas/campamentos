@@ -26,7 +26,7 @@ class UserUpdateOnlineRequest extends Request
         return [
             'first_name' => 'required | max:50',
             'last_name' => 'required | max:100',
-            'avatar'=>'mimes:jpeg,png,jpeg|max:150'
+            'avatar'=>'mimes:jpg,png,jpeg|max:150'
         ];
     }
 
@@ -37,7 +37,7 @@ class UserUpdateOnlineRequest extends Request
             'first_name.max' => 'El nombre es demasiado extenso, no supere los 50 caracteres',
             'last_name.required' => 'Los apellidos son requeridos',
             'last_name.max' => 'Los apellidos son demasiado extenso, no supere los 100 caracteres',
-            'avatar.image' => 'El avatar debe ser una imagen de tipo jpeg,png,jpeg',
+            'avatar.image' => 'El avatar debe ser una imagen de tipo jpg,png,jpeg',
             'avatar.max' => 'Seleccione una imagen inferior a los 150Kb',
 
         ];

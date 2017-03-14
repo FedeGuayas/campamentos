@@ -110,7 +110,7 @@ class EscenariosController extends Controller
     public function disable($id)
     {
         $escenario=Escenario::findOrFail($id);
-        $escenario->activated=false;
+        $escenario->activated='0';
         $escenario->update();
         return back();
     }
@@ -118,7 +118,7 @@ class EscenariosController extends Controller
     public function enable($id)
     {
         $escenario=Escenario::findOrFail($id);
-        $escenario->activated=true;
+        $escenario->activated='1';
         $escenario->update();
         return back();
     }

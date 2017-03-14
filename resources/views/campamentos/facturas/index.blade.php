@@ -14,62 +14,25 @@
     <div class="row">
         <div class="col l12 m12 s12">
 
-            <table id="comprobantes_table" class="table table-striped table-bordered table-condensed table-hover highlight responsive-table" cellspacing="0" width="100%">
+            <table id="comprobantes_table" class="table table-striped table-bordered table-condensed table-hover highlight responsive-table" cellspacing="0" width="100%" style="display: none">
                 <thead>
                 <tr>
                     <th>No.</th>
                     <th>Valor</th>
                     <th>Descuento</th>
                     <th>Inscripción</th>
-                    <th>Alumno</th>
-                    <th>Representante</th>
                     <th>Opciones</th>
                 </tr>
                 </thead>
                 <tfoot>
                 <tr>
-                    <th class="search-filter">No.</th>
+                    <th>No.</th>
                     <th>Valor</th>
                     <th>Descuento</th>
-                    <th class="search-filter">Inscripción</th>
-
-                    <th class="search-filter">Nomb Alumno</th>
-                    <th class="search-filter">Representante</th>
-                    <th>Acción</th>
+                    <th>Inscripción</th>
+                    <th>Opciones</th>
                 </tr>
                 </tfoot>
-                <tbody>
-
-                @foreach ($comprobantes as $comp)
-                    <tr>
-                        <td>{{ $comp->id }}</td>
-                        <td>$ {{number_format($comp->total,2,'.',' ')}}</td>
-                        <td>$ {{number_format($comp->descuento,2,'.',' ')}}</td>
-                        <td>
-                            @foreach($comp->inscripcions as $insc )
-                            {{$insc->id}}<br>
-                            @endforeach
-                        </td>
-                        <td>
-                            @if ($insc->alumno_id==0)
-                                {{ $insc->factura->representante->persona->getNombreAttribute() }}
-                            @else
-                                @foreach($comp->inscripcions as $insc )
-                                    {{ $insc->alumno->persona->getNombreAttribute() }}<br>
-                                @endforeach
-
-                            @endif
-                        </td>
-                        <td>{{$comp->representante->persona->getNombreAttribute()}}</td>
-                        <td>
-                            @if ( Auth::user()->hasRole(['administrator']))
-                            {!! Form::button('<i class="tiny fa fa-trash-o" ></i>',['class'=>'modal-trigger label waves-effect waves-light red darken-1','data-target'=>"modal-delete-$comp->id"]) !!}
-                             @endif
-                        </td>
-                    </tr>
-                @include('campamentos.facturas.modal-delete')
-                @endforeach
-                </tbody>
             </table><!--end table-responsive-->
         </div><!--end div ./col-lg-12. etc-->
     </div><!--end div ./row-->
@@ -80,16 +43,19 @@
     <script>
         $(document).ready( function () {
 
-            // Agregar inputs de busquedad al datatble
-            $('#comprobantes_table .search-filter').each( function () {
-                var title = $(this).text();
-                $(this).html( '<input type="text" placeholder="'+title+'" />' );
-            } );
-
-
             var table =  $('#comprobantes_table').DataTable({
-                "lengthMenu": [[5, 10, 25], [5, 10, 25]],
-                "processing": false,
+                lengthMenu: [[10, 25], [10, 25]],
+                processing: true,
+                stateSave: true,
+                serverSide:true,
+                ajax: '{{route('admin.facturas')}}',
+                columns: [
+                    {data: 'id', name: 'facturas.id'},
+                    {data: 'total', name: 'facturas.total'},
+                    {data: 'descuento', name: 'facturas.descuento'},
+                    {data: 'inscripcion', name: 'inscripcions.id'},
+                    {data: 'actions', name: 'opciones',orderable: false, searchable: false}
+                ],
                 "order" : [0,'desc'],
                 "language":{
                     "decimal":        "",
@@ -117,22 +83,22 @@
                 },
                 "fnInitComplete":function(){
                     $('#comprobantes_table').fadeIn();
+
+                    table.columns().every(function () {
+                        var column = this;
+
+                        var input = document.createElement("input");
+                        $(input).appendTo($(column.footer()).empty())
+                                .on('keyup change', function () {
+                                    column.search($(this).val(), false, false, true).draw();
+                                });
+                    });
                 }
             });
 
-            // Apply the search
-            table.columns().every( function () {
-                var that = this;
-                $( 'input', this.footer() ).on( 'keyup change', function () {
-                    if ( that.search() !== this.value ) {
-                        that.search( this.value ).draw();
-                    }
-                } );
-            } );
-
-            $("select").val('5'); //seleccionar valor por defecto del select
-            $('select').addClass("browser-default"); //agregar una clase de materializecss de esta forma ya no se pierde el select de numero de registros.
-            $('select').material_select(); //inicializar el select de materialize
+            $("select").val('5');
+            $('select').addClass("browser-default");
+            $('select').material_select();
 
         });
 

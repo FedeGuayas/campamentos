@@ -27,7 +27,8 @@ class ProgramsStoreRequest extends Request
             'modulo' => 'required',
             'escenario' => 'required',
             'disciplina' => 'required',
-            'matricula'=>'numeric'
+            'matricula'=>'numeric',
+            'imagen' => 'mimes:jpg,png,jpeg|max:150'
         ];
     }
 }

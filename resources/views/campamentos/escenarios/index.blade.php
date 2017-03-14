@@ -31,7 +31,7 @@
                             <td>{{ $esc->id }}</td>
                             <td>{{ $esc->escenario }}</td>
                             <td>
-                                @if (($esc->activated)==='1')
+                                @if (($esc->activated)=='1')
                                     <span class="label label-success">Activo</span>
                                     @if ( Auth::user()->hasRole(['planner','administrator']))
                                     <a href="{{ route('admin.escenarios.disable', $esc->id)}}" onclick="Materialize.toast('Escenario deshabilitado', 4000,'rounded')">

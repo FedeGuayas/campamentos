@@ -18,7 +18,7 @@
                        style="font-size: 10px; text-align: left;">
                     <tr>
                         <td>
-                            <br><br><br><br><br><br><br><br><br><br><br>
+                            <br><br><br><br><br><br><br><br><br><br><br><br><br><br>
                         </td>
                     </tr>
                     <tr>
@@ -39,7 +39,7 @@
                             @else
                                 {{$insc->alumno->getEdad($insc->alumno->persona->fecha_nac)}}
                             @endif
-                            <p style="display: inline">_______( Registro: {{sprintf("%'.05d",$insc->id )}} /</p>
+                            <p style="display: inline">   __Registro: <span>{{sprintf("%'.05d",$insc->id )}}</span></p>
                         </td>
                     </tr>
                     <tr>

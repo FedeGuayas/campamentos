@@ -48,7 +48,7 @@
                     </div>
                     {!! Form::button('Actualizar<i class="fa fa-play right"></i>', ['class'=>'btn waves-effect waves-light','type' => 'submit']) !!}
                     {!! Form::button('Cancelar<i class="fa fa-close right"></i>',['class'=>'btn waves-effect waves-light red darken-1','type' => 'reset']) !!}
-                    <a href="{{ route('admin.users.index') }}">
+                    <a href="{{ route('admin.index') }}">
                         {!! Form::button('<i class="fa fa-undo"></i>',['class'=>'btn waves-effect waves-light darken-1']) !!}
                     </a>
                     {!! Form::close() !!}

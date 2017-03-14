@@ -33,7 +33,7 @@ class CalendarsController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware(['role:administrator'], ['only' => 'destroy']);//eliminar cursos solo administrador
+        $this->middleware(['role:administrator|planner'], ['only' => 'destroy']);//eliminar cursos solo administrador
         $this->middleware(['role:planner|supervisor|administrator'], ['only' => 'update']);//eliminar cursos
     }
     
@@ -55,7 +55,7 @@ class CalendarsController extends Controller
             ->join('profesors as pro','pro.id','=','c.profesor_id')
             ->select('e.escenario','dis.disciplina','m.modulo','d.dia','h.start_time','h.end_time','cupos','contador',
                 'mensualidad','c.id','c.init_age','c.end_age','c.nivel','pro.nombres','pro.apellidos')
-            ->where('p.activated',true)
+            ->where('p.activated','1')
             ->get();
 
         return view('campamentos.calendars.index',compact('calendars'));
@@ -160,10 +160,10 @@ class CalendarsController extends Controller
         $profe=Profesor::where('id',$request->get('profesor_id'))->first();
         $calendar->profesor()->associate($profe);
         $calendar->update();
-        return redirect()->route('admin.programs.index');
-        
+        return redirect()->back();
         }else return abort(403);
     }
+    
 
     /**
      * Remove the specified resource from storage.
@@ -171,9 +171,11 @@ class CalendarsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($calendar)
     {
-        //
+        return response()->json([
+            'resp'=>$calendar,
+        ]);
     }
 
     /**
@@ -198,7 +200,7 @@ class CalendarsController extends Controller
                 ->select('d.dia as dias','d.activated','c.id as cID','d.id as dID',
                     'c.dia_id','c.horario_id','c.nivel','c.program_id')
                 ->where('program_id',$program->id)
-                ->where('d.activated',true)->groupBy('dID')->get()->toArray();
+                ->where('d.activated','1')->groupBy('dID')->get()->toArray();
             return response($dias);
         }
     }
@@ -226,7 +228,7 @@ class CalendarsController extends Controller
                 ->select('d.dia as dias','d.activated','c.id as cID','d.id as dID',
                     'c.dia_id','c.horario_id','c.nivel','c.program_id')
                 ->where('program_id',$program->id)
-                ->where('d.activated',true)->groupBy('dID')->get()->toArray();
+                ->where('d.activated','1')->groupBy('dID')->get()->toArray();
             return response($dias);
         }
     }
@@ -271,7 +273,7 @@ class CalendarsController extends Controller
                     $query->where('c.init_age', '<=', $edad)
                         ->where('c.end_age', '>=', $edad);
                 })
-                ->where('h.activated',true)
+                ->where('h.activated','1')
                 ->get()
                 ->toArray();
             
@@ -320,7 +322,7 @@ class CalendarsController extends Controller
                     $query->where('c.init_age', '<=', $edad)
                         ->where('c.end_age', '>=', $edad);
                 })
-                ->where('h.activated',true)
+                ->where('h.activated','1')
                 ->get()
                 ->toArray();
 
@@ -512,7 +514,7 @@ class CalendarsController extends Controller
         if ($multiple=='on')
             $tipo_desc='multiple';
 
-        if ($request->input('adulto')==true){
+        if ($request->input('adulto')=='on'){
             $alumno=$representante;
         }else {
             $alumno=Alumno::where('id',$request->input('alumno_id'))->with('persona')->first();
@@ -585,7 +587,7 @@ class CalendarsController extends Controller
 
         $total=$subTotal-$descuento; //total aplicado los descuentos
 
-//        dd($cursos_coll);
+
         return view('campamentos.inscripcions.partials.detalle',['cursos'=>$cursos,'descuento'=>$descuento,'total'=>$total,'tipo_desc'=>$tipo_descuento,'subTotal'=>$subTotal]);
     }
 

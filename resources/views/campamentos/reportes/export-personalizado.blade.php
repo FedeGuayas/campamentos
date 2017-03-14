@@ -1,4 +1,4 @@
-{!! Form::open (['route' => 'admin.reports.exportPersonalizado','method' => 'GET', 'class'=>'form_datepicker' ])!!}
+{!! Form::open (['route' => 'admin.reports.exportPersonalizado','method' => 'GET', 'id'=>'form_exportar' ])!!}
 <div class="hidden">
     {{Form::select('modulo',$moduloSelect,$modulo,['id'=>'modulo']) }}
     {{Form::select('escenario',$escenarioSelect,$escenario,['id'=>'escenario']) }}

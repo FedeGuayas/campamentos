@@ -11,7 +11,7 @@
     <div class="row">
         <div class="col l12 m12 s12">
             @include('alert.success')
-            <h4>Cursos de  deportivos</h4>
+            <h4>Cursos deportivos</h4>
         </div>
     </div>
 
@@ -26,6 +26,7 @@
                     <th>Modulo</th>
                     <th>Días</th>
                     <th>Horario</th>
+                    <th>Costo</th>
                     <th>Edad</th>
                     <th>Nivel</th>
                     <th>Cupos</th>
@@ -42,6 +43,7 @@
                     <th class="search-filter">Modulo</th>
                     <th>Días</th>
                     <th>Horario</th>
+                    <th>Costo</th>
                     <th>Edad</th>
                     <th>Nivel</th>
                     <th>Cupos</th>
@@ -59,6 +61,7 @@
                         <td>{{ $calendar->modulo}}</td>
                         <td>{{ $calendar->dia}}</td>
                         <td>{{ $calendar->start_time.'-'.$calendar->end_time}}</td>
+                        <td> $ {{number_format($calendar->mensualidad,2,'.',' ')}}</td>
                         <td>{{ $calendar->init_age.'-'.$calendar->end_age}}</td>
                         <td>{{ $calendar->nivel}}</td>
                         <td>{{ $calendar->cupos}}</td>
@@ -77,7 +80,14 @@
                             <a href="{{ route('admin.calendars.edit', $calendar ) }}">
                                 {!! Form::button('<i class="tiny fa fa-pencil-square-o" ></i>',['class'=>'label  waves-effect waves-light teal darken-1']) !!}
                             </a>
+
                             @endif
+                                @if( (($calendar->contador)==0 ) && Auth::user()->hasRole(['planner','administrator']))
+                                    <a href="{{ route('admin.calendars.delete',':CALENDAR') }}" id="eliminar" >
+                                        {!! Form::button('<i class="tiny fa fa-trash-o" ></i>',['class'=>'label waves-effect waves-light red darken-1','value'=>$calendar->id,'onclick'=>'eliminar(this)']) !!}
+                                    </a>
+                                @endif
+
                         </td>
                     </tr>
                 @endforeach
@@ -148,6 +158,27 @@
             $('select').addClass("browser-default"); //agregar una clase de materializecss de esta forma ya no se pierde el select de numero de registros.
             $('select').material_select(); //inicializar el select de materialize
         });
+
+
+        function eliminar(btn) {
+            var id = btn.value;
+            var token = $("#token").val();
+            var data = {
+                id:id,
+            }
+            var route=$("#eliminar").attr('href').replace(':CALENDAR',id);
+
+
+
+
+
+        }
+
+
+
+
+
+
     </script>
 
 

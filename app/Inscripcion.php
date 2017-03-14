@@ -39,7 +39,7 @@ class Inscripcion extends Model
      * @var array
      */
     protected $fillable = [
-        'calendar_id','alumno_id','user_id','factura_id','matricula','mensualidad'
+        'calendar_id','alumno_id','user_id','factura_id','matricula','mensualidad','escenario_id'
 
     ];
 
@@ -61,5 +61,10 @@ class Inscripcion extends Model
     public function alumno()
     {
         return $this->belongsTo('App\Alumno');
+    }
+
+    public function escenario()
+    {
+        return $this->belongsTo('App\Escenario');
     }
 }

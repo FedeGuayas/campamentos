@@ -34,6 +34,10 @@
             <!-- Datatables style bootstrap -->
     {!! Html::style('plugins/datatables/dataTables.bootstrap.css') !!}
 
+            <!-- Sweet Alert) -->
+    {!! Html::style('plugins/sweetalert-master/dist/sweetalert.css') !!}
+
+
     @yield('head')
 
 
@@ -77,8 +81,13 @@
 
         <!-- Datatables -->
     {!! Html::script('plugins/datatables/jquery.dataTables.js') !!}
+    {!! Html::script('plugins/datatables/dataTables.buttons.min.js') !!}
+{{--    {!! Html::script('plugins/datatables/extensions/TableTools/js/dataTables.tableTools.js') !!}--}}
     {!! Html::script('plugins/datatables/jquery.dataTables.min.js') !!}
     {!! Html::script('plugins/datatables/dataTables.bootstrap.min.js') !!}
+
+            <!-- Sweet alert -->
+    {!! Html::script('plugins/sweetalert-master/dist/sweetalert.min.js') !!}
 
 
 
@@ -88,7 +97,7 @@
 
 $(document).ready(function() {
 
-//        combo
+        //        combo
         $('select').material_select();
 
         {{--Boton dropdown--}}

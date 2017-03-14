@@ -38,7 +38,7 @@ class Representante extends Model
      * @var array
      */
     protected $fillable = [
-        'persona_id','encuesta_id','foto_ced','foto','phone'
+        'persona_id','encuesta_id','user_id','foto_ced','foto','phone'
     ];
 
     public function facturas()
@@ -58,6 +58,11 @@ class Representante extends Model
     public function encuesta()
     {
         return $this->belongsTo('App\Encuesta');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo('App\User');
     }
 
 

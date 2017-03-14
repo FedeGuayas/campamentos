@@ -28,47 +28,16 @@
 
 @section('scripts')
     <script>
+
         $(document).ready(function () {
-
-            //        combo
-            $('select').material_select();
-
-            {{--Boton dropdown--}}
-            $(".dropdown-button").dropdown();
-
-
-            $('.button-collapse').sideNav(
-                    {
-                        menuWidth: 240, // Default is 240
-                        edge: 'left', // Choose the horizontal origin
-                        closeOnClick: true // Closes side-nav on <a> clicks, useful for Angular/Meteor
-                    }
-            );
 
 
             $('.fixed-action-btn').openFAB();
             $('.fixed-action-btn').closeFAB();
 
-
             $('.collapsible').collapsible({
                 accordion: false // A setting that changes the collapsible behavior to expandable instead of the default accordion style
             });
-
-
-            // para ventana modal de eliminar
-            $('.modal-trigger').leanModal({
-                        dismissible: true, // Modal can be dismissed by clicking outside of the modal
-                        opacity: .5, // Opacity of modal background
-                        in_duration: 300, // Transition in duration
-                        out_duration: 200, // Transition out duration
-                        starting_top: '4%', // Starting top style attribute
-                        ending_top: '10%', // Ending top style attribute
-                    }
-            );
-
-            //modal respositive
-            $(".modal").width($(".modal").width());
-            $(".modal").height($(".modal").height());
 
             //tooltips
             $('.tooltipped').tooltip({delay: 50});
@@ -105,6 +74,8 @@
             });
 
         });
+
+
     </script>
 
 @endsection

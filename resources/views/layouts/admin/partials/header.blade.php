@@ -35,8 +35,6 @@
                 <li class="divider"></li>
                 @endrole
                 <li><a href="{!! route('admin.calendars.index') !!}" class="waves-effect waves-teal">Cursos</a></li>
-                <li class="divider"></li>
-
             </ul>
 
             <!-- Dropdown Ajustes -->
@@ -67,11 +65,14 @@
                 <li><a href="{{route('admin.facturas.index')}}" class="waves-effect waves-teal">Comprobantes</a></li>
                 <li class="divider"></li>
                 <li><a href="{{route('admin.pagos.cuadre')}}" class="waves-effect waves-teal">Cuadre Diario</a></li>
+                <li><a href="{{route('admin.reports.factura')}}" class="waves-effect waves-teal">Facturación</a></li>
                 <li class="divider"></li>
                 <li><a href="{{route('admin.reports.excel')}}" class="waves-effect waves-teal">Período Insc.</a></li>
                 <li><a href="{{route('admin.reports.personalizado')}}" class="waves-effect waves-teal">Personalizado</a></li>
+                <li><a href="{{route('admin.reports.general')}}" class="waves-effect waves-teal">Listado</a></li>
+                <li><a href="{{route('admin.reports.resumen')}}" class="waves-effect waves-teal">Inscritos - Recaudado</a></li>
                 <li class="divider"></li>
-                <li><a href="{{ route ('admin.reports.credenciales') }}" class="waves-effect waves-teal">Credenciales</a></li>
+                {{--<li><a href="{{ route ('admin.reports.credenciales') }}" class="waves-effect waves-teal">Credenciales</a></li>--}}
             </ul>
 
             <div class="nav-wrapper">
@@ -162,10 +163,12 @@
                                     <li><a href="{{route('admin.facturas.index')}}" class="waves-effect waves-teal">Comprobantes</a></li>
                                     <li class="divider"></li>
                                     <li><a href="{{route('admin.pagos.cuadre')}}" class="waves-effect waves-teal">Cuadre Diario</a></li>
-                                    <li><a href="{{route('admin.reports.excel')}}" class="waves-effect waves-teal">Período Insc.</a></li>
+                                    <li><a href="{{route('admin.reports.factura')}}" class="waves-effect waves-teal">Facturación</a></li>
                                     <li class="divider"></li>
                                     <li><a href="{{route('admin.reports.excel')}}" class="waves-effect waves-teal">Período Insc.</a></li>
                                     <li><a href="{{route('admin.reports.personalizado')}}" class="waves-effect waves-teal">Personalizado</a></li>
+                                    <li><a href="{{route('admin.reports.general')}}" class="waves-effect waves-teal">Listado</a></li>
+                                    <li><a href="{{route('admin.reports.resumen')}}" class="waves-effect waves-teal">Inscritos - Recaudado</a></li>
                                     <li class="divider"></li>
                                     <li><a href="{{ route ('admin.reports.credenciales') }}" class="waves-effect waves-teal">Credenciales</a></li>
                                 </ul>

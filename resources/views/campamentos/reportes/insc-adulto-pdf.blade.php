@@ -3,36 +3,38 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title></title>
+    <link rel="stylesheet" href="css/pdf.css">
+    <link href="css/bootstrap.css" rel="stylesheet">
 </head>
 <body>
 
 <header>
-    <div class="header">
-        <table align="" border="0" cellpadding="0" cellspacing="0" style=" width: 100%; position: fixed; left: 0px; top: -30px; right: 0px;">
-            <thead>
-            <tr>
-                <th style="width: 160px; text-decoration: underline; text-align: left;">REGISTRO # {{sprintf("%'.05d",$inscripcion->id)}}</th>
-                {{--<th style=" text-decoration: underline;">COMPROBANTE # {{$inscripcion->factura->id}}</th>--}}
-                <th style="width:200px; height: 20px; text-align: right;"><img alt="LOGO" src="img/camp/fdg-logo.png" style="width: 200px; height: 80px; "/>
-                </th>
-            </tr>
-            </thead>
-        </table>
-        <br><br>
-        <p style="text-align: center;"><span><b>MODULO:</b></span> {{$inscripcion->calendar->program->modulo->modulo}}. <span><b> COMPROBANTE # </b></span>{{$inscripcion->factura->id}}  </p>
-        <p style="text-align: center;"><span><b>INSCRIPCION EN CAMPAMENTOS DEPORTIVOS FEDEGUAYAS</b></span></p>
+    <div style="width: 160px; text-align: left; text-decoration: underline; position: fixed; top: 15px; left: 15px; ">
+        <b>REGISTRO # {{sprintf("%'.05d",$inscripcion->id)}}</b>
+    </div>
+    <div style="width:200px; height: 20px;">
+        <img alt="LOGO" src="img/camp/fdg-logo.png" style="width: 200px; height: 80px; position: absolute; top:  15px; right: 15px;"/>
+    </div>
+    <br><br>
+    <div style="text-align: center; position: relative">
+        <p>
+            <span><b>MODULO:</b></span> {{$inscripcion->calendar->program->modulo->modulo}}. <span><b> COMPROBANTE# </b></span>{{$inscripcion->factura->id}}
+        </p>
+        <p>
+            <span><b>INSCRIPCION EN CAMPAMENTOS DEPORTIVOS FEDEGUAYAS</b></span>
+        </p>
     </div>
 </header>
 
-<main style="font-size: 14px;">
 
-    <table align="center" border="0" cellpadding="2" cellspacing="0" style=" width: 720px; ">
+<div class="limpia_float content">
+    <table align="center" border="0" cellpadding="0" cellspacing="0" style=" width: 720px; font-size: 12px;">
         <tr>
             <th align="left" style="text-decoration: underline">DATOS DEL INSCRITO</th>
         </tr>
        <tr>
            <td>
-               <table align="center" border="0" cellpadding="2" cellspacing="0" style=" width: 400px; ">
+               <table align="center" border="0" cellpadding="0" cellspacing="0" style=" width: 400px; font-size: 12px; ">
                    <tr>
                        <th  align="left" style="width: 130px;">ALUMNO:</th>
                        <td>{{$inscripcion->factura->representante->persona->apellidos.' '.$inscripcion->factura->representante->persona->nombres}}</td>
@@ -61,10 +63,8 @@
            </td>
        </tr>
     </table>
-
     <br>
-
-    <table align="center" border="0" cellpadding="2" cellspacing="0" style=" width: 720px; ">
+    <table align="center" border="0" cellpadding="0" cellspacing="0" style=" width: 720px; font-size: 12px; ">
         <tr>
             <th align="left" style="text-decoration: underline; width: 350px;">DATOS DEL CURSO</th>
             <th align="left" style="text-decoration: underline">DATOS SOBRE LA INSCRIPCION</th>
@@ -88,7 +88,6 @@
                         <th align="left">HORARIO:</th>
                         <td>{{$inscripcion->calendar->horario->start_time.'-' .$inscripcion->calendar->horario->end_time }}</td>
                     </tr>
-
                 </table>
             </td>
             <td>
@@ -126,10 +125,6 @@
                         <th align="left">CANCELADO:</th>
                         <td>$ {{number_format($inscripcion->factura->total,2,'.',' ')}}</td>
                     </tr>
-                    {{--<tr>--}}
-                        {{--<th align="left">MODULO:</th>--}}
-                        {{--<td>{{$inscripcion->calendar->program->modulo->modulo}}</td>--}}
-                    {{--</tr>--}}
                     <tr>
                         <th align="left"  style="width: 130px;">FECHA:</th>
                         <td>{{$inscripcion->created_at}}</td>
@@ -138,14 +133,10 @@
             </td>
         </tr>
     </table>
+</div>
 
-
-
-</main>
-
-<footer style="font-size: 12px">
-
-    <table align="center" border="0" cellspacing="0" style="width:100%; font-style: italic; text-align : justify; ">
+<div class="">
+    <table align="center" border="0" cellspacing="0" style="width:90%; font-style: italic; text-align : justify; font-size: 11px; margin-top: -20px;">
         <tr>
             <td>
                 <p>
@@ -162,8 +153,11 @@
             </td>
         </tr>
     </table>
+</div>
     <hr>
-    <table align="center" border="0" cellpadding="0" cellspacing="0" style="width:100%; text-align : justify; ">
+
+<div>
+    <table align="left" border="1" cellpadding="5" cellspacing="0" style="width:60%; text-align : justify; font-size: 11px; margin-left: 30px; margin-top: -20px; ">
         <tr>
             <td>
                 <p>Guayaquil, {{$fecha_actual->day}} de {{$month}} del {{$fecha_actual->year}}</p>
@@ -215,12 +209,81 @@
             </td>
         </tr>
     </table>
+</div>
 
-    <p style="font-size: 12px; color: #0a568c; text-align: center; position: fixed; left: 0px; bottom: -180px; right: 0px; height: 150px;">
-        Oficina: José Mascote 1103 y Luque. Telfs: 2367856 - 2531488. fedeguayas.com.ec. email: fdg@telconet.net <br>
-        Casilla 836 Telegramas y Cables - FEDEGUAYAS. Guayaquil - Ecuador
-    </p>
+<footer>
+    <table>
+        <tr>
+            <td>
+                <p>
+                    Oficina: José Mascote 1103 y Luque. Telfs: 2367856 - 2531488. fedeguayas.com.ec. email: fdg@telconet
+                    .net <br>
+                    Casilla 836 Telegramas y Cables - FEDEGUAYAS. Guayaquil - Ecuador
+                </p>
+            </td>
+        </tr>
+    </table>
 </footer>
+
+<span style="font-family: FontAwesome;  position: absolute; bottom: 500px; right: 240px;">&#xf0c4; </span>
+<div class="credencial_img">
+
+    <table align="left" border="1" cellpadding="1" width="225px"
+           style="font-size: 9px; text-align: left;">
+        <tr>
+            <td>
+                <br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+            </td>
+        </tr>
+        <tr>
+            <th width="20%">Nombres:</th>
+            <td>
+                @if ($inscripcion->alumno_id==0)
+                    {{ $inscripcion->factura->representante->persona->apellidos.' '. $inscripcion->factura->representante->persona->nombres}}
+                @else
+                    {{ $inscripcion->alumno->persona->apellidos.' '.$inscripcion->alumno->persona->nombres }}
+                @endif
+            </td>
+        </tr>
+        <tr>
+            <th>Edad:</th>
+            <td>
+                @if ($inscripcion->alumno_id==0)
+                    {{$inscripcion->factura->representante->getEdad($inscripcion->factura->representante->persona->fecha_nac)}}
+                @else
+                    {{$inscripcion->alumno->getEdad($inscripcion->alumno->persona->fecha_nac)}}
+                @endif
+                <p style="display: inline">  /  Registro: <span>{{sprintf("%'.05d",$inscripcion->id )}}</span></p>
+            </td>
+        </tr>
+        <tr>
+            <th>Escenario:</th>
+            <td>
+                {{ $inscripcion->calendar->program->escenario->escenario }}
+            </td>
+        </tr>
+        <tr>
+            <th>Disciplina:</th>
+            <td>
+                {{ $inscripcion->calendar->program->disciplina->disciplina }}
+            </td>
+        </tr>
+        <tr>
+            <th>Horario:</th>
+            <td>
+                {{ $inscripcion->calendar->dia->dia}}
+                <br>
+                {{ $inscripcion->calendar->horario->start_time}}-{{ $inscripcion->calendar->horario->end_time}}
+            </td>
+        </tr>
+        <tr>
+            <th>Modulo:</th>
+            <td>
+                <b>{{ $inscripcion->calendar->program->modulo->modulo}}</b>
+            </td>
+        </tr>
+    </table>
+</div>
 
 </body>
 </html>

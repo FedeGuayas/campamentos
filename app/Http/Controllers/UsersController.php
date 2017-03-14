@@ -386,6 +386,7 @@ class UsersController extends Controller
     public function updateOnline(UserUpdateOnlineRequest $request, $id)
     {
         $user=User::findOrFail($id);
+
         $user->first_name=strtoupper($request->get('first_name'));
         $user->last_name=strtoupper($request->get('last_name'));
 
@@ -399,8 +400,15 @@ class UsersController extends Controller
         }
         
         $user->update();
+        
+        $message='Se actualizaron sus datos de usuario';
 
-        return redirect()->back()->with('message','Se actualizaron sus datos de usuario');
+        if ($request->ajax()){
+            return  response()->json(['message'=>$message]);
+        }else{
+            return redirect()->back()->with('message',$message);
+        }
+
     }
 
 }

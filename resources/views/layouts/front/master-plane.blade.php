@@ -18,6 +18,8 @@
     {!! Html::style('landing/css/style.css') !!}
     {!! Html::style('css/materialize.css') !!}
     {!! Html::style('landing/css/animate.css') !!}
+            <!-- Sweet Alert) -->
+    {!! Html::style('plugins/sweetalert-master/dist/sweetalert.css') !!}
 
     @yield('style')
 </head>
@@ -32,16 +34,34 @@
         <!-- Bootstrap core JavaScript -->
 {!! Html::script('js/bootstrap.min.js') !!}
         <!-- Materialize core JavaScript -->
-{!! Html::script('js/materialize.js') !!}
+{{--{!! Html::script('js/materialize.js') !!}--}}
 
-{{--{!! Html::script('landing/js/materialize.js') !!}--}}
+{!! Html::script('landing/js/materialize.js') !!}
 {!! Html::script('js/init.js') !!}
 {!! Html::script('js/wow.js') !!}
 
+        <!-- Sweet alert -->
+{!! Html::script('plugins/sweetalert-master/dist/sweetalert.min.js') !!}
 
 
 <script>
+
     $(document).ready(function(){
+
+        $('select').material_select({}); //inicializar el select de materialize
+
+//        Boton dropdown
+         $(".dropdown-button").dropdown();
+
+        {{--// SideNav init--}}
+        $('.button-collapse').sideNav(
+                {
+                    menuWidth: 240, // Default is 240
+                    edge: 'left', // Choose the horizontal origin
+                    closeOnClick: true // Closes side-nav on <a> clicks, useful for Angular/Meteor
+                }
+        );
+
         var $backToTop = $(".back-to-top");
         $backToTop.hide();
 
@@ -59,22 +79,16 @@
         });
     });
 
-    {{--//     Inicializar las ani,aciones--}}
+    {{--//     Inicializar las animaciones--}}
             new WOW().init();
+
+
 
     //Inicicio del slider
     $(document).ready(function () {
-        $('.slider').slider({full_width: true});
-    });
 
-    {{--// SideNav init--}}
-     $('.button-collapse').sideNav(
-            {
-                menuWidth: 240, // Default is 240
-                edge: 'left', // Choose the horizontal origin
-                closeOnClick: true // Closes side-nav on <a> clicks, useful for Angular/Meteor
-            }
-    );
+//        $('.slider').slider({full_width: true});
+    });
 
 </script>
 

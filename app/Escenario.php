@@ -45,5 +45,10 @@ class Escenario extends Model
     {
         return $this->hasMany('App\User');
     }
+
+    public function inscripcions()
+    {
+        return $this->hasMany('App\Inscripcion');
+    }
     
 }

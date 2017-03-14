@@ -11,9 +11,7 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', 'WelcomeController@welcome');
 
 Route::auth();
 
@@ -32,7 +30,7 @@ Route::get('user/activation/{token}', 'Auth\AuthController@activateUser')->name(
 
 /*OK*/
 /*Route group admin, and login is forces by middeware auth*/
-Route::group(['middleware' => ['auth','role:administrator|signup|planner|supervisor'], 'prefix' => 'admin'], function () {
+Route::group(['middleware' => ['auth','role:administrator|signup|planner|supervisor|invited'], 'prefix' => 'admin'], function () {
 //Route::group(['prefix' => 'admin'], function () {
 
     //borrar
@@ -47,7 +45,8 @@ Route::group(['middleware' => ['auth','role:administrator|signup|planner|supervi
     //obtener los escenarios para un modulo  para select dinamico
     Route::get('inscripcions/escenarios/{modulo_id}','ProgramsController@getEscenarios');
     //obtener las disciplina para un escenario  para select dinamico
-    Route::get('inscripcions/disciplinas/{escenario_id}','ProgramsController@getDisciplinas');
+    //    Route::get('inscripcions/disciplinas/{escenario_id}','ProgramsController@getDisciplinas');
+    Route::get('inscripcions/disciplinas/{data?}','ProgramsController@getDisciplinas');
     //obtener los dias para un programa, data defien al programa(esc,disc,modulo)
     Route::get('inscripcions/dias/{data?}',['uses'=>'CalendarsController@getDias','as'=>'program.getDias']);
     //obtener los horarios para el dia
@@ -60,23 +59,30 @@ Route::group(['middleware' => ['auth','role:administrator|signup|planner|supervi
     Route::get('inscripcions/costo/{data?}','InscripcionsController@costoUpdate');
 
 
+    //*****SELECT DINAMICOS para reporte general****//
+
+    //obtener los escenarios para un modulo  para select dinamico
+    Route::get('reports/escenarios/{modulo_id}','ProgramsController@getEscenarios');
+    //obtener las disciplina para un escenario  para select dinamico
+    Route::get('reports/disciplinas/{data?}','ProgramsController@getDisciplinas');
+    //obtener los horarios para para un curso
+    Route::get('reports/horario/{data?}','ReportesController@getHorario');
+    
+
     //*****SELECT DINAMICOS para editar inscripcion****//
     
     //obtener los escenarios para un modulo de la inscripcion seleecionada
     Route::get('inscripcions/{insc}/escenarios/{modulo_id}','ProgramsController@updateEscenarios');
     //obtener las disciplina para un escenario  para select dinamico
-    Route::get('inscripcions/{insc}/disciplinas/{escenario_id}','ProgramsController@updateDisciplinas');
-    //obtener los dias para un programa, data defien al programa(esc,disc,modulo)
-    Route::get('inscripcions/{insc}/dias/{data?}',['uses'=>'CalendarsController@updateDias','as'=>'program.updateDias']);
+    Route::get('inscripcions/{insc}/disciplinas/{data?}','ProgramsController@getDisciplinas');
     //obtener los horarios para el dia
-    Route::get('inscripcions/{insc}/horario/{data?}','CalendarsController@updateHorario');
-    //obtener los niveles para el dia y horario
-    Route::get('inscripcions/{insc}/nivel/{data?}','CalendarsController@updateNivel');
-    //obtener ontener el id del calendario o curso
-    Route::get('inscripcions/{insc}/curso/{data?}','CalendarsController@updateCurso');
-    //*****Actualizar costo de inscripcion****//
-    Route::get('inscripcions/{insc}/costo/{data?}','InscripcionsController@costoUpdate');
-    
+    Route::get('inscripcions/{insc}/horario/{data?}','ReportesController@getHorario');
+
+    //buscar el curso para editar inscripcion
+    Route::get('inscripcions/listCurso/{data?}',['as' => 'admin.inscripcions.listCurso', 'uses'=>'InscripcionsController@searchCurso']);
+
+    //cambiar el curso de la inscripcion actual
+    Route::get('inscripcions/{insc}/curso/{data?}',['as' => 'admin.inscripcions.curso.update', 'uses'=>'InscripcionsController@updateCurso']);
 
     
     //******** Importar personas de archivo excel********//
@@ -93,7 +99,7 @@ Route::group(['middleware' => ['auth','role:administrator|signup|planner|supervi
     Route::get('/persona/{id}/representante', ['as'=>'persona.representante','uses'=>'PersonasController@postRepresentante']);
 
     //crear alumno a partir de dar clik en el representante
-    Route::get(' alumnos/create{representante?}',['as' => 'admin.alumnos.create', 'uses'=>'AlumnosController@create']);
+    Route::get('alumnos/create{representante?}',['as' => 'admin.alumnos.create', 'uses'=>'AlumnosController@create']);
 
     //adicionar roles a los usuarios
     Route::get('user/{id}/roles', ['as' => 'admin.users.roles','uses'=>'UsersController@roles' ]);
@@ -118,11 +124,27 @@ Route::group(['middleware' => ['auth','role:administrator|signup|planner|supervi
     //confirmar reserva
     Route::get('/inscripcions/reserva/{id}/confirm',['as' => 'admin.reserva.confirm', 'uses'=>'InscripcionsController@reservaConfirm']);
 
-    //obtener todos los alumnos y representantes para el datatables con ajax
+    //obtener todos los alumnos, representantes, inscripciones, comprobantes para el datatables con ajax
     Route::get('/alumnos/get',['as' => 'admin.alumnos', 'uses'=>'AlumnosController@getAll']);
     Route::get('/representantes/get',['as' => 'admin.representantes', 'uses'=>'RepresentantesController@getAll']);
+    Route::get('/inscripciones/get',['as' => 'admin.inscripcions', 'uses'=>'InscripcionsController@getAll']);
+    Route::get('/facturas/get',['as' => 'admin.facturas', 'uses'=>'FacturasController@getAll']);
     
+    //permite eliminar alumnos  representantes, inscripciones, comprobantes  con botones en datatable con ajax, paginando
+    Route::get('alumnos/{alumno?}/delete',['as' => 'admin.alumnos.delete', 'uses'=>'AlumnosController@destroy']);
+    Route::get('representante/{representante?}/delete',['as' => 'admin.representante.delete', 'uses'=>'RepresentantesController@destroy']);
+    Route::get('inscripcion/delete/{inscripcion?}/',['as' => 'admin.inscripcions.delete', 'uses'=>'InscripcionsController@destroy']);
+    Route::get('facturas/delete/{comprobante?}/',['as' => 'admin.facturas.delete', 'uses'=>'FacturasController@destroy']);
+    
+    
+    //eliminar curso
+    Route::get('calendars/delete/{id?}/',['as' => 'admin.calendars.delete', 'uses'=>'CalendarsController@destroy']);
 
+    //reinscripcion
+    Route::get('inscripcion/re-inscribir/{id?}/',['as' => 'admin.inscripcions.re-inscribir', 'uses'=>'InscripcionsController@reInscribirGet']);
+    Route::get('inscripcions/new_cursos/{data?}',['as' => 'admin.inscripcions.new_curso', 'uses'=>'InscripcionsController@searchNewCurso']);
+    Route::get('inscripcions/new/curso/{data?}',['as' => 'admin.re_inscripcions.curso.store', 'uses'=>'InscripcionsController@updateCurso']);
+    
     Route::resource('users', 'UsersController');
     Route::resource('roles', 'RolesController');
     Route::resource('permissions', 'PermissionsController');
@@ -173,10 +195,15 @@ Route::group(['middleware' => ['auth','role:administrator|signup|planner|supervi
     Route::get('/reports/excel/export',['as' => 'admin.reports.exportExcel', 'uses'=>'ReportesController@exportExcel']);
     Route::get('/reports/personalizado',['as' => 'admin.reports.personalizado', 'uses'=>'ReportesController@getPersonal']);
     Route::get('/reports/excel/export/custom',['as' => 'admin.reports.exportPersonalizado', 'uses'=>'ReportesController@exportPersonal']);
+    Route::get('/reports/general{data?}',['as' => 'admin.reports.general', 'uses'=>'ReportesController@getGeneral']);
+    Route::get('/reports/export/general',['as' => 'admin.reports.exportGeneral', 'uses'=>'ReportesController@exportGeneral']);
     Route::get('/reports/pdf/{id}',['as' => 'admin.reports.pdf', 'uses'=>'ReportesController@inscripcionPDF']);
     Route::get('reports/pagos/cuadre', ['as'=>'admin.pagos.cuadre','uses'=>'ReportesController@cuadre']);
     Route::get('/reports/credenciales',['as' => 'admin.reports.credenciales', 'uses'=>'ReportesController@getCredenciales']);
     Route::get('/reports/credenciales/export',['as' => 'admin.reports.export-credenciales', 'uses'=>'ReportesController@exportCredenciales']);
+    Route::get('/reports/resumen',['as' => 'admin.reports.resumen', 'uses'=>'ReportesController@getResumen']);
+    Route::get('/reports/factura',['as' => 'admin.reports.factura', 'uses'=>'ReportesController@getFactura']);
+    Route::get('/reports/factura/export',['as' => 'admin.reports.exportFactura', 'uses'=>'ReportesController@exportFactura']);
 
     //facturacion diaria usuario
     Route::get('/user/facturas/excel',['as' => 'admin.facturas.excel', 'uses'=>'UsersController@getFacturaExcel']);
@@ -197,9 +224,9 @@ Route::get('/inscripcions-collections/reduce/{id}',['uses'=>'CalendarsController
 Route::get('/inscripcions-collections/remove/{id}',['uses'=>'CalendarsController@getRestarCurso','as'=>'inscripciones.restarTodo']);
 
 
-//*************Usuarios Online****//
+//*************Usuarios Online******************************//
 
-/*Route group user is forces by middeware auth*/
+/*Route group user is forces by middeware auth and role register*/
 Route::group(['middleware' => ['auth','role:register'], 'prefix' => 'user'], function () {
 
     //vista para editar la contraseña del perfil de usuario
@@ -207,7 +234,20 @@ Route::group(['middleware' => ['auth','role:register'], 'prefix' => 'user'], fun
     //actualizar la contraseña del perfil de usuario
     Route::put('{user}/profile/pass/edit', ['uses' => 'UsersController@postPassword','as' => 'user.password.update']);
     //actualizar la contraseña del perfil de usuario
-    Route::put('{user}/edit', ['uses' => 'UsersController@updateOnline','as' => 'user.update']);
+    Route::post('{user}/edit', ['uses' => 'UsersController@updateOnline','as' => 'user.update']);
+    //Crear representantes  del  usuario logueado
+    Route::post('/representante/create', ['uses' => 'HomeController@storeRepresentante','as' => 'user.representante.store']);
+    //actualizar el representante del usuario online
+    Route::PUT('/representante/{representante}/edit/', ['uses' => 'HomeController@updateRepresentante','as' => 'user.representante.update']);
+    //eliminar el representante del usuario online
+    Route::get('/representante/{representante}/delete/', ['uses' => 'HomeController@destroyRepresentante','as' => 'user.representante.destroy']);
+    //Crear alumnos  del  usuario logueado
+    Route::post('/representante/{representante}/alumno/create', ['uses' => 'HomeController@storeAlumno','as' => 'user.alumno.store']);
+    //actualizar alumno online
+    Route::PUT('/alumno/{alumno}/edit/', ['uses' => 'HomeController@updateAlumno','as' => 'user.alumno.update']);
+    //eliminar el alumno
+    Route::get('/alumno/{alumno}/delete/', ['uses' => 'HomeController@destroyAlumno','as' => 'user.alumno.destroy']);
+    
 });
 
 

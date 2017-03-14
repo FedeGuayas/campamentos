@@ -32,6 +32,7 @@
                     <th>Modulo</th>
                     <th>Matricula</th>
                     <th>Estado (Hab/Des)</th>
+                    <th>Imagen</th>
                     <th>Opciones</th>
                 </tr>
                 </thead>
@@ -43,6 +44,7 @@
                     <th class="search-filter">Modulo</th>
                     <th>Matricula</th>
                     <th>Estado (Hab/Des)</th>
+                    <th>Imagen</th>
                     <th>Opciones</th>
                 </tr>
                 </tfoot>
@@ -69,6 +71,13 @@
                                     {!! Form::button('<i class="tiny fa fa-check" aria-hidden="true"></i>',['class'=>'label waves-effect waves-light teal darken-1']) !!}
                                 </a>
                                 @endif
+                            @endif
+                        </td>
+                        <td>
+                            @if ($program->imagen=='NULL')
+                                NO
+                            @else
+                                <img src="{{ asset('/img/camp/disciplinas/'.$program->imagen)}}" style='max-width: 50px;' class="responsive-img img-thumbnail materialboxed">
                             @endif
                         </td>
                         <td>
@@ -111,6 +120,7 @@
                 var title = $(this).text();
                 $(this).html( '<input type="text" placeholder="'+title+'" />' );
             } );
+            $('.materialboxed').materialbox();
 
             var table =  $('#program_table').DataTable({
                 lengthMenu: [[10, 25, -1], [10, 25, "Todo"]],

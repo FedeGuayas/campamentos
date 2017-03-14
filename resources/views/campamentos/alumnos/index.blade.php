@@ -18,7 +18,7 @@
                     {!! Form::button('<i class="fa fa-user-plus" ></i>',['class'=>'btn tooltipped waves-effect waves-light','data-position'=>'right', 'data-delay'=>'50', 'data-tooltip'=>'Crear alumno']) !!}
                 </a>
             @endif
-            <table id="alumnos_table" class="table table-striped table-bordered table-condensed table-hover highlight responsive-table" cellspacing="0" width="100%" style="display: none"   data-order='[[ 0, "asc" ]]'>
+            <table id="alumnos_table" class="table table-striped table-bordered table-condensed table-hover highlight responsive-table" cellspacing="0" width="100%" style="display: none"   data-order='[[ 0, "desc" ]]'>
                 <thead>
                 <tr>
                     <th width="50">Id</th>
@@ -42,7 +42,7 @@
                 </tr>
                 </tfoot>
 
-{{--                        @include ('campamentos.alumnos.modal')--}}
+                        {{--@include ('campamentos.alumnos.modal')--}}
 
                 </table><!--end table-responsive-->
 
@@ -70,14 +70,9 @@
 
     <script>
         $(document).ready( function () {
-            // Agregar inputs de busquedad al datatble
-//            $('#alumnos_table .search-filter').each( function () {
-//                var title = $(this).text();
-//                $(this).html( '<input type="text" placeholder="'+title+'" />' );
-//            } );
 
             var table =  $('#alumnos_table').DataTable({
-                lengthMenu: [[10, 25], [10, 25]],
+                lengthMenu: [[10, 25,50], [10, 25,50]],
                 processing: true,
                 stateSave: true,
                 serverSide:true,
@@ -133,19 +128,9 @@
                 }
             });
 
-//            // Apply the search
-//            table.columns().every( function () {
-//                var that = this;
-//                $( 'input', this.footer() ).on( 'keyup change', function () {
-//                    if ( that.search() !== this.value ) {
-//                        that.search( this.value ).draw();
-//                    }
-//                } );
-//            } );
-
-            $("select").val('10'); //seleccionar valor por defecto del select
-            $('select').addClass("browser-default"); //agregar una clase de materializecss de esta forma ya no se pierde el select de numero de registros.
-            $('select').material_select(); //inicializar el select de materialize
+            $("select").val('10');
+            $('select').addClass("browser-default");
+            $('select').material_select();
         });
     </script>
 

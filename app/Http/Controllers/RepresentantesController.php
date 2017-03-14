@@ -63,9 +63,13 @@ class RepresentantesController extends Controller
                                 <a href="{{ route(\'admin.representantes.show\',[$id] ) }}">
                                     {!! Form::button(\'<i class="tiny fa fa-eye"></i>\',[\'class\'=>\'label waves-effect waves-light teal darken-1\']) !!}
                                 </a>
-                                    @if ( Auth::user()->can(\'delete_representante\'))
-                                        {!! Form::button(\'<i class="tiny fa fa-trash-o" ></i>\',[\'class\'=>\'modal-trigger label waves-effect waves-light red darken-1\',\'data-target\'=>"modal-delete-[$id]"]) !!}
-                                    @endif';
+                                @if ( Auth::user()->can(\'delete_representante\'))
+                                <a href="{{ route(\'admin.representante.delete\',[$id] ) }}" onclick="
+return confirm(\'Seguro que desea borrar al representante?\')">
+                                {!! Form::button(\'<i class="tiny fa fa-trash-o" ></i>\',[\'class\'=>\'label waves-effect waves-light red darken-1\']) !!}
+                                </a>
+                 @endif
+                       ';
 
 
             return Datatables::of($representantes)
@@ -86,7 +90,7 @@ class RepresentantesController extends Controller
                 ->make(true);
         }
 
-        return view('campamentos.alumnos.index');
+        return view('campamentos.representantes.index');
     }
 
   
@@ -122,8 +126,8 @@ class RepresentantesController extends Controller
         $out['phone'] = 'max:15';
         $out['tipo_doc'] = 'required';
         $out['num_doc'] = 'required';
-        $out['foto_ced'] = 'image|max:1000';
-        $out['foto'] = 'image|max:150';
+        $out['foto_ced'] = 'mimes:jpg,png,jpeg|max:1000';
+        $out['foto'] = 'mimes:jpg,png,jpeg|max:150';
        
 
         //Hacer validación condicional dependiendo del tipo de documento a utilizar.
@@ -184,14 +188,14 @@ class RepresentantesController extends Controller
 
             if ($request->hasFile('foto_ced')) {
                 $file = $request->file('foto_ced');
-                $name = 'rep_ced_' . time() . '.' . $file->getClientOriginalExtension();
+                $name = 'rep_ced_'.time().'.' . $file->getClientOriginalExtension();
                 $path = public_path() . '/dist/img/representantes/cedula/';//ruta donde se guardara
                 $file->move($path, $name);//lo copio a $path con el nombre $name
                 $representante->foto_ced = $name;//ahora se guarda  en el atributo foto_ced la imagen
             }
             if ($request->hasFile('foto')) {
                 $file = $request->file('foto');
-                $name = 'rep_perfil_' . time() . '.' . $file->getClientOriginalExtension();
+                $name = 'rep_perfil_'.time().'.' . $file->getClientOriginalExtension();
                 $path = public_path() . '/dist/img/representantes/perfil/';//ruta donde se guardara
                 $file->move($path, $name);//lo copio a $path con el nombre $name
                 $representante->foto = $name;//ahora se guarda  en el atributo foto_ced la imagen
@@ -266,8 +270,8 @@ class RepresentantesController extends Controller
         $out['phone'] = 'max:15';
         $out['tipo_doc'] = 'required';
         $out['num_doc'] = 'required';
-        $out['foto_ced'] = 'max:1000';
-        $out['foto'] = 'max:150';
+        $out['foto_ced'] = 'mimes:jpg,png,jpeg|max:1000';
+        $out['foto'] = 'mimes:jpg,png,jpeg|max:150';
         
 
         //Hacer validación condicional dependiendo del tipo de documento a utilizar.
@@ -322,7 +326,7 @@ class RepresentantesController extends Controller
 
             if ($request->hasFile('foto_ced')) {
                 $file = $request->file('foto_ced');
-                $name='rep_ced_'.time().'.'.$file->getClientOriginalExtension();
+                $name='rep_ced_'.$representante->id.'.'.$file->getClientOriginalExtension();
                 $path=public_path().'/dist/img/representantes/cedula/';//ruta donde se guardara
                 $file->move($path,$name);//lo copio a $path con el nombre $name
                 $representante->foto_ced=$name;//ahora se guarda  en el atributo foto_ced la imagen
@@ -330,7 +334,7 @@ class RepresentantesController extends Controller
             }
             if ($request->hasFile('foto')) {
                 $file = $request->file('foto');
-                $name='rep_perfil_'.time().'.'.$file->getClientOriginalExtension();
+                $name='rep_perfil_'.$representante->id.'.'.$file->getClientOriginalExtension();
                 $path=public_path().'/dist/img/representantes/perfil/';//ruta donde se guardara
                 $file->move($path,$name);//lo copio a $path con el nombre $name
                 $representante->foto=$name;//ahora se guarda  en el atributo foto_ced la imagen
@@ -356,19 +360,22 @@ class RepresentantesController extends Controller
      */
     public function destroy($id)
     {
+
         $representante=Representante::findOrFail($id);
         $persona=$representante->persona;
 
         $flag=$representante->alumnos;
-
+        
         if (count($flag)>0){
             Session::flash('message_danger', 'No puede eliminar a '.$representante->persona-> getNombreAttribute().' mientras este representando alumnos');
+            return redirect()->back();
         } else{
             $persona->representantes()->delete();
             $persona->delete();
             Session::flash('message', 'Se elimino al representante '.$representante->persona-> getNombreAttribute().'');
+            return  redirect()->route('admin.representantes.index');
         }
-        return back();
+      
     }
 
     public function beforeSearch(Request $request)

@@ -22,16 +22,16 @@
 
         <div class="input-field s12">
             <i class="fa fa-key prefix" aria-hidden="true"></i>
-            {!! Form::label('password_new','Confirmar contraseña:*') !!}
+            {!! Form::label('password_new_confirmation','Confirmar contraseña:*') !!}
             {!! Form::password('password_new_confirmation',['class'=>'validate']) !!}
         </div>
     </div>
     <div class="clearfix">
         <div class="center-align">
-            {!! Form::button('Guardar<i class="fa fa-save right"  aria-hidden="true"></i>', ['class'=>'btn waves-effect waves-light','type' => 'submit']) !!}
-            {!! Form::button('Cancelar<i class="fa fa-close right"  aria-hidden="true"></i>',['class'=>'btn waves-effect waves-light red darken-1','type' => 'reset']) !!}
+            {!! Form::button('<i class="fa fa-save" aria-hidden="true"></i>', ['class'=>'btn waves-effect waves-light tooltipped','type' => 'submit','data-position'=>'top', 'data-delay'=>'50', 'data-tooltip'=>'Guardar']) !!}
+            {!! Form::button('<i class="fa fa-close" aria-hidden="true"></i>',['class'=>'btn waves-effect waves-light red darken-1 tooltipped','type' => 'reset','data-position'=>'top', 'data-delay'=>'50', 'data-tooltip'=>'Cancelar']) !!}
             <a href="/home">
-                {!! Form::button('Regresar<i class="fa fa-arrow-circle-left" aria-hidden="true"></i>',['class'=>'btn waves-effect waves-light blue darken-4']) !!}
+                {!! Form::button('<i class="fa fa-arrow-circle-left" aria-hidden="true"></i>',['class'=>'btn waves-effect waves-light blue darken-4 tooltipped','data-position'=>'top', 'data-delay'=>'50', 'data-tooltip'=>'Regresar']) !!}
             </a>
         </div>
     </div>

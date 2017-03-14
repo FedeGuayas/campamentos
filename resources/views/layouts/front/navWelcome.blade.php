@@ -5,7 +5,7 @@
         <ul id="dropdownMenu" class="dropdown-content">
             <li><a href="/home" class="waves-effect waves-teal">Perfil </a></li>
             <li class="divider"></li>
-            @if(Entrust::hasRole(['administrator','planner','signup','supervisor']) )
+            @if(Entrust::hasRole(['administrator','planner','signup','supervisor','invited']) )
                 <li><a href="{{route('admin.index')}}" class="waves-effect waves-teal">Administración</a></li>
             @endif
             <div class="divider"></div>
@@ -17,7 +17,7 @@
         {{--<nav class="teal" role="navigation">--}}
 
         {{--Contenedor del menu de navegacion--}}
-            <div class="nav-wrapper container">
+            <div class="nav-wrapper">
 
                 {{--Button hamburger activa la barra lateral en moviles para poner el menu de navegacion--}}
                 <a href="#" data-activates="slide-out" class="button-collapse fixed"><i class="material-icons">menu</i></a>
@@ -64,7 +64,7 @@
                                     <ul>
                                         <li><a href="/home" class="waves-effect waves-teal">Perfil </a></li>
                                         <li class="divider"></li>
-                                        @if(Entrust::hasRole(['administrator','planner','signup','supervisor']) )
+                                        @if(Entrust::hasRole(['administrator','planner','signup','supervisor','invited']) )
                                             <li><a href="{{route('admin.index')}}" class="waves-effect waves-teal">Administración</a></li>
                                             <li class="divider"></li>
                                         @endif

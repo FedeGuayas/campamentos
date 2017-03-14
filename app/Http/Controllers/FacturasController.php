@@ -8,6 +8,7 @@ use App\Inscripcion;
 use Illuminate\Http\Request;
 use Session;
 use App\Http\Requests;
+use Yajra\Datatables\Datatables;
 
 class FacturasController extends Controller
 {
@@ -24,10 +25,51 @@ class FacturasController extends Controller
      */
     public function index()
     {
-        $comprobantes=Factura::with('representante','inscripcions')->get();
+//        $comprobantes=Factura::with('representante','inscripcions')->get();
         
-        return view('campamentos.facturas.index', compact('comprobantes'));
+//        return view('campamentos.facturas.index', compact('comprobantes'));
+        return view('campamentos.facturas.index');
     }
+
+    /**
+     * Obtener el listado de todos los alumnos para datatables con ajax
+     * @param Request $request
+     * @return mixed
+     */
+    public function getAll(Request $request)
+    {
+        if ($request->ajax()){
+            
+            $comprobantes = Factura::with('representante','inscripcions')->selectRaw('distinct facturas.*');
+
+
+            $action_buttons =
+                '@if ( Auth::user()->hasRole([\'administrator\']))
+                <a href="{{ route(\'admin.facturas.delete\',[$id] ) }}" onclick="
+                return confirm(\'Seguro que desea borrar la factura?\')">
+                   {!! Form::button(\'<i class="tiny fa fa-trash-o" ></i>\',[\'class\'=>\'label waves-effect waves-light red darken-1\']) !!}
+                 @endif
+                 ';
+            //{!! Form::button('<i class="tiny fa fa-trash-o" ></i>',['class'=>'modal-trigger label waves-effect waves-light red darken-1','data-target'=>"modal-delete-[$id]"]) !!}
+            return Datatables::of($comprobantes)
+
+                ->addColumn('inscripcion', function (Factura $factura) {
+                    return $factura->inscripcions->map(function($insc) {
+                        return ($insc->id);
+                    })->implode('<br>');
+                })
+                
+                ->addColumn('actions', $action_buttons)
+
+                ->make(true);
+        }
+
+        return view('campamentos.alumnos.index');
+    }
+
+
+
+
 
     /**
      * Show the form for creating a new resource.

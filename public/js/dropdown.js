@@ -45,10 +45,9 @@ $("#modulo_id").change(function (event) {
     var desc_est=$("#descuento_estacion");
 
     $.get("escenarios/" + event.target.value + "", function (response, state) {
-        // console.log(response);
+        console.log(response);
         escenario.find("option:gt(0)").remove();
         escenario.addClass("teal-text");
-        // escenario.empty();
         $.each(response.escenarios, function(i, item) {
             escenario.append('<option value="' + item.eID + '">' + item.escenario + '</option>');
         });
@@ -76,21 +75,53 @@ $("#modulo_id").change(function (event) {
     });
 });
 
-
 //cargar disciplinas al seleccionar el escenario
 $("#escenario_id").change(function (event) {
     var disciplina=$("#disciplina_id");
-    $.get("disciplinas/" + event.target.value + "", function (response, state) {
-        // console.log(response);
-        // disciplina.empty();
-        disciplina.find("option:gt(0)").remove();
-        disciplina.addClass("teal-text");
-        for (i = 0; i < response.length; i++) {
-            disciplina.append('<option value="' + response[i].dID + '">' + response[i].disciplina + '</option>');
+    var escenario_id=$("#escenario_id").val();
+    var modulo_id=$("#modulo_id").val();
+    var datos={
+        escenario:escenario_id,
+        modulo:modulo_id
+    }
+    // var token = $("input[name=_token]").val();
+    $.ajax({
+        url: "disciplinas",
+        type: "GET",
+        // headers: {'X-CSRF-TOKEN': token},
+        contentType: 'application/x-www-form-urlencoded',
+        data: datos,
+        success: function (response) {
+            console.log(response);
+            disciplina.find("option:gt(0)").remove();
+            disciplina.addClass("teal-text");
+            for (i = 0; i < response.length; i++) {
+                disciplina.append('<option value="' + response[i].dID + '">' + response[i].disciplina + '</option>');
+            }
+            disciplina.material_select();
+        },
+        error: function (response) {
+            // console.log(response);
         }
-        disciplina.material_select();
     });
 });
+
+
+
+//cargar disciplinas al seleccionar el escenario
+// $("#escenario_id").change(function (event) {
+//     var disciplina=$("#disciplina_id");
+//     $.get("disciplinas/" + event.target.value + "", function (response, state) {
+//         console.log(response);
+        // disciplina.empty();
+        // disciplina.find("option:gt(0)").remove();
+        // disciplina.addClass("teal-text");
+        // for (i = 0; i < response.length; i++) {
+        //     disciplina.append('<option value="' + response[i].dID + '">' + response[i].disciplina + '</option>');
+        // }
+        // disciplina.material_select();
+    // });
+// });
 
 //cargar dias al seleccionar la disciplina, paso todos los parametros pa determinar el programa al k pertenecen
 $("#disciplina_id").change(function (event) {

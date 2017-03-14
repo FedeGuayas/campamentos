@@ -5,7 +5,7 @@
 @section('body')
     @include('layouts.front.navWelcome')
 
-    <a href="#" class="back-to-top waves-effect waves-light btn btn-floating wow slideInUp">Subir</a>
+    <a href="#" class="back-to-top waves-effect waves-light btn btn-floating animated slideInUp">Subir</a>
 
 
     {{--Banner imagen Parallax--}}
@@ -13,102 +13,138 @@
         <div class="section no-pad-bot">
             <div class="container flow-text">
 
-                <h2 class="header center teal-text text-lighten-2 wow fadeInDown">                              Campamentos Deportivos</h2>
+                <h2 class="header center teal-text text-lighten-2 animated fadeInDown">Campamentos Deportivos</h2>
 
                 <div class="row center">
-                    <h5 class="header col s12 light wow fadeIn" data-wow-delay="1s">La mejor opción para ejercitar y disfrutar en familia.</h5>
+                    <h5 class="header col s12 light wow fadeIn" data-wow-delay="0.5s">La mejor opción para ejercitar y
+                        disfrutar en familia.</h5>
                 </div>
 
-               @if (Auth::guest())
-                <div class="row center">
-                    <a href="{{url('/login')}}" class="waves-effect waves-light btn btn-large teal lighten-1 wow flipInX" data-wow-delay="1.5s"><i class="material-icons right">input</i>Entrar</a>
-                    <a href="{{ url('/register') }}" class="waves-effect waves-light btn btn-large teal lighten-1 wow flipInX" data-wow-delay="1.5s"><i class="material-icons right">fingerprint</i>Registrarse</a>
-                </div>
+                @if (Auth::guest())
+                    <div class="row center">
+                        <a href="{{url('/login')}}"
+                           class="waves-effect waves-light btn btn-large teal lighten-1 animated flipInX"
+                           data-wow-delay="1.5s"><i class="material-icons right">input</i>Entrar</a>
+                        <a href="{{ url('/register') }}"
+                           class="waves-effect waves-light btn btn-large teal lighten-1 animated flipInX"
+                           data-wow-delay="1.5s"><i class="material-icons right">fingerprint</i>Registrarse</a>
+                    </div>
                 @endif
             </div>
         </div>
-        <div class="parallax"><img src="{{asset('img/camp/the-ball-cancha.jpg')}}" style=" opacity: 100; " alt="Unsplashed background img 1"></div>
+        <div class="parallax"><img src="{{asset('img/camp/the-ball-cancha.jpg')}}" style=" opacity: 100; "
+                                   alt="Unsplashed background img 1"></div>
     </div>
 
     {{--Seccion de las disciplinas--}}
     <div class="container">
-        <div class="section"  id="disciplinas">
+        <div class="section" id="disciplinas">
             <div class="section-title">
                 <div class="divider-new wow bounce">
                     <h2 class="h2-responsive wow fadeInDown">Disciplinas</h2>
                 </div>
             </div>
 
+
+
             <div class="row">
-                <div class="col s12 m4">
-                    <div class="card hoverable z-depth-4 sticky-action medium wow fadeInUp" data-wow-delay="0.3s">
-                        <div class="card-image waves-effect waves-block waves-light">
-                            <img class="activator" src="img/camp/rana1-deporte-min.jpg">
-                        </div>
-                        <div class="card-content">
-                            <span class="card-title activator grey-text text-darken-4">Disciplina #1<i class="material-icons right">more_vert</i></span>
-                            <p><a href="#">Entrar</a> para inscribirme</p>
-                            <p><a href="#">Contactar</a></p>
-                        </div>
-                        <div class="card-action">
-                            <div class="clearfix">
-                                <div class="pull-left price teal-text">$15.00</div>
-                                <a class="waves-effect waves-light btn pull-right">Pagar</a>
-                            </div>
-                        </div>
-                        <div class="card-reveal">
-                            <span class="card-title grey-text text-darken-4">Disciplina #1<i class="material-icons right">close</i></span>
-                            <p>Una pequeña descripción donde se describa esta disciplina</p>
-                        </div>
-                    </div>
-                </div>
 
-                <div class="col s12 m4">
-                    <div class="card hoverable z-depth-4 sticky-action medium wow fadeInUp" data-wow-delay="0.6s">
-                        <div class="card-image waves-effect waves-block waves-light">
-                            <img class="activator" src="img/camp/rana2-deporte-min.jpg">
-                        </div>
-                        <div class="card-content">
-                            <span class="card-title activator grey-text text-darken-4">Disciplina #2<i class="material-icons right">more_vert</i></span>
-                            <p><a href="#">Entrar</a> para inscribirme</p>
-                            <p><a href="#">Contactar</a></p>
-                        </div>
-                        <div class="card-action">
-                            <div class="clearfix">
-                                <div class="pull-left price teal-text">$15.00</div>
-                                <a class="waves-effect waves-light btn pull-right">Pagar</a>
-                            </div>
-                        </div>
-                        <div class="card-reveal">
-                            <span class="card-title grey-text text-darken-4">Disciplina #2<i class="material-icons right">close</i></span>
-                            <p>Una pequeña descripción donde se describa esta disciplina</p>
-                        </div>
-                    </div>
+                {{--<div class="carousel-fixed-item center">--}}
+                <div class="control-center-up center-align">
+                    <a class="btn-floating waves-effect blue-grey waves-purple" href="#myCarousel"
+                       data-slide="prev"><i class="fa fa-chevron-left"></i><span class="sr-only">Anterior</span></a>
+                    <a class="btn-floating waves-effect blue-grey waves-purple"  href="#myCarousel"
+                       data-slide="next"><i class="fa fa-chevron-right"></i><span class="sr-only">Siguiente</span></a>
                 </div>
+                {{--</div>--}}
 
-                <div class="col s12 m4">
-                    <div class="card hoverable z-depth-4 sticky-action medium wow fadeInUp" data-wow-delay="0.9s">
-                        <div class="card-image waves-effect waves-block waves-light">
-                            <img class="activator" src="img/camp/gimnasia-min.jpg">
-                        </div>
-                        <div class="card-content">
-                            <span class="card-title activator grey-text text-darken-4">Disciplina #3<i class="material-icons right">more_vert</i></span>
-                            <p><a href="#">Entrar</a> para inscribirme</p>
-                            <p><a href="#">Contactar</a></p>
-                        </div>
-                        <div class="card-action">
-                            <div class="clearfix">
-                                <div class="pull-left price teal-text">$15.00</div>
-                                <a class="waves-effect waves-light btn pull-right">Pagar</a>
-                            </div>
-                        </div>
-                        <div class="card-reveal">
-                            <span class="card-title grey-text text-darken-4">Disciplina #3<i class="material-icons right">close</i></span>
-                            <p>Una pequeña descripción donde se describa esta disciplina</p>
-                        </div>
-                    </div>
-                </div>
+                        <!-- Left and right controls -->
+                {{--<a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">--}}
+                    {{--<span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>--}}
+                    {{--<span class="sr-only">Previous</span>--}}
+                {{--</a>--}}
+                {{--<a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">--}}
+                    {{--<span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>--}}
+                    {{--<span class="sr-only">Next</span>--}}
+                {{--</a>--}}
+{{--             @foreach($cursos->chunk(3) as $cursosChunck)--}}
+                @foreach($cursos as $curso)
+                    @if($curso->program->imagen && ($curso->cupos - $curso->contador) >=1)
+                        <div class="col s4 m4">
+                            <div class="card hoverable z-depth-4 sticky-action  wow fadeInUp"
+                                 data-wow-delay="0.3s">
+                                <div class="card-image waves-effect waves-block waves-light">
+                                    <img class="activator"
+                                         src="{{ asset('/img/camp/disciplinas/'.$curso->program->imagen)}}">
+                                </div>
+                                <div class="card-content">
+                                    <span class="card-title activator grey-text text-darken-4">{{$curso->program->disciplina->disciplina}}
+                                        <i class="material-icons right">more_vert</i></span>
+                                    <p style="font-size: 10px;">{{$curso->dia->dia}} / {{$curso->horario->start_time.' - '.$curso->horario->end_time}} / {{ $curso->init_age.'-'.$curso->end_age}} años</p>
+                                </div>
+                                <div class="card-action">
+                                    <div class="clearfix">
+                                        <div class="pull-left price teal-text">
+                                            $ {{number_format($curso->mensualidad,2,'.',' ')}}</div>
+                                        @if (Auth::guest())
+                                            <a href="{{url('/login')}}"
+                                               class="waves-effect waves-light btn pull-right">Entrar</a>
+                                        @else
+                                            <a class="waves-effect waves-light btn pull-right">Pagar</a>
+                                        @endif
+                                    </div>
+                                </div>
+                                <div class="card-reveal">
+                                    <span class="card-title grey-text text-darken-4">{{$curso->program->disciplina->disciplina}}
+                                        <i class="material-icons right">close</i></span>
+                                    <table class="table highlight responsive-table" cellspacing="0" width="100%" style="width: 100%">
+                                        <tr>
+                                            <th>Escenario</th>
+                                            <td>{{$curso->program->escenario->escenario}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Mes</th>
+                                            <td>{{$curso->program->modulo->modulo}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Matrícula</th>
+                                            <td> $ {{number_format($curso->program->matricula,2,'.',' ')}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Disponibilidad</th>
+                                            <td>
+                                                @if( ($curso->cupos - $curso->contador) <=1)
+                                                    <span class="label label-danger">{{ $curso->cupos - $curso->contador }}</span>
+                                                @else
+                                                    <span class="label label-success">{{ $curso->cupos - $curso->contador }}</span>
+                                                @endif</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Dias</th>
+                                            <td>{{$curso->dia->dia}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Horarios</th>
+                                            <td>{{$curso->horario->start_time.' - '.$curso->horario->end_time}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Edades</th>
+                                            <td>{{ $curso->init_age.'-'.$curso->end_age}} años</td>
+                                        </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
+                        @endforeach
+
+                    {{--@endforeach--}}
+
+
+                {{--</div>--}}
+
             </div>
+
 
             {{--<!--   Icon Section   -->--}}
             {{--<div class="row">--}}
@@ -144,7 +180,6 @@
     </div>
 
 
-
     {{--Imagen Parllax--}}
     <div class="parallax-container valign-wrapper">
         <div class="section no-pad-bot">
@@ -154,12 +189,13 @@
                 </div>
             </div>
         </div>
-        <div class="parallax"><img src="{{asset('img/camp/the-ball-cancha.jpg')}}" alt="Unsplashed background img 2"></div>
+        <div class="parallax"><img src="{{asset('img/camp/the-ball-cancha.jpg')}}"
+                                   alt="Unsplashed background img 2"></div>
     </div>
 
     {{--Seccion de los Beneficios--}}
     <div class="container">
-        <div class="section"  id="beneficios">
+        <div class="section" id="beneficios">
             <div class="section-title">
                 <div class="divider-new wow bounce" data-wow-duration="0.5s">
                     <h2 class="h2-responsive wow fadeInDown">Beneficios</h2>
@@ -172,28 +208,28 @@
                         <img src="http://lorempixel.com/580/250/nature/1"> <!-- random image -->
                         <div class="caption center-align">
                             <h3>Texto llamativo!</h3>
-                            <h5 class="light grey-text text-lighten-3">Poner aki algun  slogan.</h5>
+                            <h5 class="light grey-text text-lighten-3">Poner aki algun slogan.</h5>
                         </div>
                     </li>
                     <li>
                         <img src="http://lorempixel.com/580/250/nature/2"> <!-- random image -->
                         <div class="caption left-align">
                             <h3>Texto llamativo!</h3>
-                            <h5 class="light grey-text text-lighten-3">Poner aki algun  slogan.</h5>
+                            <h5 class="light grey-text text-lighten-3">Poner aki algun slogan.</h5>
                         </div>
                     </li>
                     <li>
                         <img src="http://lorempixel.com/580/250/nature/3"> <!-- random image -->
                         <div class="caption right-align">
                             <h3>Texto llamativo!</h3>
-                            <h5 class="light grey-text text-lighten-3">Poner aki algun  slogan.</h5>
+                            <h5 class="light grey-text text-lighten-3">Poner aki algun slogan.</h5>
                         </div>
                     </li>
                     <li>
                         <img src="http://lorempixel.com/580/250/nature/4"> <!-- random image -->
                         <div class="caption center-align">
                             <h3>Texto llamativo!</h3>
-                            <h5 class="light grey-text text-lighten-3">Poner aki algun  slogan.</h5>
+                            <h5 class="light grey-text text-lighten-3">Poner aki algun slogan.</h5>
                         </div>
                     </li>
                 </ul>
@@ -210,7 +246,8 @@
                 </div>
             </div>
         </div>
-        <div class="parallax"><img src="{{asset('img/camp/nadador-min.jpg')}}" alt="Unsplashed background img 3"></div>
+        <div class="parallax"><img src="{{asset('img/camp/nadador-min.jpg')}}" alt="Unsplashed background img 3">
+        </div>
     </div>
 
     @include('layouts.front.contact')
@@ -240,6 +277,31 @@
             var_marker.setMap(var_map);
         }
         google.maps.event.addDomListener(window, 'load', init_map);
+
+        $(document).ready(function () {
+
+            var primera1 = localStorage.getItem('primera1');
+            if (primera1 == null) {
+                localStorage.setItem('primera1', 1);
+                // popup aki
+                setTimeout(function () {
+                    swal({
+                        title: "Bienvenido!",
+                        text: "Para un mejor desempeño en nuestro sitio debe utilizar Google Chrome Versión 56.0.2924.87 o superior...",
+                        type: "info",
+                    })
+                }, 500);
+            }
+        });
+
+
+
+        $('.carousel.carousel-slider').carousel({fullWidth: false});
+
+
+
+
+
 
     </script>
 
