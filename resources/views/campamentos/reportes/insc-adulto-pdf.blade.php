@@ -225,7 +225,8 @@
     </table>
 </footer>
 
-<span style="font-family: FontAwesome;  position: absolute; bottom: 500px; right: 240px;">&#xf0c4; </span>
+{{--<span style="font-family: FontAwesome;  position: absolute; bottom: 500px; right: 240px;">&#xf0c4; </span>--}}
+<div class="tijera"></div>
 <div class="credencial_img">
 
     <table align="left" border="1" cellpadding="1" width="225px"
@@ -233,6 +234,12 @@
         <tr>
             <td>
                 <br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+            </td>
+        </tr>
+        <tr>
+            <th></th>
+            <td align="" style="font-size: 12px">
+                <b>MODULO: {{ $inscripcion->calendar->program->modulo->modulo}}</b>
             </td>
         </tr>
         <tr>
@@ -258,8 +265,8 @@
         </tr>
         <tr>
             <th>Escenario:</th>
-            <td>
-                {{ $inscripcion->calendar->program->escenario->escenario }}
+            <td style="text-decoration: underline;">
+                <b>{{ $inscripcion->calendar->program->escenario->escenario }}</b>
             </td>
         </tr>
         <tr>
@@ -274,12 +281,6 @@
                 {{ $inscripcion->calendar->dia->dia}}
                 <br>
                 {{ $inscripcion->calendar->horario->start_time}}-{{ $inscripcion->calendar->horario->end_time}}
-            </td>
-        </tr>
-        <tr>
-            <th>Modulo:</th>
-            <td>
-                <b>{{ $inscripcion->calendar->program->modulo->modulo}}</b>
             </td>
         </tr>
     </table>

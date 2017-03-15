@@ -383,6 +383,13 @@ class UsersController extends Controller
         return redirect()->back()->with('message','Contraseña Actualizada');
     }
 
+
+    /**
+     * Actualizar datos del usuario online
+     * @param UserUpdateOnlineRequest $request
+     * @param $id
+     * @return mixed
+     */
     public function updateOnline(UserUpdateOnlineRequest $request, $id)
     {
         $user=User::findOrFail($id);

@@ -142,8 +142,7 @@ Route::group(['middleware' => ['auth','role:administrator|signup|planner|supervi
 
     //reinscripcion
     Route::get('inscripcion/re-inscribir/{id?}/',['as' => 'admin.inscripcions.re-inscribir', 'uses'=>'InscripcionsController@reInscribirGet']);
-    Route::get('inscripcions/new_cursos/{data?}',['as' => 'admin.inscripcions.new_curso', 'uses'=>'InscripcionsController@searchNewCurso']);
-    Route::get('inscripcions/new/curso/{data?}',['as' => 'admin.re_inscripcions.curso.store', 'uses'=>'InscripcionsController@updateCurso']);
+    Route::post('inscripcions/new/{data?}',['as' => 'admin.re_inscripcions.curso.store', 'uses'=>'InscripcionsController@storeNewCurso']);
     
     Route::resource('users', 'UsersController');
     Route::resource('roles', 'RolesController');

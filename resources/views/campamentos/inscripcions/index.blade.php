@@ -38,15 +38,15 @@
                 <tfoot>
                 <tr>
                     <th>No.</th>
-                    <th>Alumno</th>
-                    <th>CI Al.</th>
-                    <th class="non_searchable">Mes</th>
+                    <th class="non_searchable">Alumno</th>
+                    <th class="non_searchable">CI Al.</th>
+                    <th>Mes</th>
                     <th class="non_searchable">Escenario</th>
                     <th class="non_searchable">Disciplina</th>
                     <th class="non_searchable">Dias</th>
                     <th class="non_searchable">Horarios</th>
-                    <th class="non_searchable">Representante</th>
-                    <th class="non_searchable">CI Rep.</th>
+                    <th >Representante</th>
+                    <th >CI Rep.</th>
                     {{--<th>Nivel</th>--}}
                     <th>Comprobante</th>
                     <th class="non_searchable">Opciones</th>
@@ -75,7 +75,7 @@
                     {data: 'id' },
                     {data: 'alumno',orderable: false, searchable: false},
                     {data: 'ci_alumno', orderable: false, searchable: false},
-                    {data: 'modulo', orderable: false, searchable: false},
+                    {data: 'modulo', orderable: false},
                     {data: 'escenario', orderable: false, searchable: false},
                     {data: 'disciplina', orderable: false, searchable: false},
                     {data: 'dia', orderable: false, searchable: false},

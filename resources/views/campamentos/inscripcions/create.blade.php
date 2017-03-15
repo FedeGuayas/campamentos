@@ -292,9 +292,10 @@
                         alert(resp.message);
                         var total_cursos = resp.totalCursos;
                         $("#getCurso>h5>span").html(total_cursos);
-
                         if ($("#familiar").is(':checked') && total_cursos < 2) {
+                            $("#form_inscripcion").trigger("reset");//limpio el form en la primera inscripcion
                             $("#pagar").prop("disabled", true);
+
                         } else $("#pagar").prop("disabled", false);
 
                         if ($("#multiple").is(':checked') && total_cursos < 3) {

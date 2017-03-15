@@ -243,7 +243,8 @@
 </footer>
 
 
-<span style="font-family: fontAwesome;  position: absolute; bottom: 500px; right: 240px;">&#xf0c4; </span>
+{{--<span style="font-family: fontAwesome;  position: absolute; bottom: 500px; right: 240px;">&#xf0c4; </span>--}}
+<div class="tijera"></div>
 <div class="credencial_img">
     <table align="left" border="1" cellpadding="1"  width="225px"
            style="font-size: 9px; text-align: left;">
@@ -273,8 +274,8 @@
         </tr>
         <tr>
             <th>Escenario:</th>
-            <td>
-                {{ $inscripcion->calendar->program->escenario->escenario }}
+            <td style="text-decoration: underline;">
+               <b> {{ $inscripcion->calendar->program->escenario->escenario }}</b>
             </td>
         </tr>
         <tr>
