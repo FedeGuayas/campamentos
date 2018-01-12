@@ -12,14 +12,10 @@
     <div id="index-banner" class="parallax-container banner-content flex-center">
         <div class="section no-pad-bot">
             <div class="container flow-text">
-
                 <h2 class="header center teal-text text-lighten-2 animated fadeInDown">Campamentos Deportivos</h2>
-
                 <div class="row center">
-                    <h5 class="header col s12 light wow fadeIn" data-wow-delay="0.5s">La mejor opción para ejercitar y
-                        disfrutar en familia.</h5>
+                    <h5 class="header col s12 light wow fadeIn" data-wow-delay="0.5s">La mejor opción para ejercitar y disfrutar en familia.</h5>
                 </div>
-
                 @if (Auth::guest())
                     <div class="row center">
                         <a href="{{url('/login')}}"
@@ -32,8 +28,9 @@
                 @endif
             </div>
         </div>
-        <div class="parallax"><img src="{{asset('img/camp/the-ball-cancha.jpg')}}" style=" opacity: 100; "
-                                   alt="Unsplashed background img 1"></div>
+        <div class="parallax">
+            <img src="{{asset('img/camp/the-ball-cancha.jpg')}}" style=" opacity: 100; " alt="background img 1">
+        </div>
     </div>
 
     {{--Seccion de las disciplinas--}}
@@ -45,17 +42,15 @@
                 </div>
             </div>
 
-
-
             <div class="row">
 
                 {{--<div class="carousel-fixed-item center">--}}
-                <div class="control-center-up center-align">
-                    <a class="btn-floating waves-effect blue-grey waves-purple" href="#myCarousel"
-                       data-slide="prev"><i class="fa fa-chevron-left"></i><span class="sr-only">Anterior</span></a>
-                    <a class="btn-floating waves-effect blue-grey waves-purple"  href="#myCarousel"
-                       data-slide="next"><i class="fa fa-chevron-right"></i><span class="sr-only">Siguiente</span></a>
-                </div>
+                {{--<div class="control-center-up center-align">--}}
+                    {{--<a class="btn-floating waves-effect blue-grey waves-purple" href="#myCarousel"--}}
+                       {{--data-slide="prev"><i class="fa fa-chevron-left"></i><span class="sr-only">Anterior</span></a>--}}
+                    {{--<a class="btn-floating waves-effect blue-grey waves-purple"  href="#myCarousel"--}}
+                       {{--data-slide="next"><i class="fa fa-chevron-right"></i><span class="sr-only">Siguiente</span></a>--}}
+                {{--</div>--}}
                 {{--</div>--}}
 
                         <!-- Left and right controls -->
@@ -69,29 +64,40 @@
                 {{--</a>--}}
 {{--             @foreach($cursos->chunk(3) as $cursosChunck)--}}
                 @foreach($cursos as $curso)
-                    @if($curso->program->imagen && ($curso->cupos - $curso->contador) >=1)
+                    @if(($curso->cupos - $curso->contador) >=1)
                         <div class="col s4 m4">
-                            <div class="card hoverable z-depth-4 sticky-action  wow fadeInUp"
+                            <div class="card big hoverable z-depth-4 sticky-action  wow fadeInUp"
                                  data-wow-delay="0.3s">
                                 <div class="card-image waves-effect waves-block waves-light">
-                                    <img class="activator"
-                                         src="{{ asset('/img/camp/disciplinas/'.$curso->program->imagen)}}">
+                                    @if($curso->program->imagen)
+                                    <img class="activator" src="{{ asset('/img/camp/disciplinas/'.$curso->program->imagen)}}" style="max-height: 300px;">
+                                    @else
+                                        <img class="activator" src="{{ asset('/img/camp/fdg-logo.png')}}">
+                                    @endif
                                 </div>
                                 <div class="card-content">
-                                    <span class="card-title activator grey-text text-darken-4">{{$curso->program->disciplina->disciplina}}
-                                        <i class="material-icons right">more_vert</i></span>
-                                    <p style="font-size: 10px;">{{$curso->dia->dia}} / {{$curso->horario->start_time.' - '.$curso->horario->end_time}} / {{ $curso->init_age.'-'.$curso->end_age}} años</p>
+                                    <span class="card-title activator grey-text text-darken-4" >
+                                        Curso
+                                        <i class="material-icons right">more_vert</i>
+                                    </span>
+                                    <p>
+                                        {{$curso->program->disciplina->disciplina}} / {{$curso->program->escenario->escenario}}
+                                    </p>
+                                    <p style="font-size: 10px;">
+                                        {{$curso->dia->dia}} / {{$curso->horario->start_time.' - '.$curso->horario->end_time}} / {{ $curso->init_age.'-'.$curso->end_age}} años
+                                    </p>
                                 </div>
                                 <div class="card-action">
                                     <div class="clearfix">
                                         <div class="pull-left price teal-text">
                                             $ {{number_format($curso->mensualidad,2,'.',' ')}}</div>
-                                        @if (Auth::guest())
-                                            <a href="{{url('/login')}}"
-                                               class="waves-effect waves-light btn pull-right">Entrar</a>
-                                        @else
-                                            <a class="waves-effect waves-light btn pull-right">Pagar</a>
-                                        @endif
+                                        <a class="waves-effect waves-light btn-floating blue pull-right"> <i class="material-icons">check</i></a>
+                                        {{--@if (Auth::guest())--}}
+                                            {{--<a href="{{url('/login')}}"--}}
+                                               {{--class="waves-effect waves-light btn pull-right">Entrar</a>--}}
+                                        {{--@else--}}
+                                            {{--<a class="waves-effect waves-light btn pull-right">Pagar</a>--}}
+                                        {{--@endif--}}
                                     </div>
                                 </div>
                                 <div class="card-reveal">
@@ -181,62 +187,62 @@
 
 
     {{--Imagen Parllax--}}
-    <div class="parallax-container valign-wrapper">
-        <div class="section no-pad-bot">
-            <div class="container">
-                <div class="row center">
-                    <h5 class="header col s12 light">Nuestras canchas son de primer nivel</h5>
-                </div>
-            </div>
-        </div>
-        <div class="parallax"><img src="{{asset('img/camp/the-ball-cancha.jpg')}}"
-                                   alt="Unsplashed background img 2"></div>
-    </div>
+    {{--<div class="parallax-container valign-wrapper">--}}
+        {{--<div class="section no-pad-bot">--}}
+            {{--<div class="container">--}}
+                {{--<div class="row center">--}}
+                    {{--<h5 class="header col s12 light">Nuestras canchas son de primer nivel</h5>--}}
+                {{--</div>--}}
+            {{--</div>--}}
+        {{--</div>--}}
+        {{--<div class="parallax"><img src="{{asset('img/camp/the-ball-cancha.jpg')}}"--}}
+                                   {{--alt="Unsplashed background img 2"></div>--}}
+    {{--</div>--}}
 
     {{--Seccion de los Beneficios--}}
-    <div class="container">
-        <div class="section" id="beneficios">
-            <div class="section-title">
-                <div class="divider-new wow bounce" data-wow-duration="0.5s">
-                    <h2 class="h2-responsive wow fadeInDown">Beneficios</h2>
-                </div>
-            </div>
+    {{--<div class="container">--}}
+        {{--<div class="section" id="beneficios">--}}
+            {{--<div class="section-title">--}}
+                {{--<div class="divider-new wow bounce" data-wow-duration="0.5s">--}}
+                    {{--<h2 class="h2-responsive wow fadeInDown">Beneficios</h2>--}}
+                {{--</div>--}}
+            {{--</div>--}}
 
-            <div class="slider">
-                <ul class="slides">
-                    <li>
-                        <img src="http://lorempixel.com/580/250/nature/1"> <!-- random image -->
-                        <div class="caption center-align">
-                            <h3>Texto llamativo!</h3>
-                            <h5 class="light grey-text text-lighten-3">Poner aki algun slogan.</h5>
-                        </div>
-                    </li>
-                    <li>
-                        <img src="http://lorempixel.com/580/250/nature/2"> <!-- random image -->
-                        <div class="caption left-align">
-                            <h3>Texto llamativo!</h3>
-                            <h5 class="light grey-text text-lighten-3">Poner aki algun slogan.</h5>
-                        </div>
-                    </li>
-                    <li>
-                        <img src="http://lorempixel.com/580/250/nature/3"> <!-- random image -->
-                        <div class="caption right-align">
-                            <h3>Texto llamativo!</h3>
-                            <h5 class="light grey-text text-lighten-3">Poner aki algun slogan.</h5>
-                        </div>
-                    </li>
-                    <li>
-                        <img src="http://lorempixel.com/580/250/nature/4"> <!-- random image -->
-                        <div class="caption center-align">
-                            <h3>Texto llamativo!</h3>
-                            <h5 class="light grey-text text-lighten-3">Poner aki algun slogan.</h5>
-                        </div>
-                    </li>
-                </ul>
-            </div>
+            {{--<div class="slider">--}}
+                {{--<ul class="slides">--}}
+                    {{--<li>--}}
+                        {{--<img src="http://lorempixel.com/580/250/nature/1"> <!-- random image -->--}}
+                        {{--<div class="caption center-align">--}}
+                            {{--<h3>Texto llamativo!</h3>--}}
+                            {{--<h5 class="light grey-text text-lighten-3">Poner aki algun slogan.</h5>--}}
+                        {{--</div>--}}
+                    {{--</li>--}}
+                    {{--<li>--}}
+                        {{--<img src="http://lorempixel.com/580/250/nature/2"> <!-- random image -->--}}
+                        {{--<div class="caption left-align">--}}
+                            {{--<h3>Texto llamativo!</h3>--}}
+                            {{--<h5 class="light grey-text text-lighten-3">Poner aki algun slogan.</h5>--}}
+                        {{--</div>--}}
+                    {{--</li>--}}
+                    {{--<li>--}}
+                        {{--<img src="http://lorempixel.com/580/250/nature/3"> <!-- random image -->--}}
+                        {{--<div class="caption right-align">--}}
+                            {{--<h3>Texto llamativo!</h3>--}}
+                            {{--<h5 class="light grey-text text-lighten-3">Poner aki algun slogan.</h5>--}}
+                        {{--</div>--}}
+                    {{--</li>--}}
+                    {{--<li>--}}
+                        {{--<img src="http://lorempixel.com/580/250/nature/4"> <!-- random image -->--}}
+                        {{--<div class="caption center-align">--}}
+                            {{--<h3>Texto llamativo!</h3>--}}
+                            {{--<h5 class="light grey-text text-lighten-3">Poner aki algun slogan.</h5>--}}
+                        {{--</div>--}}
+                    {{--</li>--}}
+                {{--</ul>--}}
+            {{--</div>--}}
 
-        </div>
-    </div>
+        {{--</div>--}}
+    {{--</div>--}}
 
     <div class="parallax-container valign-wrapper">
         <div class="section no-pad-bot">
@@ -258,7 +264,7 @@
 @endsection
 
 @section('scripts')
-    <script src="http://maps.google.com/maps/api/js"></script>
+    {{--<script src="http://maps.google.com/maps/api/js"></script>--}}
     <script>
 
         function init_map() {
@@ -267,16 +273,17 @@
                 center: var_location,
                 zoom: 14
             };
+
+            var var_map = new google.maps.Map(document.getElementById("map-container"),
+                    var_mapoptions);
             var var_marker = new google.maps.Marker({
                 position: var_location,
                 map: var_map,
                 title: "FDGuayas"
             });
-            var var_map = new google.maps.Map(document.getElementById("map-container"),
-                    var_mapoptions);
             var_marker.setMap(var_map);
+            google.maps.event.addDomListener(window, 'load', init_map);
         }
-        google.maps.event.addDomListener(window, 'load', init_map);
 
         $(document).ready(function () {
 
@@ -294,15 +301,13 @@
             }
         });
 
+//        $('.carousel.carousel-slider').carousel({fullWidth: false});
 
+    </script>
 
-        $('.carousel.carousel-slider').carousel({fullWidth: false});
-
-
-
-
-
-
+    {{--AIzaSyDNCsUZbjj4w0oT0aca1pS_3hvAp1zrvPE api del mapa de google--}}
+    <script async defer
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDNCsUZbjj4w0oT0aca1pS_3hvAp1zrvPE&callback=init_map">
     </script>
 
 @endsection

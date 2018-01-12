@@ -1,25 +1,15 @@
 <?php
 
-/*
-|--------------------------------------------------------------------------
-| Application Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register all of the routes for an application.
-| It's a breeze. Simply tell Laravel the URIs it should respond to
-| and give it the controller to call when that URI is requested.
-|
-*/
-
 Route::get('/', 'WelcomeController@welcome');
 
+//Preinscripcion Online
+Route::get('pre-inscripcion','WelcomeController@getPreinscripcion')->name('online.preinscripcion');
 
-    /*user auth*/
-    Route::auth();
+//ruta para inscripciones de usuarios online logeados para pago online
+//Route::get('/home', 'HomeController@index');
 
-
-
-Route::get('/home', 'HomeController@index');
+/*user auth*/
+Route::auth();
 
 //Para manejar la respuesta cuando el usuario de en el link de activar la cuenta
 Route::get('user/activation/{token}', 'Auth\AuthController@activateUser')->name('user.activate');

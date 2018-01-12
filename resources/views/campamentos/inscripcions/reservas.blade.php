@@ -7,7 +7,7 @@
     <div class="row">
         <div class="col l8 m8 s">
             @include('alert.success')
-            <h4>Reservas</h4>
+            <h4>Preinscripciones</h4>
         </div>
     </div>
 

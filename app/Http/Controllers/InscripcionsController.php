@@ -2,11 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Alumno;
 use App\Calendar;
 use App\Descuento;
-use App\Disciplina;
-use App\Escenario;
 use App\Events\NuevaInscripcion;
 use App\Factura;
 use App\Inscripcion;
@@ -17,13 +14,11 @@ use App\Program;
 use App\Representante;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use App\Http\Requests\InscripcionStoreRequest;
 use DB;
 use Illuminate\Support\Facades\Auth;
 use Session;
 use Event;
 
-use App\Http\Requests;
 use Yajra\Datatables\Datatables;
 
 
