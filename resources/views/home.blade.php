@@ -122,7 +122,11 @@
                                 swal("", response.message, "success");
                             },
                             error: function (response) {
-                                console.log(response);
+                                var errors = '';
+                                $.each(response.responseJSON, function (ind, elem) {
+                                    errors +=  '"'+elem+'"' +'\n';
+                                });
+                                swal("Error!", errors, "error");
                             }
                         });
                     }, 2000);

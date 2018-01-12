@@ -58,16 +58,59 @@
     </div><!--end div ./row-->
     <input type="hidden" name="_token" value="{{csrf_token()}}" id="token">
     <div> <input type="hidden" id="insc_delete"></div>
-{{--    @include('campamentos.inscripcions.modal-delete')--}}
+
+    <div id="loader_page">
+        <div class="preloader-wrapper big active">
+            <div class="spinner-layer spinner-blue">
+                <div class="circle-clipper left">
+                    <div class="circle"></div>
+                </div><div class="gap-patch">
+                    <div class="circle"></div>
+                </div><div class="circle-clipper right">
+                    <div class="circle"></div>
+                </div>
+            </div>
+            <div class="spinner-layer spinner-red">
+                <div class="circle-clipper left">
+                    <div class="circle"></div>
+                </div><div class="gap-patch">
+                    <div class="circle"></div>
+                </div><div class="circle-clipper right">
+                    <div class="circle"></div>
+                </div>
+            </div>
+            <div class="spinner-layer spinner-yellow">
+                <div class="circle-clipper left">
+                    <div class="circle"></div>
+                </div><div class="gap-patch">
+                    <div class="circle"></div>
+                </div><div class="circle-clipper right">
+                    <div class="circle"></div>
+                </div>
+            </div>
+            <div class="spinner-layer spinner-green">
+                <div class="circle-clipper left">
+                    <div class="circle"></div>
+                </div><div class="gap-patch">
+                    <div class="circle"></div>
+                </div><div class="circle-clipper right">
+                    <div class="circle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 @endsection
 
 @section('scripts')
     <script>
         $(document).ready(function () {
 
-            var table = $('#inscripcion_table').DataTable({
+            var table = $('#inscripcion_table').on( 'processing.dt', function ( e, settings, processing ) {
+                $('#loader_page').css( 'display', processing ? 'block' : 'none' );
+            } ).DataTable({
                 lengthMenu: [[5, 10, 15], [5, 10, 15]],
-                processing: true,
+                processing: false,
                 stateSave: false,
                 serverSide: true,
                 ajax: '{{route('admin.inscripcions')}}',
@@ -123,13 +166,13 @@
 //
 //                    });
 
-                    this.api().columns().every(function () {
+                   table.columns().every(function () {
                         var column = this;
                         var columnClass = column.footer().className;
                         if(columnClass != 'non_searchable'){
                             var input = document.createElement("input");
                             $(input).appendTo($(column.footer()).empty())
-                                    .on('keyup change', function () {
+                                    .on('change', function () {//keypress keyup
                                         column.search($(this).val(), false, false, true).draw();
                                     });
                         }

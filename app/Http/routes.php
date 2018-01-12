@@ -13,7 +13,9 @@
 
 Route::get('/', 'WelcomeController@welcome');
 
-Route::auth();
+
+    /*user auth*/
+    Route::auth();
 
 
 
@@ -118,7 +120,9 @@ Route::group(['middleware' => ['auth','role:administrator|signup|planner|supervi
     Route::get('user/profile',['as' => 'admin.user.profile', 'uses'=>'UsersController@showProfile']);
     
     //mostrar reservas
-    Route::get('/inscripcions/reservas',['as' => 'admin.inscripcions.reservas', 'uses'=>'InscripcionsController@reservas']);
+//    Route::group(array('middleware' => 'forceSSL'), function() {
+        Route::get('/inscripcions/reservas', ['as' => 'admin.inscripcions.reservas', 'uses' => 'InscripcionsController@reservas']);
+//    });
     //cancelar reserva
     Route::get('/inscripcions/reserva/{id}/cancel',['as' => 'admin.reserva.cancel', 'uses'=>'InscripcionsController@reservaCancel']);
     //confirmar reserva
@@ -127,7 +131,9 @@ Route::group(['middleware' => ['auth','role:administrator|signup|planner|supervi
     //obtener todos los alumnos, representantes, inscripciones, comprobantes para el datatables con ajax
     Route::get('/alumnos/get',['as' => 'admin.alumnos', 'uses'=>'AlumnosController@getAll']);
     Route::get('/representantes/get',['as' => 'admin.representantes', 'uses'=>'RepresentantesController@getAll']);
-    Route::get('/inscripciones/get',['as' => 'admin.inscripcions', 'uses'=>'InscripcionsController@getAll']);
+    Route::get('/inscripciones',['as' => 'admin.inscripcions', 'uses'=>'InscripcionsController@getAll']);
+
+
     Route::get('/facturas/get',['as' => 'admin.facturas', 'uses'=>'FacturasController@getAll']);
     
     //permite eliminar alumnos  representantes, inscripciones, comprobantes  con botones en datatable con ajax, paginando
@@ -143,6 +149,10 @@ Route::group(['middleware' => ['auth','role:administrator|signup|planner|supervi
     //reinscripcion
     Route::get('inscripcion/re-inscribir/{id?}/',['as' => 'admin.inscripcions.re-inscribir', 'uses'=>'InscripcionsController@reInscribirGet']);
     Route::post('inscripcions/new/{data?}',['as' => 'admin.re_inscripcions.curso.store', 'uses'=>'InscripcionsController@storeNewCurso']);
+
+    //inscripciones eliminadas
+    Route::get('/inscripcion/deletes',['as' => 'admin.inscripcions.index.deletes', 'uses'=>'InscripcionsController@indexDelete']);
+    Route::get('/inscripciones/all_deletes',['as' => 'admin.inscripcions.deletes', 'uses'=>'InscripcionsController@getDelete']);
     
     Route::resource('users', 'UsersController');
     Route::resource('roles', 'RolesController');

@@ -41,7 +41,7 @@ class AlumnosController extends Controller
     {
         if ($request->ajax()){
             //        $alumnos=Alumno::with('persona')->take(10);
-            $alumnos = Alumno::with('persona')->selectRaw('distinct alumnos.*');
+            $alumnos = Alumno::with('persona')->selectRaw('distinct alumnos.*')->limit(50);
 
 
             $action_buttons =

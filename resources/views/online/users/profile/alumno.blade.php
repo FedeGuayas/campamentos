@@ -46,7 +46,7 @@
                                 </td>
                                 <td>
                                     {!! Form::button('<i class="fa fa-pencil" aria-hidden="true"></i>',['class'=>'btn-floating tooltipped waves-effect waves-light modal-trigger',  'data-target'=>"modal-edit-alumno-$alumno->id", 'data-position'=>'top', 'data-delay'=>'50', 'data-tooltip'=>'Editar']) !!}
-                                        {!! Form::button('<i class="fa fa-trash-o" aria-hidden="true"></i>',['class'=>'btn-floating tooltipped waves-effect waves-light red darken-1','data-position'=>'top', 'data-delay'=>'50', 'data-tooltip'=>'Eliminar','value'=>$alumno->id,'onclick'=>'delete_alumno(this)']) !!}
+                                        {{--{!! Form::button('<i class="fa fa-trash-o" aria-hidden="true"></i>',['class'=>'btn-floating tooltipped waves-effect waves-light red darken-1','data-position'=>'top', 'data-delay'=>'50', 'data-tooltip'=>'Eliminar','value'=>$alumno->id,'onclick'=>'delete_alumno(this)']) !!}--}}
                                 </td>
                             </tr>
                             @include('online.users.profile.edit_alumno')

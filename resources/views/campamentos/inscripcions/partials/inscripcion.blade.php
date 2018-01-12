@@ -124,6 +124,14 @@
                     {!! Form::label('matricula','Matricula') !!}
                 </div>
             </div>
+            @if (Entrust::hasRole(['admin-cortesia']))
+            <div class="col l2">
+                <div class="input-field">
+                    {!! Form::checkbox('cortesia',null,false,['id'=>'cortesia']) !!}
+                    {!! Form::label('cortesia','Cortesia') !!}
+                </div>
+            </div>
+            @endif
 
             <div class="col l2 m2 s2">
                 <div class="input-field disabled">

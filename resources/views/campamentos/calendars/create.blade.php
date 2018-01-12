@@ -56,7 +56,7 @@
                             {!! Form::number('cupos',null,['class'=>'validate' ,'placeholder'=>'0']) !!}
                         </div>
                         <div class="input-field  col l4 m4 s12">
-                            {!! Form::select('nivel',['BASICO' => 'BASICO', 'INTERMEDIO' => 'INTERMEDIO', 'AVANZADO' => 'AVANZADO'],null,['placeholder' => 'Seleccione...','id'=>'nivel']) !!}
+                            {!! Form::select('nivel',['BASICO' => 'BASICO', 'INTERMEDIO' => 'INTERMEDIO', 'AVANZADO' => 'AVANZADO','NUEVO' => 'NUEVO','25 M TABLA'=>'25 M TABLA','25 M LIBRE'=>'25 M LIBRE','50 M LIBRE'=>'50 M LIBRE','25 y 50 M LIBRE'=>'25 y 50 M LIBRE'],null,['placeholder' => 'Seleccione...','id'=>'nivel']) !!}
                             {!! Form::label('nivel','Nivel:') !!}
                         </div>
 

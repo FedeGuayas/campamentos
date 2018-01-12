@@ -40,7 +40,7 @@ class ReportesController extends Controller
 
 
     /**
-     * Vista para Reporte general
+     * Vista para Reporte general Periodo Insc
      * @param Request $request
      * @return mixed
      */
@@ -67,12 +67,11 @@ class ReportesController extends Controller
     }
 
     /**
-     * Exportar Reporte General a excel
+     * Exportar Reporte General a excel  Periodo Insc
      * @param Request $request
      */
     public function exportExcel(Request $request)
     {
-
         $start = trim($request->get('start'));
         $end = trim($request->get('end'));
 
@@ -181,6 +180,9 @@ class ReportesController extends Controller
         $day = $fecha_actual->format('d');
         $year = $fecha_actual->format('Y');
         $date = $fecha_actual->format('Y-m-d');
+
+        set_time_limit(0);
+        ini_set('memory_limit', '1G');
 
         if ($inscripcion->alumno_id == 0) {//adulto
 
@@ -340,6 +342,7 @@ class ReportesController extends Controller
             ->join('horarios', 'horarios.id', '=', 'calendars.horario_id')
             ->join('profesors', 'profesors.id', '=', 'calendars.profesor_id')
             ->join('dias', 'dias.id', '=', 'calendars.dia_id')
+            ->select('inscripcions.*')
 //            ->whereBetween('inscripcions.created_at',[$start, $end])
 //            ->where('inscripcions.created_at','like','%'.$start.'%')
 //            ->where('inscripcions.created_at','like','%'.$end.'%')
@@ -355,14 +358,14 @@ class ReportesController extends Controller
             ->orderBy('inscripcions.created_at')
             ->get();
 
-        $arrayExp[] = ['Apellidos_Alumno', 'Nombres_Alumno', 'Edad', 'Género', 'Representante', 'Cedeula Rep', 'Telefono', 'Correo', 'Direccion', 'Modulo', 'Escenario', 'Disciplina', 'Dias', 'Horario', 'Comprobante', 'Valor', 'Descuento', 'Estado', 'Fecha_Insc', 'Forma_Pago', 'Usuario', 'Pto Cobro', 'Profesor'];
+        $arrayExp[] = ['No. Reg.','Apellidos_Alumno', 'Nombres_Alumno','Cedula Alum.' ,'Edad', 'Género', 'Representante', 'Cedula Rep', 'Telefono', 'Correo', 'Direccion', 'Modulo', 'Escenario', 'Disciplina','Nivel', 'Dias', 'Horario', 'Comprobante', 'Valor', 'Descuento', 'Estado', 'Fecha_Insc', 'Forma_Pago', 'Usuario', 'Pto Cobro', 'Profesor'];
 
         foreach ($inscripciones->chunk(500) as $chunkInsc) {
             foreach ($chunkInsc as $insc) {
 
                 if (is_null($insc->escenario_id) || $insc->escenario_id == '0') {//online
                     $pto_cobro = 'N/A';
-                } else $pto_cobro = $insc->escenario;
+                } else $pto_cobro = $insc->escenario->escenario;
 
                 if ($insc->alumno_id == 0) {
                     $al_apell = $insc->factura->representante->persona->apellidos;
@@ -372,6 +375,7 @@ class ReportesController extends Controller
                     $fecha_nac = $insc->factura->representante->persona->fecha_nac;
                     $al_edad = $al->getEdad($fecha_nac);
                     $genero = $insc->factura->representante->persona->genero;
+                    $al_ced = $insc->factura->representante->persona->num_doc;
                 } else {
                     $al_apell = $insc->alumno->persona->apellidos;
                     $al_nomb = $insc->alumno->persona->nombres;
@@ -380,13 +384,16 @@ class ReportesController extends Controller
                     $fecha_nac = $al->persona->fecha_nac;
                     $al_edad = $al->getEdad($fecha_nac);
                     $genero = $insc->alumno->persona->genero;
+                    $al_ced = $insc->alumno->persona->num_doc;
                 }
 
                 $cont_comp = Inscripcion::where('factura_id', $insc->factura_id)->count();
 
                 $arrayExp[] = [
+                    'reg'=> $insc->id,
                     'al_apell' => $al_apell,
                     'al_nomb' => $al_nomb,
+                    'al_ced'=>$al_ced,
                     'al_edad' => $al_edad,
                     'al_genero' => $genero,
                     'representante' => $insc->factura->representante->persona->getNombreAttribute(),
@@ -397,6 +404,7 @@ class ReportesController extends Controller
                     'modulo' => $insc->calendar->program->modulo->modulo,
                     'escenario' => $insc->calendar->program->escenario->escenario,
                     'disciplina' => $insc->calendar->program->disciplina->disciplina,
+                    'nivel' => $insc->calendar->nivel,
                     'dias' => $insc->calendar->dia->dia,
                     'horario' => $insc->calendar->horario->start_time . '-' . $insc->calendar->horario->end_time,
                     'comprobante' => $insc->factura->id,

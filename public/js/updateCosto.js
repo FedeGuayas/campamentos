@@ -13,7 +13,19 @@ $(document).ready(function () {
         var dia_id = $("#dia_id").val();
         var horario_id = $("#horario_id").val();
         var valor = $(".valor");
-       
+        
+        //para 10% de marzo abril mayo
+        var representante_id=$("#representante_id");
+        var alumno_id=$("#alumno_id");
+        var adulto = $("#adulto");
+        if  (adulto.is(':checked')){
+            var ad=true;
+            var alumno=representante_id.val();
+        }else{
+            var ad=false;
+            var alumno=alumno_id.val();
+        }
+        
         var datos = {
             escenario: escenario_id,
             disciplina: disciplina_id,
@@ -22,9 +34,11 @@ $(document).ready(function () {
             horario_id: horario_id,
             descuento_empleado:desc_emp,
             descuento_estacion:desc_est,
-            nivel: event.target.value
-            
-        }
+            nivel: event.target.value,
+           
+            adulto:ad,
+            alumno:alumno
+        };
         // var token = $("input[name=_token]").val();
         $.ajax({
             url: "costo",
@@ -109,6 +123,81 @@ $(document).ready(function (event) {
 
     });
 });
+
+//Paase de cortesia, costo 0
+$(document).ready(function (event) {
+    // Comprobar cuando cambia un checkbox
+    $("#cortesia").on('change', function () {
+        var dia_id = $("#dia_id").val();
+        var nivel = $("#nivel").val();
+        var desc_emp = $("#descuento_empleado").val();
+        var desc_est = $("#descuento_estacion").val();
+        var horario_id = $("#horario_id").val();
+        var escenario_id = $("#escenario_id").val();
+        var disciplina_id = $("#disciplina_id").val();
+        var modulo_id = $("#modulo_id").val();
+        var valor = $(".valor");
+
+        var cortesia = $("#cortesia");
+
+        var datos = {
+            nivel: nivel,
+            dia_id: dia_id,
+            horario_id: horario_id,
+            escenario: escenario_id,
+            disciplina: disciplina_id,
+            modulo: modulo_id,
+            descuento_empleado:desc_emp,
+            descuento_estacion:desc_est,
+
+            cortesia:  cortesia.prop("checked")
+        }
+        $.ajax({
+            url: "costo",
+            type: "GET",
+            // headers: {'X-CSRF-TOKEN': token},
+            // contentType: 'application/x-www-form-urlencoded',
+            data: datos,
+            success: function (response) {
+                console.log(response);
+                if (cortesia.is(':checked')) {
+                    console.log("Checkbox  => Seleccionado");
+                    $("#familiar").prop("disabled", true);
+                    $("#multiple").prop("disabled", true);
+                    $("#matricula").prop("disabled", true);
+                    $("#reservar").prop("disabled", true);
+                    $("#matricula").prop("disabled", true);
+                    $("#add-cursos").prop("disabled", true);
+
+                    valor.addClass("teal-text");
+                    valor.val(response);
+
+
+                    // valor.val(mat);
+                } else {
+                    console.log("Checkbox => Deseleccionado");
+                    $("#familiar").prop("disabled", false);
+                    $("#multiple").prop("disabled", false);
+                    $("#matricula").prop("disabled", false);
+                    $("#matricula").prop("disabled", false);
+
+                    valor.addClass("teal-text");
+                    valor.val(response);
+                }
+                // dia.addClass("teal-text");
+            },
+            error: function (response) {
+                // console.log(response);
+                valor.removeClass("teal-text");
+            }
+        });
+
+    });
+});
+
+
+
+
 
 //
 // //Actualizar costo al marcar descuento familiar 10%

@@ -94,6 +94,7 @@
     </div><!--/.col s12-->
     </div><!--/.row-->
 
+
 @endsection
 
 @section('scripts')
@@ -128,9 +129,11 @@
                 var datos = $("#search").val();
                 var route = "{{route('admin.representantes.beforeSearch')}}";
                 var token = $("input[name=_token]").val();
+                var loader=$("#loader_page");
                 if (datos == "")
                     alert("Error. Debe ingresar datos en el campo de busqueda!");
                 else {
+                    loader.addClass('active');
                     $.ajax({
                         url: route,
                         type: "POST",
@@ -139,7 +142,7 @@
                         data: {datos},
                         success: function (resp) {
                             $("#search-result").empty().html(resp);
-
+                            loader.removeClass('active');
                             // Comprobar cuando cambia un checkbox
                             $("#table_search input[type=checkbox]").on('change', function() {
 
@@ -163,7 +166,8 @@
                             });
                         },
                         error: function (resp) {
-                            console.log(resp);
+                            loader.removeClass('active');
+                            //console.log(resp);
                             $("#search-result").empty().html("Error en la busqueda");
                         }
                     });

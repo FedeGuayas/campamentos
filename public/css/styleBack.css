@@ -31,6 +31,18 @@ tfoot input {
     box-sizing: border-box;
 }
 
+
+/*Preloader ubicacion*/
+#loader_page{
+    /*display:                 block;*/
+    /*position:                fixed;*/
+    left:                    50%;
+    top:                     50%;
+    /*z-index:                 999;*/
+    position: fixed;
+    z-index: 9999;
+}
+
 /*.modal {*/
     /*width: 75% !important ;*/
     /*max-height: 100% !important ;*/

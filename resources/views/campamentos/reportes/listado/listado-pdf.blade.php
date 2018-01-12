@@ -3,7 +3,11 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title></title>
-    {{--<link href="css/bootstrap.css" rel="stylesheet">--}}
+    <link href="css/bootstrap.css" rel="stylesheet">
+    {{--<link href="../../../../../public/css/pdf.css" rel="stylesheet">--}}
+    <script src="js/jquery-3.1.0.min.js" type="text/javascript"></script>
+    <script src="js/tablesorter.min.js" type="text/javascript"></script>
+    {{--<script src="../../../../../public/plugins/datatables/jquery.dataTables.min.js" type="text/javascript"></script>--}}
     <style>
         body{
             margin: -20px 5px -100px 20px;
@@ -68,13 +72,14 @@
 
 {{--<div style="width:100%; font-size:0;">--}}
 <div id="content">
-    <table  align="left" border="0" cellpadding="2" style="font-size: 10px; text-align: left; width: 70%" data-order='[[ 0, "desc" ]]'>
+    <table  align="left" border="0" cellpadding="2" style="font-size: 10px; text-align: left; width: 70%" id="table_listado">
         <thead>
         <tr>
             <th align="left" width="30px">No.</th>
             <th align="left" width="180px">APELLIDOS</th>
             <th align="left" width="180px">NOMBRES</th>
             <th align="left" >EDAD</th>
+            <th align="center" width="180px">COMPROBANTE</th>
         </tr>
         </thead>
         <tbody>
@@ -105,7 +110,9 @@
                         {{$insc->alumno->getEdad($insc->alumno->persona->fecha_nac)}}
                     @endif
                 </td>
-
+                <td align="center">
+                    {{sprintf("%'.05d",$insc->id)}}
+                </td>
             </tr>
         @endforeach
         </tbody>
@@ -131,8 +138,13 @@
         </tr>
     </table>
 </footer>
-
-
+<script>
+    $(document).ready(function()
+        {
+            $("#table_listado").tablesorter( {sortList: [[1,1]]} );
+        }
+    );
+</script>
 
 </body>
 </html>

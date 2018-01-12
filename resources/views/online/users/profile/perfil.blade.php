@@ -6,10 +6,12 @@
 
             <div class="waves-effect waves-block waves-light" style="text-align: center; padding-top: 15px;">
                 @if (empty($user->avatar))
-                    <img class=" activator circle" alt="Avatar del usuario"
+                    {{--<img class="activator circle" alt="Avatar del usuario"--}}
+                    <img class="circle" alt="Avatar del usuario"
                          src="{{ asset('/img/camp/user-avatar-default.png')}}" style="max-width: 200px;">
                 @else
-                    <img class="responsive-img activator circle"
+                    {{--<img class="responsive-img activator circle"--}}
+                    <img class="responsive-img circle"
                          src="{{ asset('/dist/img/users/avatar/'.$user->avatar)}}"
                          onerror="this.src='{{ asset('/img/camp/user-avatar-default.png')}}';"
                          style="max-width: 200px;  ">
@@ -17,37 +19,33 @@
             </div>
 
             <div class="card-content">
-                <span class="card-title activator grey-text text-darken-4">{{$user->getNameAttribute()}}<i
-                            class="fa fa-ellipsis-v right" aria-hidden="true"></i></span>
+                <span class="card-title grey-text text-darken-4">{{$user->getNameAttribute()}}
+                    {{--<i class="fa fa-ellipsis-v right" aria-hidden="true"></i>--}}
+                </span>
                 <p class="blue-text text-darken-2"></p>
             </div>
 
-
-            <div class="card-reveal">
-
-                <span class="card-title grey-text text-darken-4">{{$user->getNameAttribute()}}<i
-                            class="fa fa-times right " aria-hidden="true"></i></span>
-
-                <div class="row">
-                    <div class="col s12">
-                        <ul class="tabs">
-                            <li class="tab col s3"><a class="active" href="#nombre">Nombre</a></li>
-                            <li class="tab col s3"><a href="#email">Email</a></li>
-                        </ul>
-                    </div>
-
-                    <div id="email" class="col s12">
-                        <p class="flow-text">
-                            <i class="fa fa-envelope-o large teal-text text-darken-2 " aria-hidden="true"></i><br>
-                            Correo{{--{{$representante->persona->email}}--}}
-                        </p>
-                    </div>
-                    <div id="nombre" class="col s12">
+            {{--<div class="card-reveal">--}}
+                {{--<span class="card-title grey-text text-darken-4">{{$user->getNameAttribute()}}<i--}}
+                            {{--class="fa fa-times right " aria-hidden="true"></i></span>--}}
+                {{--<div class="row">--}}
+                    {{--<div class="col s12">--}}
+                        {{--<ul class="tabs">--}}
+                            {{--<li class="tab col s3"><a class="active" href="#nombre">Nombre</a></li>--}}
+                            {{--<li class="tab col s3"><a href="#email">Email</a></li>--}}
+                        {{--</ul>--}}
+                    {{--</div>--}}
+                    {{--<div id="email" class="col s12">--}}
+                        {{--<p class="flow-text">--}}
+                            {{--<i class="fa fa-envelope-o large teal-text text-darken-2 " aria-hidden="true"></i><br>--}}
+                            {{--Correo--}}{{--{{$representante->persona->email}}--}}
+                        {{--</p>--}}
+                    {{--</div>--}}
+                    {{--<div id="nombre" class="col s12">--}}
                         {{--<img class="responsive-img" src="{{ asset('dist/img/representantes/cedula/'.$representante->foto_ced)}}" style="max-width: 70%">--}}
-                    </div>
-                </div>
-
-            </div>
+                    {{--</div>--}}
+                {{--</div>--}}
+            {{--</div>--}}
 
         </div>
     </div> {{--tarjeta de usuario--}}
@@ -57,7 +55,7 @@
         <div class="card sticky-action hoverable medium">
 
             <div class="card-content">
-                <span class="card-title">Datos de Acceso</span>
+                <span class="card-title">Editar sus datos</span>
                 <span class="card-title activator grey-text text-darken-4">
                     {!! Form::button('<i class="fa fa-pencil" aria-hidden="true"></i>',['class'=>'btn-floating right waves-effect waves-light darken-1 tooltipped','data-position'=>'top', 'data-delay'=>'50', 'data-tooltip'=>'Editar']) !!}
                 </span>
@@ -112,11 +110,11 @@
                 </div>
 
                 <div class="row">
-                    <div class="input-field col l6 m6 s12">
-                        <i class="fa fa-envelope prefix"></i>
-                        {!! Form::label('email','Correo:') !!}
-                        {!! Form::email('email',null,['class'=>'validate', 'disabled']) !!}
-                    </div>
+                    {{--<div class="input-field col l6 m6 s12">--}}
+                        {{--<i class="fa fa-envelope prefix"></i>--}}
+                        {{--{!! Form::label('email','Correo:') !!}--}}
+                        {{--{!! Form::email('email',null,['class'=>'validate', 'disabled']) !!}--}}
+                    {{--</div>--}}
 
                     <div class="col l6 m6 s12">
                         <a href="{{ route('user.password.edit') }}" class="tooltipped" data-position="top"

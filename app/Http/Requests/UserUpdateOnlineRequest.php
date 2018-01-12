@@ -37,7 +37,7 @@ class UserUpdateOnlineRequest extends Request
             'first_name.max' => 'El nombre es demasiado extenso, no supere los 50 caracteres',
             'last_name.required' => 'Los apellidos son requeridos',
             'last_name.max' => 'Los apellidos son demasiado extenso, no supere los 100 caracteres',
-            'avatar.image' => 'El avatar debe ser una imagen de tipo jpg,png,jpeg',
+            'avatar.mimes' => 'El avatar debe ser una imagen de tipo jpg,png,jpeg',
             'avatar.max' => 'Seleccione una imagen inferior a los 150Kb',
 
         ];

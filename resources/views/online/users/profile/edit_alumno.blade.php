@@ -42,29 +42,34 @@
                 </div>
 
                 <div class="row">
-                    <div class="file-field  col l3 m3 s12">
-                        <button class="btn-floating tooltipped waves-effect waves-light" , data-position='top'
-                                data-delay='50' data-tooltip='Foto_Cedula'>
-                            <span><i class="fa fa-picture-o prefix" aria-hidden="true"></i></span>
-                            {!! Form::file('foto_ced') !!}
-                        </button>
+                    <div class="file-field input-field  col l3 m6 s6">
                         @if (($alumno->foto_ced)!="")
-                            <img src="{{ asset('dist/img/alumnos/cedula/'.$alumno->foto_ced)}}"
-                                 style='max-width: 100px'
-                                 class="img-thumbnail">
+                            <i class="fa  fa-2x fa-image prefix" aria-hidden="true"></i>
+                            {!! Form::text('foto_ced',$alumno->foto_ced,['class'=>'file-path validate']) !!}
+                            {!! Form::file('foto_ced') !!}
+                            {!! Form::hidden('foto_ced',$alumno->foto_ced,['id'=>'foto_ced']) !!}
+                            <img src="{{ asset('dist/img/alumnos/cedula/'.$alumno->foto_ced)}}" style='max-width: 100px' class="img-thumbnail">
+                        @else
+                            <i class="fa  fa-2x fa-image prefix" aria-hidden="true"></i>
+                            {!! Form::text('foto_ced','Fotocopia Cedula*',['class'=>'file-path validate']) !!}
+                            {!! Form::file('foto_ced',['required']) !!}
                         @endif
+
                     </div>
-                    <div class="file-field col l3 m3 s12">
-                        <button class="btn-floating tooltipped waves-effect waves-light" , data-position='top'
-                                data-delay='50' data-tooltip='Foto'>
-                            <span><i class="fa fa-file-image-o prefix" aria-hidden="true"></i></span>
-                            {!! Form::file('foto') !!}
-                        </button>
+                    <div class="file-field input-field  col l3 m6 s6">
                         @if (($alumno->foto)!="")
-                            <img src="{{ asset('dist/img/alumnos/perfil/'.$alumno->foto)}}" style='max-width: 100px'
-                                 class="img-thumbnail">
+                            <i class="fa fa-2x fa-image prefix" aria-hidden="true"></i>
+                            {!! Form::text('foto',$alumno->foto,['class'=>'file-path validate']) !!}
+                            {!! Form::file('foto') !!}
+                            {!! Form::hidden('foto',$alumno->foto,['id'=>'foto']) !!}
+                            <img src="{{ asset('dist/img/alumnos/perfil/'.$alumno->foto)}}" style='max-width: 100px' class="img-thumbnail">
+                        @else
+                            <i class="fa fa-2x fa-image prefix" aria-hidden="true"></i>
+                            {!! Form::text('foto','Foto Carnet*',['class'=>'file-path validate']) !!}
+                            {!! Form::file('foto',['required']) !!}
                         @endif
                     </div>
+
                     <div class="col l6 m6 s12 center-align">
                         {!! Form::button('<i class="fa fa-pencil-square-o "></i>', ['class'=>'btn waves-effect waves-light tooltipped blue darken-1', 'data-position'=>'top', 'data-delay'=>'50', 'data-tooltip'=>'Actualizar','type' => 'submit']) !!}
                         {!! Form::button('<i class="fa fa-eraser"></i>',['class'=>'btn waves-effect waves-light red darken-1 tooltipped','data-position'=>'top', 'data-delay'=>'50', 'data-tooltip'=>'Cancelar','type' => 'reset']) !!}

@@ -117,28 +117,29 @@
                                 @if ($insc->alumno_id==0)
                                     {{ $insc->factura->representante->persona->apellidos }}
                                 @else
-                                    {{ $insc->alumno->persona->apellidos }}
+                                    {{ $insc->alumno }}
                                 @endif
                             </td>
                             <td>
                                 @if ($insc->alumno_id==0)
                                     {{ $insc->factura->representante->persona->nombres }}
                                 @else
-                                    {{ $insc->alumno->persona->nombres }}
+                                    {{--{{ $insc->alumno->persona->nombres }}--}}
                                 @endif
                             </td>
                             <td>
                                 @if ($insc->alumno_id==0)
                                     {{ $insc->factura->representante->persona->num_doc  }}
                                 @else
-                                    {{$insc->alumno['persona']['num_doc']}}
+                                    ci
+                                    {{--{{$insc->alumno['persona']['num_doc']}}--}}
                                 @endif
                             </td>
                             <td>{{$insc->calendar->program->modulo->modulo}}</td>
                             <td>{{ $insc->calendar['program']->escenario->escenario }}</td>
                             <td>{{ $insc->calendar['program']->disciplina->disciplina }}</td>
                             <td>{{ $insc->calendar->dia->dia }}</td>
-                            <td>{{ $insc->factura->representante->persona->getNombreAttribute() }}</td>
+{{--                            <td>{{ $insc->factura->representante->persona->getNombreAttribute() }}</td>--}}
                             <td>{{ $insc->calendar->profesor->getNameAttribute() }}</td>
                         </tr>
                     @endforeach
@@ -146,7 +147,7 @@
                 </table><!--end table-responsive-->
             </div><!-- end div ./table-responsive-->
             {{ $inscripciones->appends(['modulo'=>$modulo,'escenario'=>$escenario,'disciplina'=>$disciplina,
-            'horario'=>$horario,'entrenador'=>$entrenador,'dia'=>$dia])->links()}}
+         'horario'=>$horario,'entrenador'=>$entrenador,'dia'=>$dia])->links()}}
         {{--</div><!--end div ./col-lg-12. etc-->--}}
     {{--</div><!--end div ./row-->--}}
 

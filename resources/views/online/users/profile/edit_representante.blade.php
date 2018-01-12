@@ -4,7 +4,6 @@
 
     <div class="modal-body">
 
-        @include('alert.request')
         {!! Form::model($representante,['route'=>['user.representante.update',$rep->id], 'method'=>'PUT', 'files'=>'true']) !!}
 
             <div class="row">
@@ -63,21 +62,19 @@
 
             <div class="row">
 
-                <div class="file-field col l3 m3 s12">
-                    <button class="btn-floating tooltipped waves-effect waves-light" , data-position='top' data-delay='50' data-tooltip='Foto_Cedula'>
-                        <span><i class="fa fa-picture-o prefix" aria-hidden="true"></i></span>
-                        {!! Form::file('foto_ced') !!}
-                    </button>
+                <div class="file-field input-field col l3 m3 s12">
+                    <i class="fa  fa-2x fa-image prefix" aria-hidden="true"></i>
+                    {!! Form::text('foto_ced',null,['class'=>'file-path validate','placeholder'=>'Fotocopia Cedula*']) !!}
+                    {!! Form::file('foto_ced') !!}
                     @if (($representante[0]->foto_ced)!="")
                         <img src="{{ asset('dist/img/representantes/cedula/'.$representante[0]->foto_ced)}}" style='max-width: 100px' class="img-thumbnail">
                     @endif
                 </div>
 
-                <div class="file-field col l3 m3 s12">
-                    <button class="btn-floating tooltipped waves-effect waves-light" , data-position='top' data-delay='50' data-tooltip='Foto'>
-                        <span><i class="fa fa-file-image-o prefix" aria-hidden="true"></i></span>
-                        {!! Form::file('foto') !!}
-                    </button>
+                <div class="file-field input-field col l3 m3 s12">
+                    <i class="fa fa-2x fa-image prefix" aria-hidden="true"></i>
+                    {!! Form::text('foto',null,['class'=>'file-path validate','placeholder'=>'Foto Carnet*']) !!}
+                    {!! Form::file('foto') !!}
                     @if (($representante[0]->foto)!="")
                         <img src="{{ asset('dist/img/representantes/perfil/'.$representante[0]->foto)}}" style='max-width: 100px' class="img-thumbnail">
                     @endif

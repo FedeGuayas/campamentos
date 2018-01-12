@@ -120,9 +120,11 @@
                 var datos = $("#search").val();
                 var route = "{{route('admin.representantes.beforeSearch')}}";
                 var token = $("input[name=_token]").val();
+                var loader=$("#loader_page");
                 if (datos == "")
                     alert("Error. Debe ingresar datos en el campo de busqueda!");
                 else {
+                    loader.addClass('active');
                     $.ajax({
                         url: route,
                         type: "POST",
@@ -131,7 +133,7 @@
                         data: {datos},
                         success: function (resp) {
                             $("#search-result").empty().html(resp);
-
+                            loader.removeClass('active');
                             // Comprobar cuando cambia un checkbox
                             $("#table_search input[type=checkbox]").on('change', function () {
                                 var representante_id = $("#representante_id");
@@ -146,6 +148,7 @@
 //                                   $("#persona_id").val($(this).val());
 
                                 } else {
+                                    loader.removeClass('active');
                                     console.log("Checkbox " + $(this).prop("id") + " (" + $(this).val() + ") => Deseleccionado");
                                     representante_id.find("option:gt(0)").remove();//elimino las opciones menos la primera
                                     representante_id.removeClass("teal-text");
@@ -155,6 +158,7 @@
                             });
                         },
                         error: function (resp) {
+                            loader.removeClass('active');
                             console.log(resp);
                             $("#search-result").empty().html("Error en la busqueda");
                         }

@@ -52,7 +52,7 @@ class RepresentantesController extends Controller
     {
         if ($request->ajax()){
 
-            $representantes = Representante::with('persona','alumnos')->selectRaw('distinct representantes.*');
+            $representantes = Representante::with('persona','alumnos')->selectRaw('distinct representantes.*')->limit(50);
 
 
             $action_buttons = ' @if ( Auth::user()->can(\'edit_representante\'))
@@ -393,7 +393,7 @@ return confirm(\'Seguro que desea borrar al representante?\')">
     {
         $query=trim($search);
         if ($query!=""){
-            $personas=Persona::searchPersona($search)->orderBy('created_at','DESC')->get();
+            $personas=Persona::searchPersona($search)->orderBy('created_at','DESC')->take(10)->get();
         }
 
         return view('campamentos.alumnos.listSearch',compact('personas'));

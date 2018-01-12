@@ -21,7 +21,14 @@
             <span><b>MODULO:</b></span> {{$inscripcion->calendar->program->modulo->modulo}}. <span><b> COMPROBANTE# </b></span>{{$inscripcion->factura->id}}
         </p>
         <p>
-            <span><b>INSCRIPCION EN CAMPAMENTOS DEPORTIVOS FEDEGUAYAS</b></span>
+            <span><b>
+                     @if ($inscripcion->factura->total==0 && $inscripcion->factura->descuentos->descripcion=='CORTESIA')
+                        CURSO DE CORTESIA EN CAMPAMENTOS DEPORTIVOS FEDEGUAYAS
+                    @else
+                        INSCRIPCION EN CAMPAMENTOS DEPORTIVOS FEDEGUAYAS
+                    @endif
+                </b>
+            </span>
         </p>
     </div>
 </header>
@@ -107,8 +114,8 @@
                         <td>
                             @if($inscripcion->factura->descuento==null || $inscripcion->factura->descuento==0)
                                 INDIVIDUAL
-                            @else
-                                INSCRIPCION, {{$inscripcion->factura->descuentos->descripcion}}
+                            @elseif
+                                INSCRIPCION, {{$inscripcion->factura->descuentos ? $inscripcion->factura->descuentos->descripcion : ''}}
                             @endif
                         </td>
                     </tr>

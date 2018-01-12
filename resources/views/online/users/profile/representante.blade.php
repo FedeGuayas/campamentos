@@ -49,7 +49,7 @@
                                 <td>
                                     {!! Form::button('<i class="fa fa-pencil" aria-hidden="true"></i>',['class'=>'btn-floating tooltipped waves-effect waves-light modal-trigger',  'data-target'=>"modal-edit-representante-$rep->id", 'data-position'=>'top', 'data-delay'=>'50', 'data-tooltip'=>'Editar']) !!}
                                     {!! Form::button('<i class="fa fa-plus-circle blue" aria-hidden="true"></i>',['class'=>'btn-floating tooltipped waves-effect waves-light blue darken-1  modal-trigger','data-target'=>"modal-create-alumno-$rep->id", 'data-position'=>'top', 'data-delay'=>'50', 'data-tooltip'=>'Agregar Alumnos']) !!}
-                                    {!! Form::button('<i class="fa fa-trash-o" aria-hidden="true"></i>',['class'=>'btn-floating tooltipped waves-effect waves-light red darken-1','data-position'=>'top', 'data-delay'=>'50', 'data-tooltip'=>'Eliminar','value'=>$rep->id,'onclick'=>'delete_representante(this)']) !!}
+                                    {{--{!! Form::button('<i class="fa fa-trash-o" aria-hidden="true"></i>',['class'=>'btn-floating tooltipped waves-effect waves-light red darken-1','data-position'=>'top', 'data-delay'=>'50', 'data-tooltip'=>'Eliminar','value'=>$rep->id,'onclick'=>'delete_representante(this)']) !!}--}}
                                 </td>
                             </tr>
                             @include('online.users.profile.edit_representante')

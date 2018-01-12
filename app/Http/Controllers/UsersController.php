@@ -392,6 +392,7 @@ class UsersController extends Controller
      */
     public function updateOnline(UserUpdateOnlineRequest $request, $id)
     {
+        
         $user=User::findOrFail($id);
 
         $user->first_name=strtoupper($request->get('first_name'));
@@ -403,7 +404,6 @@ class UsersController extends Controller
             $path=public_path().'/dist/img/users/avatar/';//ruta donde se guardara
             $file->move($path,$name);//lo copio a $path con el nombre $name
             $user->avatar=$name;//ahora se guarda  en el atributo avatar el nombre de la imagen
-
         }
         
         $user->update();

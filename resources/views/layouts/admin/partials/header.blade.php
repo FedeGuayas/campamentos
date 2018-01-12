@@ -24,6 +24,8 @@
                 <li><a href="{!! route('admin.alumnos.index') !!}" class="waves-effect waves-teal">Alumnos</a></li>
                 <li class="divider"></li>
                 <li><a href="{!! route('admin.representantes.index') !!}" class="waves-effect waves-teal">Representantes</a></li>
+                <li class="divider"></li>
+                <li><a href="{{route('admin.inscripcions.index.deletes')}}" class="waves-effect waves-teal">Eliminadas</a></li>
             </ul>
 
             <!-- Dropdown Programacion -->

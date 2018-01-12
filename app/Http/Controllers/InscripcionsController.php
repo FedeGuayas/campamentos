@@ -59,7 +59,7 @@ class InscripcionsController extends Controller
     public function getAll(Request $request)
     {
 
-        if ($request->ajax()){
+        if ($request->ajax()) {
 
             $inscripciones = Inscripcion::
             with('factura', 'calendar', 'user', 'alumno')
@@ -71,17 +71,18 @@ class InscripcionsController extends Controller
                 ->join('horarios', 'horarios.id', '=', 'calendars.horario_id')
                 ->join('profesors', 'profesors.id', '=', 'calendars.profesor_id')
                 ->join('dias', 'dias.id', '=', 'calendars.dia_id')
-                ->join('facturas','facturas.id','=','inscripcions.factura_id')
-                ->join('representantes','representantes.id','=','facturas.representante_id')
-                ->join('personas','personas.id','=','representantes.persona_id')
+                ->join('facturas', 'facturas.id', '=', 'inscripcions.factura_id')
+                ->join('representantes', 'representantes.id', '=', 'facturas.representante_id')
+                ->join('personas', 'personas.id', '=', 'representantes.persona_id')
                 //    ->join('alumnos','alumnos.id','=','inscripcions.alumno_id')
                 //  ->join('personas','personas.id','=','alumnos.persona_id')
-                ->select('inscripcions.id', 'inscripcions.alumno_id', 'inscripcions.factura_id', 'inscripcions.calendar_id', 'user_id', 'inscripcions.created_at', 'programs.disciplina_id', 'programs.escenario_id','modulos.modulo')
-                ->where('estado', 'Pagada');
-            
+                ->select('inscripcions.id', 'inscripcions.alumno_id', 'inscripcions.factura_id', 'inscripcions.calendar_id', 'user_id', 'inscripcions.created_at', 'programs.disciplina_id', 'programs.escenario_id', 'modulos.modulo', 'inscripcions.escenario_id as pto_cobro')
+                ->where('estado', 'Pagada')
+                ->limit(30);
+
 
             $action_buttons = '
-                                <a href="{{  route(\'admin.reports.pdf\',[$id] ) }}">
+                                <a href="{{  route(\'admin.reports.pdf\',[$id] ) }}" target="_blank">
                                 {!! Form::button(\'<i class="tiny fa fa-file-pdf-o"></i>\',[\'class\'=>\'label waves-effect waves-light teal darken-1  orange accent-4\']) !!}
                                </a>
                                
@@ -90,17 +91,18 @@ class InscripcionsController extends Controller
                                 {!! Form::button(\'<i class="tiny fa fa-pencil-square-o" ></i>\',[\'class\'=>\'label waves-effect waves-light teal darken-1\']) !!}
                                  </a>
                                  @endif
-                                 
-                                   <a href="{{ route(\'admin.inscripcions.re-inscribir\', [$id] ) }}">
-                                {!! Form::button(\'<i class="tiny fa fa-repeat" ></i>\',[\'class\'=>\'label waves-effect waves-light blue darken-1\']) !!}
-                                 </a>
                                
                             @if (Entrust::can(\'delete_inscripcion\'))
-                                @if(Auth::user()->escenario_id==$escenario_id ||  Entrust::hasRole(\'administrator\'))
+                                @if(Auth::user()->escenario_id==$pto_cobro ||  Entrust::hasRole([\'planner\',\'administrator\']))
                                     {!! Form::button(\'<i class="tiny fa fa-trash-o" ></i>\',[\'class\'=>\'label waves-effect waves-light red darken-1\',\'value\'=>$id,\'onclick\'=>\'eliminar(this)\']) !!}
                                 @endif
                             @endif
                             ';
+
+                //Boton reincribir marzo a abril
+//            <a href="{{ route('admin.inscripcions.re-inscribir', [$id] ) }}">
+//                                {!! Form::button('<i class="tiny fa fa-repeat" ></i>',['class'=>'label waves-effect waves-light blue darken-1']) !!}
+//                                 </a>
 
 //            <a href="#!" value="[$id]" onclick="eliminar(this)" data-toggle="modal" data-target="#modal-delete">
 //            {!! Form::button('<i class="tiny fa fa-trash-o" ></i>',['class'=>'label waves-effect waves-light red darken-1','value'=>"$id", 'data-toggle'=>'modal','data-target'=>'#modal-delete','onclick'=>"eliminar(this)"]) !!}
@@ -110,71 +112,82 @@ class InscripcionsController extends Controller
 
 
             return Datatables::of($inscripciones)
-
                 ->addColumn('actions', $action_buttons)
-
-                ->addColumn('alumno', function (Inscripcion $inscripcion)  {
-                    if ($inscripcion->alumno_id==0) {
+                ->addColumn('alumno', function (Inscripcion $inscripcion) {
+                    if ($inscripcion->alumno_id == 0) {
                         return $inscripcion->factura->representante->persona->getNombreAttribute();
-                    }else{
+                    } else {
                         return $inscripcion->alumno->persona->getNombreAttribute();
                     }
                 })->implode('<br>')
-                
-
-                ->addColumn('ci_alumno', function (Inscripcion $inscripcion)  {
-                    if ($inscripcion->alumno_id==0) {
+                ->addColumn('ci_alumno', function (Inscripcion $inscripcion) {
+                    if ($inscripcion->alumno_id == 0) {
                         return $inscripcion->factura->representante->persona->num_doc;
-                    }else{
+                    } else {
                         return $inscripcion->alumno->persona->num_doc;
                     }
                 })->implode('<br>')
-                
-
-                ->addColumn('modulo', function (Inscripcion $inscripcion)  {
+                ->addColumn('modulo', function (Inscripcion $inscripcion) {
                     return $inscripcion->calendar->program->modulo->modulo;
                 })->implode('<br>')
-
-                ->filterColumn('modulo', function($query, $keyword) {
+                ->filterColumn('modulo', function ($query, $keyword) {
                     $query->whereRaw("modulos.modulo like ?", ["%{$keyword}%"]);
                 })
-
-                ->addColumn('escenario', function (Inscripcion $inscripcion)  {
+                ->addColumn('escenario', function (Inscripcion $inscripcion) {
                     return $inscripcion->calendar->program->escenario->escenario;
                 })->implode('<br>')
-
-                ->addColumn('disciplina', function (Inscripcion $inscripcion)  {
+                ->addColumn('disciplina', function (Inscripcion $inscripcion) {
                     return $inscripcion->calendar->program->disciplina->disciplina;
                 })->implode('<br>')
-
-                ->addColumn('dia', function (Inscripcion $inscripcion)  {
+                ->addColumn('dia', function (Inscripcion $inscripcion) {
                     return $inscripcion->calendar->dia->dia;
                 })->implode('<br>')
-
-                ->addColumn('horario', function (Inscripcion $inscripcion)  {
-                    return $inscripcion->calendar->horario->start_time.'-'. $inscripcion->calendar->horario->end_time;
+                ->addColumn('horario', function (Inscripcion $inscripcion) {
+                    return $inscripcion->calendar->horario->start_time . '-' . $inscripcion->calendar->horario->end_time;
                 })->implode('<br>')
-
-                ->addColumn('representante', function (Inscripcion $inscripcion)  {
+                ->addColumn('representante', function (Inscripcion $inscripcion) {
                     return $inscripcion->factura->representante->persona->getNombreAttribute();
                 })->implode('<br>')
-
-                ->filterColumn('representante', function($query, $keyword) {
+                ->filterColumn('representante', function ($query, $keyword) {
                     $query->whereRaw("CONCAT(personas.nombres,'',personas.apellidos) like ?", ["%{$keyword}%"]);
                 })
-                
-                ->addColumn('ci_representante', function (Inscripcion $inscripcion)  {
+                ->addColumn('ci_representante', function (Inscripcion $inscripcion) {
                     return $inscripcion->factura->representante->persona->num_doc;
                 })->implode('<br>')
-
-                ->filterColumn('ci_representante', function($query, $keyword) {
+                ->filterColumn('ci_representante', function ($query, $keyword) {
                     $query->whereRaw("personas.num_doc like ?", ["%{$keyword}%"]);
                 })
-
                 ->make(true);
         }
 
         return view('campamentos.inscripcions.index');
+    }
+
+
+    /**
+     * Mostrar Listado de inscripciones eliminadas
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function indexDelete()
+    {
+        return view('campamentos.inscripcions.deletes');
+    }
+    
+    /**
+     * Obtener el listado de todas las inscripciones eliminadas para datatables con ajax
+     * @param Request $request
+     * @return mixed
+     */
+    public function getDelete(Request $request)
+    {
+        if ($request->ajax()) {
+
+            $inscripciones = Inscripcion::onlyTrashed()->get();
+            return Datatables::of($inscripciones)
+                ->make(true);
+        }
+        return view('campamentos.inscripcions.deletes');
     }
 
 
@@ -186,7 +199,7 @@ class InscripcionsController extends Controller
     {
         $inscripciones = Inscripcion::where('estado', 'Reservada')->with('factura', 'calendar', 'user', 'alumno')->get();
         $reservas = $inscripciones->count();
-        
+
         Session::put('reservas', $reservas);
 //        dd(Session::get('reservas'));
         return view('campamentos.inscripcions.reservas', ['inscripciones' => $inscripciones]);
@@ -199,7 +212,7 @@ class InscripcionsController extends Controller
      */
     public function reservaCancel($id)
     {
-        if (Auth::user()->hasRole(['planner', 'administrator','supervisor'])) {
+        if (Auth::user()->hasRole(['planner', 'administrator', 'supervisor'])) {
 
             $inscripcion = Inscripcion::where('id', $id)->with('factura', 'calendar', 'user', 'alumno')->first();
 //            $calendar = $inscripcion->calendar;
@@ -212,21 +225,21 @@ class InscripcionsController extends Controller
 
             if ($count_fact > 1) { //si es una inscripcion multiple
 
-                for ($i=0;$i<$count_fact;$i++){ //eliminar cada inscripcion asociada
-                    $inscripcion_m = Inscripcion::where('factura_id',$fact_id)->first();
+                for ($i = 0; $i < $count_fact; $i++) { //eliminar cada inscripcion asociada
+                    $inscripcion_m = Inscripcion::where('factura_id', $fact_id)->first();
                     $calendar = Calendar::findOrFail($inscripcion_m->calendar_id);
-                    if ( ($calendar->contador)>0){
+                    if (($calendar->contador) > 0) {
                         $calendar->decrement('contador');
-                    }else{
+                    } else {
                         Session::flash('message_danger', 'No hay Reservas para este curso ');
                         return redirect()->back();
                     }
 
                     $inscripcion_m->delete();
                 }
-                $descuento=Descuento::where('factura_id',$inscripcion->factura_id);
+                $descuento = Descuento::where('factura_id', $inscripcion->factura_id);
                 $descuento->delete();
-                $factura = Factura::where('id',$inscripcion->factura_id);
+                $factura = Factura::where('id', $inscripcion->factura_id);
                 $factura->delete();
 
                 $tipo_inscripcion = 'multiple';
@@ -235,25 +248,25 @@ class InscripcionsController extends Controller
 
             } else { //inscripcion sencilla
 
-                if ( ($calendar->contador)>0){
+                if (($calendar->contador) > 0) {
                     $calendar->decrement('contador');
-                }else{
+                } else {
                     Session::flash('message_danger', 'No hay reservas para este curso ');
                     return redirect()->back();
                 }
-                $descuento=Descuento::where('factura_id',$inscripcion->factura_id);
+                $descuento = Descuento::where('factura_id', $inscripcion->factura_id);
                 $descuento->delete();
-                $factura = Factura::where('id',$inscripcion->factura_id);
+                $factura = Factura::where('id', $inscripcion->factura_id);
                 $factura->delete();
                 $inscripcion->delete();
                 Session::flash('message_danger', 'Reserva eliminada');
                 return redirect()->route('admin.inscripcions.reservas');
             }
-           
+
 //            $inscripcion->delete();
 //            $inscripcion->factura->delete();
 
-           // Session::flash('message', 'Reserva eliminada');
+            // Session::flash('message', 'Reserva eliminada');
 //            return redirect()->back();
 
 
@@ -267,7 +280,7 @@ class InscripcionsController extends Controller
      */
     public function reservaConfirm($id)
     {
-        if (Auth::user()->hasRole(['planner', 'administrator','supervisor'])) {
+        if (Auth::user()->hasRole(['planner', 'administrator', 'supervisor'])) {
 
             $inscripcion = Inscripcion::where('id', $id)->with('factura', 'calendar', 'user', 'alumno')->first();
             $inscripcion->estado = 'Pagada';
@@ -303,8 +316,8 @@ class InscripcionsController extends Controller
 
         if (Auth::user()->hasRole(['planner', 'administrator', 'signup'])) {
 
-
             if (!Session::has('curso')) {//si no hay curso en la session
+
 
                 try {
 
@@ -315,7 +328,7 @@ class InscripcionsController extends Controller
                     $matricula = $program->matricula; //matricula del curso
                     $calendar = Calendar::findOrFail($calendar_id);
 
-                    if ($calendar->cupos <= $calendar->contador) { 
+                    if ($calendar->cupos <= $calendar->contador) {
                         Session::flash('message_danger', 'No hay disponibilidad para el curso');
                         return redirect()->back();
                     }
@@ -346,19 +359,29 @@ class InscripcionsController extends Controller
 
                     $factura->save();
 
-                    if ($request->input('descuento_empleado') == 'true') {
-                        $descuentos=new Descuento();
+                    if ($request->input('valor') ==0 && $request->input('cortesia')=='on') {
+                        $descuentos = new Descuento();
                         $descuentos->factura()->associate($factura);
-                        $descuentos->descripcion='DESCUENTO EMPLEADO';
-                        $descuentos->valor=$factura->descuento;
+                        $descuentos->descripcion = 'CORTESIA';
+                        $descuentos->valor = $factura->descuento;
                         $descuentos->save();
                     }
 
+                    if ($request->input('descuento_empleado') == 'true' && $request->input('valor') > 0) {
+                        $descuentos = new Descuento();
+                        $descuentos->factura()->associate($factura);
+                        $descuentos->descripcion = 'DESCUENTO EMPLEADO';
+                        $descuentos->valor = $factura->descuento;
+                        $descuentos->save();
+                    }
+
+
+
                     //inscripcion
                     $user = $request->user();//usuario logueado
-                    if (is_null($user->escenario_id)){//online
-                        $pto_cobro='N/A';
-                    }else  $pto_cobro=$user->escenario_id;
+                    if (is_null($user->escenario_id)) {//online
+                        $pto_cobro = 'N/A';
+                    } else  $pto_cobro = $user->escenario_id;
 
                     $inscripcion = new Inscripcion();
                     $inscripcion->calendar()->associate($calendar);
@@ -400,7 +423,6 @@ class InscripcionsController extends Controller
                 return redirect()->route('admin.inscripcions.index');
             }
 
-
             //Existen cursos Multiples almacenados en la Session, asi k los almaceno todos
 
             //inscripcion familiar no puede tener menos de dos inscritos
@@ -441,25 +463,25 @@ class InscripcionsController extends Controller
                 $descuento = $precioTotal * $desc2; //descuento aplicado a la mensualidad total
             }
 
-            $matricula=0;
-            foreach ($cursos as $curso){
-                $matricula+=$curso['matricula']; //costo de la matricula
+            $matricula = 0;
+            foreach ($cursos as $curso) {
+                $matricula += $curso['matricula']; //costo de la matricula
             }
-            
-            $total = ($precioTotal+ $matricula) - $descuento; //total con descuentos aplicados
+
+            $total = ($precioTotal + $matricula) - $descuento; //total con descuentos aplicados
 
             try {
                 DB::beginTransaction();
 
                 $user = Auth::user(); //usuario autenticado
-                if (is_null($user->escenario_id)){//online
-                    $pto_cobro='N/A';
-                }else  $pto_cobro=$user->escenario_id;
+                if (is_null($user->escenario_id)) {//online
+                    $pto_cobro = 'N/A';
+                } else  $pto_cobro = $user->escenario_id;
                 $pago_id = $request->input('fpago_id');
                 $fpago = Pago::findOrFail($pago_id); //forma de pago
-                
+
                 $representante = $cart->representante;
-               
+
                 $factura = new Factura();
                 $factura->pago()->associate($fpago);
                 $factura->representante()->associate($representante);
@@ -468,45 +490,45 @@ class InscripcionsController extends Controller
 
                 $factura->save(); //se guarda una sola factura 
 
-                $descuentos=new Descuento();
+                $descuentos = new Descuento();
                 $descuentos->factura()->associate($factura);
-                $descuentos->valor=$descuento;
-                
+                $descuentos->valor = $descuento;
+
                 if ($tipo_descuento == 'familiar') {
-                    $descuentos->descripcion='DESCUENTO FAMILIAR';
+                    $descuentos->descripcion = 'DESCUENTO FAMILIAR';
                     $descuentos->save();
                 }
                 if ($tipo_descuento == 'multiple') {
-                    $descuentos->descripcion='DESCUENTO MULTIPLE';
+                    $descuentos->descripcion = 'DESCUENTO MULTIPLE';
                     $descuentos->save();
                 }
                 if ($desc_emp == 'true') {
-                    $descuentos->descripcion='DESCUENTO EMPLEADO';
+                    $descuentos->descripcion = 'DESCUENTO EMPLEADO';
                     $descuentos->save();
                 }
 
-                
+
                 foreach ($cursos as $curso) {//recorro los cursos dentro de la coleccion (carrito)
                     $calendar = $curso['curso']; //1 curso dentro del item (storedCurso) de cursos 
                     if ($calendar->cupos < ($calendar->contador + $curso['qty'])) {//cupos no puede ser menor k la suma
                         Session::flash('message_danger', 'No hay disponibilidad para el curso');
                         return redirect()->back();
                     }
-                                        
+
                     foreach ($curso['alumno'] as $alumno) {//por cada alumno en cada curso hago una incripcion
                         $inscripcion = new Inscripcion();
-                        $inscripcion->mensualidad=$calendar->mensualidad;
-                        $inscripcion->matricula=$curso['matricula']/$curso['qty'];
+                        $inscripcion->mensualidad = $calendar->mensualidad;
+                        $inscripcion->matricula = $curso['matricula'] / $curso['qty'];
                         $inscripcion->calendar()->associate($calendar);
                         $inscripcion->factura()->associate($factura);
                         $inscripcion->user()->associate($user);
                         $inscripcion->escenario()->associate($pto_cobro);
-                        
+
                         if ($request->input('reservar') == 'on') {
                             $inscripcion->estado = 'Reservada';
                         }
 
-                        if ($alumno->id==$representante->id) {//adulto por tanto el rep =alumno
+                        if ($alumno->id == $representante->id) {//adulto por tanto el rep =alumno
                             $inscripcion->alumno_id = 0;
                         } else {
                             $inscripcion->alumno_id = $alumno->id;
@@ -548,47 +570,49 @@ class InscripcionsController extends Controller
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id){
+    public function edit($id)
+    {
 
-        $inscripcion = Inscripcion::where('id', $id)->with('factura', 'calendar', 'user', 'alumno','escenario')->first();
-       
+        $inscripcion = Inscripcion::where('id', $id)->with('factura', 'calendar', 'user', 'alumno', 'escenario')->first();
+
         //curso actual de la inscripcion seleccionada
-        $curso_actual=Calendar::where('id',$inscripcion->calendar_id)->first();
-        
+        $curso_actual = Calendar::where('id', $inscripcion->calendar_id)->first();
+
         //costo actual de la inscripcion
-        $costo_actual=$curso_actual->mensualidad;
+        $costo_actual = $curso_actual->mensualidad;
 
         //edad del alumno
         if ($inscripcion->alumno_id == 0) { //si es inscripcion de adulto
-           $edad=$inscripcion->factura->representante->getEdad($inscripcion->factura->representante->persona->fecha_nac);
+            $edad = $inscripcion->factura->representante->getEdad($inscripcion->factura->representante->persona->fecha_nac);
         } else { //si es inscripcion de menor
-            $edad=$inscripcion->alumno->getEdad($inscripcion->alumno->persona->fecha_nac);
+            $edad = $inscripcion->alumno->getEdad($inscripcion->alumno->persona->fecha_nac);
         }
 
         $modulos_coll = Modulo::where('activated', true);
         $modulos = $modulos_coll->pluck('modulo', 'id');
-        
-        return view('campamentos.inscripcions.edit', compact('modulos', 'inscripcion','costo_actual','edad','curso_actual'));
-        
+
+        return view('campamentos.inscripcions.edit', compact('modulos', 'inscripcion', 'costo_actual', 'edad', 'curso_actual'));
+
     }
 
-    
+
     /**
      * Buscar el curso para donde se quiere hacer el cambio en la inscripcion
      * @param Request $request
      * @return mixed
      */
-    
-    public function searchCurso(Request $request){
-        
-        
+
+    public function searchCurso(Request $request)
+    {
+
+
         $modulo = $request->get('modulo_id');
         $escenario = $request->get('escenario_id');
         $disciplina = $request->get('disciplina_id');
         $horario_id = $request->get('horario_id');
         $edad = $request->get('edad');
-        $costo=$request->get('costo');
-        $inscripcion_id=$request->get('inscripcion_id');
+        $costo = $request->get('costo');
+        $inscripcion_id = $request->get('inscripcion_id');
 
         $cursos = Calendar::with('program', 'horario', 'dia', 'profesor')
             ->join('programs as p', 'p.id', '=', 'c.program_id', 'as c')
@@ -598,7 +622,7 @@ class InscripcionsController extends Controller
             ->join('modulos as m', 'm.id', '=', 'p.modulo_id')
             ->join('disciplinas as dis', 'dis.id', '=', 'p.disciplina_id')
             ->join('profesors as pro', 'pro.id', '=', 'c.profesor_id')
-            ->select('program_id', 'profesor_id', 'dia_id', 'c.horario_id', 'cupos', 'contador', 'mensualidad', 'init_age', 'end_age', 'nivel', 'c.id', 'p.modulo_id', 'p.escenario_id', 'p.disciplina_id','c.mensualidad')
+            ->select('program_id', 'profesor_id', 'dia_id', 'c.horario_id', 'cupos', 'contador', 'mensualidad', 'init_age', 'end_age', 'nivel', 'c.id', 'p.modulo_id', 'p.escenario_id', 'p.disciplina_id', 'c.mensualidad')
             ->where('modulo_id', $modulo)
             ->where('escenario_id', $escenario)
             ->where('disciplina_id', $disciplina)
@@ -606,11 +630,11 @@ class InscripcionsController extends Controller
             ->where('p.activated', '1')
             ->get();
 
-        return view('campamentos.calendars.filtrados.list_curso',compact('cursos','edad','costo','inscripcion_id'));
-        
+        return view('campamentos.calendars.filtrados.list_curso', compact('cursos', 'edad', 'costo', 'inscripcion_id'));
+
     }
-    
-   
+
+
     /**
      * Actualizar la inscripcion con el nuevo curso seleccionado
      *
@@ -618,30 +642,30 @@ class InscripcionsController extends Controller
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function updateCurso(Request $request, $inscripcion_id,$curso)
+    public function updateCurso(Request $request, $inscripcion_id, $curso)
     {
-        
-        if(Auth::user()->hasRole(['planner','administrator','supervisor'])) {
+
+        if (Auth::user()->hasRole(['planner', 'administrator', 'supervisor'])) {
 
             try {
 
                 DB::beginTransaction();
 
                 //inscripcion a modificar
-                $inscripcion=Inscripcion::where('id',$inscripcion_id)->with('factura','calendar','user','alumno')->first();
+                $inscripcion = Inscripcion::where('id', $inscripcion_id)->with('factura', 'calendar', 'user', 'alumno')->first();
 
                 //curso anterior que se desea modificar
-                $curso_anterior=Calendar::findOrFail($inscripcion->calendar_id);
+                $curso_anterior = Calendar::findOrFail($inscripcion->calendar_id);
 
                 //curso nuevo seleccionado
                 $calendar = Calendar::findOrFail($curso);
 
-                if ( ($calendar->mensualidad!=$inscripcion->calendar->mensualidad) ) {
+                if (($calendar->mensualidad != $inscripcion->calendar->mensualidad)) {
                     Session::flash('message_danger', 'Los cursos tienen costos diferentes');
                     return redirect()->back();
                 }
 
-                if ( ($calendar->cupos - $calendar->contador)<=0 ) {
+                if (($calendar->cupos - $calendar->contador) <= 0) {
                     Session::flash('message_danger', 'No hay cupos para el curso seleccionado');
                     return redirect()->back();
                 }
@@ -650,7 +674,7 @@ class InscripcionsController extends Controller
                 $inscripcion->calendar()->associate($calendar);
 
                 //usuario logueado que modifico
-                $inscripcion->user_edit=$request->user()->id;
+                $inscripcion->user_edit = $request->user()->id;
 
                 $inscripcion->update();
 
@@ -672,9 +696,9 @@ class InscripcionsController extends Controller
             }
 
             return redirect()->route('admin.inscripcions.index');
-        }else
+        } else
             return abort(403);
-        
+
     }
 
 
@@ -684,38 +708,39 @@ class InscripcionsController extends Controller
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function reInscribirGet($id){
+    public function reInscribirGet($id)
+    {
 
         //inscripcion actual
-        $inscripcion = Inscripcion::where('id', $id)->with('factura', 'calendar', 'user', 'alumno','escenario')->first();
+        $inscripcion = Inscripcion::where('id', $id)->with('factura', 'calendar', 'user', 'alumno', 'escenario')->first();
         //curso actual de la inscripcion seleccionada
-        $curso_actual=Calendar::where('id',$inscripcion->calendar_id)->first();
+        $curso_actual = Calendar::where('id', $inscripcion->calendar_id)->first();
 
-        $program_actual=Program::where('id',$curso_actual->program_id)->first();
+        $program_actual = Program::where('id', $curso_actual->program_id)->first();
 
         //familiar??
-        $count_fact=Inscripcion::where('factura_id',$inscripcion->factura_id)->count();
+        $count_fact = Inscripcion::where('factura_id', $inscripcion->factura_id)->count();
 
-        $program_nuevo=Program::where('escenario_id',$program_actual->escenario_id)->where('disciplina_id',$program_actual->disciplina_id)->where('modulo_id',8)->first();
-        
-        $curso_nuevo=Calendar::where('dia_id',$curso_actual->dia_id)->where('horario_id',$curso_actual->horario_id)->where('program_id',$program_nuevo->id)->first();
+        $program_nuevo = Program::where('escenario_id', $program_actual->escenario_id)->where('disciplina_id', $program_actual->disciplina_id)->where('modulo_id', 8)->first();
+
+        $curso_nuevo = Calendar::where('dia_id', $curso_actual->dia_id)->where('horario_id', $curso_actual->horario_id)->where('program_id', $program_nuevo->id)->first();
 
 //        if (count($curso_nuevo)>0){
-            if ((count($curso_nuevo)>0) && ($inscripcion->calendar->program->modulo_id == $curso_nuevo->program->modulo_id)) {
-                Session::flash('message_danger', 'La persona ya esta inscrita en el curso del presente mes');
-                return redirect()->back();
-            }
+        if ((count($curso_nuevo) > 0) && ($inscripcion->calendar->program->modulo_id == $curso_nuevo->program->modulo_id)) {
+            Session::flash('message_danger', 'La persona ya esta inscrita en el curso del presente mes');
+            return redirect()->back();
+        }
 //        }
 
 
         //edad del alumno
         if ($inscripcion->alumno_id == 0) { //si es inscripcion de adulto
-            $edad=$inscripcion->factura->representante->getEdad($inscripcion->factura->representante->persona->fecha_nac);
+            $edad = $inscripcion->factura->representante->getEdad($inscripcion->factura->representante->persona->fecha_nac);
         } else { //si es inscripcion de menor
-            $edad=$inscripcion->alumno->getEdad($inscripcion->alumno->persona->fecha_nac);
+            $edad = $inscripcion->alumno->getEdad($inscripcion->alumno->persona->fecha_nac);
         }
-        
-        return view('campamentos.inscripcions.re-inscribir', compact('inscripcion','edad','count_fact','curso_nuevo'));
+
+        return view('campamentos.inscripcions.re-inscribir', compact('inscripcion', 'edad', 'count_fact', 'curso_nuevo'));
 
     }
 
@@ -726,78 +751,76 @@ class InscripcionsController extends Controller
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function storeNewCurso(Request $request){
+    public function storeNewCurso(Request $request)
+    {
 
         if (Auth::user()->hasRole(['planner', 'administrator', 'signup'])) {
 
             try {
                 DB::beginTransaction();
 
-                    //inscripcion anterior
-                    $insc_ant=Inscripcion::where('id',$request->get('inscripcion_id'))->first();
+                //inscripcion anterior
+                $insc_ant = Inscripcion::where('id', $request->get('inscripcion_id'))->first();
 
-                    //curso
-                    $calendar=Calendar::findOrFail($request->get('calendar_id'));
+                //curso
+                $calendar = Calendar::findOrFail($request->get('calendar_id'));
 
-                    if ($calendar->cupos <= $calendar->contador) {
-                        Session::flash('message_danger', 'No hay disponibilidad para el curso');
-                        return redirect()->back();
-                    }
-
-                    $mensualidad = $calendar->mensualidad;//mensualidad del curso
-                    //costo inscipcion anterior
-                    $valor = $insc_ant->factura->total;
-                    $pago_id = $insc_ant->factura->pago_id;
-
-                    $representante = $insc_ant->factura->representante_id;
-
-                    $factura = new Factura();
-                    $factura->pago()->associate($pago_id);
-                    $factura->representante()->associate($representante);
-                    $factura->total = $valor; //costo de la inscripcion
-
-                    $factura->save();
-
-                    //inscripcion
-                    $user = $request->user();//usuario logueado
-
-                    if (is_null($user->escenario_id)){//online
-                        $pto_cobro='N/A';
-                    }else  $pto_cobro=$user->escenario_id;
-
-                    $inscripcion = new Inscripcion();
-                    $inscripcion->calendar()->associate($calendar);
-                    $inscripcion->factura()->associate($factura);
-                    $inscripcion->user()->associate($user);
-                    $inscripcion->escenario()->associate($pto_cobro);
-
-                    $inscripcion->alumno_id = $insc_ant->alumno_id;
-
-                    $inscripcion->mensualidad = $calendar->mensualidad;
-
-                    $inscripcion->save();
-
-                    DB::commit();
-                        $calendar->increment('contador');
-                        $calendar->update();
-
-                    Session::flash('message', 'Inscripción satisfactoria');
-
-                } catch (\Exception $e) { //en caso de error viro al estado anterior
-                    DB::rollback();
-                    Session::flash('message_danger', 'Error' . $e->getMessage());
-                    return redirect()->route('admin.inscripcions.index');
+                if ($calendar->cupos <= $calendar->contador) {
+                    Session::flash('message_danger', 'No hay disponibilidad para el curso');
+                    return redirect()->back();
                 }
 
+                $mensualidad = $calendar->mensualidad;//mensualidad del curso
+                //costo inscipcion anterior
+                $valor = $insc_ant->factura->total;
+                $pago_id = $insc_ant->factura->pago_id;
+
+                $representante = $insc_ant->factura->representante_id;
+
+                $factura = new Factura();
+                $factura->pago()->associate($pago_id);
+                $factura->representante()->associate($representante);
+                $factura->total = $valor; //costo de la inscripcion
+
+                $factura->save();
+
+                //inscripcion
+                $user = $request->user();//usuario logueado
+
+                if (is_null($user->escenario_id)) {//online
+                    $pto_cobro = 'N/A';
+                } else  $pto_cobro = $user->escenario_id;
+
+                $inscripcion = new Inscripcion();
+                $inscripcion->calendar()->associate($calendar);
+                $inscripcion->factura()->associate($factura);
+                $inscripcion->user()->associate($user);
+                $inscripcion->escenario()->associate($pto_cobro);
+
+                $inscripcion->alumno_id = $insc_ant->alumno_id;
+
+                $inscripcion->mensualidad = $calendar->mensualidad;
+
+                $inscripcion->save();
+
+                DB::commit();
+                $calendar->increment('contador');
+                $calendar->update();
+
+                Session::flash('message', 'Inscripción satisfactoria');
+
+            } catch (\Exception $e) { //en caso de error viro al estado anterior
+                DB::rollback();
+                Session::flash('message_danger', 'Error' . $e->getMessage());
                 return redirect()->route('admin.inscripcions.index');
             }
-        
-            else
+
+            return redirect()->route('admin.inscripcions.index');
+        } else
             return abort(403);
 
     }
-    
-    
+
 
     /**
      * Remove the specified resource from storage.
@@ -805,9 +828,9 @@ class InscripcionsController extends Controller
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy( Request $request,$id)
+    public function destroy(Request $request, $id)
     {
-        if(Auth::user()->hasRole(['planner','administrator','supervisor'])) {
+        if (Auth::user()->hasRole(['planner', 'administrator', 'supervisor'])) {
 
             if ($request->ajax()) {
 
@@ -827,8 +850,8 @@ class InscripcionsController extends Controller
                         if (($calendar->contador) > 0) {
                             $calendar->decrement('contador');
                         } else {
-                            $message='Ooops! parece que el curso tiene 0 cupos, por lo que no puede ser eliminado, contacte al admin.';
-                            return  response()->json(['resp'=>$message]);
+                            $message = 'Ooops! parece que el curso tiene 0 cupos, por lo que no puede ser eliminado, contacte al admin.';
+                            return response()->json(['resp' => $message]);
                         }
                         $inscripcion_m->delete();
                     }
@@ -836,30 +859,30 @@ class InscripcionsController extends Controller
                     $descuento->delete();
                     $factura = Factura::where('id', $inscripcion->factura_id);
                     $factura->delete();
-                    $message='Inscripcion multiple, se eliminaron todas las inscripciones asociadas';
-                    return response()->json(['resp'=>$message]);
+                    $message = 'Inscripcion multiple, se eliminaron todas las inscripciones asociadas';
+                    return response()->json(['resp' => $message]);
 
                 } else { //inscripcion sencilla
 
                     if (($calendar->contador) > 0) {
                         $calendar->decrement('contador');
                     } else {
-                        $message='Ooops! parece que el curso tiene 0 cupos, por lo que no puede ser eliminado, contacte al admin.';
-                        return  response()->json(['resp'=>$message]);
+                        $message = 'Ooops! parece que el curso tiene 0 cupos, por lo que no puede ser eliminado, contacte al admin.';
+                        return response()->json(['resp' => $message]);
                     }
                     $descuento = Descuento::where('factura_id', $inscripcion->factura_id);
                     $descuento->delete();
                     $factura = Factura::where('id', $inscripcion->factura_id);
                     $factura->delete();
                     $inscripcion->delete();
-                    $message='Inscripción eliminada';
+                    $message = 'Inscripción eliminada';
                     return response()->json(['resp' => $message]);
                 }
             }
-        }else
-            if ($request->ajax()){
-                return response()->json(['resp'=>'No tiene permisos para realizar esta acción']);
-            }else{
+        } else
+            if ($request->ajax()) {
+                return response()->json(['resp' => 'No tiene permisos para realizar esta acción']);
+            } else {
                 return abort(403);
             }
 
@@ -881,7 +904,7 @@ class InscripcionsController extends Controller
             $disciplina_id = $request->get('disciplina');
             $modulo_id = $request->get('modulo');
             $matricula = Program::
-                select('matricula')
+            select('matricula')
                 ->where('escenario_id', $escenario_id)
                 ->where('disciplina_id', $disciplina_id)
                 ->where('modulo_id', $modulo_id)->first();
@@ -890,12 +913,12 @@ class InscripcionsController extends Controller
             $dia_id = $request->get('dia_id');
             $horario_id = $request->get('horario_id');
             $nivel = $request->get('nivel'); //me trae el id del calendario(curso)
-            
+
             //programa
             $program = Program::where('escenario_id', $escenario_id)
                 ->where('disciplina_id', $disciplina_id)
                 ->where('modulo_id', $modulo_id)->first();
-            
+
             //costo de la mensualidad para el curso
             $mensualidad = Calendar::
             select('mensualidad')
@@ -905,15 +928,89 @@ class InscripcionsController extends Controller
                 ->where('horario_id', $horario_id)->first();
 
             $mes = $mensualidad->mensualidad;
-            
+//dd($mes);
+
+            $adulto = $request->get('adulto');
+            $alumno_id = $request->get('alumno');
+
             if ($request->input('descuento_empleado') == 'true') {
                 $desc = 0.5; //50%
-                $descuento =$mes * $desc;
-            } else if ( $request->input('descuento_familiar') == 'true' ||
-                ( ($request->input('descuento_multiple') == 'true') && ($request->input('descuento_estacion') == 'VERANO') ) ){
+                $descuento = $mes * $desc;
+            } else if ($request->input('descuento_familiar') == 'true' ||
+                (($request->input('descuento_multiple') == 'true') && ($request->input('descuento_estacion') == 'VERANO'))
+            ) {
                 $desc = 0.1; //10%
-                $descuento =$mes * $desc;
-            }else  $descuento=0;
+                $descuento = $mes * $desc;
+            }
+
+            /*Desceunto 10% insc en mayo de un alumno que se insc en marzo y abril en la misma disciplina*/
+            /*****************/
+             //else if (($adulto == 'false' && !is_null($alumno_id))) { //inscripcion de menor
+               // $alumno = Alumno::where('id', $alumno_id)->with('persona')->first();
+               // $insc = $alumno->inscripcions()->select('id', 'calendar_id')->where('estado', 'Pagada')->with('calendar')->get();
+                 //$inscArray = [];
+                 //foreach ($insc as $ins) {
+                     //si las insc anteriores son en  marzo y abril y en la disciplina que se esta inscribiendo actualmente, y que no sea  marzo permanente 2017, abril permanente 2017
+                     //if ((stristr($ins->calendar->program->modulo->modulo, 'marzo 2017') || stristr($ins->calendar->program->modulo->modulo, 'abril 2017')) && ($ins->calendar->program->disciplina_id == $disciplina_id)) {
+                         //guardo en un array la disciplina y el modulo respectivo
+                         //$inscArray[] = [
+                             //'disciplina' => $ins->calendar->program->disciplina->disciplina,
+                             //'modulo' => $ins->calendar->program->modulo->modulo
+                         //];
+                     //}
+                 //}
+                 // dd($inscArray);
+                 //$meses = [];
+                 //foreach ($inscArray as $arr) {
+                     //foreach ($arr as $key => $value) {
+                         //$meses[$key][$value] = $value;
+                     //}
+                 //}
+                 //   dd($meses);
+                 //si se inscribio en los dos meses
+                 //if (isset($meses['modulo']) && count($meses['modulo']) >= 2) {
+                     //var_dump('Inscrito en marzo y abril');
+                     //$desc_marz_abril = 0.1;
+                 //} else $desc_marz_abril = 0;
+                 //$descuento = $mes * $desc_marz_abril;
+             //}
+             //else if ($adulto == 'true') { //insc de adulto
+                        //$rep = Representante::where('persona_id', $alumno_id)->with('persona')->first();
+                        //$facturas=Factura::where('representante_id',$alumno_id)->get();
+                        //$ins_rep = $rep->facturas()->select('id')->get()->toArray();
+                        //$insc = Inscripcion::whereIn('factura_id', $ins_rep)->where('alumno_id', 0)->select('id', 'calendar_id')->where('estado', 'Pagada')->with('calendar')->get();
+
+                 //$inscArray = [];
+                 //foreach ($insc as $ins) {
+                     //si las insc son en  marzo o abril y en la disciplina que se esta inscribiendo actualmente
+                     //if ((stristr($ins->calendar->program->modulo->modulo, 'marzo 2017') || stristr($ins->calendar->program->modulo->modulo, 'abril 2017')) && ($ins->calendar->program->disciplina_id == $disciplina_id)) {
+                         //guardo en un array la disciplina y el modulo respectivo
+                         //$inscArray[] = [
+                             //'disciplina' => $ins->calendar->program->disciplina->disciplina,
+                             //'modulo' => $ins->calendar->program->modulo->modulo
+                         //];
+                     //}
+                 //}
+                 // dd($inscArray);
+                 //$meses = [];
+                 //foreach ($inscArray as $arr) {
+                     //foreach ($arr as $key => $value) {
+                         //$meses[$key][$value] = $value;
+                     //}
+                 //}
+                 //   dd($meses);
+                 //si se inscribio en los dos meses
+                 //if (isset($meses['modulo']) && count($meses['modulo']) >= 2) {
+                     //var_dump('Inscrito en marzo y abril');
+                     //$desc_marz_abril = 0.1;
+                 //} else $desc_marz_abril = 0;
+                 //$descuento = $mes * $desc_marz_abril;
+             //}
+
+            /***********************************/
+            else $descuento=0;
+
+
 
             if ($request->input('matricula') == 'true') {
                 $mat = $matricula->matricula;
@@ -921,7 +1018,21 @@ class InscripcionsController extends Controller
 
             $precio = $mat + $mes - $descuento;
 
+            //pase de cortesia costo 0
+            if ($request->input('cortesia') == 'true') {
+               $precio = 0;
+            }
+
             return response(number_format($precio, 2, '.', ' '));
+
         }
+    }
+
+
+    /**
+     * descuento 10% ins marzo abril mayo misma disc
+     */
+    public function descMarzoAbril(){
+
     }
 }

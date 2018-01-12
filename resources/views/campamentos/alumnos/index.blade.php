@@ -47,19 +47,6 @@
                 </table><!--end table-responsive-->
 
 
-                {{--<div class="preloader-wrapper big active hidden">--}}
-                {{--<div class="spinner-layer spinner-blue">--}}
-                {{--<div class="circle-clipper left">--}}
-                {{--<div class="circle"></div>--}}
-                {{--</div><div class="gap-patch">--}}
-                {{--<div class="circle"></div>--}}
-                {{--</div><div class="circle-clipper right">--}}
-                {{--<div class="circle"></div>--}}
-                {{--</div>--}}
-                {{--</div>--}}
-                {{--</div>--}}
-
-
         </div><!--end div ./col-lg-12. etc-->
     </div><!--end div ./row-->
 
@@ -119,7 +106,7 @@
 
                             var input = document.createElement("input");
                             $(input).appendTo($(column.footer()).empty())
-                                    .on('keyup change', function () {
+                                    .on('change', function () {
                                         column.search($(this).val(), false, false, true).draw();
                                     });
 

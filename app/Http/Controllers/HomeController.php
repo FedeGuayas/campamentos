@@ -217,8 +217,9 @@ class HomeController extends Controller
         $out['phone'] = 'max:15';
         $out['tipo_doc'] = 'required';
         $out['num_doc'] = 'required';
-        $out['foto_ced'] = 'mimes:jpg,png,jpeg|max:1000';
-        $out['foto'] = 'mimes:jpg,png,jpeg|max:150';
+//        $out['foto_ced'] = 'required|mimes:jpg,png,jpeg|max:1000';
+//        $out['foto'] = 'required|mimes:jpg,png,jpeg|max:150';
+
 
         //Hacer validación condicional dependiendo del tipo de documento a utilizar.
         switch($data['tipo_doc']){
@@ -242,6 +243,7 @@ class HomeController extends Controller
      */
     public function updateRepresentante(Request $request, $representante)
     {
+//        dd($request->all());
         if(Auth::user()->hasRole(['register'])){
 
             $validator = $this->validatorUpdateRepresentante($request->all());
@@ -299,7 +301,7 @@ class HomeController extends Controller
     }
 
     /**
-     * Eliminar representante
+     * Eliminar representante online
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
@@ -454,8 +456,8 @@ class HomeController extends Controller
 //        $out['telefono'] = 'max:15';
         $out['tipo_doc'] = 'required';
         $out['num_doc'] = 'required';
-        $out['foto_ced'] = 'mimes:jpg,png,jpeg|max:1000';
-        $out['foto'] = 'mimes:jpg,png,jpeg|max:150';
+        $out['foto_ced'] = 'required';
+        $out['foto'] = 'required';
 
         //Hacer validación condicional dependiendo del tipo de documento a utilizar.
         switch($data['tipo_doc']){
@@ -466,6 +468,13 @@ class HomeController extends Controller
                 $out['num_doc'] = 'required|alpha_num |max:8 |min:5';
                 break;
         }
+
+//        if ($data['foto_ced']){
+//            $out['foto_ced'] = 'mimes:jpg,png,jpeg|max:1000';
+//        }
+//        if ($data['foto']){
+//            $out['foto'] = 'mimes:jpg,png,jpeg|max:150';
+//        }
         //Retornar la variable $out auxiliar
         return Validator::make($data, $out);
     }
@@ -486,6 +495,11 @@ class HomeController extends Controller
             $validator = $this->validatorUpdateAlumno($request->all());
 
             if ($validator->fails()) {
+
+
+
+                    dd('error');
+
                 $this->throwValidationException(
                     $request, $validator
                 );

@@ -103,7 +103,7 @@
 
                         var input = document.createElement("input");
                         $(input).appendTo($(column.footer()).empty())
-                                .on('keyup change', function () {
+                                .on('change', function () {
                                     column.search($(this).val(), false, false, true).draw();
                                 });
 

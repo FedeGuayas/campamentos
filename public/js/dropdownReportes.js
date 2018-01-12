@@ -73,7 +73,7 @@ $("#disciplina_id").change(function (event) {
         // contentType: 'application/x-www-form-urlencoded',
         data: datos,
         success: function (response) {
-            console.log(response);
+            //console.log(response);
             horario.find("option:gt(0)").remove();
             horario.addClass("teal-text");
                 for (i = 0; i < response.length; i++) {
