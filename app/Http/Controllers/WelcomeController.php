@@ -31,10 +31,6 @@ class WelcomeController extends Controller
         return view('welcome',compact('cursos','year','month'));
     }
 
-    public function getPreinscripcion()
-    {
-        return view('online.inscripcions.pre-inscripcion');
-    }
 
 
 }

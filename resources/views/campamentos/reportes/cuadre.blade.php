@@ -16,22 +16,52 @@
                 <table class="table table-striped table-bordered table-condensed table-hover">
                     <thead>
                     <th>Usuarios</th>
-                    <th>Valor</th>
+                    <th>Contado</th>
+                    <th>Tarjeta</th>
+                    <th>Western</th>
+                    <th>Total</th>
                     </thead>
                     @foreach ($cuadreArray as $c )
                         <tr>
-                            <td>{{ $c['nombre'] }}</td>
-                            <td>$ {{number_format($c['factura'],2,'.',' ')}}</td>
+                            <td>{{ $c['usuario'] }}</td>
+                            <td>{{ $c['contado'] }}</td>
+                            <td>{{ $c['tarjeta'] }}</td>
+                            <td>{{ $c['western'] }}</td>
+                            <td>$ {{number_format($c['valor'],2,'.',' ')}}</td>
                         </tr>
                    @endforeach
                     <tr>
-                        <th>Total</th>
-                        <th>$ {{number_format($total['total'],2,'.',' ')}}</th>
+                        <th></th>
+                        <th>$ {{number_format($total['totalContado'],2,'.',' ')}}</th>
+                        <th>$ {{number_format($total['totalTarjeta'],2,'.',' ')}}</th>
+                        <th>$ {{number_format($total['totalWestern'],2,'.',' ')}}</th>
+                        <th>$ {{number_format($total['totalGeneral'],2,'.',' ')}}</th>
                     </tr>
                 </table><!--end table-responsive-->
+
+                <table class="table table-striped table-bordered table-condensed table-hover">
+                    <thead>
+                        <caption>Resumen</caption>
+                    </thead>
+                    <tbody>
+                        <th>Contado</th>
+                        <th>Tarjeta</th>
+                        <th>Western</th>
+                        <th>Total</th>
+                    </tbody>
+                    <tfoot>
+                        <th>$ {{number_format($total['totalContado'],2,'.',' ')}}</th>
+                        <th>$ {{number_format($total['totalTarjeta'],2,'.',' ')}}</th>
+                        <th>$ {{number_format($total['totalWestern'],2,'.',' ')}}</th>
+                        <th style="color: red">$ {{number_format($total['totalGeneral'],2,'.',' ')}}</th>
+                    </tfoot>
+                </table>
+
             </div><!-- end div ./table-responsive-->
         </div><!--end div ./col-lg-12. etc-->
     </div><!--end div ./row-->
+
+
 @endsection
 
 

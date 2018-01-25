@@ -2,8 +2,38 @@
 
 Route::get('/', 'WelcomeController@welcome');
 
-//Preinscripcion Online
-Route::get('pre-inscripcion','WelcomeController@getPreinscripcion')->name('online.preinscripcion');
+//************** Preinscripcion Online ******************//
+//carga la vista de preinscripcion
+Route::get('pre-inscripcion','PreInscripcionsController@getPreinscripcion')->name('online.preinscripcion');
+//carga formulario para la busqueda del representante online
+Route::get('representatives/search/{search}',['as' => 'representatives.search', 'uses'=>'PreInscripcionsController@searchRepresentatives']);
+Route::POST('representatives/search',['as' => 'representatives.beforeSearch', 'uses'=>'PreInscripcionsController@beforeSearch']);
+Route::get('representatives/listSearch/{d?}',['as' => 'representatives.listSearch', 'uses'=>'PreInscripcionsController@listSearch']);
+//obtener los alumnos de un trabajador  online
+Route::get('pre-inscripcion/alumnos/{data?}',['uses'=>'PreInscripcionsController@getAlumnos','as' =>'pre-inscripcion.getAlumnos']);
+//obtener los escenarios para un modulo online
+Route::get('pre-inscripcion/escenarios/{data?}','PreInscripcionsController@getEscenarios');
+//obtener las disciplina para un escenario online
+Route::get('pre-inscripcion/disciplinas/{data?}','PreInscripcionsController@getDisciplinas');
+//obtener los dias para un programa online
+Route::get('pre-inscripcion/dias/{data?}','PreInscripcionsController@getDias');
+//obtener los horarios para el dia
+Route::get('pre-inscripcion/horario/{data?}','PreInscripcionsController@getHorario');
+//obtener los niveles para el dia y horario
+Route::get('pre-inscripcion/nivel/{data?}','PreInscripcionsController@getNivel');
+//obtener ontener el id del calendario o curso
+Route::get('pre-inscripcion/curso/{data?}','PreInscripcionsController@getCurso');
+//Descargar termino
+Route::get('pre-inscripcion/termsDownload',['as' => 'pre-inscripcion.terms-download', 'uses'=>'PreInscripcionsController@termsDownload']);
+//Guardar la pre-inscripcion online
+Route::post('pre-inscripcion/reservar', ['as' => 'pre-inscripcions.store','uses'=>'PreInscripcionsController@store' ]);
+//comprobante de preinscripcion
+Route::get('preinscripcion/comprobante/{pre}',['as' => 'preinscripcion.comprobante', 'uses'=>'PreInscripcionsController@pre_inscripcionPDF']);
+
+
+
+/*********************************************************/
+
 
 //ruta para inscripciones de usuarios online logeados para pago online
 //Route::get('/home', 'HomeController@index');
@@ -122,8 +152,6 @@ Route::group(['middleware' => ['auth','role:administrator|signup|planner|supervi
     Route::get('/alumnos/get',['as' => 'admin.alumnos', 'uses'=>'AlumnosController@getAll']);
     Route::get('/representantes/get',['as' => 'admin.representantes', 'uses'=>'RepresentantesController@getAll']);
     Route::get('/inscripciones',['as' => 'admin.inscripcions', 'uses'=>'InscripcionsController@getAll']);
-
-
     Route::get('/facturas/get',['as' => 'admin.facturas', 'uses'=>'FacturasController@getAll']);
     
     //permite eliminar alumnos  representantes, inscripciones, comprobantes  con botones en datatable con ajax, paginando
@@ -131,8 +159,7 @@ Route::group(['middleware' => ['auth','role:administrator|signup|planner|supervi
     Route::get('representante/{representante?}/delete',['as' => 'admin.representante.delete', 'uses'=>'RepresentantesController@destroy']);
     Route::get('inscripcion/delete/{inscripcion?}/',['as' => 'admin.inscripcions.delete', 'uses'=>'InscripcionsController@destroy']);
     Route::get('facturas/delete/{comprobante?}/',['as' => 'admin.facturas.delete', 'uses'=>'FacturasController@destroy']);
-    
-    
+
     //eliminar curso
     Route::get('calendars/delete/{id?}/',['as' => 'admin.calendars.delete', 'uses'=>'CalendarsController@destroy']);
 

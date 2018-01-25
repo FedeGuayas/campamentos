@@ -25,6 +25,7 @@
         {{--FOOTER--}}
         @include('layouts.front.footer')
     </footer>
+@endsection
 
 @section('scripts')
     <script>
@@ -77,7 +78,5 @@
 
 
     </script>
-
-@endsection
 
 @endsection

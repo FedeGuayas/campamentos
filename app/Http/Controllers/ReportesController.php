@@ -188,6 +188,7 @@ class ReportesController extends Controller
 
             $pdf = PDF::loadView('campamentos.reportes.insc-adulto-pdf', compact('inscripcion', 'fecha_actual', 'month'));
 //        return $pdf->download('ComprobantePago.pdf');//descarga el pdf
+
             return $pdf->stream('ComprobantePago');//imprime en pantalla
 
         } else {//menor
@@ -200,7 +201,7 @@ class ReportesController extends Controller
     }
 
     /**
-     * Mostrar el cuadre diarrio de las ventas de los usuarios
+     * Mostrar el cuadre diario de las ventas de los usuarios
      * @param Request $request
      * @return mixed
      */
@@ -219,49 +220,82 @@ class ReportesController extends Controller
             $cuadre = Factura::
             join('inscripcions as i', 'i.factura_id', '=', 'facturas.id')
                 ->join('users as u', 'u.id', '=', 'i.user_id')
-                ->select('total', 'factura_id', 'i.user_id as uid', 'u.first_name', 'u.last_name', 'u.escenario_id', 'i.created_at', 'i.id', 'i.estado')
+                ->join('pagos as p', 'p.id', '=', 'facturas.pago_id')
+                ->select('total', 'factura_id', 'i.user_id as uid', 'u.first_name', 'u.last_name', 'u.escenario_id', 'i.created_at', 'i.id', 'i.estado','p.id as pagoID','p.forma')
                 ->where('i.estado', '=', 'Pagada')
                 ->where('facturas.created_at', 'like', '%' . $fecha . '%')
                 ->where('i.escenario_id', 'like', '%' . $escenario . '%')
-                ->groupBy('factura_id')
+                ->groupBy('factura_id') //agrupo por facturas de la tabla inscripciones xk hay varias insccripciones con una misma factura
                 ->get();
 
             $group = [];
+
             //crear array agrupando por el nombre de usuario  y agregar los valores de las facturas
             foreach ($cuadre as $c) {
                 $user = $c->first_name . ' ' . $c->last_name;
                 $i = $c->total;
-                $group[$user][] = [
+                $forma=$c->forma;
+                $group[$user][]= [
                     "Nombre" => $user,
-                    "factura" => $i];
-            }
+                    "precio" => $i,
+                    "fpago"=>$forma,
+                ];
 
+            }
 
             //sumar columnas para total por usuario y Total general
             $cuadreArray = [];
-            $precioFinal = 0;
-            foreach ($group as $nombre => $fact) {
-                $precioGrupo = 0;
-                foreach ($group[$nombre] as $r) {
+            $valorFinal = 0;
+            $totalContado=0;
+            $totalTarjeta=0;
+            $totalWestern=0;
+            foreach ($group as $nombre => $fp) {
+                $valorUsuario = 0;
+                $valorContado=0;
+                $valorTarjeta=0;
+                $valorWestern=0;
+                foreach ($group[$nombre] as $key=>$value) { // agrupar los valores de las facturas por usuario
                     //acumulados
-                    $precioGrupo += $r['factura'];
-                    //totales Finales
-                    $precioFinal += $r['factura'];
+                    if (stristr($value['fpago'], 'contado')){
+                        $valorContado += $value['precio']; //acumulado de contado para el usuario
+                        $totalContado +=$value['precio']; //acumulado total de contado
+                    }
+                    if (stristr($value['fpago'], 'tarjeta')){
+                        $valorTarjeta += $value['precio'];
+                        $totalTarjeta +=$value['precio'];
+                    }
+                    if (stristr($value['fpago'], 'western')){
+                        $valorWestern +=$value['precio'];
+                        $totalWestern +=$value['precio'];
+                    }
+
+                    $valorUsuario += $value['precio']; //acumulado para el usuario actual
+
+                    $valorFinal += $value['precio']; //acumulado total
                 }
                 $cuadreArray [] = [
-                    "factura" => $precioGrupo,
-                    "nombre" => $nombre,
+                    "valor" => $valorUsuario,
+                    "usuario" => $nombre,
+                    "contado"=>$valorContado,
+                    "tarjeta"=>$valorTarjeta,
+                    "western"=>$totalWestern
                 ];
-//                $group[$nombre]['acumulados'] = ["factura"=>$precioGrupo ];
+
+
             }
-//            $group['TotalesFinales'] = array("factura"=>$precioFinal);
+
             $total = [
-                "total" => $precioFinal
+                "totalWestern" => $totalWestern,
+                "totalContado" => $totalContado,
+                "totalTarjeta" => $totalTarjeta,
+                "totalGeneral"=>$valorFinal,
             ];
 
+
         }
+
         return view('campamentos.reportes.cuadre', compact('escenarioSelect', 'usuarioSelect', 'escenario', 'usuario',
-            'fecha', 'cuadreArray', 'total'));
+            'fecha', 'cuadreArray', 'total', 'cuadre'));
     }
 
 
@@ -441,7 +475,6 @@ class ReportesController extends Controller
 
             });
         })
-//
 //        ->store('xlsx',public_path());
             ->export('xlsx');
 
@@ -630,7 +663,8 @@ class ReportesController extends Controller
             ->select('inscripcions.id', 'inscripcions.alumno_id', 'inscripcions.factura_id', 'inscripcions.calendar_id', 'user_id', 'inscripcions.created_at', 'programs.disciplina_id', 'programs.escenario_id')
             ->where('calendar_id', $curso_id)
 //            ->orderBy('inscripcions.created_at')
-            ->get();
+            ->get()
+        ;
 
         $pdf = PDF::loadView('campamentos.reportes.listado.listado-pdf', compact('inscripciones', 'curso', 'numero'));
         return $pdf->stream('Listado');//imprime en pantalla

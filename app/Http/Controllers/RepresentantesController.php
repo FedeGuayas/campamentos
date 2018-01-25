@@ -391,14 +391,26 @@ return confirm(\'Seguro que desea borrar al representante?\')">
 
     public function search($search)
     {
-        $query=trim($search);
-        if ($query!=""){
-            $personas=Persona::searchPersona($search)->orderBy('created_at','DESC')->take(10)->get();
+        $field=trim($search);
+        if ($field!=""){
+
+            $personas=Persona::whereHas('representantes',function ($query) use ($field) {
+                $query->where('num_doc', 'LIKE', '%' . $field . '%')
+                    ->orWhere('nombres', 'LIKE', '%' . $field . '%')
+                    ->orWhere('apellidos', 'LIKE', '%' . $field . '%');})
+                ->orderBy('created_at','DESC')->take(10)->get();
+
         }
+//        $query=trim($search);
+//        if ($query!=""){
+//            $personas=Persona::searchPersona($search)->orderBy('created_at','DESC')->take(10)->get();
+//        }
 
         return view('campamentos.alumnos.listSearch',compact('personas'));
 
     }
+
+
 
     public function listSearch()
     {

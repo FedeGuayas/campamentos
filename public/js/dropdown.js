@@ -7,8 +7,9 @@
 
 //cargar alumnos del representante
 $("#representante_id").change(function (event) {
+
     var alumno=$("#alumno_id");
-    var fact_nombres=$(".fact_nombres")
+    var fact_nombres=$(".fact_nombres");
     var fact_email=$(".fact_email");
     var fact_phone=$(".fact_phone");
     var fact_direccion=$(".fact_direccion");
@@ -270,7 +271,7 @@ $("#nivel").change(function (event) {
                 program_id.empty();
                 calendar_id.val(response[0].cID);//curso
                 program_id.val(response[0].program_id);//programa
-                if ( $("#familiar").is(':checked') && $("#cursos_session").val()<2 ){
+                if ( ($("#familiar").is(':checked') || $("#primo").is(':checked')) && $("#cursos_session").val()<2 ){
                     $("#pagar").prop('disabled',true);
                 }else{
                     $("#pagar").prop('disabled',false);
@@ -293,15 +294,3 @@ $("#nivel").change(function (event) {
     });
 
 });
-
-
-//V2
-// $("#area_id").change(event=>{
-//     $.get(`persons/${event.target.value}`,function(res,sta){
-//         // console.log(response);
-//         $("#person_id").empty();
-//         res.forEach(element=>{
-//             $("#person_id").append(`<option value=${element.id}> ${element.first_name}</option>`);
-// });
-// });
-// });

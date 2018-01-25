@@ -62,12 +62,24 @@
 <body>
 <header>
     <h2>Campamentos Deportivos</h2>
-    <p>
-        MODULO: {{$curso->program->modulo->modulo}}<br>
-        ESCENARIO: {{$curso->program->escenario->escenario}}<br>
-        DISCIPLINA: {{$curso->program->disciplina->disciplina}}<br>
-        HORARIO: {{ $curso->horario->start_time.'-'.$curso->horario->end_time}}
-    </p>
+    <table style="font-size: 11px;">
+        <tr>
+           <td style="width: 350px">
+               MODULO: {{$curso->program->modulo->modulo}}
+           </td>
+            <td>ESCENARIO: {{$curso->program->escenario->escenario}}</td>
+        </tr>
+        <tr>
+            <td>DISCIPLINA: {{$curso->program->disciplina->disciplina}}</td>
+            <td>HORARIO: {{ $curso->horario->start_time.'-'.$curso->horario->end_time}}</td>
+        </tr>
+        <tr>
+            <td colspan="2">DIAS: {{$curso->dia->dia}}</td>
+            <td></td>
+        </tr>
+
+    </table>
+
 </header>
 
 {{--<div style="width:100%; font-size:0;">--}}
@@ -88,10 +100,8 @@
                 <td> {{$numero++}}</td>
                 <td>
                     @if ($insc->alumno_id==0)
-                        {{--                                {{ $insc->factura->representante->persona->apellidos.' '. $insc->factura->representante->persona->nombres}}--}}
                         {{ $insc->factura->representante->persona->apellidos}}
                     @else
-                        {{--{{ $insc->alumno->persona->apellidos.' '.$insc->alumno->persona->nombres }}--}}
                         {{ $insc->alumno->persona->apellidos}}
                     @endif
                 </td>
@@ -141,7 +151,7 @@
 <script>
     $(document).ready(function()
         {
-            $("#table_listado").tablesorter( {sortList: [[1,1]]} );
+            $("#table_listado").tablesorter( {sortList: [[0,3]]} );
         }
     );
 </script>

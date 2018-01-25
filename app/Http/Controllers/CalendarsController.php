@@ -497,7 +497,8 @@ class CalendarsController extends Controller
      */
 
     public function getAddCurso(Request $request,$id){
-       
+
+
         $curso=Calendar::where('id',$id)->with('horario','dia','program')->first(); //obtengo el curso, actual inscripcion
 
         $desc_emp=$request->input('descuento_empleado'); //si es empleado o no, true or false
@@ -506,13 +507,17 @@ class CalendarsController extends Controller
         
         $matricula=$request->input('matricula'); //true or false
 
-        $familiar=$request->input('familiar');//on or off,  10% familiares
+        $familiar=$request->input('familiar');//on or off,  10% familiares hermanos
+        $primo=$request->input('primo');//on or off,  5% primos
         $multiple=$request->input('multiple');//on or off, 10% inscripcion en mismo curso 3 meses o mas
 
+        $tipo_desc='';
         if ($familiar=='on')
             $tipo_desc='familiar';
         if ($multiple=='on')
             $tipo_desc='multiple';
+        if ($primo=='on')
+            $tipo_desc='primo';
 
         if ($request->input('adulto')=='on'){
             $alumno=$representante;
@@ -527,7 +532,7 @@ class CalendarsController extends Controller
             'alumno'=>$alumno,
             'representante'=>$representante,
         ];
-       
+
         //si hay un curso almacenado en la session lo tomo, sino le paso nulo
         $oldCurso=Session::has('curso') ? Session::get('curso') : null;
         //creo una instancia de la coleccion de cursos
@@ -566,7 +571,7 @@ class CalendarsController extends Controller
 
         $cursos=$cursos_coll->cursos; //objeto curso dentro del arreglo
         $precioTotal=$cursos_coll->totalPrecio; //suma de todas las mensualidades de los cursos en el carrito
-        $tipo_descuento=$cursos_coll->tipo_desc; //si es decuento familiar o multiple
+        $tipo_descuento=$cursos_coll->tipo_desc; //si es decuento familiar primo o multiple
         $desc_emp=$cursos_coll->desc_empleado; //si es des por empleado
 
         $matricula=0;
@@ -579,7 +584,10 @@ class CalendarsController extends Controller
             $descuento= $precioTotal*$desc; //mensualidadTotal*desc_empleado 
             $tipo_descuento='empleado';
         }else if ($tipo_descuento=='familiar' || $tipo_descuento=='multiple'){
-            $desc=0.1; //10% desc
+            $desc=0.1; //10% desc hermanos y multiple
+            $descuento=$precioTotal*$desc; //mensualidadTotal*desc
+        }else if ($tipo_descuento=='primo'){
+            $desc=0.05; //5% desc primos
             $descuento=$precioTotal*$desc; //mensualidadTotal*desc
         }
 
@@ -646,8 +654,6 @@ class CalendarsController extends Controller
      */
     public function postStore(Request $request)
     {
-
-
        //  guardar los cursos de la session
 
         $oldCurso=Session::get('curso');
@@ -660,13 +666,17 @@ class CalendarsController extends Controller
         
         if ($tipo_descuento=='familiar' || $tipo_descuento=='multiple'){
             $desc1=0.1;
-        }else  $desc1=0;
+        } else  $desc1=0;
 
         if ($desc_emp=='true'){
             $desc2=0.5;
         }else  $desc2=0;
 
-        $descuento=$precioTotal*$desc1 + $precioTotal*$desc2;
+        if ($tipo_descuento=='primo'){
+            $desc3=0.05;
+        }else  $desc3=0;
+
+        $descuento=$precioTotal*$desc1 + $precioTotal*$desc2 +$precioTotal*$desc3;;
 
         $total=$precioTotal-$descuento;
 

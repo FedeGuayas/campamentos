@@ -83,6 +83,12 @@ class Multiples
             $this->tipo_desc=$opciones[0]['tipo_desc'];
         }
 
+        //descuento para primos 5%
+        if ( $opciones[0]['tipo_desc']=='primo' ){
+//            $desc=0.05;
+            $this->tipo_desc=$opciones[0]['tipo_desc'];
+        }
+
         //descuento para inscipcines multiples
         if ( $opciones[0]['tipo_desc']=='multiple') {
 //            $desc=0.1;

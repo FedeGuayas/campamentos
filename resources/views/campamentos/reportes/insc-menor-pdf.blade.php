@@ -141,7 +141,7 @@
         </table>
     </div>
 
-<br><br><br><br><br><br>
+<br><br><br><br><br><br><br>
     <div class="limpia_float">
         {{--<div style="font-size: 12px">--}}
         <table align="center" border="0" cellspacing="0" style="width:90%; font-style: italic; text-align : justify; font-size: 11px">
@@ -252,18 +252,29 @@
 
 {{--<span style="font-family: fontAwesome;  position: absolute; bottom: 500px; right: 240px;">&#xf0c4; </span>--}}
 <div class="tijera"></div>
-<div class="credencial_img">
+
+@if ( stristr($inscripcion->calendar->program->modulo->modulo, 'permanente') )
+    <div class="credencial_campamentos">
+@else
+    <div class="credencial_img">
+@endif
     <table align="left" border="1" cellpadding="1"  width="225px"
            style="font-size: 9px; text-align: left;">
         <tr>
             <td>
-                <br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+                <br><br><br><br><br><br><br><br><br><br><br><br><br>
             </td>
         </tr>
         <tr>
-            <th></th>
-            <td align="" style="font-size: 12px">
-                <b>MODULO: {{ $inscripcion->calendar->program->modulo->modulo}}</b>
+            <th>Modulo:</th>
+            <td>
+                <b> {{ $inscripcion->calendar->program->modulo->modulo}}</b>
+            </td>
+        </tr>
+        <tr>
+            <th>Fecha:</th>
+            <td>
+                <b> {{ $inscripcion->calendar->program->modulo->inicio}} / {{$inscripcion->calendar->program->modulo->fin}}</b>
             </td>
         </tr>
         <tr>

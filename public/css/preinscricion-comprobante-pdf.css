@@ -1,0 +1,43 @@
+/*body {
+    width: 1cm;
+}
+*/
+
+body{
+
+    font-family: sans-serif;
+}
+
+td {
+    border:hidden;
+}
+table {
+    border: 3px solid ;
+}
+
+@page {
+    margin: 5px 5px;
+}
+
+
+.logo{
+    background: url(../img/camp/fdg-logo.png) no-repeat fixed center;
+    -webkit-background-size: contain;
+    -moz-background-size: contain;
+    -o-background-size: contain;
+    background-size: contain;
+    height: 35%;
+    width: 35% ;
+    text-align: center;
+    position: absolute;
+    top: 155px;
+    right: 30px;
+    opacity: 0.5;
+    z-index: -999;
+    /*border: 1px ;*/
+    /*border-style: dashed;*/
+    /*border-color:#090c29;*/
+}
+
+
+

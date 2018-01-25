@@ -293,22 +293,30 @@
                     contentType: false,
                     processData: false,
                     success: function (resp) {
-                        alert(resp.message);
+                        console.log(resp);
+//                        alert(resp.message);
+                        swal("", resp.message, "success");
                         var total_cursos = resp.totalCursos;
+
                         $("#getCurso>h5>span").html(total_cursos);
+
                         if ($("#familiar").is(':checked') && total_cursos < 2) {
                             $("#form_inscripcion").trigger("reset");//limpio el form en la primera inscripcion
                             $("#pagar").prop("disabled", true);
-
                         } else $("#pagar").prop("disabled", false);
 
                         if ($("#multiple").is(':checked') && total_cursos < 3) {
                             $("#pagar").prop("disabled", true);
                         } else $("#pagar").prop("disabled", false);
+
+                        if ($("#primo").is(':checked') && total_cursos < 2) {
+                            $("#form_inscripcion").trigger("reset");//limpio el form en la primera inscripcion
+                            $("#pagar").prop("disabled", true);
+                        } else $("#pagar").prop("disabled", false);
                     },
                     error: function (resp) {
                         console.log(resp);
-                        alert("No se pudo realizar la acción");
+                        swal("", "No se pudo realizar la acción", "error");
                     }
                 });
             }
@@ -350,15 +358,15 @@
 
                     // si se activa
                     if ($(this).is(':checked')) {
-                        console.log("Checkbox " + $(this).prop("id") + " (" + $(this).val() + ") => Seleccionado");
+//                        console.log("Checkbox " + $(this).prop("id") + " (" + $(this).val() + ") => Seleccionado");
                         $("div").remove(".alumno");
 //                   representante_id.append('<option value="' +$(this).val()+ '">' + name + '</option>');
 //                   representante_id.addClass("teal-text");
 //                                   $("#persona_id").val($(this).val());
 
                     } else {
-                        console.log("Checkbox " + $(this).prop("id") + " (" + $(this).val() + ") => Deseleccionado");
-                        $("div").add(".alumno");
+//                        console.log("Checkbox " + $(this).prop("id") + " (" + $(this).val() + ") => Deseleccionado");
+//                        $("div").add(".alumno");
 //                   representante_id.find("option:gt(0)").remove();//elimino las opciones menos la primera
 //                   representante_id.removeClass("teal-text");
 //                   $("#persona_id").empty();
@@ -368,15 +376,17 @@
             });
 
 
-            //inscripcion familiar
+            //inscripcion familiar hermanos 10%
             $(document).ready(function () {
                 $("#familiar").on('click', function () {
                     if ($(this).is(':checked')) {
+                        $("#primo").prop("disabled", true);
                         $("#multiple").prop("disabled", true);
                         $(".agregar").prop("disabled", false);
 //                        $("#pagar").prop('disabled', true);
 
                     } else {
+                        $("#primo").prop("disabled", false);
                         $("#multiple").prop("disabled", false);
                         $(".agregar").prop("disabled", true);
 //                        $("#pagar").prop("disabled", false);
@@ -384,12 +394,32 @@
                 });
             });
 
+            //inscripcion familiar primos 5%
+            $(document).ready(function () {
+                $("#primo").on('click', function () {
+                    if ($(this).is(':checked')) {
+                        $("#familiar").prop("disabled", true);
+                        $("#multiple").prop("disabled", true);
+                        $(".agregar").prop("disabled", false);
+//                        $("#pagar").prop('disabled', true);
+
+                    } else {
+                        $("#familiar").prop("disabled", false);
+                        $("#multiple").prop("disabled", false);
+                        $(".agregar").prop("disabled", true);
+//                        $("#pagar").prop("disabled", false);
+                    }
+                });
+            });
+
+
             //checkbox inscripcion multiple
             $(document).ready(function () {
                 var select = $('select');
                 $("#multiple").on('change', function () {
                     if ($(this).is(':checked')) {
                         $("#familiar").prop("disabled", true);
+                        $("#primo").prop("disabled", true);
                         $(".agregar").prop("disabled", false);
 
 //                        $("#pagar").prop('disabled', true);
@@ -400,6 +430,7 @@
 
                     } else {
                         $("#familiar").prop("disabled", false);
+                        $("#primo").prop("disabled", false);
                         $(".agregar").prop("disabled", true);
 //                        $("#pagar").prop("disabled", false);
 //                        $("#representante_id").prop('disabled', false);

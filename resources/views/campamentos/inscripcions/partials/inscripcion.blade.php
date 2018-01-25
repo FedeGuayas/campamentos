@@ -109,7 +109,13 @@
             <div class="col l2">
                 <div class="input-field">
                     {!! Form::checkbox('familiar',null,false,['id'=>'familiar']) !!}
-                    {!! Form::label('familiar','Familiar') !!}
+                    {!! Form::label('familiar','Familiar (10%)') !!}
+                </div>
+            </div>
+            <div class="col l2">
+                <div class="input-field">
+                    {!! Form::checkbox('primo',null,false,['id'=>'primo']) !!}
+                    {!! Form::label('primo','Primos (5%)') !!}
                 </div>
             </div>
             <div class="col l2">

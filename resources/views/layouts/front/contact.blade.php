@@ -27,7 +27,7 @@
                     </li>
 
                     <li class="wow fadeInUp" data-wow-delay="0.4s"><a class="btn-floating" data-toggle="modal" data-target="#contact-form"><i class="material-icons medium">contact_mail</i></a>
-                        <p>contact@fedeguayas.com.ec</p>
+                        <p>info@fedeguayas.com.ec</p>
                     </li>
                 </ul>
             </div>

@@ -94,7 +94,7 @@ class InscripcionsController extends Controller
                             @endif
                             ';
 
-                //Boton reincribir marzo a abril
+            //Boton reincribir marzo a abril
 //            <a href="{{ route('admin.inscripcions.re-inscribir', [$id] ) }}">
 //                                {!! Form::button('<i class="tiny fa fa-repeat" ></i>',['class'=>'label waves-effect waves-light blue darken-1']) !!}
 //                                 </a>
@@ -168,7 +168,7 @@ class InscripcionsController extends Controller
     {
         return view('campamentos.inscripcions.deletes');
     }
-    
+
     /**
      * Obtener el listado de todas las inscripciones eliminadas para datatables con ajax
      * @param Request $request
@@ -209,63 +209,68 @@ class InscripcionsController extends Controller
     {
         if (Auth::user()->hasRole(['planner', 'administrator', 'supervisor'])) {
 
-            $inscripcion = Inscripcion::where('id', $id)->with('factura', 'calendar', 'user', 'alumno')->first();
-//            $calendar = $inscripcion->calendar;
-            $calendar_id = $inscripcion->calendar_id;
-            $calendar = Calendar::findOrFail($calendar_id);
-            $calendar->decrement('contador');
+            try {
 
-            $fact_id = $inscripcion->factura_id;
-            $count_fact = Inscripcion::where('factura_id', '=', $fact_id)->count();
+                DB::beginTransaction();
 
-            if ($count_fact > 1) { //si es una inscripcion multiple
+                $inscripcion = Inscripcion::where('id', $id)->with('factura', 'calendar', 'user', 'alumno')->first();
+                $calendar_id = $inscripcion->calendar_id;
+                $calendar = Calendar::findOrFail($calendar_id);
 
-                for ($i = 0; $i < $count_fact; $i++) { //eliminar cada inscripcion asociada
-                    $inscripcion_m = Inscripcion::where('factura_id', $fact_id)->first();
-                    $calendar = Calendar::findOrFail($inscripcion_m->calendar_id);
-                    if (($calendar->contador) > 0) {
-                        $calendar->decrement('contador');
-                    } else {
-                        Session::flash('message_danger', 'No hay Reservas para este curso ');
-                        return redirect()->back();
-                    }
-
-                    $inscripcion_m->delete();
+                if (($calendar->contador) <= 0) {
+                    Session::flash('message_danger', 'No se encontro la reserva ');
+                    return redirect()->back();
                 }
-                $descuento = Descuento::where('factura_id', $inscripcion->factura_id);
-                $descuento->delete();
-                $factura = Factura::where('id', $inscripcion->factura_id);
-                $factura->delete();
 
-                $tipo_inscripcion = 'multiple';
-                Session::flash('message_danger', 'Reserva multiple, se eliminaron todas las reservas asociadas');
-                return redirect()->back();
+                $fact_id = $inscripcion->factura_id;
+                $count_fact = Inscripcion::where('factura_id', '=', $fact_id)->count();
 
-            } else { //inscripcion sencilla
+                if ($count_fact > 1) { //si es una inscripcion multiple
+
+                    for ($i = 0; $i < $count_fact; $i++) { //eliminar cada inscripcion asociada
+                        $inscripcion_m = Inscripcion::where('factura_id', $fact_id)->first();
+                        $calendar = Calendar::findOrFail($inscripcion_m->calendar_id);
+                        if (($calendar->contador) > 0) {
+                            $calendar->decrement('contador');
+                        }
+
+                        $inscripcion_m->delete();
+                    }
+                    $descuento = Descuento::where('factura_id', $inscripcion->factura_id);
+                    $descuento->delete();
+                    $factura = Factura::where('id', $inscripcion->factura_id);
+                    $factura->delete();
+                    $tipo_inscripcion = 'multiple';
+                    Session::flash('message_danger', 'Reserva multiple, se eliminaron todas las reservas asociadas');
+                    return redirect()->back();
+
+                }
+                //inscripcion sencilla
 
                 if (($calendar->contador) > 0) {
                     $calendar->decrement('contador');
-                } else {
-                    Session::flash('message_danger', 'No hay reservas para este curso ');
-                    return redirect()->back();
                 }
+
                 $descuento = Descuento::where('factura_id', $inscripcion->factura_id);
                 $descuento->delete();
                 $factura = Factura::where('id', $inscripcion->factura_id);
                 $factura->delete();
                 $inscripcion->delete();
+
+                DB::commit();
+
                 Session::flash('message_danger', 'Reserva eliminada');
+                return redirect()->back();
+
+            } catch (\Exception $e) { //en caso de error viro al estado anterior
+                DB::rollback();
+                Session::flash('message_danger', 'Error no se pudo eliminar la reserva');
+//                Session::flash('message_danger', 'Error' . $e->getMessage());
                 return redirect()->route('admin.inscripcions.reservas');
             }
 
-//            $inscripcion->delete();
-//            $inscripcion->factura->delete();
-
-            // Session::flash('message', 'Reserva eliminada');
-//            return redirect()->back();
-
-
         } else return abort(403);
+
     }
 
     /**
@@ -273,12 +278,15 @@ class InscripcionsController extends Controller
      * @param $id
      * @return mixed
      */
-    public function reservaConfirm($id)
+    public function reservaConfirm(Request $request,$id)
     {
         if (Auth::user()->hasRole(['planner', 'administrator', 'supervisor'])) {
 
+            $user=$request->user();
+
             $inscripcion = Inscripcion::where('id', $id)->with('factura', 'calendar', 'user', 'alumno')->first();
             $inscripcion->estado = 'Pagada';
+            $inscripcion->user()->associate($user);
             $inscripcion->update();
 
             Session::flash('message', 'Inscripcion Confirmada');
@@ -354,7 +362,7 @@ class InscripcionsController extends Controller
 
                     $factura->save();
 
-                    if ($request->input('valor') ==0 && $request->input('cortesia')=='on') {
+                    if ($request->input('valor') == 0 && $request->input('cortesia') == 'on') {
                         $descuentos = new Descuento();
                         $descuentos->factura()->associate($factura);
                         $descuentos->descripcion = 'CORTESIA';
@@ -369,7 +377,6 @@ class InscripcionsController extends Controller
                         $descuentos->valor = $factura->descuento;
                         $descuentos->save();
                     }
-
 
 
                     //inscripcion
@@ -426,13 +433,18 @@ class InscripcionsController extends Controller
                 return redirect()->back();
             }
 
+            if ($request->input('primo') == 'on' && Session::get('curso')->totalCursos < 2) {
+                Session::flash('message_danger', 'No se permiten menos de 2 inscripciones para el grupo Primos');
+                return redirect()->back();
+            }
+
             //inscripcion multiples no puede tener menos de 3 inscritos y no puede ser en invierno
             if (($request->input('multiple') == 'on' && Session::get('curso')->totalCursos < 3)) {
                 Session::flash('message_danger', 'No se permiten menos de 3 inscripciones para el grupo Multiple o esta fuera de temporada');
                 return redirect()->back();
             }
 
-            //si es inscripcion variada tiene que estar marcado o familira o multiple
+            //si es inscripcion variada tiene que estar marcado o familiar o multiple
             if (Session::get('curso')->totalCursos > 0 && ($request->input('familiar') == false && $request->input('multiple') == false)) {
                 Session::flash('message_danger', 'Debe seleccionar Familiar o Multiple, según corresponda');
                 return redirect()->back();
@@ -892,6 +904,7 @@ class InscripcionsController extends Controller
      */
     public function costoUpdate(Request $request)
     {
+
         if ($request->ajax()) {
 
             //costo de la matricula para el programa en determinado mes escenario y disciplina
@@ -939,72 +952,71 @@ class InscripcionsController extends Controller
             }
 
             /*Desceunto 10% insc en mayo de un alumno que se insc en marzo y abril en la misma disciplina*/
-            /*****************/
-             //else if (($adulto == 'false' && !is_null($alumno_id))) { //inscripcion de menor
-               // $alumno = Alumno::where('id', $alumno_id)->with('persona')->first();
-               // $insc = $alumno->inscripcions()->select('id', 'calendar_id')->where('estado', 'Pagada')->with('calendar')->get();
-                 //$inscArray = [];
-                 //foreach ($insc as $ins) {
-                     //si las insc anteriores son en  marzo y abril y en la disciplina que se esta inscribiendo actualmente, y que no sea  marzo permanente 2017, abril permanente 2017
-                     //if ((stristr($ins->calendar->program->modulo->modulo, 'marzo 2017') || stristr($ins->calendar->program->modulo->modulo, 'abril 2017')) && ($ins->calendar->program->disciplina_id == $disciplina_id)) {
-                         //guardo en un array la disciplina y el modulo respectivo
-                         //$inscArray[] = [
-                             //'disciplina' => $ins->calendar->program->disciplina->disciplina,
-                             //'modulo' => $ins->calendar->program->modulo->modulo
-                         //];
-                     //}
-                 //}
-                 // dd($inscArray);
-                 //$meses = [];
-                 //foreach ($inscArray as $arr) {
-                     //foreach ($arr as $key => $value) {
-                         //$meses[$key][$value] = $value;
-                     //}
-                 //}
-                 //   dd($meses);
-                 //si se inscribio en los dos meses
-                 //if (isset($meses['modulo']) && count($meses['modulo']) >= 2) {
-                     //var_dump('Inscrito en marzo y abril');
-                     //$desc_marz_abril = 0.1;
-                 //} else $desc_marz_abril = 0;
-                 //$descuento = $mes * $desc_marz_abril;
-             //}
-             //else if ($adulto == 'true') { //insc de adulto
-                        //$rep = Representante::where('persona_id', $alumno_id)->with('persona')->first();
-                        //$facturas=Factura::where('representante_id',$alumno_id)->get();
-                        //$ins_rep = $rep->facturas()->select('id')->get()->toArray();
-                        //$insc = Inscripcion::whereIn('factura_id', $ins_rep)->where('alumno_id', 0)->select('id', 'calendar_id')->where('estado', 'Pagada')->with('calendar')->get();
+            /******************************************************************************************************************************************/
+            //else if (($adulto == 'false' && !is_null($alumno_id))) { //inscripcion de menor
+            // $alumno = Alumno::where('id', $alumno_id)->with('persona')->first();
+            // $insc = $alumno->inscripcions()->select('id', 'calendar_id')->where('estado', 'Pagada')->with('calendar')->get();
+            //$inscArray = [];
+            //foreach ($insc as $ins) {
+            //si las insc anteriores son en  marzo y abril y en la disciplina que se esta inscribiendo actualmente, y que no sea  marzo permanente 2017, abril permanente 2017
+            //if ((stristr($ins->calendar->program->modulo->modulo, 'marzo 2017') || stristr($ins->calendar->program->modulo->modulo, 'abril 2017')) && ($ins->calendar->program->disciplina_id == $disciplina_id)) {
+            //guardo en un array la disciplina y el modulo respectivo
+            //$inscArray[] = [
+            //'disciplina' => $ins->calendar->program->disciplina->disciplina,
+            //'modulo' => $ins->calendar->program->modulo->modulo
+            //];
+            //}
+            //}
+            // dd($inscArray);
+            //$meses = [];
+            //foreach ($inscArray as $arr) {
+            //foreach ($arr as $key => $value) {
+            //$meses[$key][$value] = $value;
+            //}
+            //}
+            //   dd($meses);
+            //si se inscribio en los dos meses
+            //if (isset($meses['modulo']) && count($meses['modulo']) >= 2) {
+            //var_dump('Inscrito en marzo y abril');
+            //$desc_marz_abril = 0.1;
+            //} else $desc_marz_abril = 0;
+            //$descuento = $mes * $desc_marz_abril;
+            //}
+            //else if ($adulto == 'true') { //insc de adulto
+            //$rep = Representante::where('persona_id', $alumno_id)->with('persona')->first();
+            //$facturas=Factura::where('representante_id',$alumno_id)->get();
+            //$ins_rep = $rep->facturas()->select('id')->get()->toArray();
+            //$insc = Inscripcion::whereIn('factura_id', $ins_rep)->where('alumno_id', 0)->select('id', 'calendar_id')->where('estado', 'Pagada')->with('calendar')->get();
 
-                 //$inscArray = [];
-                 //foreach ($insc as $ins) {
-                     //si las insc son en  marzo o abril y en la disciplina que se esta inscribiendo actualmente
-                     //if ((stristr($ins->calendar->program->modulo->modulo, 'marzo 2017') || stristr($ins->calendar->program->modulo->modulo, 'abril 2017')) && ($ins->calendar->program->disciplina_id == $disciplina_id)) {
-                         //guardo en un array la disciplina y el modulo respectivo
-                         //$inscArray[] = [
-                             //'disciplina' => $ins->calendar->program->disciplina->disciplina,
-                             //'modulo' => $ins->calendar->program->modulo->modulo
-                         //];
-                     //}
-                 //}
-                 // dd($inscArray);
-                 //$meses = [];
-                 //foreach ($inscArray as $arr) {
-                     //foreach ($arr as $key => $value) {
-                         //$meses[$key][$value] = $value;
-                     //}
-                 //}
-                 //   dd($meses);
-                 //si se inscribio en los dos meses
-                 //if (isset($meses['modulo']) && count($meses['modulo']) >= 2) {
-                     //var_dump('Inscrito en marzo y abril');
-                     //$desc_marz_abril = 0.1;
-                 //} else $desc_marz_abril = 0;
-                 //$descuento = $mes * $desc_marz_abril;
-             //}
+            //$inscArray = [];
+            //foreach ($insc as $ins) {
+            //si las insc son en  marzo o abril y en la disciplina que se esta inscribiendo actualmente
+            //if ((stristr($ins->calendar->program->modulo->modulo, 'marzo 2017') || stristr($ins->calendar->program->modulo->modulo, 'abril 2017')) && ($ins->calendar->program->disciplina_id == $disciplina_id)) {
+            //guardo en un array la disciplina y el modulo respectivo
+            //$inscArray[] = [
+            //'disciplina' => $ins->calendar->program->disciplina->disciplina,
+            //'modulo' => $ins->calendar->program->modulo->modulo
+            //];
+            //}
+            //}
+            // dd($inscArray);
+            //$meses = [];
+            //foreach ($inscArray as $arr) {
+            //foreach ($arr as $key => $value) {
+            //$meses[$key][$value] = $value;
+            //}
+            //}
+            //   dd($meses);
+            //si se inscribio en los dos meses
+            //if (isset($meses['modulo']) && count($meses['modulo']) >= 2) {
+            //var_dump('Inscrito en marzo y abril');
+            //$desc_marz_abril = 0.1;
+            //} else $desc_marz_abril = 0;
+            //$descuento = $mes * $desc_marz_abril;
+            //}
 
-            /***********************************/
-            else $descuento=0;
-
+            /**************************************************************************************************************************************/
+            else $descuento = 0;
 
 
             if ($request->input('matricula') == 'true') {
@@ -1015,7 +1027,7 @@ class InscripcionsController extends Controller
 
             //pase de cortesia costo 0
             if ($request->input('cortesia') == 'true') {
-               $precio = 0;
+                $precio = 0;
             }
 
             return response(number_format($precio, 2, '.', ' '));
@@ -1027,7 +1039,8 @@ class InscripcionsController extends Controller
     /**
      * descuento 10% ins marzo abril mayo misma disc
      */
-    public function descMarzoAbril(){
+    public function descMarzoAbril()
+    {
 
     }
 }

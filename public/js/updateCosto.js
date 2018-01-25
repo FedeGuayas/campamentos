@@ -47,6 +47,7 @@ $(document).ready(function () {
             // contentType: 'application/x-www-form-urlencoded',
             data: datos,
             success: function (response) {
+                console.log(response);
                 if ($("#cursos_session").val()>0){
                     valor.addClass("teal-text");
                     valor.val($("#cursos_precio_session").val());
@@ -92,7 +93,7 @@ $(document).ready(function (event) {
             // descuento_multiple:desc_mult.prop("checked"),
             // descuento_familiar:desc_fam.prop("checked"),
             matricula:  matricula.prop("checked")
-        }
+        };
         $.ajax({
             url: "costo",
             type: "GET",
@@ -100,16 +101,16 @@ $(document).ready(function (event) {
             // contentType: 'application/x-www-form-urlencoded',
             data: datos,
             success: function (response) {
-                console.log(response);
+                //console.log(response);
                 if (matricula.is(':checked')) {
-                    console.log("Checkbox  => Seleccionado");
+                   // console.log("Checkbox matricula  => Seleccionado");
                     valor.addClass("teal-text");
                     valor.val(response);
                     // var mat=parseFloat(response.matricula[0].matricula);
 
                     // valor.val(mat);
                 } else {
-                    console.log("Checkbox => Deseleccionado");
+                   // console.log("Checkbox matricula => Deseleccionado");
                     valor.addClass("teal-text");
                     valor.val(response);
                 }
@@ -163,10 +164,10 @@ $(document).ready(function (event) {
                 if (cortesia.is(':checked')) {
                     console.log("Checkbox  => Seleccionado");
                     $("#familiar").prop("disabled", true);
+                    $("#primo").prop("disabled", true);
                     $("#multiple").prop("disabled", true);
                     $("#matricula").prop("disabled", true);
                     $("#reservar").prop("disabled", true);
-                    $("#matricula").prop("disabled", true);
                     $("#add-cursos").prop("disabled", true);
 
                     valor.addClass("teal-text");
@@ -177,9 +178,11 @@ $(document).ready(function (event) {
                 } else {
                     console.log("Checkbox => Deseleccionado");
                     $("#familiar").prop("disabled", false);
+                    $("#primo").prop("disabled", false);
                     $("#multiple").prop("disabled", false);
                     $("#matricula").prop("disabled", false);
-                    $("#matricula").prop("disabled", false);
+                    $("#reservar").prop("disabled", false);
+
 
                     valor.addClass("teal-text");
                     valor.val(response);

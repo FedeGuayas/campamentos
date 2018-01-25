@@ -22,13 +22,12 @@
         </p>
         <p>
             <span><b>
-                     @if ($inscripcion->factura->total==0 && $inscripcion->factura->descuentos->descripcion=='CORTESIA')
+             		@if ($inscripcion->factura->total==0 && $inscripcion->factura->descuentos->descripcion=='CORTESIA')
                         CURSO DE CORTESIA EN CAMPAMENTOS DEPORTIVOS FEDEGUAYAS
                     @else
                         INSCRIPCION EN CAMPAMENTOS DEPORTIVOS FEDEGUAYAS
                     @endif
-                </b>
-            </span>
+            </b></span>
         </p>
     </div>
 </header>
@@ -39,36 +38,36 @@
         <tr>
             <th align="left" style="text-decoration: underline">DATOS DEL INSCRITO</th>
         </tr>
-       <tr>
-           <td>
-               <table align="center" border="0" cellpadding="0" cellspacing="0" style=" width: 400px; font-size: 12px; ">
-                   <tr>
-                       <th  align="left" style="width: 130px;">ALUMNO:</th>
-                       <td>{{$inscripcion->factura->representante->persona->apellidos.' '.$inscripcion->factura->representante->persona->nombres}}</td>
-                   </tr>
-                   <tr>
-                       <th align="left">EDAD:</th>
-                       <td>{{$inscripcion->factura->representante->getEdad($inscripcion->factura->representante->persona->fecha_nac)}}</td>
-                   </tr>
-                   <tr>
-                       <th align="left">SEXO:</th>
-                       <td>{{$inscripcion->factura->representante->persona->genero}}</td>
-                   </tr>
-                   <tr>
-                       <th align="left">DIRECCION:</th>
-                       <td>{{$inscripcion->factura->representante->persona->direccion}}</td>
-                   </tr>
-                   <tr>
-                       <th align="left">TEEFONO:</th>
-                       <td>{{$inscripcion->factura->representante->persona->telefono}}</td>
-                   </tr>
-                   <tr>
-                       <th align="left">CORREO:</th>
-                       <td>{{$inscripcion->factura->representante->persona->email}}</td>
-                   </tr>
-               </table>
-           </td>
-       </tr>
+        <tr>
+            <td>
+                <table align="center" border="0" cellpadding="0" cellspacing="0" style=" width: 400px; font-size: 12px; ">
+                    <tr>
+                        <th  align="left" style="width: 130px;">ALUMNO:</th>
+                        <td>{{$inscripcion->factura->representante->persona->apellidos.' '.$inscripcion->factura->representante->persona->nombres}}</td>
+                    </tr>
+                    <tr>
+                        <th align="left">EDAD:</th>
+                        <td>{{$inscripcion->factura->representante->getEdad($inscripcion->factura->representante->persona->fecha_nac)}}</td>
+                    </tr>
+                    <tr>
+                        <th align="left">SEXO:</th>
+                        <td>{{$inscripcion->factura->representante->persona->genero}}</td>
+                    </tr>
+                    <tr>
+                        <th align="left">DIRECCION:</th>
+                        <td>{{$inscripcion->factura->representante->persona->direccion}}</td>
+                    </tr>
+                    <tr>
+                        <th align="left">TEEFONO:</th>
+                        <td>{{$inscripcion->factura->representante->persona->telefono}}</td>
+                    </tr>
+                    <tr>
+                        <th align="left">CORREO:</th>
+                        <td>{{$inscripcion->factura->representante->persona->email}}</td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
     </table>
     <br>
     <table align="center" border="0" cellpadding="0" cellspacing="0" style=" width: 720px; font-size: 12px; ">
@@ -114,7 +113,7 @@
                         <td>
                             @if($inscripcion->factura->descuento==null || $inscripcion->factura->descuento==0)
                                 INDIVIDUAL
-                            @elseif
+                            @else
                                 INSCRIPCION, {{$inscripcion->factura->descuentos ? $inscripcion->factura->descuentos->descripcion : ''}}
                             @endif
                         </td>
@@ -141,7 +140,7 @@
         </tr>
     </table>
 </div>
-
+<br>
 <div class="">
     <table align="center" border="0" cellspacing="0" style="width:90%; font-style: italic; text-align : justify; font-size: 11px; margin-top: -20px;">
         <tr>
@@ -161,7 +160,7 @@
         </tr>
     </table>
 </div>
-    <hr>
+<hr>
 
 <div>
     <table align="left" border="1" cellpadding="5" cellspacing="0" style="width:60%; text-align : justify; font-size: 11px; margin-left: 30px; margin-top: -20px; ">
@@ -234,19 +233,29 @@
 
 {{--<span style="font-family: FontAwesome;  position: absolute; bottom: 500px; right: 240px;">&#xf0c4; </span>--}}
 <div class="tijera"></div>
-<div class="credencial_img">
 
+@if ( stristr($inscripcion->calendar->program->modulo->modulo, 'permanente') )
+    <div class="credencial_campamentos">
+@else
+    <div class="credencial_img">
+@endif
     <table align="left" border="1" cellpadding="1" width="225px"
            style="font-size: 9px; text-align: left;">
         <tr>
             <td>
-                <br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+                <br><br><br><br><br><br><br><br><br><br><br><br><br>
             </td>
         </tr>
         <tr>
-            <th></th>
-            <td align="" style="font-size: 12px">
-                <b>MODULO: {{ $inscripcion->calendar->program->modulo->modulo}}</b>
+            <th>Modulo:</th>
+            <td>
+                <b> {{ $inscripcion->calendar->program->modulo->modulo}}</b>
+            </td>
+        </tr>
+        <tr>
+            <th>Fecha:</th>
+            <td>
+                <b> {{ $inscripcion->calendar->program->modulo->inicio}} / {{$inscripcion->calendar->program->modulo->fin}}</b>
             </td>
         </tr>
         <tr>

@@ -52,7 +52,7 @@
             {{--Barra Lateral para moviles--}}
             <ul id="slide-out" class="side-nav teal lighten-1">
 
-                <li><a href="#preinscripcion" class="waves-effect waves-teal">Inscripción</a></li>
+                <li><a href="{{route('online.preinscripcion')}}" class="waves-effect waves-teal">Inscripción</a></li>
                 <li><a href="#disciplinas" class="waves-effect waves-teal">Disciplinas</a></li>
                 {{--<li><a href="#beneficios" class="waves-effect waves-teal">Beneficios</a></li>--}}
                 <li><a href="#contacto" class="waves-effect waves-teal">Contáctenos</a></li>
