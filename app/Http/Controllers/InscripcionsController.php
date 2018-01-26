@@ -18,6 +18,7 @@ use DB;
 use Illuminate\Support\Facades\Auth;
 use Session;
 use Event;
+use Maatwebsite\Excel\Facades\Excel;
 
 use Yajra\Datatables\Datatables;
 
@@ -294,6 +295,137 @@ class InscripcionsController extends Controller
         } else return abort(403);
     }
 
+
+
+    /**
+     * Editar reserva
+     *
+     * @param  int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function reservaEdit($id)
+    {
+
+        $inscripcion = Inscripcion::where('id', $id)->with('factura', 'calendar', 'user', 'alumno', 'escenario')->first();
+
+        $fpago_coll = Pago::all();
+        $fpago = $fpago_coll->pluck('forma', 'id');
+
+        return view('campamentos.inscripcions.reserva-edit', compact( 'inscripcion', 'fpago'));
+
+    }
+
+
+    /**
+     * Actualizar la forma de pago de la reserva
+     *
+     * @param  \Illuminate\Http\Request $request
+     * @param  int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function reservaUpdate(Request $request, $inscripcion_id)
+    {
+        if (Auth::user()->hasRole(['planner', 'administrator', 'supervisor'])) {
+
+            try {
+
+                $fpago_id=$request->input('pago_id');
+
+                DB::beginTransaction();
+
+                $fpago = Pago::findOrFail($fpago_id);
+
+                //inscripcion a modificar
+                $inscripcion = Inscripcion::where('id', $inscripcion_id)->first();
+
+                //usuario logueado que modifico
+                $inscripcion->user_edit = $request->user()->id;
+                $inscripcion->update();
+
+                $factura=Factura::where('id',$inscripcion->factura_id)->first();
+                $factura->pago()->associate($fpago);
+                $factura->update();
+
+                DB::commit();
+
+                Session::flash('message', 'Se actualizó la forma de pago de la reserva '.$inscripcion->id);
+                return redirect()->route('admin.inscripcions.reservas');
+
+            } catch (\Exception $e) {
+                DB::rollback();
+//                Session::flash('message_danger', 'Error' . $e->getMessage());
+                Session::flash('message_danger', 'Ocurrio un error y no se pudo actualizar la forma de pago de la reserva');
+                return redirect()->route('admin.inscripcions.reservas');
+            }
+
+        } else
+            return abort(403);
+
+    }
+
+    /**
+     * Exportar reservas al formato de WU
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function reservasExport(Request $request)
+    {
+        $queryD = trim($request->get('searchDesde'));
+        $queryH = trim($request->get('searchHata'));
+
+        $inscripciones = Inscripcion::with('factura', 'calendar', 'user', 'alumno', 'escenario')
+            ->whereBetween('id', [$queryD, $queryH])
+            ->where('estado', '=', 'Reservada')
+            ->whereNull('cart')
+            ->orderBy('id')
+            ->get();
+
+        $arrayExp =[];
+
+        foreach ($inscripciones as $insc) {
+
+            if ($insc->alumno_id == 0){
+                $alumno=$insc->factura->representante->persona->getNombreAttribute();
+            }else{
+                $alumno=$insc->alumno->persona->getNombreAttribute();
+            }
+
+            $arrayExp[] = [
+                'ced_rep'=>(string)$insc->factura->representante->persona->num_doc,
+                'nom_rep'=>(string)$insc->factura->representante->persona->getNombreAttribute(),
+                'valor1'=>(string)$insc->factura->total,
+                'valor2'=>(string)$insc->factura->total,
+                'valor3'=>(string)$insc->factura->total,
+                'cobrar_hasta'=>(string)str_replace('-','',$insc->created_at->addDay()->toDateString()),
+                'insc_id'=>(string)$insc->id,
+                'alumno'=>(string)$alumno,
+            ];
+        }
+
+        Excel::create('Formato Excel Western Union- ' . Carbon::now() . '', function ($excel) use ($arrayExp) {
+
+            $excel->sheet('WU', function ($sheet) use ($arrayExp) {
+
+                $sheet->setColumnFormat(array(
+                    'A'=>'@',
+                    'B'=>'@',
+                    'C'=>'@',
+                    'D'=>'@',
+                    'E' => '@',
+                    'F' => '@',
+                    'G'=>'@',
+                    'H'=>'@'
+                ));
+
+                $sheet->fromArray($arrayExp, null, 'A1', false, false);
+
+            });
+        })->export('xlsx');
+
+        return view('admin.inscripcions.reservas', ["searchDesde" => $queryD, "searchHasta" => $queryH]);
+    }
+
+
     /**
      * Show the form for creating a new resource.
      *
@@ -316,11 +448,9 @@ class InscripcionsController extends Controller
      */
     public function store(Request $request)
     {
-
         if (Auth::user()->hasRole(['planner', 'administrator', 'signup'])) {
 
             if (!Session::has('curso')) {//si no hay curso en la session
-
 
                 try {
 

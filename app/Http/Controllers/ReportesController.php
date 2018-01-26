@@ -33,7 +33,7 @@ class ReportesController extends Controller
 {
     public function __construct()
     {
-        Carbon::setLocale('es');
+//        Carbon::setLocale('es');
         $this->middleware('auth');
 //        $this->middleware(['role:supervisor|administrador']);
     }
@@ -46,8 +46,8 @@ class ReportesController extends Controller
      */
     public function getExcel(Request $request)
     {
-        $start = trim($request->get('start'));
-        $end = trim($request->get('end'));
+        $start = $request->get('start');
+        $end = $request->get('end');
 
         $start = new Carbon($start);
         $start = $start->toDateString();
@@ -72,8 +72,13 @@ class ReportesController extends Controller
      */
     public function exportExcel(Request $request)
     {
-        $start = trim($request->get('start'));
-        $end = trim($request->get('end'));
+        $start = $request->get('start');
+        $end = $request->get('end');
+
+        $start = new Carbon($start);
+        $start = $start->toDateString();
+        $end = new Carbon($end);
+        $end = $end->toDateString();
 
         $inscripciones = Inscripcion::with('factura', 'calendar', 'user', 'alumno', 'escenario')
             ->whereBetween('created_at', [$start, $end])

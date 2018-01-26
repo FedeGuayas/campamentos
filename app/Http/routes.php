@@ -147,6 +147,12 @@ Route::group(['middleware' => ['auth','role:administrator|signup|planner|supervi
     Route::get('/inscripcions/reserva/{id}/cancel',['as' => 'admin.reserva.cancel', 'uses'=>'InscripcionsController@reservaCancel']);
     //confirmar reserva
     Route::get('/inscripcions/reserva/{id}/confirm',['as' => 'admin.reserva.confirm', 'uses'=>'InscripcionsController@reservaConfirm']);
+    //editar reserva
+    Route::get('/inscripcions/reserva/{id}/edit',['as' => 'admin.reserva.edit', 'uses'=>'InscripcionsController@reservaEdit']);
+    //actualizar forma pago de reserva
+    Route::put('/inscripcions/reserva/{id}/update',['as' => 'admin.reserva.update', 'uses'=>'InscripcionsController@reservaUpdate']);
+    //exportar reservas
+    Route::post('/inscripcions/reserva/export', ['as'=>'admin.reserva.export','uses'=>'InscripcionsController@reservasExport']);
 
     //obtener todos los alumnos, representantes, inscripciones, comprobantes para el datatables con ajax
     Route::get('/alumnos/get',['as' => 'admin.alumnos', 'uses'=>'AlumnosController@getAll']);

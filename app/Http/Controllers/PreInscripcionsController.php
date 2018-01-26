@@ -543,7 +543,7 @@ class PreInscripcionsController extends Controller
         ini_set('memory_limit', '1G');
 
         $pdf = PDF::loadView('online.preinscripcions.pre-insc-comprobante', compact('inscripcion'));
-        $pdf->setPaper(array(0,0,600,250));
+//        $pdf->setPaper(array(0,0,600,250));
 //        return $pdf->download('ComprobantePago.pdf');//descarga el pdf
         return $pdf->stream('Comprobante preinscripcion');//imprime en pantalla
 
