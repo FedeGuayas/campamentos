@@ -20,6 +20,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 use Session;
 use Event;
 use Barryvdh\DomPDF\Facade as PDF;
@@ -32,9 +33,6 @@ class PreInscripcionsController extends Controller
     public function __construct()
     {
         Carbon::setLocale('es'); //fechas en español
-//        $this->middleware('auth'); //debe estar logeado para acceder a este controlador
-//        $this->middleware(['role:planner|administrator'], ['only' => ['update']]); //solo los roles planner y administrator pueden acceder al metodo update
-//        $this->middleware(['role:administrator|supervisor|planner'], ['only' => ['destroy']]); //acceso al metodo destroy solo al los roles administrator, supervisor y planner
     }
 
 
@@ -396,7 +394,6 @@ class PreInscripcionsController extends Controller
         }
     }
 
-
     /**
      * Terminos y condiciones en pdf
      * @param $id
@@ -506,8 +503,7 @@ class PreInscripcionsController extends Controller
             //aumentar contadores
             Event::fire(new NuevaInscripcion($calendar));//al guardar correctamenta la inscripcion llamao al evento de aumentar contador
 
-            Session::flash('message', 'Inscripción satisfactoria');
-
+            Session::flash('message', 'Se realizo la preinscripción correctamente');
 
         } catch (\Exception $e) { //en caso de error viro al estado anterior
             DB::rollback();
@@ -516,7 +512,7 @@ class PreInscripcionsController extends Controller
             return redirect()->back();
         }
 
-        return redirect()->route('preinscripcion.comprobante',$inscripcion);
+        return redirect()->route('preinscripcion.comprobante', $inscripcion);
 
     }
 
@@ -529,7 +525,7 @@ class PreInscripcionsController extends Controller
     {
         $inscripcion = Inscripcion::with('factura', 'calendar', 'user', 'alumno')
             ->where('id', $id)
-            ->where('estado','Reservada')
+            ->where('estado', 'Reservada')
             ->withCount('factura')
             ->first();
         setlocale(LC_TIME, 'es');
@@ -545,7 +541,291 @@ class PreInscripcionsController extends Controller
         $pdf = PDF::loadView('online.preinscripcions.pre-insc-comprobante', compact('inscripcion'));
 //        $pdf->setPaper(array(0,0,600,250));
 //        return $pdf->download('ComprobantePago.pdf');//descarga el pdf
-        return $pdf->stream('Comprobante preinscripcion');//imprime en pantalla
+        return $pdf->stream('Comprobante preinscripcion.pdf');//imprime en pantalla
+
+    }
+
+    /**
+     * Validaciones para los campos al crear representantes en la preinscripcion
+     * @param  array $data
+     * @return \Illuminate\Contracts\Validation\Validator
+     */
+    protected function validatorRepresentanteCreate(array $data)
+    {
+        //variable tipo arreglo en donde se haga el arreglo de validación final
+        $out = [];
+        $out['nombres'] = 'required | max:50';
+        $out['apellidos'] = 'required | max:50';
+        $out['genero'] = 'required';
+        $out['fecha_nac'] = 'required';
+        $out['email'] = 'email|required|unique:personas';
+        $out['direccion'] = 'required|max:255';
+        $out['telefono'] = 'required|max:15';
+        $out['phone'] = 'max:15';
+        $out['tipo_doc'] = 'required';
+//        $out['encuesta_id'] = 'required';
+        $out['num_doc'] = 'required';
+        $out['foto_ced'] = 'mimes:jpg,png,jpeg|max:1000';//|required
+        $out['foto'] = 'mimes:jpg,png,jpeg|max:150';//|required
+
+
+        //Hacer validación condicional dependiendo del tipo de documento a utilizar.
+        switch ($data['tipo_doc']) {
+            case 'CEDULA':
+                $out['num_doc'] = 'required|digits:10 | unique:personas';
+                break;
+            case 'PASAPORTE':
+                $out['num_doc'] = 'required|alpha_num |max:10 |min:5| unique:personas';
+                break;
+        }
+
+        //Retornar la variable $out auxiliar
+        return Validator::make($data, $out);
+    }
+
+
+    /**
+     * Guardar Representante online en preinscripcion
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+
+
+    public function storeRepresentante(Request $request)
+    {
+        $validator = $this->validatorRepresentanteCreate($request->all());
+        if ($validator->fails()) {
+
+            $ced_unique = array_get($validator->failed(), 'num_doc.Unique');
+            //verifico si el error es de cedula existente
+            if ($ced_unique) {
+                $msg = 'No es posible guardar su información porque este documento de identidad ya se encuentra registrado. Verifique que este correcto el número o contáctenos para solucionar este inconveniente.';
+                if ($request->ajax()) {
+                    return response()->json(['error' => 'true', 'message_error' => $msg]);
+                } else {
+                    return redirect()->back()->with('message_danger', $msg)->withInput();
+                }
+            }
+
+            $this->throwValidationException(
+                $request, $validator
+            );
+        }
+
+        try {
+            DB::beginTransaction();
+
+            $fecha_nac=$request->get('fecha_nac');
+
+
+
+            $persona = new Persona();
+            $persona->nombres = strtoupper($request->get('nombres'));
+            $persona->apellidos = strtoupper($request->get('apellidos'));
+            $persona->fecha_nac = $fecha_nac;
+            $persona->tipo_doc = $request->get('tipo_doc');
+            $persona->num_doc = $request->get('num_doc');
+            $persona->genero = $request->get('genero');
+            $persona->email = $request->get('email');
+            $persona->direccion = strtoupper($request->get('direccion'));
+            $persona->telefono = $request->get('telefono');
+            $persona->phone = $request->get('phone');
+            $persona->save();
+
+            $date = explode('-',$fecha_nac);
+            $edad=Carbon::createFromDate($date[0], $date[1], $date[2])->diff(Carbon::now())->format('%y');
+
+            if ($edad<18) {
+                $msg="El representante no puede ser menor de edad";
+                return response()->json(['error' => 'true', 'message_error' => $msg]);
+            }
+
+//            $encuesta_id = $request->get('encuesta_id');
+//            $encuesta = Encuesta::find($encuesta_id);
+
+            $representante = new Representante;
+
+            $representante->persona()->associate($persona);
+//            $representante->encuesta()->associate($encuesta);
+
+            $user_login = $request->user();
+            if ($user_login) {
+                $representante->user_id = $user_login->id;
+            }
+
+
+            if ($request->hasFile('foto_ced')) {
+                $file = $request->file('foto_ced');
+                $name = 'rep_ced_' . time() . '.' . $file->getClientOriginalExtension();
+                $path = public_path() . '/dist/img/representantes/cedula/';//ruta donde se guardara
+                $file->move($path, $name);//lo copio a $path con el nombre $name
+                $representante->foto_ced = $name;//ahora se guarda  en el atributo foto_ced la imagen
+            }
+            if ($request->hasFile('foto')) {
+                $file = $request->file('foto');
+                $name = 'rep_perfil_' . time() . '.' . $file->getClientOriginalExtension();
+                $path = public_path() . '/dist/img/representantes/perfil/';//ruta donde se guardara
+                $file->move($path, $name);//lo copio a $path con el nombre $name
+                $representante->foto = $name;//ahora se guarda  en el atributo foto_ced la imagen
+            }
+            $representante->save();
+
+            DB::commit();
+
+//            if ($encuesta) {
+//                event(new EncuestaRespondida($encuesta));
+//            }
+            $msg = "Representante creado correctamente";
+            if ($request->ajax()) {
+                return response()->json([
+                    'message' => $msg,
+                    'persona_id' => $persona->id,//porque el id de persona es el necesario al almacenar la inscripcion
+                    'nombre' => $persona->getNombreAttribute(),
+                ]);
+            }
+
+        } catch (\Exception $e) {
+            DB::rollback();
+//            $msg = "Ocurrio un error al guardar los datos";
+            $msg = $e->getMessage();
+            if ($request->ajax()) {
+                return response()->json(['error' => 'true', 'message_error' => $msg]);
+            } else {
+                return redirect()->back()->with('message_danger', $msg)->withInput();
+            }
+        }
+    }
+
+
+    /**
+     * Validaciones para crear los alumnos en preinscripcion
+     * @param  array $data
+     * @return \Illuminate\Contracts\Validation\Validator
+     */
+    protected function validatorAlumnoCreate(array $data)
+    {
+        //variable tipo arreglo en donde se haga el arreglo de validación final
+        $out = [];
+//        $out['representante_id'] = 'required';
+        $out['nombres_a'] = 'required | max:50';
+        $out['apellidos_a'] = 'required | max:50';
+        $out['genero_a'] = 'required';
+        $out['fecha_nac_a'] = 'required';
+//        $out['email'] = 'email|unique:personas';
+//        $out['direccion'] = 'max:255';
+//        $out['telefono'] = 'max:15';
+        $out['tipo_doc_a'] = 'required';
+        $out['num_doc_a'] = 'required';
+        $out['foto_ced'] = 'mimes:jpg,png,jpeg|max:1000';//|required
+        $out['foto'] = 'mimes:jpg,png,jpeg|max:150';//|required
+
+
+        //Hacer validación condicional dependiendo del tipo de documento a utilizar.
+        switch ($data['tipo_doc_a']) {
+            case 'CEDULA':
+                $out['num_doc_a'] = 'required|digits:10 | unique:personas,num_doc';
+                break;
+            case 'PASAPORTE':
+                $out['num_doc_a'] = 'required|alpha_num |max:10 |min:5| unique:personas,num_doc';
+                break;
+        }
+        //Retornar la variable $out auxiliar
+        return Validator::make($data, $out);
+    }
+
+
+    /**
+     * Guardar el alumno creado en la preinscripcion
+     * @param Request $request
+     * @return $this|\Illuminate\Http\JsonResponse
+     */
+    public function storeAlumno(Request $request)
+    {
+        $persona_id = $request->input('persona_id');
+        $representante = Representante::where('persona_id', $persona_id)->first();
+
+        $validator = $this->validatorAlumnoCreate($request->all());
+        if ($validator->fails()) {
+
+            $ced_unique = array_get($validator->failed(), 'num_doc_a.Unique');
+            //verifico si el error es de cedula existente
+            if ($ced_unique) {
+                $msg = 'No es posible guardar su información porque este documento de identidad ya se encuentra registrado. Verifique que este correcto el número o contáctenos para solucionar este inconveniente.';
+                if ($request->ajax()) {
+                    return response()->json(['error' => 'true', 'message_error' => $msg]);
+                } else {
+                    return redirect()->back()->with('message_danger', $msg)->withInput();
+                }
+            }
+
+            $this->throwValidationException(
+                $request, $validator
+            );
+        }
+        try {
+            DB::beginTransaction();
+
+            $fecha_nac=$request->get('fecha_nac_a');
+
+            $persona = new Persona;
+            $persona->nombres = strtoupper($request->get('nombres_a'));
+            $persona->apellidos = strtoupper($request->get('apellidos_a'));
+            $persona->tipo_doc = $request->get('tipo_doc_a');
+            $persona->num_doc = $request->get('num_doc_a');
+            $persona->genero = $request->get('genero_a');
+            $persona->fecha_nac = $fecha_nac;
+
+            $persona->save();
+
+            $date = explode('-',$fecha_nac);
+            $edad=Carbon::createFromDate($date[0], $date[1], $date[2])->diff(Carbon::now())->format('%y');
+
+            if ($edad>18) {
+                $msg="El alumno no puede ser mayor de edad";
+                return response()->json(['error' => 'true', 'message_error' => $msg]);
+            }
+
+
+            $alumno = new Alumno;
+
+            $alumno->persona()->associate($persona);
+            $alumno->representante()->associate($representante);
+
+            if ($request->hasFile('foto_ced')) {
+                $file = $request->file('foto_ced');
+                $name = 'alumno_ced_' . time() . '.' . $file->getClientOriginalExtension();
+                $path = public_path() . '/dist/img/alumnos/cedula/';//ruta donde se guardara
+                $file->move($path, $name);//lo copio a $path con el nombre $name
+                $alumno->foto_ced = $name;//ahora se guarda  en el atributo foto_ced la imagen
+            }
+            if ($request->hasFile('foto')) {
+                $file = $request->file('foto');
+                $name = 'alumno_perfil_' . time() . '.' . $file->getClientOriginalExtension();
+                $path = public_path() . '/dist/img/alumnos/perfil/';//ruta donde se guardara
+                $file->move($path, $name);//lo copio a $path con el nombre $name
+                $alumno->foto = $name;//ahora se guarda  en el atributo foto_ced la imagen
+            }
+            $alumno->save();
+            DB::commit();
+            $msg = "Alumno creado correctamente";
+            if ($request->ajax()) {
+                return response()->json([
+                    'message' => $msg,
+                    'alumno_id' => $alumno->id,
+                    'nombre' => $persona->getNombreAttribute(),
+                ]);
+            }
+        } catch (\Exception $e) {
+            DB::rollback();
+//            $msg = "Ocurrio un error al guardar los datos";
+            $msg = $e->getMessage();
+            if ($request->ajax()) {
+                return response()->json(['error' => 'true', 'message_error' => $msg]);
+            } else {
+                return redirect()->back()->with('message_danger', $msg)->withInput();
+            }
+
+        }
 
     }
 

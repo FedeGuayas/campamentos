@@ -12,7 +12,7 @@
             @include('alert.success')
         </div>
     </div>
-{{--filtrar --}}
+    {{--filtrar --}}
     <div class="row">
         {!! Form::open (['route' => 'admin.reports.factura','method' => 'GET', 'class'=>'form_datepicker' ])!!}
         <div class="input-field col s2 ">
@@ -24,28 +24,22 @@
             {!! Form::date('end',$end,['class'=>'datepicker']) !!}
         </div>
         <div class="input-field col s3 ">
-            {{Form::select('escenario',$escenarioSelect,$escenario,['id'=>'escenario','class'=>'browser-default']) }}
+            {{Form::select('escenario',$escenarioSelect,$escenario,['placeholder'=>'Pto Cobro (Todos)','id'=>'escenario','class'=>'browser-default']) }}
         </div>
         {{--<div class="clearfix"></div>--}}
-        <div class="col s3">
+        <div class="col s1">
             {!! Form::button('<i class="fa fa-search left"></i>',['class'=>'btn-floating waves-effect waves-light blue darken-2 tooltipped','data-position'=>'top', 'data-delay'=>'50','data-tooltip'=>'Filtrar', 'type'=>'submit','id'=>'filtrar']) !!}
         </div>
         {!!form::close()!!}
-
         {{--fin filtro--}}
-        <div class="col-sm-3">
-            {{--exportar--}}
+        <div class="col s2">
             {!! Form::open (['route' => 'admin.reports.exportFactura','method' => 'GET'])!!}
-            <div class="col s12">
                 <div class="hidden">
                     {!! Form::date('start',$start,['class'=>'datepicker']) !!}
                     {!! Form::date('end',$end,['class'=>'datepicker']) !!}
-                    {{Form::select('escenario',$escenarioSelect,$escenario,['id'=>'escenario']) }}
+                    {{Form::select('escenario',$escenarioSelect,$escenario,['placeholder'=>'','class'=>'browser-default']) }}
                 </div>
-                <div class="col s2 pull-right ">
-                    {!! Form::button('<i class="fa fa-file-excel-o fa-2x" ></i>',['class'=>'exportar btn-floating waves-effect waves-light teal tooltipped','data-position'=>'top', 'data-delay'=>'50','data-tooltip'=>'Exportar', 'type'=>'submit']) !!}
-                </div>
-            </div>
+            {!! Form::button('<i class="fa fa-file-excel-o fa-2x" ></i>',['class'=>'exportar btn-floating waves-effect waves-light teal tooltipped','data-position'=>'top', 'data-delay'=>'50','data-tooltip'=>'Exportar', 'type'=>'submit']) !!}
             {!! Form::close() !!}
             {{--fin exportar--}}
         </div>
@@ -57,62 +51,61 @@
 
     <div class="row">
 
-
-                <table class="table table-striped table-bordered table-condensed table-hover">
-                    <thead>
-                    <th>Representante</th>
-                    <th>CI</th>
-                    <th>Dirección</th>
-                    <th>Telefono</th>
-                    <th>Email</th>
-                    <th>Fecha</th>
-                    <th>Disciplina</th>
-                    <th>Escenario</th>
-                    <th>Cod-Escenario</th>
-                    <th>Valor</th>
-                    <th>Forma de Pago</th>
-                    </thead>
-                    @foreach ($inscripciones as $insc )
-                        <tr>
-                            <td>
-                                {{ $insc->factura->representante->persona->getNombreAttribute() }}
-                            </td>
-                            <td>
-                                {{ $insc->factura->representante->persona->num_doc}}
-                            </td>
-                            <td>
-                                {{ $insc->factura->representante->persona->direccion}}
-                            </td>
-                            <td>
-                                {{ $insc->factura->representante->persona->telefono}}
-                            </td>
-                            <td>
-                                {{ $insc->factura->representante->persona->email}}
-                            </td>
-                            <td>
-                                {{ $insc->factura->created_at}}
-                            </td>
-                            <td>
-                                {{ $insc->calendar->program->disciplina->disciplina}}
-                            </td>
-                            <td>
-                                {{ $insc->calendar->program->escenario->escenario}}
-                            </td>
-                            <td>
-                                @if(is_null($insc->user->escenario_id))
-                                @else
-                                    {{ $insc->user->escenario->codigo}}
-                                @endif
-                            </td>
-                            <td>
-                                {{ $insc->factura->total}}
-                            </td>
-                            <td>
-                                {{ $insc->factura->pago->forma}}
-                            </td>
-                        </tr>
-                    @endforeach
-                </table><!--end table-responsive-->
+        <table class="table table-striped table-bordered table-condensed table-hover">
+            <thead>
+            <th>Representante</th>
+            <th>CI</th>
+            <th>Dirección</th>
+            <th>Telefono</th>
+            <th>Email</th>
+            <th>Fecha</th>
+            <th>Disciplina</th>
+            <th>Esc. Deportivo</th>
+            <th>Cod-Escenario</th>
+            <th>Valor</th>
+            <th>Forma de Pago</th>
+            </thead>
+            @foreach ($inscripciones as $insc )
+                <tr>
+                    <td>
+                        {{ $insc->factura->representante->persona->getNombreAttribute() }}
+                    </td>
+                    <td>
+                        {{ $insc->factura->representante->persona->num_doc}}
+                    </td>
+                    <td>
+                        {{ $insc->factura->representante->persona->direccion}}
+                    </td>
+                    <td>
+                        {{ $insc->factura->representante->persona->telefono}}
+                    </td>
+                    <td>
+                        {{ $insc->factura->representante->persona->email}}
+                    </td>
+                    <td>
+                        {{ $insc->factura->created_at}}
+                    </td>
+                    <td>
+                        {{ $insc->calendar->program->disciplina->disciplina}}
+                    </td>
+                    <td>
+                        {{ $insc->calendar->program->escenario->escenario}}
+                    </td>
+                    <td>
+                        @if(is_null($insc->user->escenario_id))
+                        @else
+                            {{ $insc->user->escenario->codigo}}
+                        @endif
+                    </td>
+                    <td>
+                        {{ $insc->factura->total}}
+                    </td>
+                    <td>
+                        {{ $insc->factura->pago->forma}}
+                    </td>
+                </tr>
+            @endforeach
+        </table><!--end table-responsive-->
 
 
     </div><!--end div ./row-->
@@ -126,7 +119,6 @@
 
             //valida el datepicker k no este vacio
             function checkDate() {
-
                 if ($('.datepicker').val() == '') {
                     $('.datepicker').addClass('invalid')
                     $flag = 0;
@@ -149,20 +141,10 @@
                 }
             });
 
-
             $('.datepicker').pickadate({
                 selectMonths: true, // Creates a dropdown to control month
                 selectYears: 5, // Creates a dropdown of 15 years to control year
-                format: 'yyyy/mm/dd'
-            });
-
-        });
-
-        $(document).ready(function () {
-            $("#filtrar").on('click', function () {
-                var exportar = $(".exportar");
-
-                exportar.prop("disabled", false);
+                format: 'yyyy-mm-dd'
             });
 
         });

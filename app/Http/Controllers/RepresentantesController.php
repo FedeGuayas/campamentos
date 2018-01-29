@@ -136,7 +136,7 @@ return confirm(\'Seguro que desea borrar al representante?\')">
                 $out['num_doc'] = 'required|digits:10 | unique:personas';
                 break;
             case 'PASAPORTE':
-                $out['num_doc'] = 'required|alpha_num |max:8 |min:5| unique:personas';
+                $out['num_doc'] = 'required|alpha_num |max:10 |min:5| unique:personas';
                 break;
         }
 
@@ -218,7 +218,9 @@ return confirm(\'Seguro que desea borrar al representante?\')">
 
         } catch (\Exception $e) {
             DB::rollback();
-            Session::flash('message_danger', $e->getMessage());
+            $msgerror='Error al guardar los datos';
+//            $msgerror=$e->getMessage();
+            Session::flash('message_danger', $msgerror);
             return redirect()->back('admin.representantes.index');
         }
 

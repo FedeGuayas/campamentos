@@ -104,7 +104,7 @@
         $(function () {
             //prevenir que al dar enter se envie el formulario
             $(".form_noEnter").keypress(function (e) {
-                if (e.width == 13) {
+                if (e.which == 13) {
                     return false;
                 }
             });

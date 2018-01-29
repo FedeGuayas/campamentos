@@ -677,7 +677,8 @@ class ReportesController extends Controller
 
 
     /**
-     * Resumen de inscritos y Recaudacion
+     * Resumen de inscritos y Recaudacion,
+     * Resumen de cobrado por eventos deportivos por modulo, no lo recolectado por pto de cobro
      * @param Request $request
      * @return mixed
      */
@@ -709,7 +710,7 @@ class ReportesController extends Controller
             $escenariosArray = [];
             foreach ($inscripciones as $insc) {
                 $cont_comp = Inscripcion::where('factura_id', $insc->factura_id)->count();
-                $escenario = $insc->escenario;
+                $escenario = $insc->escenario; //escenario donde practicara el deporte, no es el pto de cobro
                 $disciplina = $insc->disciplina;
 //                if ($cont_comp>1){
 //                    $factura = round(($insc->total)/$cont_comp,3);
@@ -825,25 +826,42 @@ class ReportesController extends Controller
      */
     public function getFactura(Request $request)
     {
-        $escenarioSelect = ['' => 'Pto de Cobro'] + Escenario::lists('escenario', 'id')->all();
+        $escenarios_coll = Escenario::all();
+        $escenarioSelect = $escenarios_coll->pluck('escenario', 'id');
+//        $escenarioSelect = ['' => 'Pto de Cobro'] + Escenario::lists('escenario', 'id')->all();
+
+        $escenario = $request->get('escenario');
+
         $start = trim($request->get('start'));
         $end = trim($request->get('end'));
+
         $start=new Carbon($start);
         $start=$start->toDateString();
         $end=new Carbon($end);
         $end=$end->toDateString();
-        $escenario = $request->get('escenario');
 
 //        $user=Auth::user();
 
-        $inscripciones=Inscripcion::with('factura','calendar','user','alumno')
-            ->whereBetween('created_at',[$start, $end])
+        if ($escenario){
+            $inscripciones=Inscripcion::with('factura','calendar','user','alumno','escenario')
+                ->whereBetween('created_at',[$start, $end])
 //            ->where('user_id',$user->id)
-            ->where('escenario_id', $escenario)//pto cobro
-            ->where('estado','Pagada')
-            ->orderBy('created_at')
-            ->groupBy('factura_id')
-            ->paginate(5);
+                ->where('escenario_id',$escenario)//pto cobro
+                ->where('estado','Pagada')
+                ->orderBy('created_at')
+                ->groupBy('factura_id')
+                ->paginate(5);
+
+        }else {
+            $inscripciones=Inscripcion::with('factura','calendar','user','alumno','escenario')
+                ->whereBetween('created_at',[$start, $end])
+//            ->where('user_id',$user->id)
+                ->where('escenario_id','like', '%'.$escenario.'%')
+                ->where('estado','Pagada')
+                ->orderBy('created_at')
+                ->groupBy('factura_id')
+                ->paginate(5);
+        }
 
         return view('campamentos.reportes.reporte-factura',compact('inscripciones','start','end','escenarioSelect','escenario'));
     }
@@ -860,15 +878,31 @@ class ReportesController extends Controller
         $end = trim($request->get('end'));
 //        $user=Auth::user();
         $escenario = $request->get('escenario');
-        
-        $inscripciones=Inscripcion::with('factura','calendar','user','alumno')
-            ->whereBetween('created_at',[$start, $end])
+
+        $start=new Carbon($start);
+        $start=$start->toDateString();
+        $end=new Carbon($end);
+        $end=$end->toDateString();
+
+        if ($escenario){
+            $inscripciones=Inscripcion::with('factura','calendar','user','alumno','escenario')
+                ->whereBetween('created_at',[$start, $end])
 //            ->where('user_id',$user->id)
-            ->where('escenario_id', $escenario)//pto cobro
-            ->where('estado','Pagada')
-            ->orderBy('created_at')
-            ->groupBy('factura_id')
-            ->get();
+                ->where('escenario_id', $escenario)//pto cobro
+                ->where('estado','Pagada')
+                ->orderBy('created_at')
+                ->groupBy('factura_id')
+                ->get();
+        }else {
+            $inscripciones=Inscripcion::with('factura','calendar','user','alumno','escenario')
+                ->whereBetween('created_at',[$start, $end])
+//            ->where('user_id',$user->id)
+                ->where('escenario_id','like', '%'.$escenario.'%')
+                ->where('estado','Pagada')
+                ->orderBy('created_at')
+                ->groupBy('factura_id')
+                ->get();
+        }
 
         $arrayExp[] = ['codigopadre','codigo','nombre','nombrecomercial','RUC','Fecha','Referencia','Comentario',
             'CtaIngreso','Cantidad','Valor','Iva','DIRECCION','division','TipoCli','actividad','codvend','recaudador',
@@ -878,20 +912,13 @@ class ReportesController extends Controller
 
         foreach ($inscripciones as $insc) {
 
-            if ($insc->alumno_id == 0) {
-
-            } else{
-
-            }
-
             $arrayExp[] = [
                 'codigopadre'=>'',
                 'codigo'=>'',
                 'nombre'=> $insc->factura->representante->persona->getNombreAttribute(),
                 'nombrecomercial'=> $insc->factura->representante->persona->getNombreAttribute(),
                 'RUC'=> (int)$insc->factura->representante->persona->num_doc,
-//                'Fecha'=> $insc->factura->created_at->format('d/m/Y'),
-                'Fecha'=> $insc->factura->created_at->format('d/m/Y'),
+                'Fecha'=>(string)$insc->factura->created_at->format('d/m/Y'),
                 'Referencia'=> 'INSCRIPCION CAMPAMENTOS'.'-'. $insc->calendar->program->disciplina->disciplina.'-'.$insc->calendar->program->escenario->escenario,
                 'Comentario'=> $insc->factura->id,
                 'CtaIngreso'=> '6252499006133',
@@ -943,7 +970,7 @@ class ReportesController extends Controller
                     'C'=>'General',
                     'D'=>'General',
                     'E' => '0',
-                    'F' => '0',
+                    'F' => '@',
                     'I'=>'@',
                     'K'=>'#,##0.00_-',
                     'N' => '0',

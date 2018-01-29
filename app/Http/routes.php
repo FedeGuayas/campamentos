@@ -29,7 +29,10 @@ Route::get('pre-inscripcion/termsDownload',['as' => 'pre-inscripcion.terms-downl
 Route::post('pre-inscripcion/reservar', ['as' => 'pre-inscripcions.store','uses'=>'PreInscripcionsController@store' ]);
 //comprobante de preinscripcion
 Route::get('preinscripcion/comprobante/{pre}',['as' => 'preinscripcion.comprobante', 'uses'=>'PreInscripcionsController@pre_inscripcionPDF']);
-
+//Guardar representante creado en la pre-inscripcion online
+Route::post('pre-inscripcion/representante/store', ['as' => 'pre-inscripcions.representante.store','uses'=>'PreInscripcionsController@storeRepresentante' ]);
+//Guardar alumno creado en la pre-inscripcion online
+Route::post('pre-inscripcion/alumno/store', ['as' => 'pre-inscripcions.alumno.store','uses'=>'PreInscripcionsController@storeAlumno' ]);
 
 
 /*********************************************************/

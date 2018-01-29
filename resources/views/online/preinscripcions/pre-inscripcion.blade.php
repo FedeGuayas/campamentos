@@ -42,7 +42,7 @@
                         {!! Form::hidden('descuento_empleado',null,['id'=>'descuento_empleado']) !!} {{--Capturo si es empleado, true or false--}}
                         {!! Form::hidden('descuento_estacion',null,['id'=>'descuento_estacion']) !!}  {{--Capturo la estacion actual VERANO o INVIERNO--}}
                         {{--{!! Form::hidden('user_id',Auth::user()->id) !!}--}}
-                        {{--                        {!! Form::hidden('precio',null,['id'=>'precio']) !!}--}}
+
                         @include('alert.request')
                         @include('alert.success')
 
@@ -159,10 +159,12 @@
                                         </div>
                                         <div class="collapsible-body">
                                             <a href="#terminos-modal" class="waves-effect waves-light tooltipped  btn"
-                                               data-position="top" data-delay="50" data-tooltip="Leer Términos"><i class="fa fa-eye right"></i>
+                                               data-position="top" data-delay="50" data-tooltip="Leer Términos"><i
+                                                        class="fa fa-eye right"></i>
                                                 Leer
                                             </a>
-                                            <a href="{{route('pre-inscripcion.terms-download')}}" onclick="preventDefault();" >
+                                            <a href="{{route('pre-inscripcion.terms-download')}}"
+                                               onclick="preventDefault();">
                                                 {!! Form::button('<i class="tiny fa fa-download"></i>',['class'=>'btn right indigo waves-effect waves-light tooltipped ', 'data-position'=>'top', 'data-delay'=>'50', 'data-tooltip'=>'Descargar']) !!}
                                             </a>
 
@@ -176,29 +178,23 @@
                                     {!! Form::label('terms','Aceptar Términos y Condiciones',['class'=>'terms']) !!}
                                 </div>
                             </div>
-                        </div>
-
-                        <div class="row">
                             <div class="col m5 s12 pull-right">
                                 {!! Form::button('<i class="fa fa-close right" aria-hidden="true"></i> Cancelar',['class'=>'btn btn-xs waves-effect waves-light red darken-1 tooltipped','data-position'=>'top', 'data-delay'=>'10', 'data-tooltip'=>'Cancelar','type' => 'reset']) !!}
                                 {{--Pagar--}}
                                 {!! Form::button('<i class="fa fa-play right" aria-hidden="true"></i> Guardar',['id'=>'pagar','disabled','class'=>'btn waves-effect waves-light darken-1 tooltipped','data-position'=>'top', 'data-delay'=>'50', 'data-tooltip'=>'Guardar','type'=>'submit']) !!}
                             </div>
                         </div>
-
                     </div><!--/.card content-->
 
                     {!! Form::close() !!}
-                    {{--@include('campamentos.inscripcions.partials.representante_create')--}}
-                    {{--@include('campamentos.inscripcions.partials.alumno_create')--}}
-                    {{--Busca el represenatnte --}}
-
 
                 </div>
             </div>
         </div>
     </div>
     @include('online.preinscripcions.search-representante')
+    @include('online.preinscripcions.representante_create')
+    @include('online.preinscripcions.alumno_create')
     @include('online.preinscripcions.terminos-modal')
 @endsection
 
@@ -206,60 +202,86 @@
 
     <script>
 
+        // cerrar el toast al dar click en el
+        $(document).on('click', '#toast-container .toast', function () {
+            $(this).fadeOut(function () {
+                $(this).remove();
+            });
+        });
+
         $(document).ready(function () {
 
             $("#modulo_id").material_select();
             $("#fpago_id").material_select();
+            $("#genero").material_select();
+            $("#genero_a").material_select();
+            $("#tipo_doc").material_select();
+            $("#tipo_doc_a").material_select();
+            $("#representante_id").material_select();
+            $("#alumno_id").material_select();
+            $("#nivel_id").material_select();
 
         });
 
         $(document).ready(function () {
-            // para ventana modal de crear alumno
-            $('.modal-alumno').modal({
+
+            // ventana modal de busqueda de representante
+            $('#search-repre').modal({
                 dismissible: false, // Modal can be dismissed by clicking outside of the modal
-                opacity: .5, // Opacity of modal background
+                opacity: 0.5, // Opacity of modal background
                 in_duration: 300, // Transition in duration
                 out_duration: 200, // Transition out duration
                 starting_top: '4%', // Starting top style attribute
                 ending_top: '2%' // Ending top style attribute
             });
 
-        });
-
-        $(document).ready(function () {
-            // para ventana modal de crear representante
-            $('.modal-representante').modal({
+            // ventana modal de terminos
+            $('#terminos-modal').modal({
                 dismissible: false, // Modal can be dismissed by clicking outside of the modal
-                opacity: .5, // Opacity of modal background
+                opacity: 0.5, // Opacity of modal background
                 in_duration: 300, // Transition in duration
                 out_duration: 200, // Transition out duration
                 starting_top: '4%', // Starting top style attribute
                 ending_top: '2%' // Ending top style attribute
             });
 
-        });
 
-        // para ventana modal de busqueda de representante
-        $(document).ready(function () {
-            $('.modal').modal({
+            // ventana modal de crear representante
+            $('#modal-representante').modal({
                 dismissible: false, // Modal can be dismissed by clicking outside of the modal
                 opacity: .5, // Opacity of modal background
                 in_duration: 300, // Transition in duration
                 out_duration: 200, // Transition out duration
                 starting_top: '4%', // Starting top style attribute
-                ending_top: '2%' // Ending top style attribute
+                ending_top: '2%', // Ending top style attribute
+                complete: function() {
+                    $("#form_representante").trigger("reset"); //limpio el form al cerrar modal
+                }
             });
-        });
 
-        //        $(document).ready(function () {
-        //            $('ul.tabs').tabs();
-        //        });
+            // ventana modal de crear alumno
+            $('#modal-alumno').modal({
+                dismissible: false, // Modal can be dismissed by clicking outside of the modal
+                opacity: .5, // Opacity of modal background
+                in_duration: 300, // Transition in duration
+                out_duration: 200, // Transition out duration
+                starting_top: '4%', // Starting top style attribute
+                ending_top: '2%', // Ending top style attribute
+                ready: function(modal, trigger) { // Callback for Modal open. Modal and trigger parameters available.
+                    var representante_id = $("#representante_id").val();
+                    if (representante_id==='placeholder') {
+                        swal("Alerta", "Debe seleccionar un representante para crear al alumno, en caso de ser mayor de edad seleccione Inscripción para mayores!", "error");
+                        $('#modal-alumno').modal('close');
+                    }
+                },
+                complete: function() {
+                    $("#form_alumno").trigger("reset"); //limpio el form al cerrar modal
+                }
+            });
 
-
-        $(function () {
             //prevenir que al dar enter se envie el formulario
             $(".form_noEnter").keypress(function (e) {
-                if (e.width === 13) {
+                if (e.which === 13) {
                     return false;
                 }
             });
@@ -269,6 +291,10 @@
                 $("#pagar").prop("disabled", true);
             });
 
+        });
+
+        $(function () {
+
             //buscar representante
             $("#Buscar").on('click', function (event) {
                 event.preventDefault();
@@ -277,8 +303,7 @@
                 var token = $("input[name=_token]").val();
                 var loader = $("#loader_page");
                 if (datos === "")
-                    swal("ERROR", "Debe ingresar datos en el campo de busqueda!", "error");
-//                    alert("Error. Debe ingresar datos en el campo de busqueda!");
+                    swal("ERROR", "Debe ingresar sus datos en el campo de busqueda!", "error");
                 else {
                     loader.addClass('active');
                     $.ajax({
@@ -298,8 +323,8 @@
 //                                    console.log("Checkbox " + $(this).prop("id") + " (" + $(this).val() + ") => Seleccionado");
                                     // buscar el td más cercano en el DOM hacia "arriba"
                                     // luego encontrar los td adyacentes a este y obtener el nombre
-                                    var name = $(this).closest('td').siblings('td:eq(1)').text();
-                                    representante_id.append('<option value="' + $(this).val() + '">' + name + '</option>');
+                                    var name = $(this).closest('td').siblings('td:eq(1)').text();//columna de nombre y apellidos
+                                    representante_id.append('<option value="' + $(this).val() + '">' + name + '</option>'); //value del checkbox
                                     representante_id.addClass("teal-text");
 //                                   $("#persona_id").val($(this).val());
 
@@ -322,10 +347,11 @@
                 }
             });
 
-/************************************************************************************************/
+
             //funcion crear representante
             function crear_representante_ajax() {
-                var route = "{{route('admin.representantes.store')}}";
+                var representante_id = $("#representante_id");
+                var route = "{{route('pre-inscripcions.representante.store')}}";
                 var token = $("input[name=_token]").val();
 //                var representante_id = $("#representante_id");
                 var formData = new FormData(document.getElementById("form_representante"));//se envia tod el form al controlador
@@ -341,26 +367,34 @@
                     contentType: false,
                     processData: false,
 //                    data:$("#form_representante").serialize(),
-                    success: function (resp) {
-//                        console.log(resp);
+                    success: function (resp)
+                    {
+                        console.log(resp);
                         var id = resp.persona_id;
                         var name = resp.nombre;
-                        var representante_id = $("#representante_id");
-                        $("#form_representante").trigger("reset");//limpio el form
-                        $("#msj-rep-succes").html(resp.message)
-                        $("#mensaje-rep-success").fadeIn();
-                        representante_id.append('<option value="' + id + '">' + name + '</option>');
-                        representante_id.addClass("teal-text");
-                        representante_id.material_select();
+                        if (resp.error==='true'){
+                            swal("Error", resp.message_error, "error");
+                        }else{
+                            var $toastContent = '<div><button type="button" class="close" aria-labelledby="Close"><span aria-hidden="true">&times;</span></button>'+resp.message+' </div>';
+                            Materialize.toast($toastContent, 5000,'green accent-3 rounded');
+                            representante_id.find("option:gt(0)").remove();
+                            representante_id.append('<option value="' + id + '">' + name + '</option>');
+                            representante_id.addClass("teal-text");
+                            representante_id.material_select();
+                            $("#form_representante").trigger("reset");//limpio form
+                            $('#modal-representante').modal('close');//cierro modal
+                        }
                     },
-                    error: function (resp) {
+                    error: function (resp)
+                    {
                         //console.log(resp.responseJSON)
-                        var errors = '';
+                        var errors = '<div><button type="button" class="close" aria-labelledby="Close"><span aria-hidden="true">&times;</span></button><br><ul>';
                         $.each(resp.responseJSON, function (ind, elem) {
-                            errors += elem + '<br>';
+                            errors += '<li>' +elem+ '</li>';
+//                            errors +=elem +'<br>';
                         });
-                        $('#msj-rep-error').show().html(errors);
-                        $("#mensaje-rep-error").fadeIn();
+                        errors+='</ul></div>';
+                        Materialize.toast(errors, 15000,'red darken-3 rounded');
                         representante_id.removeClass("teal-text");
                         representante_id.find("option:gt(0)").remove();
                     }
@@ -376,7 +410,7 @@
 
             //funcion crear alumno
             function crear_alumno_ajax() {
-                var route = "{{route('admin.alumnos.store')}}";
+                var route = "{{route('pre-inscripcions.alumno.store')}}";
                 var alumno_id = $("#alumno_id");
                 var token = $("input[name=_token]").val();
                 var formData = new FormData(document.getElementById("form_alumno"));
@@ -392,42 +426,46 @@
                     processData: false,
 //                    data:$("#form_representante").serialize(),
                     success: function (resp) {
-                        console.log(resp);
+//                        console.log(resp);
                         var id = resp.alumno_id;
                         var name = resp.nombre;
-                        $("#form_alumno").trigger("reset");//limpio el form
-                        $("#msj-succes").html(resp.message)
-                        $("#mensaje-success").fadeIn();
-                        alumno_id.append('<option value="' + id + '">' + name + '</option>');
-                        alumno_id.addClass("teal-text");
-                        alumno_id.material_select();
+                        if (resp.error==='true'){
+                            swal("Error", resp.message_error, "error");
+                        }else{
+                            var $toastContent = '<div><button type="button" class="close" aria-labelledby="Close"><span aria-hidden="true">&times;</span></button>'+resp.message+' </div>';
+                            Materialize.toast($toastContent, 5000,'green accent-3 rounded');
+                            alumno_id.append('<option value="' + id + '">' + name + '</option>');
+                            alumno_id.addClass("teal-text");
+                            alumno_id.material_select();
+                            $("#form_alumno").trigger("reset");//limpio el form
+                            $('#modal-alumno').modal('close');//cierro modal
+                        }
                     },
                     error: function (resp) {
-                        console.log(resp.responseJSON)
-                        var errors = '';
+//                        console.log(resp.responseJSON);
+                        var errors = '<div><button type="button" class="close" aria-labelledby="Close"><span aria-hidden="true">&times;</span></button><br><ul>';
                         $.each(resp.responseJSON, function (ind, elem) {
-                            errors += elem + '<br>';
+                            errors += '<li>' +elem+ '</li>';
+//                            errors +=elem +'<br>';
                         });
-                        $('#msj-error').show().html(errors);
-                        $("#mensaje-error").fadeIn();
-                        alumno_id.removeClass("teal-text");
-                        alumno_id.find("option:gt(0)").remove();
-                        $("#alumno_id").empty();
+                        errors+='</ul></div>';
+                        Materialize.toast(errors, 15000,'red darken-3 rounded');
                     }
                 });
             }
 
-            $(document).ready(function () {
-                //llamar a funcion crear alumno
-                $("#alumno_create").on("click", function (event) {
-                    event.preventDefault();
-                    crear_alumno_ajax();
-                });
+            //llamar a funcion crear alumno
+            $("#alumno_create").on("click", function (event) {
+                event.preventDefault();
+                crear_alumno_ajax();
             });
 
 
+
+            /************************************************************************************************/
+
             $(document).ready(function () {
-                // Adulto que se kiere inscribir
+                // Inscripcion de adulto
                 $("#adulto").on('change', function () {
                     if ($(this).is(':checked')) {
                         $("div").remove(".alumno");
@@ -450,7 +488,7 @@
                     $("#terms").removeAttr("disabled");
                 }
             });
-            // Aceptar los terminos
+            // Habilitar guardar el formulario cuando se aceptan los terminos
             $("#terms").on('change', function () {
                 if ($(this).is(':checked')) {
                     $("#pagar").prop('disabled', false);
@@ -463,7 +501,7 @@
 
 
     </script>
-    {{--Script para select dinamico condicional dropdown --}}
+
     <script src="{{ asset("js/pre-inscripcion.js") }}" type="text/javascript"></script>
 
 @endsection

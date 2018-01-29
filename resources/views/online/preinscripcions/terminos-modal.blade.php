@@ -1,4 +1,4 @@
-    <div id="terminos-modal" class="modal" >
+    <div id="terminos-modal" class="modal" style="width: 70%;">
         <div class="modal-header">
             <p class="">TÉRMINOS DE USO Y POLÍTICAS DE PRIVACIDAD</p>
         </div>

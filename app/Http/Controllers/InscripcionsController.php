@@ -72,7 +72,7 @@ class InscripcionsController extends Controller
                 ->join('personas', 'personas.id', '=', 'representantes.persona_id')
                 //    ->join('alumnos','alumnos.id','=','inscripcions.alumno_id')
                 //  ->join('personas','personas.id','=','alumnos.persona_id')
-                ->select('inscripcions.id', 'inscripcions.alumno_id', 'inscripcions.factura_id', 'inscripcions.calendar_id', 'user_id', 'inscripcions.created_at', 'programs.disciplina_id', 'programs.escenario_id', 'modulos.modulo', 'inscripcions.escenario_id as pto_cobro')
+                ->select('inscripcions.id', 'inscripcions.alumno_id', 'inscripcions.factura_id', 'inscripcions.calendar_id', 'inscripcions.user_id', 'inscripcions.created_at', 'programs.disciplina_id', 'programs.escenario_id', 'modulos.modulo', 'inscripcions.escenario_id as pto_cobro')
                 ->where('estado', 'Pagada')
                 ->limit(30);
 
@@ -575,8 +575,8 @@ class InscripcionsController extends Controller
             }
 
             //si es inscripcion variada tiene que estar marcado o familiar o multiple
-            if (Session::get('curso')->totalCursos > 0 && ($request->input('familiar') == false && $request->input('multiple') == false)) {
-                Session::flash('message_danger', 'Debe seleccionar Familiar o Multiple, según corresponda');
+            if (Session::get('curso')->totalCursos > 0 && ($request->input('familiar') == false && $request->input('multiple') == false && $request->input('primo') == false )) {
+                Session::flash('message_danger', 'Debe seleccionar Familiar, Multiple o Primo , según corresponda');
                 return redirect()->back();
             }
 
@@ -590,9 +590,15 @@ class InscripcionsController extends Controller
             $tipo_descuento = $cart->tipo_desc; //tipo de desceunto aplicado
             $desc_emp = $cart->desc_empleado;//true o false
 
+            $descuento=0;
             if ($tipo_descuento == 'familiar' || $tipo_descuento == 'multiple') {//si el descunto es familiar o multiple
                 $desc1 = 0.1;
                 $descuento = $precioTotal * $desc1; //descuento aplicado a la mensualidad total
+            }
+
+            if ($tipo_descuento == 'primo') {//si el descunto es primo
+                $desc3 = 0.05;
+                $descuento = $precioTotal * $desc3; //descuento aplicado a la mensualidad total
             }
 
             if ($desc_emp == 'true') { //en caso de empleado
@@ -635,6 +641,12 @@ class InscripcionsController extends Controller
                     $descuentos->descripcion = 'DESCUENTO FAMILIAR';
                     $descuentos->save();
                 }
+
+                if ($tipo_descuento == 'primo') {
+                    $descuentos->descripcion = 'DESCUENTO PRIMOS';
+                    $descuentos->save();
+                }
+
                 if ($tipo_descuento == 'multiple') {
                     $descuentos->descripcion = 'DESCUENTO MULTIPLE';
                     $descuentos->save();
