@@ -35,7 +35,7 @@ class ProgramsController extends Controller
         join('escenarios as e', 'e.id', '=', 'p.escenario_id', 'as p')
             ->join('disciplinas as d', 'd.id', '=', 'p.disciplina_id')
             ->join('modulos as m', 'm.id', '=', 'p.modulo_id')
-            ->select('p.id', 'e.escenario', 'd.disciplina', 'm.modulo', 'matricula', 'p.activated','p.imagen')
+            ->select('p.id', 'e.escenario', 'd.disciplina', 'm.modulo', 'matricula', 'p.activated', 'p.imagen')
 //            ->where('p.activated',true)
             ->orderBy('e.escenario')->get();
 
@@ -115,6 +115,7 @@ class ProgramsController extends Controller
 
         } else return abort(403);
     }
+
 
     /**
      * Display the specified resource.
