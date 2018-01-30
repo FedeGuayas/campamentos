@@ -1,5 +1,12 @@
 @extends('layouts.front.master-plane')
 
+@section('style')
+    <style>
+    nav ul a.active {
+    background: rgba(0,0,0,0.2);
+    }
+    </style>
+@endsection
 
 @section('body')
 
@@ -13,16 +20,18 @@
                 <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
                 <ul class="right hide-on-med-and-down">
                     <li><a href="{{url('/')}}">Inicio</a></li>
-                    <li><a href="#!">Ayuda</a></li>
+                    <li><a href="#help">Ayuda</a></li>
                 </ul>
                 <ul class="side-nav" id="mobile-demo">
                     <li><a href="{{url('/')}}">Inicio</a></li>
-                    <li><a href="#!">Ayuda</a></li>
+                    <li><a href="#help">Ayuda</a></li>
                 </ul>
 
             </div>
         </nav>
     </div>
+
+    <a href="#" class="back-to-top waves-effect waves-light btn btn-floating animated slideInUp">Subir</a>
 
     <div class="no-pad">
         <div class="container">
@@ -192,6 +201,7 @@
             </div>
         </div>
     </div>
+    @include('online.preinscripcions.help')
     @include('online.preinscripcions.search-representante')
     @include('online.preinscripcions.representante_create')
     @include('online.preinscripcions.alumno_create')
@@ -220,6 +230,13 @@
             $("#representante_id").material_select();
             $("#alumno_id").material_select();
             $("#nivel_id").material_select();
+
+            $('.scrollspy').scrollSpy();
+
+
+            $('.table-of-contents').pushpin({
+                top: $('.table-of-contents').offset().top
+            });
 
         });
 
