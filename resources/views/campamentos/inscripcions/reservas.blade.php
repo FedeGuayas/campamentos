@@ -11,37 +11,35 @@
         </div>
     </div>
 
-
-<div class="row">
-    <div class="col s6 right">
-        {{--{!! Form::open(['route'=>'admin.alumnos.store', 'method'=>'POST','files'=>'true'])  !!}--}}
-        {!! Form::open (['route' => 'admin.reserva.export',	'method' => 'POST', 'autocomplete'=> 'off', 'role' => 'search' ])!!}
-        <ul class="collapsible popout" data-collapsible="accordion">
-            <li>
-                <div class="collapsible-header green accent-1"><i class="fa fa-file-excel-o"></i> <b>Exportar preinscripción</b></div>
-                <div class="collapsible-body">
-                    <div class="input-field col s4">
-                        {!! Form::label('searchDesde','Desde') !!}
-                        {!! Form::text('searchDesde',null,['class'=>'validate']) !!}
-                    </div>
-                    <div class="input-field col s4">
-                        {!! Form::label('searchHata','Hasta') !!}
-                        {!! Form::text('searchHata',null,['class'=>'validate']) !!}
-                    </div>
-                    <div class="input-field col s2">
-
-                      {!!   Form::button('<i class="fa fa-file-excel-o" aria-hidden="true"></i>',['type'=>'submit', 'class'=>'btn-floating indigo waves-effect waves-light tooltipped', 'data-position'=>'top', 'delay'=>'50', 'data-tooltip'=>'Exportar']) !!}
-
-
-                    </div>
-                    <br><br><br><br>
-                </div>
-            </li>
-        </ul>
-        {!! Form::close() !!}
-    </div>
-
-</div>
+    @if ( Entrust::hasRole(['export_reserva','administrator']) )
+        <div class="row">
+            <div class="col s6 right">
+                {{--{!! Form::open(['route'=>'admin.alumnos.store', 'method'=>'POST','files'=>'true'])  !!}--}}
+                {!! Form::open (['route' => 'admin.reserva.export',	'method' => 'POST', 'autocomplete'=> 'off', 'role' => 'search' ])!!}
+                <ul class="collapsible popout" data-collapsible="accordion">
+                    <li>
+                        <div class="collapsible-header green accent-1"><i class="fa fa-file-excel-o"></i> <b>Exportar
+                                preinscripción</b></div>
+                        <div class="collapsible-body">
+                            <div class="input-field col s4">
+                                {!! Form::label('searchDesde','Desde') !!}
+                                {!! Form::text('searchDesde',null,['class'=>'validate']) !!}
+                            </div>
+                            <div class="input-field col s4">
+                                {!! Form::label('searchHata','Hasta') !!}
+                                {!! Form::text('searchHata',null,['class'=>'validate']) !!}
+                            </div>
+                            <div class="input-field col s2">
+                                {!!   Form::button('<i class="fa fa-file-excel-o" aria-hidden="true"></i>',['type'=>'submit', 'class'=>'btn-floating indigo waves-effect waves-light tooltipped', 'data-position'=>'top', 'delay'=>'50', 'data-tooltip'=>'Exportar']) !!}
+                            </div>
+                            <br><br><br><br>
+                        </div>
+                    </li>
+                </ul>
+                {!! Form::close() !!}
+            </div>
+        </div>
+    @endif
 
     <div class="row">
         <div class="col l12 m12 s12">
@@ -60,6 +58,7 @@
                     <th>Valor</th>
                     <th>Creada</th>
                     <th width="50px">Vence</th>
+                    <th>Estado</th>
                     <th>F. Pago</th>
                     <th width="55px;">Opciones</th>
                 </tr>
@@ -75,6 +74,7 @@
                     <th></th>
                     <th></th>
                     <th></th>
+                    <th class="search-filter" width="60px;"></th>
                     <th></th>
                     <th></th>
                 </tr>
@@ -97,11 +97,23 @@
                         </td>
                         <td>$ {{ number_format($insc->factura->total, 2, '.', ' ') }}</td>
                         <td>{{$insc->created_at->diffForHumans()}}</td>
-                        <td>{{ $insc->created_at->addDay()->toDateString() }}</td>
+                        <td>
+                            @if ( Entrust::hasRole(['administrator']) )
+                                {{ $insc->created_at->addDay()->toDateString() }}</td>
+                            @endif
+                        <td>
+                            @if (\Carbon\Carbon::now()->diffInHours($insc->created_at)>48)
+                                <span class="red-text">Venc. (+48H)</span>
+                            @else
+                                <span class="teal-text">OK</span>
+                            @endif
+
+                        </td>
                         <td>
                             {{$insc->factura->pago->forma}}
                         </td>
                         <td>
+
                             @if ( Entrust::can('cancel_reserva'))
                                 <a href="{{ route('admin.reserva.cancel', $insc->id ) }}" type="button"
                                    class="btn-xs white-text red darken-1 waves-effect waves-light tooltipped"
@@ -109,7 +121,7 @@
                                     <i class=" fa fa-trash" aria-hidden="true"></i>
                                 </a>
                             @endif
-                            @if ( Entrust::can('confirm_reserva'))
+                            @if ( Entrust::hasRole(['edit_reserva','administrator']) )
                                 <a href="{{ route('admin.reserva.confirm', $insc->id ) }}" type="button"
                                    class="btn-xs white-text blue accent-3 waves-effect waves-light tooltipped"
                                    data-position="top" delay="50" data-tooltip="Aprobar Reserva">
@@ -121,7 +133,6 @@
                                     <i class="fa fa-edit" aria-hidden="true"></i>
                                 </a>
                             @endif
-
                         </td>
                     </tr>
                 @endforeach
