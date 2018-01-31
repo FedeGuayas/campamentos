@@ -308,8 +308,14 @@ class InscripcionsController extends Controller
 
         $inscripcion = Inscripcion::where('id', $id)->with('factura', 'calendar', 'user', 'alumno', 'escenario')->first();
 
-        $fpago_coll = Pago::all();
-        $fpago = $fpago_coll->pluck('forma', 'id');
+        $fpagos_coll = Pago::all();
+        //filtro las formas de pago
+        $fp = $fpagos_coll->filter(function ($fp) {   //solo muestro los pagos CONTADO o WESTERN UNION
+            if (strpos($fp->forma, 'CONTADO') !== false || strpos($fp->forma, 'WESTERN UNION') !== false || strpos($fp->forma, 'TARJETA') !== false) {
+                return true; // true, el elemento se incluye, si retorna false, no se incluye
+            }
+        });
+        $fpago = $fp->pluck('forma', 'id');
 
         return view('campamentos.inscripcions.reserva-edit', compact( 'inscripcion', 'fpago'));
 

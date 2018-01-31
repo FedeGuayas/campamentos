@@ -200,7 +200,7 @@ class ReportesController extends Controller
 
             $pdf = PDF::loadView('campamentos.reportes.insc-menor-pdf', compact('inscripcion', 'fecha_actual', 'month'));
 //        return $pdf->download('ComprobantePago.pdf');//descarga el pdf
-            return $pdf->stream('ComprobantePago');//imprime en pantalla
+            return $pdf->stream('ComprobantePago '.$inscripcion->id.'.pdf');//imprime en pantalla
 
         }
     }
