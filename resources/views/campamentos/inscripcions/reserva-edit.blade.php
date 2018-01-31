@@ -20,12 +20,20 @@
                     <th>{{ $inscripcion->calendar->program->escenario->escenario }}</th>
                 </tr>
                 <tr>
+                    <th>Modulo</th>
+                    <th>{{ $inscripcion->calendar->program->modulo->modulo }}</th>
+                </tr>
+                <tr>
+                    <th>Fecha (Inicio / Fin)</th>
+                    <th>{{ $inscripcion->calendar->program->modulo->inicio }} / {{ $inscripcion->calendar->program->modulo->fin }}</th>
+                </tr>
+                <tr>
                     <th>Disciplina</th>
                     <th>{{ $inscripcion->calendar->program->disciplina->disciplina }}</th>
                 </tr>
                 <tr>
                     <th>Representante</th>
-                    <th>{{ $inscripcion->factura->representante->persona->getNombreAttribute() }}</th>
+                    <th>{{ $inscripcion->factura->representante->persona->getNombreAttribute() }}  (Tel: {{ $inscripcion->factura->representante->persona->telefono }})</th>
                 </tr>
                 <tr>
                     <th>CI Rep.</th>

@@ -281,7 +281,7 @@ class InscripcionsController extends Controller
      */
     public function reservaConfirm(Request $request,$id)
     {
-        if (Auth::user()->hasRole(['planner', 'administrator', 'supervisor'])) {
+        if (Auth::user()->hasRole(['planner', 'administrator', 'supervisor','edit_reserva'])) {
 
             $user=$request->user();
 
@@ -325,7 +325,7 @@ class InscripcionsController extends Controller
      */
     public function reservaUpdate(Request $request, $inscripcion_id)
     {
-        if (Auth::user()->hasRole(['planner', 'administrator', 'supervisor'])) {
+        if (Auth::user()->hasRole(['planner', 'administrator', 'supervisor','edit_reserva'])) {
 
             try {
 
