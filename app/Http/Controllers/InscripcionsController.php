@@ -426,7 +426,7 @@ class InscripcionsController extends Controller
                 $sheet->fromArray($arrayExp, null, 'A1', false, false);
 
             });
-        })->export('xlsx');
+        })->export('csv');
 
         return view('admin.inscripcions.reservas', ["searchDesde" => $queryD, "searchHasta" => $queryH]);
     }
