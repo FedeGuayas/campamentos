@@ -397,14 +397,14 @@ class InscripcionsController extends Controller
             }
 
             $arrayExp[] = [
-                'ced_rep'=>(string)$insc->factura->representante->persona->num_doc,
-                'nom_rep'=>(string)$insc->factura->representante->persona->getNombreAttribute(),
-                'valor1'=>(string)$insc->factura->total,
-                'valor2'=>(string)$insc->factura->total,
-                'valor3'=>(string)$insc->factura->total,
-                'cobrar_hasta'=>(string)str_replace('-','',$insc->created_at->addDay()->toDateString()),
-                'insc_id'=>(string)$insc->id,
-                'alumno'=>(string)$alumno,
+                'ced_rep'=>$insc->factura->representante->persona->num_doc,
+                'nom_rep'=>$insc->factura->representante->persona->getNombreAttribute(),
+                'valor1'=>number_format($insc->factura->total, 2, '.', ''),
+                'valor2'=>number_format($insc->factura->total, 2, '.', ''),
+                'valor3'=>number_format($insc->factura->total, 2, '.', ''),
+                'cobrar_hasta'=>str_replace('-','',$insc->created_at->addDay()->toDateString()),
+                'insc_id'=>$insc->id,
+                'alumno'=>$alumno,
             ];
         }
 
