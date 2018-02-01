@@ -84,7 +84,7 @@ $("#modulo_id").change( function (event) {
         contentType: 'application/x-www-form-urlencoded',
         data: datos,
         success: function (response) {
-            console.log(response);
+           // console.log(response);
             escenario.find("option:gt(0)").remove();
             escenario.addClass("teal-text");
             $.each(response.escenarios, function(i, item) {
@@ -121,7 +121,7 @@ $("#escenario_id").change(function (event) {
         contentType: 'application/x-www-form-urlencoded',
         data: datos,
         success: function (response) {
-            console.log(response);
+            // console.log(response);
             disciplina.find("option:gt(0)").remove();
             disciplina.addClass("teal-text");
             $.each(response, function(i, item) {
@@ -154,7 +154,7 @@ $("#disciplina_id").change(function (event) {
         contentType: 'application/x-www-form-urlencoded',
         data: datos,
         success: function (response) {
-           console.log(response);
+           //console.log(response);
             horario.find("option:gt(0)").remove();
             horario.addClass("teal-text");
             dia.find("option:gt(0)").remove();
@@ -196,7 +196,7 @@ $("#dia_id").change(function (event) {
         contentType: 'application/x-www-form-urlencoded',
         data: datos,
         success: function (response) {
-            console.log(response);
+            //console.log(response);
             if ( typeof response.msg_error !=='undefined'){
                 swal("Error!", response.msg_error, "error");
             }else {
@@ -282,7 +282,7 @@ $("#nivel").change(function (event) {
         type: "GET",
         data: datos,
         success: function (response) {
-            console.log(response);
+            //console.log(response);
             if (parseFloat(response.curso[0].cupos) > parseFloat(response.curso[0].contador)){
                 calendar_id.empty();
                 program_id.empty();

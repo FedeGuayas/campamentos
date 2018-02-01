@@ -143,7 +143,7 @@ class PreInscripcionsController extends Controller
 
             return response()->json([
                 'alumnos' => $alumnos,
-//                'representante'=>$representante,
+                'representante'=>$representante,
                 'descuento_empleado' => $descuento_empleado
             ]);
         }
@@ -384,10 +384,12 @@ class PreInscripcionsController extends Controller
 
             $mes = $mensualidad->mensualidad;
 
-            if ($descuento_empleado === true) {
+            $desc=0;
+            $descuento = 0;
+            if ($descuento_empleado) {
                 $desc = 0.5; //50%
                 $descuento = $mes * $desc;
-            } else $descuento = 0;
+            }
 
             $precio = $mes - $descuento;
 
