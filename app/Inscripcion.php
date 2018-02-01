@@ -7,7 +7,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Inscripcion extends Model
 {
+
     use SoftDeletes;
+
+    const INSCRIPCION_ONLINE='1';
+    const INSCRIPCION_PRESENCIAL='0';
 
     /**
      * The attributes that should be mutated to dates.
@@ -39,9 +43,13 @@ class Inscripcion extends Model
      * @var array
      */
     protected $fillable = [
-        'calendar_id','alumno_id','user_id','factura_id','matricula','mensualidad','escenario_id'
+        'calendar_id','alumno_id','user_id','factura_id','matricula','mensualidad','escenario_id','inscripcion_type'
 
     ];
+
+    public function esOnline(){
+        return $this->inscripcion_type==Inscripcion::INSCRIPCION_ONLINE;
+    }
 
     public function factura()
     {

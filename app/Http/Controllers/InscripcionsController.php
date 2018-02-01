@@ -287,6 +287,7 @@ class InscripcionsController extends Controller
 
             $inscripcion = Inscripcion::where('id', $id)->with('factura', 'calendar', 'user', 'alumno')->first();
             $inscripcion->estado = 'Pagada';
+            $inscripcion->inscripcion_type=Inscripcion::INSCRIPCION_ONLINE;
             $inscripcion->user()->associate($user);
             $inscripcion->update();
 
@@ -537,9 +538,9 @@ class InscripcionsController extends Controller
                         $inscripcion->matricula = $matricula; //le asigno el valor 
                     }
 
-                    if ($request->input('reservar') == 'on') { //si va a reservar
-                        $inscripcion->estado = 'Reservada'; //el estado de la reserva sera 'Reservada'
-                    }
+//                    if ($request->input('reservar') == 'on') { //si va a reservar
+//                        $inscripcion->estado = 'Reservada'; //el estado de la reserva sera 'Reservada'
+//                    }
                     $inscripcion->mensualidad = $mensualidad;
 
                     $inscripcion->save();

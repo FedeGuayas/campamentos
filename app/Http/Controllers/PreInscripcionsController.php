@@ -486,6 +486,7 @@ class PreInscripcionsController extends Controller
             $inscripcion->factura()->associate($factura);
             $inscripcion->user()->associate($user);
             $inscripcion->escenario()->associate($pto_cobro);
+            $inscripcion->inscripcion_type=Inscripcion::INSCRIPCION_ONLINE;
 
             if ($request->input('adulto') == true) { //si es una inscripcion para adulto
                 $inscripcion->alumno_id = 0; //le voy a asignara al id del alumno 0 en la tabla de inscripcion

@@ -157,8 +157,8 @@
                 <a href="{{route('inscripciones.addMultiples',':CALENDAR')}}" id="add-cursos">
                     {!! Form::button('<i class="fa fa-plus"></i>', ['class'=>'btn waves-effect waves-light tooltipped agregar','disabled','data-position'=>'top', 'data-delay'=>'10', 'data-tooltip'=>'Agregar']) !!}
                 </a>
-                {!! Form::checkbox('reservar',null,false,['id'=>'reservar']) !!}
-                {!! Form::label('reservar','Reserva') !!}
+                {{--{!! Form::checkbox('reservar',null,false,['id'=>'reservar']) !!}--}}
+                {{--{!! Form::label('reservar','Reserva') !!}--}}
 
                 {!! Form::button('<i class="fa fa-close right" aria-hidden="true"></i> Cancelar',['class'=>'btn waves-effect waves-light red darken-1 tooltipped','data-position'=>'top', 'data-delay'=>'10', 'data-tooltip'=>'Cancelar','type' => 'reset']) !!}
 
