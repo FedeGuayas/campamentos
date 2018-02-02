@@ -4,7 +4,6 @@ $(document).ready(function () {
     $("#nivel").change(function (event) {
         var calendar_id = $("#calendar_id");
         var program_id = $("#program_id");
-        var precio = $("#precio");
         var desc_emp = $("#descuento_empleado").val();
         var desc_est = $("#descuento_estacion").val();
         var escenario_id = $("#escenario_id").val();
@@ -35,7 +34,6 @@ $(document).ready(function () {
             descuento_empleado:desc_emp,
             descuento_estacion:desc_est,
             nivel: event.target.value,
-           
             adulto:ad,
             alumno:alumno
         };
@@ -47,7 +45,7 @@ $(document).ready(function () {
             // contentType: 'application/x-www-form-urlencoded',
             data: datos,
             success: function (response) {
-                console.log(response);
+                //console.log(response);
                 if ($("#cursos_session").val()>0){
                     valor.addClass("teal-text");
                     valor.val($("#cursos_precio_session").val());
@@ -55,7 +53,6 @@ $(document).ready(function () {
                     valor.addClass("teal-text");
                     valor.val(response);
                 }
-
             },
             error: function (response) {
                 valor.removeClass("teal-text");
@@ -152,7 +149,7 @@ $(document).ready(function (event) {
             descuento_estacion:desc_est,
 
             cortesia:  cortesia.prop("checked")
-        }
+        };
         $.ajax({
             url: "costo",
             type: "GET",
@@ -160,9 +157,9 @@ $(document).ready(function (event) {
             // contentType: 'application/x-www-form-urlencoded',
             data: datos,
             success: function (response) {
-                console.log(response);
+               // console.log(response);
                 if (cortesia.is(':checked')) {
-                    console.log("Checkbox  => Seleccionado");
+                    //console.log("Checkbox  => Seleccionado");
                     $("#familiar").prop("disabled", true);
                     $("#primo").prop("disabled", true);
                     $("#multiple").prop("disabled", true);
@@ -176,7 +173,7 @@ $(document).ready(function (event) {
 
                     // valor.val(mat);
                 } else {
-                    console.log("Checkbox => Deseleccionado");
+                    //console.log("Checkbox => Deseleccionado");
                     $("#familiar").prop("disabled", false);
                     $("#primo").prop("disabled", false);
                     $("#multiple").prop("disabled", false);

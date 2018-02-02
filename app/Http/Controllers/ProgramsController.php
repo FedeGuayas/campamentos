@@ -262,8 +262,9 @@ class ProgramsController extends Controller
             $escenarios = Program::
             join('escenarios as e', 'e.id', '=', 'p.escenario_id', 'as p')
                 ->join('modulos as m', 'm.id', '=', 'p.modulo_id')
-                ->select('e.escenario as escenario', 'p.id as pID', 'e.id as eID', 'm.id as mID',
-                    'p.modulo_id', 'p.escenario_id', 'p.matricula')
+                ->select('e.escenario as escenario','e.id as eID','p.modulo_id')
+//                ->select('e.escenario as escenario', 'p.id as pID', 'e.id as eID', 'm.id as mID',
+//                    'p.modulo_id', 'p.escenario_id', 'p.matricula')
                 ->where('p.modulo_id', $id)
                 ->where('e.activated', '1')->groupBy('eID')->get();
 
@@ -349,8 +350,9 @@ class ProgramsController extends Controller
             join('escenarios as e', 'e.id', '=', 'p.escenario_id', 'as p')
                 ->join('modulos as m', 'm.id', '=', 'p.modulo_id')
                 ->join('disciplinas as d', 'd.id', '=', 'p.disciplina_id')
-                ->select('e.escenario as escenario', 'p.id as pID', 'e.id as eID', 'm.id as mID', 'd.id as dID',
-                    'p.modulo_id', 'p.escenario_id', 'p.matricula', 'd.disciplina as disciplina', 'd.activated')
+//                ->select('e.escenario as escenario', 'p.id as pID', 'e.id as eID', 'm.id as mID', 'd.id as dID',
+//                    'p.modulo_id', 'p.escenario_id', 'p.matricula', 'd.disciplina as disciplina', 'd.activated')
+                ->select('d.id as dID', 'd.disciplina as disciplina', 'p.modulo_id', 'p.escenario_id', 'd.activated')
                 ->where('p.escenario_id', $escenario_id)
                 ->where('p.modulo_id', $modulo_id)
                 ->where('d.activated', '1')->groupBy('dID')->get()->toArray();

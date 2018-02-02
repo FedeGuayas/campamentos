@@ -197,8 +197,7 @@ class CalendarsController extends Controller
 
             $dias=Calendar::
                 join('dias as d','d.id','=','c.dia_id','as c')
-                ->select('d.dia as dias','d.activated','c.id as cID','d.id as dID',
-                    'c.dia_id','c.horario_id','c.nivel','c.program_id')
+                ->select('d.dia as dias', 'd.activated','c.dia_id','c.program_id','d.id as dID')
                 ->where('program_id',$program->id)
                 ->where('d.activated','1')->groupBy('dID')->get()->toArray();
             return response($dias);
@@ -265,8 +264,8 @@ class CalendarsController extends Controller
             $horario=Calendar::
                 join('horarios as h','h.id','=','c.horario_id','as c')
                 ->join('dias as d','d.id','=','c.dia_id')
-                ->select('h.start_time as start_time','h.end_time as end_time','h.activated','c.id as cID',
-                    'h.id as hID','c.dia_id','c.horario_id','c.nivel', 'c.init_age','c.end_age')
+                ->select('c.horario_id', 'h.start_time as start_time','h.end_time as end_time','c.init_age','c.end_age',
+                    'h.activated','c.dia_id','c.program_id')
                 ->where('program_id',$program->id)
                 ->where('c.dia_id',$dia_id)
                 ->where(function ($query) use ($edad) {
@@ -354,19 +353,14 @@ class CalendarsController extends Controller
             $nivel=Calendar::
                where('program_id',$program->id)
                 ->where('dia_id',$dia_id)
+                ->where('cupos','>','contador')
                 ->where('horario_id',$horario_id)->get()->toArray();
 
-            $nivezxcvzxvcl=Calendar::
-            join('horarios as h','h.id','=','c.horario_id','as c')
-                ->join('dias as d','d.id','=','c.dia_id')
-                ->select('c.id as cID','c.dia_id','c.horario_id','c.nivel')
-
-                ->where('c.dia_id',$dia_id)
-                ->where('c.horario_id',$horario_id)
-               ->get()->toArray();
-
-
-            return response($nivel);
+            if (count($nivel)>0)
+            {
+                return response($nivel);
+            }
+            return response()->json('error');
         }
     }
 
@@ -420,32 +414,15 @@ class CalendarsController extends Controller
     public function getCurso(Request $request){
         if ($request->ajax()){
 
-            $escenario_id=$request->get('escenario');
-            $disciplina_id=$request->get('disciplina');
-            $modulo_id=$request->get('modulo');
-            $dia_id=$request->get('dia_id');
-            $horario_id=$request->get('horario_id');
             $calendar_id=$request->get('nivel');//xk en el value del select de nivel estoy pasando el calenadr_id
 
-            $program=Program::where('escenario_id',$escenario_id)
-                ->where('disciplina_id',$disciplina_id)
-                ->where('modulo_id',$modulo_id)->first();
+            $curso=Calendar::where('id',$calendar_id)->first();
 
-            $calendar=Calendar::findOrFail($calendar_id);
+            if ($curso){
+                return response($curso);
+            }
+            return response()->json('error');
 
-            $curso=Calendar::
-            join('horarios as h','h.id','=','c.horario_id','as c')
-                ->join('dias as d','d.id','=','c.dia_id')
-                ->select('c.id as cID','c.program_id','c.cupos','c.contador')
-                ->where('c.program_id',$program->id)
-                ->where('c.id',$calendar_id)
-                ->where('c.dia_id',$dia_id)
-                ->where('cupos','>','contador')
-                ->where('c.horario_id',$horario_id)
-                ->get()->toArray();
-
-
-            return response($curso);
         }
     }
 

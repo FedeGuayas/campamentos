@@ -120,7 +120,7 @@
             </div>
             <div class="col l2">
                 <div class="input-field">
-                    {!! Form::checkbox('multiple',null,false,['id'=>'multiple','class'=>'multiple']) !!}
+                    {!! Form::checkbox('multiple',null,false,['id'=>'multiple','class'=>'multiple','disabled']) !!}
                     {!! Form::label('multiple','Multiple',['class'=>'multiple']) !!}
                 </div>
             </div>

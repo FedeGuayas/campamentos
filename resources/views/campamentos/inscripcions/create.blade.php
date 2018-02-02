@@ -139,7 +139,7 @@
                                 var representante_id = $("#representante_id");
                                 // si se activa
                                 if ($(this).is(':checked')) {
-                                    console.log("Checkbox " + $(this).prop("id") + " (" + $(this).val() + ") => Seleccionado");
+                                    //console.log("Checkbox " + $(this).prop("id") + " (" + $(this).val() + ") => Seleccionado");
                                     // buscar el td más cercano en el DOM hacia "arriba"
                                     // luego encontrar los td adyacentes a este y obtener el nombre
                                     var name = $(this).closest('td').siblings('td:eq(1)').text();
@@ -149,7 +149,7 @@
 
                                 } else {
                                     loader.removeClass('active');
-                                    console.log("Checkbox " + $(this).prop("id") + " (" + $(this).val() + ") => Deseleccionado");
+                                    //console.log("Checkbox " + $(this).prop("id") + " (" + $(this).val() + ") => Deseleccionado");
                                     representante_id.find("option:gt(0)").remove();//elimino las opciones menos la primera
                                     representante_id.removeClass("teal-text");
 //                                    $("#persona_id").empty();
@@ -159,7 +159,7 @@
                         },
                         error: function (resp) {
                             loader.removeClass('active');
-                            console.log(resp);
+                            //console.log(resp);
                             $("#search-result").empty().html("Error en la busqueda");
                         }
                     });
@@ -236,7 +236,7 @@
                     processData: false,
 //                    data:$("#form_representante").serialize(),
                     success: function (resp) {
-                        console.log(resp);
+                        //console.log(resp);
                         var id = resp.alumno_id;
                         var name = resp.nombre;
                         $("#form_alumno").trigger("reset");//limpio el form
@@ -247,7 +247,7 @@
                         alumno_id.material_select();
                     },
                     error: function (resp) {
-                        console.log(resp.responseJSON)
+                        //console.log(resp.responseJSON)
                         var errors = '';
                         $.each(resp.responseJSON, function (ind, elem) {
                             errors += elem + '<br>';
@@ -293,7 +293,7 @@
                     contentType: false,
                     processData: false,
                     success: function (resp) {
-                        console.log(resp);
+                        //console.log(resp);
 //                        alert(resp.message);
                         swal("", resp.message, "success");
                         var total_cursos = resp.totalCursos;
@@ -315,7 +315,7 @@
                         } else $("#pagar").prop("disabled", false);
                     },
                     error: function (resp) {
-                        console.log(resp);
+                       // console.log(resp);
                         swal("", "No se pudo realizar la acción", "error");
                     }
                 });
@@ -341,11 +341,11 @@
                     contentType: 'application/x-www-form-urlencoded',
 //                       data: {datos},
                     success: function (resp) {
-                        console.log(resp);
+                       // console.log(resp);
                         $("#detalle").empty().html(resp);
                     },
                     error: function (resp) {
-                        console.log(resp);
+                        //console.log(resp);
                         $("#detalle").empty().html("!!! No Hay Productos en el Carrito ");
                     }
                 });
