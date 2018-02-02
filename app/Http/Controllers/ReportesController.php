@@ -283,7 +283,7 @@ class ReportesController extends Controller
                     "usuario" => $nombre,
                     "contado"=>$valorContado,
                     "tarjeta"=>$valorTarjeta,
-                    "western"=>$totalWestern
+                    "western"=>$valorWestern
                 ];
 
 
