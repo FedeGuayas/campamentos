@@ -101,9 +101,7 @@ return confirm(\'Seguro que desea borrar al alumno?\')">
         $out['apellidos'] = 'required | max:50';
         $out['genero'] = 'required';
         $out['fecha_nac'] = 'required';
-//        $out['email'] = 'email|unique:personas';
         $out['direccion'] = 'max:255';
-//        $out['telefono'] = 'max:15';
         $out['tipo_doc'] = 'required';
         $out['num_doc'] = 'required';
         $out['foto_ced'] = 'image|max:1000';
@@ -117,7 +115,7 @@ return confirm(\'Seguro que desea borrar al alumno?\')">
                 $out['num_doc'] = 'required|digits:10 | unique:personas';
                 break;
             case 'PASAPORTE':
-                $out['num_doc'] = 'required|alpha_num |max:8 |min:5| unique:personas';
+                $out['num_doc'] = 'required|alpha_num |max:10 |min:5| unique:personas';
                 break;
         }
 
@@ -324,9 +322,7 @@ return confirm(\'Seguro que desea borrar al alumno?\')">
         $out['apellidos'] = 'required | max:50';
         $out['genero'] = 'required';
         $out['fecha_nac'] = 'required';
-//        $out['email'] = 'email';
         $out['direccion'] = 'max:255';
-//        $out['telefono'] = 'max:15';
         $out['tipo_doc'] = 'required';
         $out['num_doc'] = 'required';
         $out['foto_ced'] = 'max:1000';

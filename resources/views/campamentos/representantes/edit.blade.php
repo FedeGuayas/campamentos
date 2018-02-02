@@ -30,7 +30,7 @@
                         </div>
                         <div class="input-field col l4 m4 s12">
                             {!! Form::label('num_doc','Número del documento:*') !!}
-                            {!! Form::text('num_doc',$representante->persona->num_doc,['class'=>'validate','required']) !!}
+                            {!! Form::text('num_doc',$representante->persona->num_doc,['class'=>'validate','required','onkeypress'=>"if (this.value.length > 9) {return false}"]) !!}
                         </div>
 
                         <div class="input-field col l4 m4 s12">

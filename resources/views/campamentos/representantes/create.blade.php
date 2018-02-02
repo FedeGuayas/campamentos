@@ -29,7 +29,7 @@
                         </div>
                         <div class="input-field col l4 m4 s12">
                             {!! Form::label('num_doc','Número del documento:*') !!}
-                            {!! Form::text('num_doc',null,['class'=>'validate','required']) !!}
+                            {!! Form::text('num_doc',null,['class'=>'validate','required','onkeypress'=>"if (this.value.length > 9) {return false}"]) !!}
                         </div>
                         <div class="input-field col l4 m4 s12">
                             {!! Form::select('genero', ['MASCULINO' => 'MASCULINO', 'FEMENINO' => 'FEMENINO'],null, ['id'=>'genero','required']) !!}

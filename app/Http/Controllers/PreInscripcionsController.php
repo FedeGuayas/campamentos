@@ -562,12 +562,11 @@ class PreInscripcionsController extends Controller
         $out['apellidos'] = 'required | max:50';
         $out['genero'] = 'required';
         $out['fecha_nac'] = 'required';
-        $out['email'] = 'email|required|unique:personas';
+        $out['email'] = 'email|required';
         $out['direccion'] = 'required|max:255';
         $out['telefono'] = 'required|max:15';
         $out['phone'] = 'max:15';
         $out['tipo_doc'] = 'required';
-//        $out['encuesta_id'] = 'required';
         $out['num_doc'] = 'required';
         $out['foto_ced'] = 'mimes:jpg,png,jpeg|max:1000';//|required
         $out['foto'] = 'mimes:jpg,png,jpeg|max:150';//|required
@@ -708,16 +707,12 @@ class PreInscripcionsController extends Controller
      */
     protected function validatorAlumnoCreate(array $data)
     {
-        //variable tipo arreglo en donde se haga el arreglo de validación final
+
         $out = [];
-//        $out['representante_id'] = 'required';
         $out['nombres_a'] = 'required | max:50';
         $out['apellidos_a'] = 'required | max:50';
         $out['genero_a'] = 'required';
         $out['fecha_nac_a'] = 'required';
-//        $out['email'] = 'email|unique:personas';
-//        $out['direccion'] = 'max:255';
-//        $out['telefono'] = 'max:15';
         $out['tipo_doc_a'] = 'required';
         $out['num_doc_a'] = 'required';
         $out['foto_ced'] = 'mimes:jpg,png,jpeg|max:1000';//|required

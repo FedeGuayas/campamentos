@@ -120,7 +120,7 @@ return confirm(\'Seguro que desea borrar al representante?\')">
         $out['apellidos'] = 'required | max:50';
         $out['genero'] = 'required';
         $out['fecha_nac'] = 'required';
-        $out['email'] = 'email|required|unique:personas';
+        $out['email'] = 'email|required';
         $out['direccion'] = 'required|max:255';
         $out['telefono'] = 'required|max:15';
         $out['phone'] = 'max:15';
@@ -282,7 +282,7 @@ return confirm(\'Seguro que desea borrar al representante?\')">
                 $out['num_doc'] = 'required|digits:10';
                 break;
             case 'PASAPORTE':
-                $out['num_doc'] = 'required|alpha_num |max:8 |min:5';
+                $out['num_doc'] = 'required|alpha_num |max:10 |min:5';
                 break;
         }
 
