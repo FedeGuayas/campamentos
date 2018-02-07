@@ -122,7 +122,7 @@ $(document).ready(function (event) {
     });
 });
 
-//Paase de cortesia, costo 0
+//Pase de cortesia, costo 0
 $(document).ready(function (event) {
     // Comprobar cuando cambia un checkbox
     $("#cortesia").on('change', function () {
@@ -165,6 +165,7 @@ $(document).ready(function (event) {
                     $("#multiple").prop("disabled", true);
                     $("#matricula").prop("disabled", true);
                     $("#reservar").prop("disabled", true);
+                    $("#presidente").prop("disabled", true);
                     $("#add-cursos").prop("disabled", true);
 
                     valor.addClass("teal-text");
@@ -179,7 +180,80 @@ $(document).ready(function (event) {
                     $("#multiple").prop("disabled", false);
                     $("#matricula").prop("disabled", false);
                     $("#reservar").prop("disabled", false);
+                    $("#presidente").prop("disabled", false);
 
+                    valor.addClass("teal-text");
+                    valor.val(response);
+                }
+                // dia.addClass("teal-text");
+            },
+            error: function (response) {
+                // console.log(response);
+                valor.removeClass("teal-text");
+            }
+        });
+
+    });
+});
+
+//Presidente asociocion 50% descuento
+$(document).ready(function (event) {
+    // Comprobar cuando cambia un checkbox
+    $("#presidente").on('change', function () {
+        var dia_id = $("#dia_id").val();
+        var nivel = $("#nivel").val();
+        var desc_emp = $("#descuento_empleado").val();
+        var desc_est = $("#descuento_estacion").val();
+        var horario_id = $("#horario_id").val();
+        var escenario_id = $("#escenario_id").val();
+        var disciplina_id = $("#disciplina_id").val();
+        var modulo_id = $("#modulo_id").val();
+        var valor = $(".valor");
+
+        var presidente = $("#presidente");
+
+        var datos = {
+            nivel: nivel,
+            dia_id: dia_id,
+            horario_id: horario_id,
+            escenario: escenario_id,
+            disciplina: disciplina_id,
+            modulo: modulo_id,
+            descuento_empleado:desc_emp,
+            descuento_estacion:desc_est,
+            presidente:  presidente.prop("checked")
+        };
+        $.ajax({
+            url: "costo",
+            type: "GET",
+            // headers: {'X-CSRF-TOKEN': token},
+            // contentType: 'application/x-www-form-urlencoded',
+            data: datos,
+            success: function (response) {
+                // console.log(response);
+                if (presidente.is(':checked')) {
+                    //console.log("Checkbox  => Seleccionado");
+                    $("#familiar").prop("disabled", true);
+                    $("#primo").prop("disabled", true);
+                    $("#multiple").prop("disabled", true);
+                    $("#matricula").prop("disabled", true);
+                    $("#reservar").prop("disabled", true);
+                    $("#add-cursos").prop("disabled", true);
+                    $("#cortesia").prop("disabled", true);
+
+                    valor.addClass("teal-text");
+                    valor.val(response);
+
+
+                    // valor.val(mat);
+                } else {
+                    //console.log("Checkbox => Deseleccionado");
+                    $("#familiar").prop("disabled", false);
+                    $("#primo").prop("disabled", false);
+                    $("#multiple").prop("disabled", false);
+                    $("#matricula").prop("disabled", false);
+                    $("#reservar").prop("disabled", false);
+                    $("#cortesia").prop("disabled", false);
 
                     valor.addClass("teal-text");
                     valor.val(response);

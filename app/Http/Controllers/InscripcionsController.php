@@ -283,16 +283,33 @@ class InscripcionsController extends Controller
     {
         if (Auth::user()->hasRole(['planner', 'administrator', 'supervisor','edit_reserva'])) {
 
+            try {
+
+                DB::beginTransaction();
             $user=$request->user();
 
             $inscripcion = Inscripcion::where('id', $id)->with('factura', 'calendar', 'user', 'alumno')->first();
             $inscripcion->estado = 'Pagada';
             $inscripcion->inscripcion_type=Inscripcion::INSCRIPCION_ONLINE;
             $inscripcion->user()->associate($user);
+            $inscripcion->escenario_id=$user->escenario_id;
+
             $inscripcion->update();
 
+            $factura=Factura::where('id',$inscripcion->factura_id)->first();
+            $factura->created_at=$inscripcion->updated_at;
+            $factura->update();
+
+                DB::commit();
             Session::flash('message', 'Inscripcion Confirmada');
             return redirect()->back();
+            } catch (\Exception $e) { //en caso de error viro al estado anterior
+                DB::rollback();
+                Session::flash('message_danger', 'Error no se pudo aprobar la reserva');
+//                Session::flash('message_danger', 'Error' . $e->getMessage());
+                return redirect()->route('admin.inscripcions.reservas');
+            }
+
         } else return abort(403);
     }
 
@@ -507,6 +524,14 @@ class InscripcionsController extends Controller
                         $descuentos->save();
                     }
 
+                    if ($request->input('presidente') == 'on' && $request->input('valor') > 0) {
+                        $descuentos = new Descuento();
+                        $descuentos->factura()->associate($factura);
+                        $descuentos->descripcion = 'PRESIDENTE ASO';
+                        $descuentos->valor = $factura->descuento;
+                        $descuentos->save();
+                    }
+
                     if ($request->input('descuento_empleado') == 'true' && $request->input('valor') > 0) {
                         $descuentos = new Descuento();
                         $descuentos->factura()->associate($factura);
@@ -515,18 +540,17 @@ class InscripcionsController extends Controller
                         $descuentos->save();
                     }
 
-
                     //inscripcion
                     $user = $request->user();//usuario logueado
-                    if (is_null($user->escenario_id)) {//online
-                        $pto_cobro = 'N/A';
-                    } else  $pto_cobro = $user->escenario_id;
+                    if ($user) {
+                        $pto_cobro = $user->escenario_id;
+                    } else  $pto_cobro = '0';//online
 
                     $inscripcion = new Inscripcion();
                     $inscripcion->calendar()->associate($calendar);
                     $inscripcion->factura()->associate($factura);
                     $inscripcion->user()->associate($user);
-                    $inscripcion->escenario()->associate($pto_cobro);
+                    $inscripcion->escenario_id=$pto_cobro;
 
                     if ($request->input('adulto') == true) { //si es una inscripcion para adulto
                         $inscripcion->alumno_id = 0; //le voy a asignara al id del alumno 0 en la tabla de inscripcion
@@ -1173,6 +1197,11 @@ class InscripcionsController extends Controller
             } else $mat = 0;
 
             $precio = $mat + $mes - $descuento;
+
+            //precio de presidentes de asociacion 50%
+            if ($request->input('presidente') == 'true') {
+                $precio = $precio*0.5;
+            }
 
             //pase de cortesia costo 0
             if ($request->input('cortesia') == 'true') {

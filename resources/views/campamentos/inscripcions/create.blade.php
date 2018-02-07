@@ -300,19 +300,28 @@
 
                         $("#getCurso>h5>span").html(total_cursos);
 
+                        //inscripcion de hermanos
                         if ($("#familiar").is(':checked') && total_cursos < 2) {
                             $("#form_inscripcion").trigger("reset");//limpio el form en la primera inscripcion
                             $("#pagar").prop("disabled", true);
                         } else $("#pagar").prop("disabled", false);
 
+                        //inscripciones multiples
                         if ($("#multiple").is(':checked') && total_cursos < 3) {
                             $("#pagar").prop("disabled", true);
                         } else $("#pagar").prop("disabled", false);
 
+                        //incripcion primos
                         if ($("#primo").is(':checked') && total_cursos < 2) {
                             $("#form_inscripcion").trigger("reset");//limpio el form en la primera inscripcion
                             $("#pagar").prop("disabled", true);
                         } else $("#pagar").prop("disabled", false);
+
+                        //inscripcion padres hijos sin descuentos
+//                        if (($("#primo").not(':checked') && $("#multiple").not(':checked') && $("#familiar").not(':checked')) && total_cursos < 2) {
+//                            $("#form_inscripcion").trigger("reset");//limpio el form en la primera inscripcion
+//                            $("#pagar").prop("disabled", true);
+//                        } else $("#pagar").prop("disabled", false);
                     },
                     error: function (resp) {
                        // console.log(resp);

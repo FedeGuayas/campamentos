@@ -40,7 +40,7 @@ class ReportesController extends Controller
 
 
     /**
-     * Vista para Reporte general Periodo Insc
+     * Vista para Generar Reporte por Periodo de Inscripción
      * @param Request $request
      * @return mixed
      */
@@ -55,19 +55,23 @@ class ReportesController extends Controller
         $end = $end->toDateString();
 
         $inscripciones = Inscripcion::with('factura', 'calendar', 'user', 'alumno')
-            ->whereBetween('created_at', [$start, $end])
+            ->whereHas('factura', function($q) use($start,$end) {
+                $q->whereBetween('created_at', [$start, $end]);
+        })
+//            ->whereBetween('created_at', [$start, $end])
 //            ->where('created_at','>=',$start)
 //            ->where('created_at','<=',$end)
             ->where('estado', '=', 'Pagada')
             ->whereNull('cart')//inscripciones internas sin las online
             ->orderBy('created_at')
+            ->groupBy('factura_id')
             ->paginate(10);
 
         return view('campamentos.reportes.reporte-excell', compact('inscripciones', 'start', 'end'));
     }
 
     /**
-     * Exportar Reporte General a excel  Periodo Insc
+     * Exportar Generar Reporte por Periodo de Inscripción
      * @param Request $request
      */
     public function exportExcel(Request $request)
@@ -81,12 +85,13 @@ class ReportesController extends Controller
         $end = $end->toDateString();
 
         $inscripciones = Inscripcion::with('factura', 'calendar', 'user', 'alumno', 'escenario')
-            ->whereBetween('created_at', [$start, $end])
-//            ->where('created_at','>=',$start)
-//            ->where('created_at','<=',$end)
+            ->whereHas('factura', function($q) use($start,$end) {
+                $q->whereBetween('created_at', [$start, $end]);
+            })
             ->where('estado', '=', 'Pagada')
             ->whereNull('cart')
             ->orderBy('created_at')
+            ->groupBy('factura_id')
             ->get();
 
         $arrayExp[] = ['Recibo', 'Apellidos_Alumno', 'Nombres_Alumno', 'Edad', 'Género', 'Representante', 'Cedeula Rep', 'Telefono', 'Correo', 'Direccion',
@@ -124,8 +129,6 @@ class ReportesController extends Controller
                 'al_nomb' => $al_nomb,
                 'al_edad' => $al_edad,
                 'al_genero' => $genero,
-//                'rep_apell' => $insc->factura->representante->persona->apellidos,
-//                'rep_nomb' => $insc->factura->representante->persona->nombres,
                 'representante' => $insc->factura->representante->persona->getNombreAttribute(),
                 'ced_representante' => $insc->factura->representante->persona->num_doc,
                 'tel_representante' => $insc->factura->representante->persona->telefono,
@@ -145,7 +148,6 @@ class ReportesController extends Controller
                 'usuario' => $insc->user->getNameAttribute(),
                 'pto_cobro' => $pto_cobro,
                 'profe' => $insc->calendar->profesor->getNameAttribute(),
-
             ];
         }
 
@@ -194,7 +196,7 @@ class ReportesController extends Controller
             $pdf = PDF::loadView('campamentos.reportes.insc-adulto-pdf', compact('inscripcion', 'fecha_actual', 'month'));
 //        return $pdf->download('ComprobantePago.pdf');//descarga el pdf
 
-            return $pdf->stream('ComprobantePago');//imprime en pantalla
+            return $pdf->stream('ComprobantePago '.$inscripcion->id.'.pdf');//imprime en pantalla
 
         } else {//menor
 
@@ -245,7 +247,6 @@ class ReportesController extends Controller
                     "precio" => $i,
                     "fpago"=>$forma,
                 ];
-
             }
 
             //sumar columnas para total por usuario y Total general
@@ -286,7 +287,6 @@ class ReportesController extends Controller
                     "western"=>$valorWestern
                 ];
 
-
             }
 
             $total = [
@@ -295,7 +295,6 @@ class ReportesController extends Controller
                 "totalTarjeta" => $totalTarjeta,
                 "totalGeneral"=>$valorFinal,
             ];
-
 
         }
 
@@ -820,7 +819,7 @@ class ReportesController extends Controller
 
 
     /**
-     * Cargar vista para las facturas del usuario
+     * Cargar vista para Generar Formato Facturación
      * @param Request $request
      * @return mixed
      */
@@ -840,12 +839,10 @@ class ReportesController extends Controller
         $end=new Carbon($end);
         $end=$end->toDateString();
 
-//        $user=Auth::user();
 
         if ($escenario){
             $inscripciones=Inscripcion::with('factura','calendar','user','alumno','escenario')
                 ->whereBetween('created_at',[$start, $end])
-//            ->where('user_id',$user->id)
                 ->where('escenario_id',$escenario)//pto cobro
                 ->where('estado','Pagada')
                 ->orderBy('created_at')
@@ -855,8 +852,7 @@ class ReportesController extends Controller
         }else {
             $inscripciones=Inscripcion::with('factura','calendar','user','alumno','escenario')
                 ->whereBetween('created_at',[$start, $end])
-//            ->where('user_id',$user->id)
-                ->where('escenario_id','like', '%'.$escenario.'%')
+//                ->where('escenario_id','like', '%'.$escenario.'%')
                 ->where('estado','Pagada')
                 ->orderBy('created_at')
                 ->groupBy('factura_id')
@@ -868,7 +864,7 @@ class ReportesController extends Controller
 
 
     /**
-     * Exportar excel con formato de facturacion
+     * Exportar excel Generar Formato Facturación
      * @param Request $request
      */
 
@@ -876,7 +872,6 @@ class ReportesController extends Controller
 
         $start = trim($request->get('start'));
         $end = trim($request->get('end'));
-//        $user=Auth::user();
         $escenario = $request->get('escenario');
 
         $start=new Carbon($start);
@@ -887,7 +882,6 @@ class ReportesController extends Controller
         if ($escenario){
             $inscripciones=Inscripcion::with('factura','calendar','user','alumno','escenario')
                 ->whereBetween('created_at',[$start, $end])
-//            ->where('user_id',$user->id)
                 ->where('escenario_id', $escenario)//pto cobro
                 ->where('estado','Pagada')
                 ->orderBy('created_at')
@@ -896,8 +890,7 @@ class ReportesController extends Controller
         }else {
             $inscripciones=Inscripcion::with('factura','calendar','user','alumno','escenario')
                 ->whereBetween('created_at',[$start, $end])
-//            ->where('user_id',$user->id)
-                ->where('escenario_id','like', '%'.$escenario.'%')
+//                ->where('escenario_id','like', '%'.$escenario.'%')
                 ->where('estado','Pagada')
                 ->orderBy('created_at')
                 ->groupBy('factura_id')

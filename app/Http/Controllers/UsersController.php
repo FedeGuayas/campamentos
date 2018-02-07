@@ -209,7 +209,7 @@ class UsersController extends Controller
 
    
     /**
-     * Cargar vista para las facturas del usuario
+     * Cargar vista para Generar Formato Facturación Masiva por usuario
      * @param Request $request
      * @return mixed
      */
@@ -224,8 +224,11 @@ class UsersController extends Controller
         $end=$end->toDateString();
         $user=Auth::user();
 
-        $inscripciones=Inscripcion::with('factura','calendar','user','alumno')
-            ->whereBetween('created_at',[$start, $end])
+        $inscripciones=Inscripcion::with('factura','calendar','user','alumno','escenario')
+            ->whereHas('factura', function($q) use($start,$end) {
+                $q->whereBetween('created_at', [$start, $end]); //fecha de la factura
+            })
+//            ->whereBetween('created_at',[$start, $end]) //fecha inscripcion
             ->where('user_id',$user->id)
             ->where('estado','Pagada')
             ->orderBy('created_at')
@@ -237,7 +240,7 @@ class UsersController extends Controller
 
 
     /**
-     * Exportar excel con formato de facturacion
+     * Exportar excel para Generar Formato Facturación Masiva por usuario
      * @param Request $request
      */
 
@@ -245,73 +248,59 @@ class UsersController extends Controller
 
         $start = trim($request->get('start'));
         $end = trim($request->get('end'));
+        $start=new Carbon($start);
+        $start=$start->toDateString();
+        $end=new Carbon($end);
+        $end=$end->toDateString();
         $user=Auth::user();
 
-
-
-        $inscripciones=Inscripcion::with('factura','calendar','user','alumno')
-            ->whereBetween('created_at',[$start, $end])
+        $inscripciones=Inscripcion::with('factura','calendar','user','alumno','escenario')
+            ->whereHas('factura', function($q) use($start,$end) {
+                $q->whereBetween('created_at', [$start, $end]); //fecha de la factura
+            })
+//            ->whereBetween('created_at',[$start, $end]) //fecha inscripcion
             ->where('user_id',$user->id)
             ->where('estado','Pagada')
             ->orderBy('created_at')
             ->groupBy('factura_id')
             ->get();
 
-        $arrayExp[] = ['codigopadre','codigo','nombre','nombrecomercial','RUC','Fecha','Referencia','Comentario',
-            'CtaIngreso','Cantidad','Valor','Iva','DIRECCION','division','TipoCli','actividad','codvend','recaudador',
-            'formadepago','estado','diasplazo','precio','telefono','fax','celular','e_mail','pais','provincia','ciudad',
-            'CtaxCob','CtaxAnt','cupo','empresasri'
+        $arrayExp[] = ['Fecha Insc.','Representante','RUC','Dirección','Teléfono','Email','Alumno','Modulo','Horario','Escenario','Valor','Forma Pago',         'Registro','Pto Cobro'
         ];
 
         foreach ($inscripciones as $insc) {
 
+            if (is_null($insc->escenario_id) || $insc->escenario_id == '0') {//online
+                $pto_cobro = 'N/A';
+            } else $pto_cobro = $insc->escenario->escenario;
+
             if ($insc->alumno_id == 0) {
-
+                $alumno=$insc->factura->representante->persona->getNombreAttribute();
             } else{
-
+                $alumno=$insc->alumno->persona->getNombreAttribute();
             }
 
+            $cont_comp = Inscripcion::where('factura_id', $insc->factura_id)->count();
+
             $arrayExp[] = [
-
-                'codigopadre'=>'',
-                'codigo'=>'',
-                'nombre'=> $insc->factura->representante->persona->getNombreAttribute(),
-                'nombrecomercial'=> $insc->factura->representante->persona->getNombreAttribute(),
-                'RUC'=> (int)$insc->factura->representante->persona->num_doc,
-//                'Fecha'=> $insc->factura->created_at->format('d/m/Y'),
-                'Fecha'=> $insc->factura->created_at->format('d/m/Y'),
-                'Referencia'=> 'INSCRIPCION CAMPAMENTOS'.'-'. $insc->calendar->program->disciplina->disciplina.'-'.$insc->calendar->program->escenario->escenario,
-                'Comentario'=> $insc->factura->id,
-                'CtaIngreso'=> '6252499006133',
-                'Cantidad'=> 1,
-                'Valor'=> (float)$insc->factura->total,
-                'Iva'=> 'S',
-                'DIRECCION'=> $insc->factura->representante->persona->direccion,
-                'division'=> (int)$insc->user->escenario->codigo,
-                'TipoCli'=> 1,
-                'actividad'=> 1,
-                'codvend'=> '',
-                'recaudador'=> '',
-                'formadepago'=> $insc->factura->pago->forma,
-                'estado'=> 'A',
-                'diasplazo'=> 1,
-                'precio'=> 1,
+                'fecha'=>$insc->created_at->format('d/m/Y'),
+                'repre'=>$insc->factura->representante->persona->getNombreAttribute(),
+                'ruc'=> (int)$insc->factura->representante->persona->num_doc,
+                'direccion'=>$insc->factura->representante->persona->direccion,
                 'telefono'=> (string)$insc->factura->representante->persona->telefono,
-                'fax'=> '',
-                'celular'=> '',
                 'e_mail'=> $insc->factura->representante->persona->email,
-                'pais'=> 1,
-                'provincia'=> 1,
-                'ciudad'=> 4,
-                'CtaxCob'=> '1110101001',
-                'CtaxAnt'=> '210307999',
-                'cupo'=> 500,
-                'empresasri'=> 'PERSONAS NO OBLIGADAS A LLEVAR CONTABILIDAD, FACTURA',
-
+                'alumno'=>$alumno,
+                'modulo'=>$insc->calendar->program->modulo->modulo,
+                'horario'=>$insc->calendar->horario->start_time.' - '.$insc->calendar->horario->end_time,
+                'escenario'=>$insc->calendar->program->escenario->escenario,
+                'valor'=> round(($insc->factura->total) / $cont_comp, 3),
+                'formadepago'=> $insc->factura->pago->forma,
+                'insc'=>$insc->id,
+                'ptocobro'=>$pto_cobro
             ];
         }
 
-        Excel::create('Facturacion_Masiva - '.Carbon::now().'', function ($excel) use ($arrayExp) {
+        Excel::create('Facturacion_Usuario - '.Carbon::now().'', function ($excel) use ($arrayExp) {
 
             $excel->sheet('Facturacion', function ($sheet) use ($arrayExp) {
 
@@ -323,31 +312,30 @@ class UsersController extends Controller
 //
 //                });
 
-                $sheet->setColumnFormat(array(
-                    'A'=>'General',
-                    'B'=>'General',
-                    'C'=>'General',
-                    'D'=>'General',
-                    'E' => '0',
-                    'F' => '0',
-                    'I'=>'@',
-                    'K'=>'#,##0.00_-',
-                    'N' => '0',
-                    'O' => '0',
-                    'P' => '0',
-                    'U' => '0',
-                    'V' => '0',
-                    'AA' => '0',
-                    'AB' => '0',
-                    'AC' => '0',
-                    'AF' => '#,##0.00_-',
-                    'AD'=>'General',
-                    'AE'=>'General',
-
-                ));
+//                $sheet->setColumnFormat(array(
+//                    'A'=>'General',
+//                    'B'=>'General',
+//                    'C'=>'General',
+//                    'D'=>'General',
+//                    'E' => '0',
+//                    'F' => '0',
+//                    'I'=>'@',
+//                    'K'=>'#,##0.00_-',
+//                    'N' => '0',
+//                    'O' => '0',
+//                    'P' => '0',
+//                    'U' => '0',
+//                    'V' => '0',
+//                    'AA' => '0',
+//                    'AB' => '0',
+//                    'AC' => '0',
+//                    'AF' => '#,##0.00_-',
+//                    'AD'=>'General',
+//                    'AE'=>'General',
+//
+//                ));
 
                 $sheet->fromArray($arrayExp,null,'A1',false,false);
-
             });
         })->export('xlsx');
 

@@ -386,7 +386,7 @@ class PreInscripcionsController extends Controller
 
             $desc=0;
             $descuento = 0;
-            if ($descuento_empleado) {
+            if ($descuento_empleado==='true') {
                 $desc = 0.5; //50%
                 $descuento = $mes * $desc;
             }
@@ -479,15 +479,13 @@ class PreInscripcionsController extends Controller
             //inscripcion
 //            $user = $request->user();//usuario logueado
             $user = User::where('email', 'western@mail.com')->first();
-            if (is_null($user->escenario_id)) {//online
-                $pto_cobro = 'N/A';
-            } else  $pto_cobro = $user->escenario_id;
+            $pto_cobro = '0';
 
             $inscripcion = new Inscripcion();
             $inscripcion->calendar()->associate($calendar);
             $inscripcion->factura()->associate($factura);
             $inscripcion->user()->associate($user);
-            $inscripcion->escenario()->associate($pto_cobro);
+            $inscripcion->escenario_id=$pto_cobro;
             $inscripcion->inscripcion_type=Inscripcion::INSCRIPCION_ONLINE;
 
             if ($request->input('adulto') == true) { //si es una inscripcion para adulto
@@ -619,8 +617,6 @@ class PreInscripcionsController extends Controller
             DB::beginTransaction();
 
             $fecha_nac=$request->get('fecha_nac');
-
-
 
             $persona = new Persona();
             $persona->nombres = strtoupper($request->get('nombres'));
