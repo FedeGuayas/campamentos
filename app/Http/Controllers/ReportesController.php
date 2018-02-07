@@ -54,16 +54,22 @@ class ReportesController extends Controller
         $end = new Carbon($end);
         $end = $end->toDateString();
 
-        $inscripciones = Inscripcion::with('factura', 'calendar', 'user', 'alumno')
+        $inscripciones = Inscripcion::
+//            join('facturas as f', 'f.id', '=', 'inscripcions.factura_id')
+//            ->join('pagos as p', 'p.id', '=', 'f.pago_id')
+//            ->join('users as u', 'u.id', '=', 'inscripcions.user_id')
+//            ->join('calendars as c', 'c.id', '=', 'inscripcions.calendar_id')
+//            ->select('inscripcions.*','f.representante_id','f.total','f.descuento','f.created_at')
+        with('factura', 'calendar', 'user', 'alumno')
             ->whereHas('factura', function($q) use($start,$end) {
                 $q->whereBetween('created_at', [$start, $end]);
         })
-//            ->whereBetween('created_at', [$start, $end])
+//            ->whereBetween('f.created_at', [$start, $end])
 //            ->where('created_at','>=',$start)
 //            ->where('created_at','<=',$end)
-            ->where('estado', '=', 'Pagada')
+            ->where('inscripcions.estado', '=', 'Pagada')
             ->whereNull('cart')//inscripciones internas sin las online
-            ->orderBy('created_at')
+            ->orderBy('inscripcions.created_at')
             ->groupBy('factura_id')
             ->paginate(10);
 
@@ -84,18 +90,19 @@ class ReportesController extends Controller
         $end = new Carbon($end);
         $end = $end->toDateString();
 
-        $inscripciones = Inscripcion::with('factura', 'calendar', 'user', 'alumno', 'escenario')
+        $inscripciones = Inscripcion::
+        with('factura', 'calendar', 'user', 'alumno', 'escenario')
             ->whereHas('factura', function($q) use($start,$end) {
                 $q->whereBetween('created_at', [$start, $end]);
             })
-            ->where('estado', '=', 'Pagada')
+//            ->whereBetween('f.created_at', [$start, $end])
+            ->where('inscripcions.estado', 'Pagada')
             ->whereNull('cart')
-            ->orderBy('created_at')
-            ->groupBy('factura_id')
+            ->orderBy('inscripcions.created_at')
             ->get();
 
-        $arrayExp[] = ['Recibo', 'Apellidos_Alumno', 'Nombres_Alumno', 'Edad', 'Género', 'Representante', 'Cedeula Rep', 'Telefono', 'Correo', 'Direccion',
-            'Modulo', 'Escenario', 'Disciplina', 'Dias', 'Horario', 'Comprobante', 'Valor', 'Descuento', 'Estado', 'Fecha_Insc', 'Forma_Pago', 'Usuario', 'Pto Cobro', 'Profesor'];
+        $arrayExp[] = ['Recibo', 'Apellidos_Alumno', 'Nombres_Alumno', 'Edad', 'Género', 'Representante', 'Cedula Rep', 'Telefono', 'Correo', 'Direccion',
+            'Modulo', 'Escenario', 'Disciplina', 'Dias', 'Horario', 'Comprobante', 'Valor', 'Descuento', 'Estado', 'Fecha_Cobro', 'Forma_Pago', 'Usuario', 'Pto Cobro', 'Profesor'];
 
         foreach ($inscripciones as $insc) {
 
@@ -143,7 +150,7 @@ class ReportesController extends Controller
                 'valor' => round(($insc->factura->total) / $cont_comp, 3),
                 'descuento' => $insc->factura->descuento,
                 'estado' => $insc->estado,
-                'fecha_insc' => $insc->created_at,
+                'fecha_cob' => $insc->factura->created_at,
                 'fpago' => $insc->factura->pago->forma,
                 'usuario' => $insc->user->getNameAttribute(),
                 'pto_cobro' => $pto_cobro,

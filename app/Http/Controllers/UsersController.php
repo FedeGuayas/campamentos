@@ -262,7 +262,6 @@ class UsersController extends Controller
             ->where('user_id',$user->id)
             ->where('estado','Pagada')
             ->orderBy('created_at')
-            ->groupBy('factura_id')
             ->get();
 
         $arrayExp[] = ['Fecha Insc.','Representante','RUC','Dirección','Teléfono','Email','Alumno','Modulo','Horario','Escenario','Valor','Forma Pago',         'Registro','Pto Cobro'
