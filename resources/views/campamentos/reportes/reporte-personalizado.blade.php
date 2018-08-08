@@ -117,29 +117,29 @@
                                 @if ($insc->alumno_id==0)
                                     {{ $insc->factura->representante->persona->apellidos }}
                                 @else
-                                    {{ $insc->alumno }}
+                                    {{ $insc->alumno->persona->apellidos }}
                                 @endif
                             </td>
                             <td>
                                 @if ($insc->alumno_id==0)
                                     {{ $insc->factura->representante->persona->nombres }}
                                 @else
-                                    {{--{{ $insc->alumno->persona->nombres }}--}}
+                                    {{ $insc->alumno->persona->nombres }}
                                 @endif
                             </td>
                             <td>
                                 @if ($insc->alumno_id==0)
                                     {{ $insc->factura->representante->persona->num_doc  }}
                                 @else
-                                    ci
                                     {{--{{$insc->alumno['persona']['num_doc']}}--}}
+                                    {{$insc->alumno->persona->num_doc}}
                                 @endif
                             </td>
                             <td>{{$insc->calendar->program->modulo->modulo}}</td>
-                            <td>{{ $insc->calendar['program']->escenario->escenario }}</td>
-                            <td>{{ $insc->calendar['program']->disciplina->disciplina }}</td>
+                            <td>{{ $insc->calendar->program->escenario->escenario }}</td>
+                            <td>{{ $insc->calendar->program->disciplina->disciplina }}</td>
                             <td>{{ $insc->calendar->dia->dia }}</td>
-{{--                            <td>{{ $insc->factura->representante->persona->getNombreAttribute() }}</td>--}}
+                            <td>{{ $insc->factura->representante->persona->getNombreAttribute() }}</td>
                             <td>{{ $insc->calendar->profesor->getNameAttribute() }}</td>
                         </tr>
                     @endforeach

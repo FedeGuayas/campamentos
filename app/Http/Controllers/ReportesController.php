@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+ini_set('max_execution_time', 300);
+
 use App\Alumno;
 use App\Calendar;
 use App\Dia;
@@ -33,7 +35,6 @@ class ReportesController extends Controller
 {
     public function __construct()
     {
-//        Carbon::setLocale('es');
         $this->middleware('auth');
 //        $this->middleware(['role:supervisor|administrador']);
     }
@@ -55,22 +56,12 @@ class ReportesController extends Controller
         $end = $end->toDateString();
 
         $inscripciones = Inscripcion::
-//            join('facturas as f', 'f.id', '=', 'inscripcions.factura_id')
-//            ->join('pagos as p', 'p.id', '=', 'f.pago_id')
-//            ->join('users as u', 'u.id', '=', 'inscripcions.user_id')
-//            ->join('calendars as c', 'c.id', '=', 'inscripcions.calendar_id')
-//            ->select('inscripcions.*','f.representante_id','f.total','f.descuento','f.created_at')
-        with('factura', 'calendar', 'user', 'alumno')
-            ->whereHas('factura', function($q) use($start,$end) {
+        with('factura', 'calendar', 'user', 'alumno', 'escenario')
+            ->whereHas('factura', function ($q) use ($start, $end) {
                 $q->whereBetween('created_at', [$start, $end]);
-        })
-//            ->whereBetween('f.created_at', [$start, $end])
-//            ->where('created_at','>=',$start)
-//            ->where('created_at','<=',$end)
-            ->where('inscripcions.estado', '=', 'Pagada')
+            })
+            ->where('inscripcions.estado', 'Pagada')
             ->whereNull('cart')//inscripciones internas sin las online
-            ->orderBy('inscripcions.created_at')
-            ->groupBy('factura_id')
             ->paginate(10);
 
         return view('campamentos.reportes.reporte-excell', compact('inscripciones', 'start', 'end'));
@@ -92,71 +83,79 @@ class ReportesController extends Controller
 
         $inscripciones = Inscripcion::
         with('factura', 'calendar', 'user', 'alumno', 'escenario')
-            ->whereHas('factura', function($q) use($start,$end) {
+            ->whereHas('factura', function ($q) use ($start, $end) {
                 $q->whereBetween('created_at', [$start, $end]);
             })
-//            ->whereBetween('f.created_at', [$start, $end])
             ->where('inscripcions.estado', 'Pagada')
-            ->whereNull('cart')
-            ->orderBy('inscripcions.created_at')
-            ->get();
+            ->whereNull('cart');
+
 
         $arrayExp[] = ['Recibo', 'Apellidos_Alumno', 'Nombres_Alumno', 'Edad', 'Género', 'Representante', 'Cedula Rep', 'Telefono', 'Correo', 'Direccion',
             'Modulo', 'Escenario', 'Disciplina', 'Dias', 'Horario', 'Comprobante', 'Valor', 'Descuento', 'Estado', 'Fecha_Cobro', 'Forma_Pago', 'Usuario', 'Pto Cobro', 'Profesor'];
 
-        foreach ($inscripciones as $insc) {
+        $count = $inscripciones->count();
+        $off_ex = 100;
+        for ($j = 0; $j < $count / $off_ex; $j++) {
 
-            if (is_null($insc->escenario_id) || $insc->escenario_id == '0') {//online
-                $pto_cobro = 'N/A';
-            } else $pto_cobro = $insc->escenario->escenario;
+            $inscripcioness = $inscripciones->skip($j * $off_ex)->take($off_ex)->get();
 
-            if ($insc->alumno_id == 0) {
-                $al_apell = $insc->factura->representante->persona->apellidos;
-                $al_nomb = $insc->factura->representante->persona->nombres;
+            foreach ($inscripcioness as $insc) {
 
-                $al = Representante::where('id', $insc->factura->representante_id)->first();
-                $fecha_nac = $insc->factura->representante->persona->fecha_nac;
-                $al_edad = $al->getEdad($fecha_nac);
-                $genero = $insc->factura->representante->persona->genero;
-            } else {
-                $al_apell = $insc->alumno->persona->apellidos;
-                $al_nomb = $insc->alumno->persona->nombres;
+                if (is_null($insc->escenario_id) || $insc->escenario_id == '0') {//online
+                    $pto_cobro = 'N/A';
+                } else $pto_cobro = $insc->escenario->escenario;
 
-                $al = Alumno::where('id', $insc->alumno_id)->first();
-                $fecha_nac = $al->persona->fecha_nac;
-                $al_edad = $al->getEdad($fecha_nac);
-                $genero = $insc->alumno->persona->genero;
+                if ($insc->alumno_id == 0) {
+                    $al_apell = $insc->factura->representante->persona->apellidos;
+                    $al_nomb = $insc->factura->representante->persona->nombres;
+
+                    $al = Representante::where('id', $insc->factura->representante_id)->first();
+                    $fecha_nac = $insc->factura->representante->persona->fecha_nac;
+                    $al_edad = $al->getEdad($fecha_nac);
+                    $genero = $insc->factura->representante->persona->genero;
+                } else {
+                    $al_apell = $insc->alumno->persona->apellidos;
+                    $al_nomb = $insc->alumno->persona->nombres;
+
+                    $al = Alumno::where('id', $insc->alumno_id)->first();
+                    $fecha_nac = $al->persona->fecha_nac;
+                    $al_edad = $al->getEdad($fecha_nac);
+                    $genero = $insc->alumno->persona->genero;
+                }
+
+                $cont_comp = Inscripcion::where('factura_id', $insc->factura_id)->count();
+
+                $arrayExp[] = [
+                    'recibo' => $insc->id,
+                    'al_apell' => $al_apell,
+                    'al_nomb' => $al_nomb,
+                    'al_edad' => $al_edad,
+                    'al_genero' => $genero,
+                    'representante' => $insc->factura->representante->persona->getNombreAttribute(),
+                    'ced_representante' => $insc->factura->representante->persona->num_doc,
+                    'tel_representante' => $insc->factura->representante->persona->telefono,
+                    'email_representante' => $insc->factura->representante->persona->email,
+                    'direccion_representante' => $insc->factura->representante->persona->direccion,
+                    'modulo' => $insc->calendar->program->modulo->modulo,
+                    'escenario' => $insc->calendar->program->escenario->escenario,
+                    'disciplina' => $insc->calendar->program->disciplina->disciplina,
+                    'dias' => $insc->calendar->dia->dia,
+                    'horario' => $insc->calendar->horario->start_time . '-' . $insc->calendar->horario->end_time,
+                    'comprobante' => $insc->factura->id,
+                    'valor' => round(($insc->factura->total) / $cont_comp, 3),
+                    'descuento' => $insc->factura->descuento,
+                    'estado' => $insc->estado,
+                    'fecha_cob' => $insc->factura->created_at,
+                    'fpago' => $insc->factura->pago->forma,
+                    'usuario' => $insc->user->getNameAttribute(),
+                    'pto_cobro' => $pto_cobro,
+                    'profe' => $insc->calendar->profesor->getNameAttribute(),
+                ];
             }
-
-            $cont_comp = Inscripcion::where('factura_id', $insc->factura_id)->count();
-
-            $arrayExp[] = [
-                'recibo' => $insc->id,
-                'al_apell' => $al_apell,
-                'al_nomb' => $al_nomb,
-                'al_edad' => $al_edad,
-                'al_genero' => $genero,
-                'representante' => $insc->factura->representante->persona->getNombreAttribute(),
-                'ced_representante' => $insc->factura->representante->persona->num_doc,
-                'tel_representante' => $insc->factura->representante->persona->telefono,
-                'email_representante' => $insc->factura->representante->persona->email,
-                'direccion_representante' => $insc->factura->representante->persona->direccion,
-                'modulo' => $insc->calendar->program->modulo->modulo,
-                'escenario' => $insc->calendar->program->escenario->escenario,
-                'disciplina' => $insc->calendar->program->disciplina->disciplina,
-                'dias' => $insc->calendar->dia->dia,
-                'horario' => $insc->calendar->horario->start_time . '-' . $insc->calendar->horario->end_time,
-                'comprobante' => $insc->factura->id,
-                'valor' => round(($insc->factura->total) / $cont_comp, 3),
-                'descuento' => $insc->factura->descuento,
-                'estado' => $insc->estado,
-                'fecha_cob' => $insc->factura->created_at,
-                'fpago' => $insc->factura->pago->forma,
-                'usuario' => $insc->user->getNameAttribute(),
-                'pto_cobro' => $pto_cobro,
-                'profe' => $insc->calendar->profesor->getNameAttribute(),
-            ];
         }
+
+        set_time_limit(0);
+        ini_set('memory_limit', '1G');
 
         Excel::create('Reporte_General_Campamentos- ' . Carbon::now() . '', function ($excel) use ($arrayExp) {
 
@@ -174,6 +173,7 @@ class ReportesController extends Controller
 
             });
         })->export('xlsx');
+
     }
 
     /**
@@ -183,7 +183,6 @@ class ReportesController extends Controller
      */
     public function inscripcionPDF($id)
     {
-
         $inscripcion = Inscripcion::with('factura', 'calendar', 'user', 'alumno')
             ->where('id', $id)
             ->withCount('factura')
@@ -203,13 +202,13 @@ class ReportesController extends Controller
             $pdf = PDF::loadView('campamentos.reportes.insc-adulto-pdf', compact('inscripcion', 'fecha_actual', 'month'));
 //        return $pdf->download('ComprobantePago.pdf');//descarga el pdf
 
-            return $pdf->stream('ComprobantePago '.$inscripcion->id.'.pdf');//imprime en pantalla
+            return $pdf->stream('ComprobantePago ' . $inscripcion->id . '.pdf');//imprime en pantalla
 
         } else {//menor
 
             $pdf = PDF::loadView('campamentos.reportes.insc-menor-pdf', compact('inscripcion', 'fecha_actual', 'month'));
 //        return $pdf->download('ComprobantePago.pdf');//descarga el pdf
-            return $pdf->stream('ComprobantePago '.$inscripcion->id.'.pdf');//imprime en pantalla
+            return $pdf->stream('ComprobantePago ' . $inscripcion->id . '.pdf');//imprime en pantalla
 
         }
     }
@@ -222,7 +221,6 @@ class ReportesController extends Controller
     public function cuadre(Request $request)
     {
         $escenarioSelect = ['' => 'Seleccione el escenario'] + Escenario::lists('escenario', 'id')->all();
-//        $usuarioSelect = ['' => 'Seleccione el usuario'] + User::select(DB::raw('CONCAT(first_name, " ", last_name) AS nombre'), 'id')->lists('nombre', 'id')->all();
 
         if ($request) {
             $fecha = $request->get('fecha');
@@ -235,11 +233,11 @@ class ReportesController extends Controller
             join('inscripcions as i', 'i.factura_id', '=', 'facturas.id')
                 ->join('users as u', 'u.id', '=', 'i.user_id')
                 ->join('pagos as p', 'p.id', '=', 'facturas.pago_id')
-                ->select('total', 'factura_id', 'i.user_id as uid', 'u.first_name', 'u.last_name', 'u.escenario_id', 'i.created_at', 'i.id', 'i.estado','p.id as pagoID','p.forma')
+                ->select('total', 'factura_id', 'i.user_id as uid', 'u.first_name', 'u.last_name', 'u.escenario_id', 'i.created_at', 'i.id', 'i.estado', 'p.id as pagoID', 'p.forma')
                 ->where('i.estado', '=', 'Pagada')
                 ->where('facturas.created_at', 'like', '%' . $fecha . '%')
                 ->where('i.escenario_id', 'like', '%' . $escenario . '%')
-                ->groupBy('factura_id') //agrupo por facturas de la tabla inscripciones xk hay varias insccripciones con una misma factura
+                ->groupBy('factura_id')//agrupo por facturas de la tabla inscripciones xk hay varias insccripciones con una misma factura
                 ->get();
 
             $group = [];
@@ -248,67 +246,61 @@ class ReportesController extends Controller
             foreach ($cuadre as $c) {
                 $user = $c->first_name . ' ' . $c->last_name;
                 $i = $c->total;
-                $forma=$c->forma;
-                $group[$user][]= [
+                $forma = $c->forma;
+                $group[$user][] = [
                     "Nombre" => $user,
                     "precio" => $i,
-                    "fpago"=>$forma,
+                    "fpago" => $forma,
                 ];
             }
-
             //sumar columnas para total por usuario y Total general
             $cuadreArray = [];
             $valorFinal = 0;
-            $totalContado=0;
-            $totalTarjeta=0;
-            $totalWestern=0;
+            $totalContado = 0;
+            $totalTarjeta = 0;
+            $totalWestern = 0;
             foreach ($group as $nombre => $fp) {
                 $valorUsuario = 0;
-                $valorContado=0;
-                $valorTarjeta=0;
-                $valorWestern=0;
-                foreach ($group[$nombre] as $key=>$value) { // agrupar los valores de las facturas por usuario
+                $valorContado = 0;
+                $valorTarjeta = 0;
+                $valorWestern = 0;
+                foreach ($group[$nombre] as $key => $value) { // agrupar los valores de las facturas por usuario
                     //acumulados
-                    if (stristr($value['fpago'], 'contado')){
+                    if (stristr($value['fpago'], 'contado')) {
                         $valorContado += $value['precio']; //acumulado de contado para el usuario
-                        $totalContado +=$value['precio']; //acumulado total de contado
+                        $totalContado += $value['precio']; //acumulado total de contado
                     }
-                    if (stristr($value['fpago'], 'tarjeta')){
+                    if (stristr($value['fpago'], 'tarjeta')) {
                         $valorTarjeta += $value['precio'];
-                        $totalTarjeta +=$value['precio'];
+                        $totalTarjeta += $value['precio'];
                     }
-                    if (stristr($value['fpago'], 'western')){
-                        $valorWestern +=$value['precio'];
-                        $totalWestern +=$value['precio'];
+                    if (stristr($value['fpago'], 'western')) {
+                        $valorWestern += $value['precio'];
+                        $totalWestern += $value['precio'];
                     }
-
                     $valorUsuario += $value['precio']; //acumulado para el usuario actual
-
                     $valorFinal += $value['precio']; //acumulado total
                 }
                 $cuadreArray [] = [
                     "valor" => $valorUsuario,
                     "usuario" => $nombre,
-                    "contado"=>$valorContado,
-                    "tarjeta"=>$valorTarjeta,
-                    "western"=>$valorWestern
+                    "contado" => $valorContado,
+                    "tarjeta" => $valorTarjeta,
+                    "western" => $valorWestern
                 ];
-
             }
 
             $total = [
                 "totalWestern" => $totalWestern,
                 "totalContado" => $totalContado,
                 "totalTarjeta" => $totalTarjeta,
-                "totalGeneral"=>$valorFinal,
+                "totalGeneral" => $valorFinal,
             ];
-
         }
 
         return view('campamentos.reportes.cuadre', compact('escenarioSelect', 'usuarioSelect', 'escenario', 'usuario',
             'fecha', 'cuadreArray', 'total', 'cuadre'));
     }
-
 
     /**
      * Vista para generar  Reporte Personalizado
@@ -367,9 +359,6 @@ class ReportesController extends Controller
      */
     public function exportPersonal(Request $request)
     {
-
-//        if ($request->ajax()){
-
         $escenario = $request->get('escenario');
         $modulo = $request->get('modulo');
         $disciplina = $request->get('disciplina');
@@ -403,7 +392,7 @@ class ReportesController extends Controller
             ->orderBy('inscripcions.created_at')
             ->get();
 
-        $arrayExp[] = ['No. Reg.','Apellidos_Alumno', 'Nombres_Alumno','Cedula Alum.' ,'Edad', 'Género', 'Representante', 'Cedula Rep', 'Telefono', 'Correo', 'Direccion', 'Modulo', 'Escenario', 'Disciplina','Nivel', 'Dias', 'Horario', 'Comprobante', 'Valor', 'Descuento', 'Estado', 'Fecha_Insc', 'Forma_Pago', 'Usuario', 'Pto Cobro', 'Profesor'];
+        $arrayExp[] = ['No. Reg.', 'Apellidos_Alumno', 'Nombres_Alumno', 'Cedula Alum.', 'Edad', 'Género', 'Representante', 'Cedula Rep', 'Telefono', 'Correo', 'Direccion', 'Modulo', 'Escenario', 'Disciplina', 'Nivel', 'Dias', 'Horario', 'Comprobante', 'Valor', 'Descuento', 'Estado', 'Fecha_Insc', 'Forma_Pago', 'Usuario', 'Pto Cobro', 'Profesor'];
 
         foreach ($inscripciones->chunk(500) as $chunkInsc) {
             foreach ($chunkInsc as $insc) {
@@ -435,10 +424,10 @@ class ReportesController extends Controller
                 $cont_comp = Inscripcion::where('factura_id', $insc->factura_id)->count();
 
                 $arrayExp[] = [
-                    'reg'=> $insc->id,
+                    'reg' => $insc->id,
                     'al_apell' => $al_apell,
                     'al_nomb' => $al_nomb,
-                    'al_ced'=>$al_ced,
+                    'al_ced' => $al_ced,
                     'al_edad' => $al_edad,
                     'al_genero' => $genero,
                     'representante' => $insc->factura->representante->persona->getNombreAttribute(),
@@ -456,7 +445,7 @@ class ReportesController extends Controller
                     'valor' => round(($insc->factura->total) / $cont_comp, 3),
                     'descuento' => $insc->factura->descuento,
                     'estado' => $insc->estado,
-                    'fecha_insc' => $insc->factura->created_at,
+                    'fecha_insc' => $insc->factura->created_at->toDateString(),
                     'fpago' => $insc->factura->pago->forma,
                     'usuario' => $insc->user->getNameAttribute(),
                     'pto_cobro' => $pto_cobro,
@@ -467,8 +456,6 @@ class ReportesController extends Controller
 
         set_time_limit(0);
         ini_set('memory_limit', '1G');
-//        ini_set('max_exeution_time', '240');
-//        \DB::connection()->disableQueryLog();
 
         Excel::create('Reporte_Personalizado_Campamentos - ' . Carbon::now() . '', function ($excel) use ($arrayExp) {
 
@@ -674,8 +661,7 @@ class ReportesController extends Controller
             ->select('inscripcions.id', 'inscripcions.alumno_id', 'inscripcions.factura_id', 'inscripcions.calendar_id', 'user_id', 'inscripcions.created_at', 'programs.disciplina_id', 'programs.escenario_id')
             ->where('calendar_id', $curso_id)
 //            ->orderBy('inscripcions.created_at')
-            ->get()
-        ;
+            ->get();
 
         $pdf = PDF::loadView('campamentos.reportes.listado.listado-pdf', compact('inscripciones', 'curso', 'numero'));
         return $pdf->stream('Listado');//imprime en pantalla
@@ -691,7 +677,7 @@ class ReportesController extends Controller
     public function getResumen(Request $request)
     {
 
-        if (Auth::user()->hasRole(['planner', 'administrator'])) {
+        if (Auth::user()->hasRole(['planner', 'administrator', 'admin-cortesia'])) {
 
             $modulos_coll = Modulo::where('activated', true);
             $modulos = $modulos_coll->pluck('modulo', 'id');
@@ -700,17 +686,17 @@ class ReportesController extends Controller
             $inscripciones =
 //                DB::table('inscripcions as i')
                 Inscripcion::with('factura', 'calendar', 'user', 'alumno')
-                ->join('facturas as f', 'f.id', '=', 'inscripcions.factura_id')
-                ->join('calendars as c', 'c.id', '=', 'inscripcions.calendar_id')
-                ->join('programs as p', 'p.id', '=', 'c.program_id')
-                ->join('modulos as m', 'm.id', '=', 'p.modulo_id')
-                ->join('escenarios as e', 'e.id', '=', 'p.escenario_id')
-                ->join('disciplinas as d', 'd.id', '=', 'p.disciplina_id')
-                ->select('calendar_id','alumno_id','cart','inscripcions.id','factura_id','estado','e.escenario','f.total','d.disciplina')
-                ->where('modulo_id', $modulo)
-                ->where('estado', '=', 'Pagada')
-                ->whereNull('cart')
-                ->get();
+                    ->join('facturas as f', 'f.id', '=', 'inscripcions.factura_id')
+                    ->join('calendars as c', 'c.id', '=', 'inscripcions.calendar_id')
+                    ->join('programs as p', 'p.id', '=', 'c.program_id')
+                    ->join('modulos as m', 'm.id', '=', 'p.modulo_id')
+                    ->join('escenarios as e', 'e.id', '=', 'p.escenario_id')
+                    ->join('disciplinas as d', 'd.id', '=', 'p.disciplina_id')
+                    ->select('calendar_id', 'alumno_id', 'cart', 'inscripcions.id', 'factura_id', 'estado', 'e.escenario', 'f.total', 'd.disciplina')
+                    ->where('modulo_id', $modulo)
+                    ->where('estado', '=', 'Pagada')
+                    ->whereNull('cart')
+                    ->get();
 
             //creo arreglo agrupado por escenarios
             $escenariosArray = [];
@@ -723,7 +709,7 @@ class ReportesController extends Controller
 ////                    round(($insc->factura->total) / $cont_comp, 3),
 //                }else {$factura = $insc->total;}
 //                $factura = round(($insc->total)/$cont_comp,3);
-                $factura = ($insc->total)/$cont_comp;
+                $factura = ($insc->total) / $cont_comp;
                 $escenariosArray[$escenario][] = [
                     "escenario" => $escenario,
                     "disciplina" => $disciplina,
@@ -748,7 +734,7 @@ class ReportesController extends Controller
                 //totales Finales
                 $precioFinal += $precioGrupo;
                 $totalInscritos += $cont;
-                $resumenEscenario[$key]= [
+                $resumenEscenario[$key] = [
                     "factura" => $precioGrupo,
                     "escenario" => $key,
                     "inscritos" => $cont,
@@ -761,7 +747,7 @@ class ReportesController extends Controller
 //            $escenariosArray['TotalesFinales'] = ["factura"=>$precioFinal];
 //        $total = ["total" => $precioFinal ];
 
-/***************************************************************************************************************************************/
+            /***************************************************************************************************************************************/
             //creo arreglo agrupado por escenarios y despues por disciplinas
             $array = [];
             foreach ($inscripciones as $insc) {
@@ -774,34 +760,34 @@ class ReportesController extends Controller
                     "factura" => $factura,
                 ];
             }
-            $resumenEscenarioDisciplina=[];
-            foreach ($array as $key => $value){
+            $resumenEscenarioDisciplina = [];
+            foreach ($array as $key => $value) {
                 foreach ($array[$key] as $disc) {//recorriendo los valores en cada escenario
                     //acumulados por escenario
 //                    $precioGrupo += $disc['factura'];
 //                    $cont++;
-                    $disciplina=$disc['disciplina'];
-                    $resumenEscenarioDisciplina[$key][$disciplina][]=[ //agrupo por escenario y disciplina
-                        "valor"=>$disc['factura'],
-                        "disciplina"=>$disciplina,
-                        "escenario"=>$key,
+                    $disciplina = $disc['disciplina'];
+                    $resumenEscenarioDisciplina[$key][$disciplina][] = [ //agrupo por escenario y disciplina
+                        "valor" => $disc['factura'],
+                        "disciplina" => $disciplina,
+                        "escenario" => $key,
                     ];
                 }
 //                $resumenEscenarioDisciplina[$key][$disciplina][]=["escenario"=>$key];
             }
 
-            $resultado=[];
+            $resultado = [];
             $precio = 0;
             $contador = 0;
-            foreach ($resumenEscenarioDisciplina as $key=>$value){
+            foreach ($resumenEscenarioDisciplina as $key => $value) {
 
-                foreach ($resumenEscenarioDisciplina[$key] as $r){
+                foreach ($resumenEscenarioDisciplina[$key] as $r) {
 //                    dd($r);
 //                    $precio += $r['valor'];
                     $cont++;
 //                    $disciplina=$r['disciplina'];
-                    $resultado=[
-                        "inscritos"=>$cont,
+                    $resultado = [
+                        "inscritos" => $cont,
                     ];
                 }
 
@@ -814,13 +800,13 @@ class ReportesController extends Controller
 //            $array = array_where($array, function ($key, $value) {
 //                return is_string($value);
 //            });
-            
+
 
 //            dd($resumenEscenarioDisciplina);
 
 //            dd($resumenEscenarioDisciplina);
 
-            return view('campamentos.reportes.recaudado', compact('modulos', 'modulo','resumenEscenario','totalRecaudado', 'totalInscritos','resumenEscenarioDisciplina'));
+            return view('campamentos.reportes.recaudado', compact('modulos', 'modulo', 'resumenEscenario', 'totalRecaudado', 'totalInscritos', 'resumenEscenarioDisciplina'));
         } else return abort(403);
     }
 
@@ -841,32 +827,32 @@ class ReportesController extends Controller
         $start = trim($request->get('start'));
         $end = trim($request->get('end'));
 
-        $start=new Carbon($start);
-        $start=$start->toDateString();
-        $end=new Carbon($end);
-        $end=$end->toDateString();
+        $start = new Carbon($start);
+        $start = $start->toDateString();
+        $end = new Carbon($end);
+        $end = $end->toDateString();
 
 
-        if ($escenario){
-            $inscripciones=Inscripcion::with('factura','calendar','user','alumno','escenario')
-                ->whereBetween('created_at',[$start, $end])
-                ->where('escenario_id',$escenario)//pto cobro
-                ->where('estado','Pagada')
+        if ($escenario) {
+            $inscripciones = Inscripcion::with('factura', 'calendar', 'user', 'alumno', 'escenario')
+                ->whereBetween('created_at', [$start, $end])
+                ->where('escenario_id', $escenario)//pto cobro
+                ->where('estado', 'Pagada')
                 ->orderBy('created_at')
                 ->groupBy('factura_id')
                 ->paginate(5);
 
-        }else {
-            $inscripciones=Inscripcion::with('factura','calendar','user','alumno','escenario')
-                ->whereBetween('created_at',[$start, $end])
+        } else {
+            $inscripciones = Inscripcion::with('factura', 'calendar', 'user', 'alumno', 'escenario')
+                ->whereBetween('created_at', [$start, $end])
 //                ->where('escenario_id','like', '%'.$escenario.'%')
-                ->where('estado','Pagada')
+                ->where('estado', 'Pagada')
                 ->orderBy('created_at')
                 ->groupBy('factura_id')
                 ->paginate(5);
         }
 
-        return view('campamentos.reportes.reporte-factura',compact('inscripciones','start','end','escenarioSelect','escenario'));
+        return view('campamentos.reportes.reporte-factura', compact('inscripciones', 'start', 'end', 'escenarioSelect', 'escenario'));
     }
 
 
@@ -875,84 +861,85 @@ class ReportesController extends Controller
      * @param Request $request
      */
 
-    public function exportFactura(Request $request){
+    public function exportFactura(Request $request)
+    {
 
         $start = trim($request->get('start'));
         $end = trim($request->get('end'));
         $escenario = $request->get('escenario');
 
-        $start=new Carbon($start);
-        $start=$start->toDateString();
-        $end=new Carbon($end);
-        $end=$end->toDateString();
+        $start = new Carbon($start);
+        $start = $start->toDateString();
+        $end = new Carbon($end);
+        $end = $end->toDateString();
 
-        if ($escenario){
-            $inscripciones=Inscripcion::with('factura','calendar','user','alumno','escenario')
-                ->whereBetween('created_at',[$start, $end])
+        if ($escenario) {
+            $inscripciones = Inscripcion::with('factura', 'calendar', 'user', 'alumno', 'escenario')
+                ->whereBetween('created_at', [$start, $end])
                 ->where('escenario_id', $escenario)//pto cobro
-                ->where('estado','Pagada')
+                ->where('estado', 'Pagada')
                 ->orderBy('created_at')
                 ->groupBy('factura_id')
                 ->get();
-        }else {
-            $inscripciones=Inscripcion::with('factura','calendar','user','alumno','escenario')
-                ->whereBetween('created_at',[$start, $end])
+        } else {
+            $inscripciones = Inscripcion::with('factura', 'calendar', 'user', 'alumno', 'escenario')
+                ->whereBetween('created_at', [$start, $end])
 //                ->where('escenario_id','like', '%'.$escenario.'%')
-                ->where('estado','Pagada')
+                ->where('estado', 'Pagada')
                 ->orderBy('created_at')
                 ->groupBy('factura_id')
                 ->get();
         }
 
-        $arrayExp[] = ['codigopadre','codigo','nombre','nombrecomercial','RUC','Fecha','Referencia','Comentario',
-            'CtaIngreso','Cantidad','Valor','Iva','DIRECCION','division','TipoCli','actividad','codvend','recaudador',
-            'formadepago','estado','diasplazo','precio','telefono','fax','celular','e_mail','pais','provincia','ciudad',
-            'CtaxCob','CtaxAnt','cupo','empresasri'
+        $arrayExp[] = ['codigopadre', 'codigo', 'nombre', 'nombrecomercial', 'RUC', 'Fecha', 'Referencia', 'Comentario',
+            'CtaIngreso', 'Cantidad', 'Valor', 'Iva', 'DIRECCION', 'division', 'TipoCli', 'actividad', 'codvend', 'recaudador',
+            'formadepago', 'estado', 'diasplazo', 'precio', 'telefono', 'fax', 'celular', 'e_mail', 'pais', 'provincia', 'ciudad',
+            'CtaxCob', 'CtaxAnt', 'cupo', 'empresasri'
         ];
 
         foreach ($inscripciones as $insc) {
 
             $arrayExp[] = [
-                'codigopadre'=>'',
-                'codigo'=>'',
-                'nombre'=> $insc->factura->representante->persona->getNombreAttribute(),
-                'nombrecomercial'=> $insc->factura->representante->persona->getNombreAttribute(),
-                'RUC'=> (int)$insc->factura->representante->persona->num_doc,
-                'Fecha'=>(string)$insc->factura->created_at->format('d/m/Y'),
-                'Referencia'=> 'INSCRIPCION CAMPAMENTOS'.'-'. $insc->calendar->program->disciplina->disciplina.'-'.$insc->calendar->program->escenario->escenario,
-                'Comentario'=> $insc->factura->id,
-                'CtaIngreso'=> '6252499006133',
-                'Cantidad'=> 1,
-                'Valor'=> (float)$insc->factura->total,
-                'Iva'=> 'S',
-                'DIRECCION'=> $insc->factura->representante->persona->direccion,
-                'division'=> (int)$insc->escenario->codigo,
-                'TipoCli'=> 1,
-                'actividad'=> 1,
-                'codvend'=> '',
-                'recaudador'=> '',
-                'formadepago'=> $insc->factura->pago->forma,
-                'estado'=> 'A',
-                'diasplazo'=> 1,
-                'precio'=> 1,
-                'telefono'=> (string)$insc->factura->representante->persona->telefono,
-                'fax'=> '',
-                'celular'=> '',
-                'e_mail'=> $insc->factura->representante->persona->email,
-                'pais'=> 1,
-                'provincia'=> 1,
-                'ciudad'=> 4,
-                'CtaxCob'=> '1110101001',
-                'CtaxAnt'=> '210307999',
-                'cupo'=> 500,
-                'empresasri'=> 'PERSONAS NO OBLIGADAS A LLEVAR CONTABILIDAD, FACTURA',
+                'codigopadre' => '',
+                'codigo' => '',
+                'nombre' => $insc->factura->representante->persona->getNombreAttribute(),
+                'nombrecomercial' => $insc->factura->representante->persona->getNombreAttribute(),
+                'RUC' => (int)$insc->factura->representante->persona->num_doc,
+                'Fecha' => (string)$insc->factura->created_at->format('d/m/Y'),
+                'Referencia' => 'INSCRIPCION CAMPAMENTOS' . '-' . $insc->calendar->program->disciplina->disciplina . '-' . $insc->calendar->program->escenario->escenario,
+                'Comentario' => $insc->factura->id,
+                'CtaIngreso' => '6252499006133',
+                'Cantidad' => 1,
+                'Valor' => (float)$insc->factura->total,
+                'Iva' => 'S',
+                'DIRECCION' => $insc->factura->representante->persona->direccion,
+                'division' => (int)$insc->escenario->codigo,
+                'TipoCli' => 1,
+                'actividad' => 1,
+                'codvend' => '',
+                'recaudador' => '',
+                'formadepago' => $insc->factura->pago->forma,
+                'estado' => 'A',
+                'diasplazo' => 1,
+                'precio' => 1,
+                'telefono' => (string)$insc->factura->representante->persona->telefono,
+                'fax' => '',
+                'celular' => '',
+                'e_mail' => $insc->factura->representante->persona->email,
+                'pais' => 1,
+                'provincia' => 1,
+                'ciudad' => 4,
+                'CtaxCob' => '1110101001',
+                'CtaxAnt' => '210307999',
+                'cupo' => 500,
+                'empresasri' => 'PERSONAS NO OBLIGADAS A LLEVAR CONTABILIDAD, FACTURA',
 
             ];
         }
 
         set_time_limit(0);
         ini_set('memory_limit', '1G');
-        Excel::create('Facturacion_Masiva - '.Carbon::now().'', function ($excel) use ($arrayExp) {
+        Excel::create('Facturacion_Masiva - ' . Carbon::now() . '', function ($excel) use ($arrayExp) {
 
             $excel->sheet('Facturacion', function ($sheet) use ($arrayExp) {
 
@@ -965,14 +952,14 @@ class ReportesController extends Controller
 //                });
 
                 $sheet->setColumnFormat(array(
-                    'A'=>'General',
-                    'B'=>'General',
-                    'C'=>'General',
-                    'D'=>'General',
+                    'A' => 'General',
+                    'B' => 'General',
+                    'C' => 'General',
+                    'D' => 'General',
                     'E' => '0',
                     'F' => '@',
-                    'I'=>'@',
-                    'K'=>'#,##0.00_-',
+                    'I' => '@',
+                    'K' => '#,##0.00_-',
                     'N' => '0',
                     'O' => '0',
                     'P' => '0',
@@ -982,17 +969,17 @@ class ReportesController extends Controller
                     'AB' => '0',
                     'AC' => '0',
                     'AF' => '#,##0.00_-',
-                    'AD'=>'General',
-                    'AE'=>'General',
+                    'AD' => 'General',
+                    'AE' => 'General',
 
                 ));
 
-                $sheet->fromArray($arrayExp,null,'A1',false,false);
+                $sheet->fromArray($arrayExp, null, 'A1', false, false);
 
             });
         })->export('xlsx');
 
     }
-    
+
 
 }

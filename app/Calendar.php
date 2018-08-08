@@ -28,7 +28,7 @@ class Calendar extends Model
      * @var array
      */
     protected $fillable = [
-        'program_id','dia_id','horario_id','cupos','contador','mensualidad','nivel','init_age','end_age'
+        'program_id','dia_id','horario_id','cupos','contador','mensualidad','nivel','init_age','end_age','activated'
         
     ];
 

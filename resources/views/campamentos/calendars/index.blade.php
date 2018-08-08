@@ -32,6 +32,7 @@
                     <th>Cupos</th>
                     <th>Disponibilidad</th>
                     <th>Profesor</th>
+                    <th>(Hab/Des)</th>
                     <th>Opciones</th>
                 </tr>
                 </thead>
@@ -49,6 +50,7 @@
                     <th>Cupos</th>
                     <th class="search-filter">Disponibilidad</th>
                     <th class="search-filter">Profesor</th>
+                    <th>(Hab/Des)</th>
                     <th>Opciones</th>
                 </tr>
                 </tfoot>
@@ -74,6 +76,23 @@
                         </td>
                         <td>
                             {{ $calendar->nombres.' '.$calendar->apellidos}}
+                        </td>
+                        <td>
+                            @if (($calendar->activated)=='1')
+                                <span class="label label-success">Activo</span>
+                                @if ( Auth::user()->hasRole(['planner','administrator']))
+                                    <a href="{{ route('admin.calendars.disable', $calendar->id)}}">
+                                        {!! Form::button('<i class="tiny fa fa-check" aria-hidden="true"></i>',['class'=>'label  waves-effect waves-light red darken-1']) !!}
+                                    </a>
+                                @endif
+                            @else
+                                <span class="label label-danger">Inactivo</span>
+                                @if ( Auth::user()->hasRole(['planner','administrator']))
+                                    <a href="{{ route('admin.calendars.enable', $calendar->id)}}">
+                                        {!! Form::button('<i class="tiny fa fa-check" aria-hidden="true"></i>',['class'=>'label waves-effect waves-light teal darken-1']) !!}
+                                    </a>
+                                @endif
+                            @endif
                         </td>
                         <td>
                             @if (Auth::user()->hasRole(['planner','administrator']))

@@ -54,7 +54,7 @@ class CalendarsController extends Controller
             ->join('disciplinas as dis','dis.id','=','p.disciplina_id')
             ->join('profesors as pro','pro.id','=','c.profesor_id')
             ->select('e.escenario','dis.disciplina','m.modulo','d.dia','h.start_time','h.end_time','cupos','contador',
-                'mensualidad','c.id','c.init_age','c.end_age','c.nivel','pro.nombres','pro.apellidos')
+                'mensualidad','c.id','c.init_age','c.end_age','c.nivel','pro.nombres','pro.apellidos','c.activated')
             ->where('p.activated','1')
             ->get();
 
@@ -178,6 +178,29 @@ class CalendarsController extends Controller
         ]);
     }
 
+    public function disable(Request $request, $id)
+    {
+        if (Auth::user()->hasRole(['planner', 'administrator'])) {
+            $calendar = Calendar::findOrFail($id);
+            $calendar->activated = false;
+            $calendar->update();
+            return back();
+
+        } else return abort(403);
+    }
+
+    public function enable($id)
+    {
+        if (Auth::user()->hasRole(['planner', 'administrator'])) {
+
+            $calendar = Calendar::findOrFail($id);
+            $calendar->activated = true;
+            $calendar->update();
+            return back();
+
+        } else return abort(403);
+    }
+
     /**
      *  Obtener los dias para un programa  con select dinamico
      * @param Request $request
@@ -197,15 +220,16 @@ class CalendarsController extends Controller
 
             $dias=Calendar::
                 join('dias as d','d.id','=','c.dia_id','as c')
-                ->select('d.dia as dias', 'd.activated','c.dia_id','c.program_id','d.id as dID')
+                ->select('d.dia as dias', 'd.activated','c.dia_id','c.program_id','d.id as dID','c.activated')
                 ->where('program_id',$program->id)
+                ->where('c.activated','1')
                 ->where('d.activated','1')->groupBy('dID')->get()->toArray();
             return response($dias);
         }
     }
 
 
-    /**
+    /** VER XK NO SE ESTA UTILIZANDO
      *  Obtener los dias para un programa  con select dinamico para editar inscripcion
      * @param Request $request
      * @param $id
@@ -254,17 +278,17 @@ class CalendarsController extends Controller
 
             if ($request->input('alumno_id')=='null' || !$request->input('alumno_id')){
                 $representante=Representante::where('persona_id',$request->input('representante_id'))->with('persona')->first();
-                $edad=$representante->getEdad($representante->persona->fecha_nac);
+                $edad=$representante->getEdad($representante->persona->fecha_nac); //edad del representante, insc de adulto
 
             }else {
                 $alumno=Alumno::where('id',$request->input('alumno_id'))->with('persona')->first();
-                $edad=$alumno->getEdad($alumno->persona->fecha_nac);
+                $edad=$alumno->getEdad($alumno->persona->fecha_nac); //edad del alumno inscrito
             }
 
             $horario=Calendar::
                 join('horarios as h','h.id','=','c.horario_id','as c')
                 ->join('dias as d','d.id','=','c.dia_id')
-                ->select('c.horario_id', 'h.start_time as start_time','h.end_time as end_time','c.init_age','c.end_age',
+                ->select('c.horario_id', 'h.start_time as start_time','h.end_time as end_time','c.init_age','c.end_age','c.activated',
                     'h.activated','c.dia_id','c.program_id')
                 ->where('program_id',$program->id)
                 ->where('c.dia_id',$dia_id)
@@ -273,6 +297,7 @@ class CalendarsController extends Controller
                         ->where('c.end_age', '>=', $edad);
                 })
                 ->where('h.activated','1')
+                ->where('c.activated','1')
                 ->get()
                 ->toArray();
             

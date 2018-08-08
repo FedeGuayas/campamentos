@@ -352,9 +352,10 @@ class ProgramsController extends Controller
                 ->join('disciplinas as d', 'd.id', '=', 'p.disciplina_id')
 //                ->select('e.escenario as escenario', 'p.id as pID', 'e.id as eID', 'm.id as mID', 'd.id as dID',
 //                    'p.modulo_id', 'p.escenario_id', 'p.matricula', 'd.disciplina as disciplina', 'd.activated')
-                ->select('d.id as dID', 'd.disciplina as disciplina', 'p.modulo_id', 'p.escenario_id', 'd.activated')
+                ->select('d.id as dID', 'd.disciplina as disciplina', 'p.modulo_id', 'p.escenario_id', 'd.activated','p.activated')
                 ->where('p.escenario_id', $escenario_id)
                 ->where('p.modulo_id', $modulo_id)
+                ->where('p.activated', '1')
                 ->where('d.activated', '1')->groupBy('dID')->get()->toArray();
 
 //            ->where('p.escenario_id',$id)

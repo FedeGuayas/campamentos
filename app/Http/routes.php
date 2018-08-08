@@ -224,6 +224,10 @@ Route::group(['middleware' => ['auth','role:administrator|signup|planner|supervi
     //enabled, disabled programs
     Route::get('programs/{program}/enable',['as' => 'admin.programs.enable', 'uses'=>'ProgramsController@enable']);
     Route::get('programs/{program}/disable',['as' => 'admin.programs.disable', 'uses'=>'ProgramsController@disable']);
+
+    //enabled, disabled calendars
+    Route::get('calendars/{calendar}/enable',['as' => 'admin.calendars.enable', 'uses'=>'CalendarsController@enable']);
+    Route::get('calendars/{calendar}/disable',['as' => 'admin.calendars.disable', 'uses'=>'CalendarsController@disable']);
     
     //Reportes
     Route::get('/reports/excel',['as' => 'admin.reports.excel', 'uses'=>'ReportesController@getExcel']);
