@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 
 use App\Alumno;
 use App\Persona;
+use App\Provincia;
 use App\Representante;
 use Illuminate\Http\Request;
 use DB;
@@ -41,7 +42,7 @@ class AlumnosController extends Controller
     {
         if ($request->ajax()){
             //        $alumnos=Alumno::with('persona')->take(10);
-            $alumnos = Alumno::with('persona')->selectRaw('distinct alumnos.*')->limit(50);
+            $alumnos = Alumno::with('persona')->selectRaw('distinct alumnos.*');
 
 
             $action_buttons =
@@ -63,7 +64,17 @@ return confirm(\'Seguro que desea borrar al alumno?\')">
             //{!! Form::button('<i class="tiny fa fa-trash-o" ></i>',['class'=>'modal-trigger label waves-effect waves-light red darken-1','data-target'=>"modal-delete-[$id]"]) !!}
             return Datatables::of($alumnos)
                 ->addColumn('actions', $action_buttons)
+                ->addColumn('canton', function ($alumno) {
+                    if (count($alumno->persona->parroquia)>0){
+                        return $alumno->persona->parroquia->canton->canton;
+                    }else {
+                        return '-';
+                    }
 
+                })->implode('<br>')
+                ->filterColumn('canton', function ($query, $keyword) {
+                    $query->whereRaw("cantons.canton like ?", ["%{$keyword}%"]);
+                })
                 ->make(true);
         }
 
@@ -82,8 +93,12 @@ return confirm(\'Seguro que desea borrar al alumno?\')">
         $representante_id=key($data);
         $representante=Representante::find($representante_id);
 
+        $provincias = Provincia::all();
+        $list_provincias = $provincias->pluck('province', 'id');
+
+
 //        $encuestas=[] + Encuesta::lists('encuesta', 'id')->all();
-        return view('campamentos.alumnos.create',compact('representante'));
+        return view('campamentos.alumnos.create',compact('representante','list_provincias'));
     }
 
 
@@ -145,10 +160,12 @@ return confirm(\'Seguro que desea borrar al alumno?\')">
             $persona=new Persona;
             $persona->nombres=strtoupper($request->get('nombres'));
             $persona->apellidos=strtoupper($request->get('apellidos'));
+            $persona->direccion=strtoupper($request->get('direccion'));
             $persona->tipo_doc=$request->get('tipo_doc');
             $persona->num_doc=$request->get('num_doc');
             $persona->genero=$request->get('genero');
             $persona->fecha_nac=$request->get('fecha_nac');
+            $persona->parroquia_id=$request->get('parroquia_id');
 
             $persona->save();
 
@@ -222,7 +239,10 @@ return confirm(\'Seguro que desea borrar al alumno?\')">
     {
         $alumno=Alumno::findOrFail($id);
 
-        return view('campamentos.alumnos.edit',compact('alumno'));
+        $provincias = Provincia::all();
+        $list_provincias = $provincias->pluck('province', 'id');
+
+        return view('campamentos.alumnos.edit',compact('alumno','list_provincias'));
     }
 
     /**
@@ -246,6 +266,8 @@ return confirm(\'Seguro que desea borrar al alumno?\')">
         try {
             DB::beginTransaction();
 
+            $parroquia=$request->get('parroquia_id');
+
             $alumno=Alumno::findOrFail($id);
             $persona=$alumno->persona;
 
@@ -256,8 +278,10 @@ return confirm(\'Seguro que desea borrar al alumno?\')">
             $persona->genero=$request->get('genero');
             $persona->fecha_nac=$request->get('fecha_nac');
             $persona->direccion=strtoupper($request->get('direccion'));
+            if($parroquia!=''){
+                $persona->parroquia_id=$parroquia;
+            }
             $persona->update();
-
 
             $representante=Representante::where('persona_id',$request->get('persona_id'))->first();
             $alumno->persona()->associate($persona);
@@ -309,8 +333,6 @@ return confirm(\'Seguro que desea borrar al alumno?\')">
 
         return redirect()->route('admin.alumnos.index');
     }
-
-    
 
 
     protected function validatorUpdate(array $data)

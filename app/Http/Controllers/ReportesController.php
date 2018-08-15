@@ -183,10 +183,12 @@ class ReportesController extends Controller
      */
     public function inscripcionPDF($id)
     {
+
         $inscripcion = Inscripcion::with('factura', 'calendar', 'user', 'alumno')
             ->where('id', $id)
             ->withCount('factura')
             ->first();
+
         setlocale(LC_TIME, 'es');
         $fecha_actual = Carbon::now();
         $month = $fecha_actual->formatLocalized('%B');//mes en español
@@ -194,21 +196,38 @@ class ReportesController extends Controller
         $year = $fecha_actual->format('Y');
         $date = $fecha_actual->format('Y-m-d');
 
+        $fecha_evento_inicio=new Carbon($inscripcion->calendar->program->modulo->inicio);
+        $fecha_evento_inicio=$fecha_evento_inicio->formatLocalized('%d %B %Y');
+        $fecha_evento_fin=new Carbon($inscripcion->calendar->program->modulo->fin);
+        $fecha_evento_fin=$fecha_evento_fin->formatLocalized('%d %B %Y');
+
+        $fecha_evento=strtoupper($fecha_evento_inicio);
+
         set_time_limit(0);
         ini_set('memory_limit', '1G');
 
         if ($inscripcion->alumno_id == 0) {//adulto
 
+            if ((stristr($inscripcion->calendar->program->disciplina->disciplina, 'II FESTIVAL DE NATACION') ) ) {
+                $pdf = PDF::loadView('campamentos.reportes.insc-festival2-pdf', compact('inscripcion', 'fecha_actual', 'month','fecha_evento'));
+                return $pdf->stream('ComprobanteFestival ' . $inscripcion->id . '.pdf');//imprime en pantalla
+            }
+
             $pdf = PDF::loadView('campamentos.reportes.insc-adulto-pdf', compact('inscripcion', 'fecha_actual', 'month'));
 //        return $pdf->download('ComprobantePago.pdf');//descarga el pdf
 
-            return $pdf->stream('ComprobantePago ' . $inscripcion->id . '.pdf');//imprime en pantalla
+            return $pdf->stream('ComprobantePagoAdulto ' . $inscripcion->id . '.pdf');//imprime en pantalla
 
         } else {//menor
 
+            if ((stristr($inscripcion->calendar->program->disciplina->disciplina, 'II FESTIVAL DE NATACION') ) ) {
+                $pdf = PDF::loadView('campamentos.reportes.insc-festival2-pdf', compact('inscripcion', 'fecha_actual', 'month','fecha_evento'));
+                return $pdf->stream('ComprobanteFestival ' . $inscripcion->id . '.pdf');//imprime en pantalla
+            }
+
             $pdf = PDF::loadView('campamentos.reportes.insc-menor-pdf', compact('inscripcion', 'fecha_actual', 'month'));
 //        return $pdf->download('ComprobantePago.pdf');//descarga el pdf
-            return $pdf->stream('ComprobantePago ' . $inscripcion->id . '.pdf');//imprime en pantalla
+            return $pdf->stream('ComprobantePagoMenor ' . $inscripcion->id . '.pdf');//imprime en pantalla
 
         }
     }

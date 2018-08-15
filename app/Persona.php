@@ -25,7 +25,7 @@ class Persona extends Model
      * @var array
      */
     protected $fillable = [
-        'nombres', 'apellidos', 'tipo_doc', 'num_doc', 'genero', 'fecha_nac', 'email', 'direccion', 'telefono'
+        'nombres', 'apellidos', 'tipo_doc', 'num_doc', 'genero', 'fecha_nac', 'email', 'direccion', 'telefono','phone','parroquia_id'
     ];
 
     /**
@@ -72,6 +72,21 @@ class Persona extends Model
     public function representantes()
     {
         return $this->hasMany('App\Representante');
+    }
+
+    public function parroquia()
+    {
+        return $this->belongsTo('App\Parroquia');
+    }
+
+//    public function getCantonName($canton_id){
+//
+//        $canton=Canton::where('id',$canton_id)->first();
+//        return $canton->canton;
+//    }
+
+    function getNameAttribute(){
+        return $this->nombres . ' ' . $this->apellidos;
     }
 
 

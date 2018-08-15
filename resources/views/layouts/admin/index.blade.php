@@ -129,7 +129,7 @@ $(document).ready(function() {
                     in_duration: 300, // Transition in duration
                     out_duration: 200, // Transition out duration
                     starting_top: '4%', // Starting top style attribute
-                    ending_top: '10%', // Ending top style attribute
+                    ending_top: '2%' // Ending top style attribute
                 }
         );
 

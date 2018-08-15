@@ -247,6 +247,10 @@ Route::group(['middleware' => ['auth','role:administrator|signup|planner|supervi
     //facturacion diaria usuario
     Route::get('/user/facturas/excel',['as' => 'admin.facturas.excel', 'uses'=>'UsersController@getFacturaExcel']);
     Route::get('/user/facturas/export',['as' => 'admin.facturas.exportExcel', 'uses'=>'UsersController@exportFacturaExcel']);
+
+    //select dinamico de provincia-canton-parroquia
+    Route::get('provincia/{provincia_id}','PersonasController@getCanton')->name('getCanton');
+    Route::get('canton/{canton_id}','PersonasController@getParroquia')->name('getParroquia');
 });
 
 

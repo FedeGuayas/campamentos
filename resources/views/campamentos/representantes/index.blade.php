@@ -23,16 +23,19 @@
 
     <div class="row">
         <div class="col l12 m12 s12">
-
-            <table id="representante_table" class="table table-striped table-bordered table-condensed table-hover highlight responsive-table" cellspacing="0" width="100%" style="display: none"   data-order='[[ 0, "desc" ]]'>
+            <div class="table-responsive">
+                <table id="representante_table" class="table table-striped table-bordered table-condensed table-hover highlight" cellspacing="0" width="100%" style="display: none"   data-order='[[ 0, "desc" ]]'>
                     <thead>
+                    <tr>
                         <th width="40">Id</th>
                         <th width="130">Nombres</th>
                         <th width="130">Apellidos</th>
                         <th width="70">CI</th>
+                        <th width="90">Canton</th>
                         <th width="220">Alumno</th>
                         <th width="70">CI. A</th>
                         <th width="70">Opciones</th>
+                    </tr>
                     </thead>
                     <tfoot>
                     <tr>
@@ -40,12 +43,15 @@
                         <th>Nombres</th>
                         <th>Apellidos</th>
                         <th>CI</th>
-                        <th>Alumno</th>
-                        <th>CI. A</th>
-                        <th>Opciones</th>
+                        <th width="90" class="non_searchable">Canton</th>
+                        <th class="non_searchable">Alumno</th>
+                        <th class="non_searchable">CI. A</th>
+                        <th class="non_searchable">Opciones</th>
                     </tr>
                     </tfoot>
                 </table><!--end table-responsive-->
+            </div>
+
         </div><!--end div ./col-lg-12. etc-->
     </div><!--end div ./row-->
 
@@ -58,7 +64,7 @@
             var table =  $('#representante_table').DataTable({
                 lengthMenu: [[10, 25], [10, 25]],
                 processing: true,
-                stateSave: true,
+                stateSave: false,
                 serverSide:true,
                 ajax: '{{route('admin.representantes')}}',
                 columns: [
@@ -66,8 +72,9 @@
                     {data: 'persona.nombres', name: 'persona.nombres'},
                     {data: 'persona.apellidos', name: 'persona.apellidos'},
                     {data: 'persona.num_doc', name: 'persona.num_doc'},
-                    {data: 'nombres', name: 'alumnos.nombres',orderable: false, searchable: false},
-                    {data: 'ci', name: 'alumnos.ci',orderable: false, searchable: false},
+                    {data: 'canton' ,orderable: false, searchable: false},
+                    {data: 'alumnos', name: 'alumnos.persona',orderable: false,  searchable: false},
+                    {data: 'ci', name: 'alumnos.ci',orderable: false,  searchable: false},
                     {data: 'actions', name: 'actions',orderable: false, searchable: false}
                 ],
                 "language":{
@@ -100,13 +107,14 @@
 
                     table.columns().every(function () {
                         var column = this;
-
-                        var input = document.createElement("input");
-                        $(input).appendTo($(column.footer()).empty())
-                                .on('change', function () {
+                        var columnClass = column.footer().className;
+                        if(columnClass != 'non_searchable'){
+                            var input = document.createElement("input");
+                            $(input).appendTo($(column.footer()).empty())
+                                .on('change', function () {//keypress keyup
                                     column.search($(this).val(), false, false, true).draw();
                                 });
-
+                        }
                     });
 
                 }

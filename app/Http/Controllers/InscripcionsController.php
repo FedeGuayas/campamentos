@@ -11,6 +11,8 @@ use App\Modulo;
 use App\Multiples;
 use App\Pago;
 use App\Program;
+use App\Provincia;
+use App\Register;
 use App\Representante;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -20,6 +22,7 @@ use Session;
 use Event;
 use Maatwebsite\Excel\Facades\Excel;
 
+use function Sodium\increment;
 use Yajra\Datatables\Datatables;
 
 
@@ -461,7 +464,9 @@ class InscripcionsController extends Controller
         $modulos = $modulos_coll->pluck('modulo', 'id');
         $fpagos_coll = Pago::all();
         $fpagos = $fpagos_coll->pluck('forma', 'id');
-        return view('campamentos.inscripcions.create', compact('modulos', 'fpagos'));
+        $provincias = Provincia::all();
+        $list_provincias = $provincias->pluck('province', 'id');
+        return view('campamentos.inscripcions.create', compact('modulos', 'fpagos','list_provincias'));
     }
 
     /**
@@ -568,6 +573,18 @@ class InscripcionsController extends Controller
                     $inscripcion->mensualidad = $mensualidad;
 
                     $inscripcion->save();
+
+                    if ((stristr($inscripcion->calendar->program->disciplina->disciplina, 'II FESTIVAL DE NATACION') ) ) {
+
+                        $max_id = Register::max('id'); //ultimo registro
+                        $max_num = DB::table('registers')->max('num_registro');
+                        $num_reg=$max_num+1;
+                        $registro=new Register();
+                        $registro->inscripcion()->associate($inscripcion);
+                        $registro->num_registro= $max_id ? $num_reg : 1 ;
+                        $registro->save();
+
+                    }
 
                     DB::commit();
 

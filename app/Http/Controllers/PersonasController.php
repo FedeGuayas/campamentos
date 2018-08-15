@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Persona;
 use App\Representante;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Session;
 
 use App\Http\Requests;
@@ -25,7 +26,6 @@ class PersonasController extends Controller
 
         return view('campamentos.personas.index', compact('personas'));
     }
-
 
     /**
      * Display the specified resource.
@@ -63,5 +63,23 @@ class PersonasController extends Controller
             $persona->delete();
             Session::flash('message', 'Se elimino  '.$persona-> getNombreAttribute().'');
         return back();
+    }
+
+    /**
+     * Obtener las parroquias del id de provincia
+     * @param $prov_id
+     * @return mixed
+     */
+    public function getCanton($prov_id)
+    {
+        $cantones = DB::table('cantons')->select('canton', 'id')->where('province_id', $prov_id)->get();
+        return $cantones;
+//      $cantones2 = $cantones->pluck('canton', 'id');
+//      return response()->json(['data'=>$cantones2],200);
+    }
+    public function getParroquia($canton_id)
+    {
+        $parroquias = DB::table('parroquias')->select('parroquia', 'id')->where('canton_id', $canton_id)->get();
+        return $parroquias;
     }
 }

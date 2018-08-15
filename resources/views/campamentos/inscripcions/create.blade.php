@@ -50,8 +50,12 @@
 @endsection
 
 @section('scripts')
-
+    <script src="{{ asset("js/dropdown-province.js") }}" type="text/javascript"></script>
     <script>
+
+        var url_getCanton = "{{route('getCanton',':ID_Provincia')}}";
+        var url_getParroquia = "{{route('getParroquia',':ID_Canton')}}";
+
         $(document).ready(function () {
 
             $("#modulo_id").material_select();
@@ -77,8 +81,8 @@
                 opacity: .5, // Opacity of modal background
                 in_duration: 300, // Transition in duration
                 out_duration: 200, // Transition out duration
-                starting_top: '4%', // Starting top style attribute
-                ending_top: '2%', // Ending top style attribute
+//                starting_top: '4%', // Starting top style attribute
+//                ending_top: '2%', // Ending top style attribute
             });
 
         });
@@ -129,7 +133,7 @@
                         type: "POST",
                         headers: {'X-CSRF-TOKEN': token},
                         contentType: 'application/x-www-form-urlencoded',
-                        data: {datos},
+                        data: {datos:datos},
                         success: function (resp) {
                             $("#search-result").empty().html(resp);
                             loader.removeClass('active');

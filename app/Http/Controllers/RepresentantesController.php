@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 
 
 use App\Alumno;
+use App\Provincia;
 use App\Worker;
 use Event;
 use App\Encuesta;
@@ -52,7 +53,8 @@ class RepresentantesController extends Controller
     {
         if ($request->ajax()){
 
-            $representantes = Representante::with('persona','alumnos')->selectRaw('distinct representantes.*')->limit(50);
+            $representantes = Representante::with('persona','alumnos')
+                ->select('representantes.*');
 
 
             $action_buttons = ' @if ( Auth::user()->can(\'edit_representante\'))
@@ -76,15 +78,28 @@ return confirm(\'Seguro que desea borrar al representante?\')">
 
                 ->addColumn('actions', $action_buttons)
 
-                ->addColumn('nombres', function (Representante $representante) {
+                ->addColumn('alumnos', function (Representante $representante) {
                     return $representante->alumnos->map(function($alumno) {
-                        return ($alumno->persona->nombres.' '.$alumno->persona->apellidos);
+                        return $alumno->persona->getNombreAttribute();
                     })->implode('<br>');
+                })->implode('<br>')
+                ->filterColumn('alumnos', function ($query, $keyword) {
+                    $query->whereRaw("CONCAT(personas.nombres,'',personas.apellidos) like ?", ["%{$keyword}%"]);
                 })
                 ->addColumn('ci', function (Representante $representante) {
                     return $representante->alumnos->map(function($alumno) {
                         return ($alumno->persona->num_doc);
                     })->implode('<br>');
+                })
+                ->addColumn('canton', function ($alumno) {
+                    if (count($alumno->persona->parroquia)>0){
+                        return $alumno->persona->parroquia->canton->canton;
+                    }else {
+                        return '-';
+                    }
+                })->implode('<br>')
+                ->filterColumn('canton', function ($query, $keyword) {
+                    $query->whereRaw("cantons.canton like ?", ["%{$keyword}%"]);
                 })
 
                 ->make(true);
@@ -102,7 +117,9 @@ return confirm(\'Seguro que desea borrar al representante?\')">
     public function create()
     {
         $encuestas=[] + Encuesta::lists('encuesta', 'id')->all();
-        return view('campamentos.representantes.create',compact('encuestas'));
+        $provincias = Provincia::all();
+        $list_provincias = $provincias->pluck('province', 'id');
+        return view('campamentos.representantes.create',compact('encuestas','list_provincias'));
     }
 
     
@@ -176,6 +193,7 @@ return confirm(\'Seguro que desea borrar al representante?\')">
             $persona->direccion = strtoupper($request->get('direccion'));
             $persona->telefono = $request->get('telefono');
             $persona->phone = $request->get('phone');
+            $persona->parroquia_id=$request->get('parroquia_id');
             $persona->save();
 
             $encuesta_id = $request->get('encuesta_id');
@@ -252,7 +270,10 @@ return confirm(\'Seguro que desea borrar al representante?\')">
     {
         $representante=Representante::findOrFail($id);
 
-        return view('campamentos.representantes.edit',compact('representante'));
+        $provincias = Provincia::all();
+        $list_provincias = $provincias->pluck('province', 'id');
+
+        return view('campamentos.representantes.edit',compact('representante','list_provincias'));
     }
 
 
@@ -310,6 +331,8 @@ return confirm(\'Seguro que desea borrar al representante?\')">
         try {
             DB::beginTransaction();
 
+            $parroquia=$request->get('parroquia_id');
+
             $representante=Representante::findOrFail($id);
             $persona=$representante->persona;
 
@@ -323,6 +346,9 @@ return confirm(\'Seguro que desea borrar al representante?\')">
             $persona->direccion=strtoupper($request->get('direccion'));
             $persona->telefono=$request->get('telefono');
             $persona->phone=$request->get('phone');
+            if($parroquia!=''){
+                $persona->parroquia_id=$parroquia;
+            }
             $persona->update();
 
 

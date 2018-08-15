@@ -13,7 +13,7 @@ class AddInscripcionTypeToInscripcionsTable extends Migration
     public function up()
     {
         Schema::table('inscripcions', function (Blueprint $table) {
-            $table->string('inscripcion_type')->default(\App\Inscripcion::INSCRIPCION_PRESENCIAL);
+             $table->string('inscripcion_type')->default(\App\Inscripcion::INSCRIPCION_PRESENCIAL);
         });
     }
 

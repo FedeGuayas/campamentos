@@ -75,4 +75,10 @@ class Inscripcion extends Model
     {
         return $this->belongsTo('App\Escenario');
     }
+
+
+    public function register()
+    {
+        return $this->hasOne('App\Register');
+    }
 }
