@@ -1,4 +1,3 @@
-
 <div>
     <div style="width:200px; height: 20px;">
         <img alt="LOGO" src="img/camp/fdg-logo.png"
@@ -6,19 +5,19 @@
     </div>
     <div style="text-align: center;">
         <p>CAMPAMENTOS DEPORTIVOS
-<p>FEDEGUAYAS</p>
+        <p>FEDEGUAYAS</p>
         <p>II FESTIVAL DE NATACIÓN</p>
         <p>
-RECIBO DE INSCRIPCIÓN NO:
+            RECIBO DE INSCRIPCIÓN NO:
             <b>
-@if($inscripcion->register)
-{{sprintf("%'.04d",$inscripcion->register->num_registro)}}
-@else
-{{sprintf("%'.04d",$inscripcion->id)}}
-@endif
-</b>
-</p>
-</div>
+                @if(count($inscripcion->register)>0)
+                    {{sprintf("%'.04d",$inscripcion->register->num_registro)}}
+                @else
+                    {{sprintf("%'.04d",$inscripcion->id)}}
+                @endif
+            </b>
+        </p>
+    </div>
 </div>
 
 <div>
