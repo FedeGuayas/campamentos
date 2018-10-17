@@ -949,7 +949,7 @@ class ReportesController extends Controller
                 'provincia' => 1,
                 'ciudad' => 4,
                 'CtaxCob' => '1110101001',
-                'CtaxAnt' => '210307999',
+                'CtaxAnt' => '2120307999',
                 'cupo' => 500,
                 'empresasri' => 'PERSONAS NO OBLIGADAS A LLEVAR CONTABILIDAD, FACTURA',
 
