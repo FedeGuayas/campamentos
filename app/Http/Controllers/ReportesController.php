@@ -123,6 +123,10 @@ class ReportesController extends Controller
                     $genero = $insc->alumno->persona->genero;
                 }
 
+                if (is_null($insc->calendar->profesor) || $insc->calendar->profesor == '') {//profesor eliminado
+                    $profesor = 'N/A';
+                } else $profesor =  $insc->calendar->profesor->getNameAttribute();
+
                 $cont_comp = Inscripcion::where('factura_id', $insc->factura_id)->count();
 
                 $arrayExp[] = [
@@ -149,7 +153,7 @@ class ReportesController extends Controller
                     'fpago' => $insc->factura->pago->forma,
                     'usuario' => $insc->user->getNameAttribute(),
                     'pto_cobro' => $pto_cobro,
-                    'profe' => $insc->calendar->profesor->getNameAttribute(),
+                    'profe' => $profesor,
                 ];
             }
         }
@@ -717,6 +721,7 @@ class ReportesController extends Controller
                     ->whereNull('cart')
                     ->get();
 
+//dd($inscripciones);
             //creo arreglo agrupado por escenarios
             $escenariosArray = [];
             foreach ($inscripciones as $insc) {
@@ -738,6 +743,7 @@ class ReportesController extends Controller
             $resumenEscenario = [];
             $precioFinal = 0;
             $totalInscritos = 0;
+//            dd($escenariosArray);
             foreach ($escenariosArray as $key => $value) {//recorro cada escenario agrupado
                 $precioGrupo = 0;
                 $cont = 0;

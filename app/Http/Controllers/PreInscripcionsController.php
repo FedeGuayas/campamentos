@@ -41,12 +41,12 @@ class PreInscripcionsController extends Controller
      */
     public function getPreinscripcion()
     {
-//        $modulos_coll = Modulo::where('activated', true)->get();
-        $modulos_coll = Modulo::all();
+        $modulos_coll = Modulo::where('activated', true)->get();
+        //$modulos_coll = Modulo::all();
 
         //filtro los modulos para extraer los que dicen permanente
         $mod = $modulos_coll->filter(function ($mod) {
-            if (strpos($mod->modulo, 'PERMANENTE') == false && strpos($mod->modulo, '2018') == true ) {
+            if (strpos($mod->modulo, 'PERMANENTE') == false && strpos($mod->modulo, '2019') == true ) {
                 return true; // true, el elemento se incluye, si retorna false, no se incluye
             }
         });
