@@ -25,7 +25,7 @@ class ProfesorsController extends Controller
     {
         if ($request) {
          
-            $profesors = Profesor::with('calendars')->get();
+            $profesors = Profesor::where('status',Profesor::ACTIVO)->with('calendars')->get();
             return view('campamentos.profesors.index', ['profesors' => $profesors]);
         }
     }
@@ -153,9 +153,10 @@ class ProfesorsController extends Controller
     public function destroy($id)
     {
         $profe=Profesor::findOrFail($id);
-        $profe->delete();
+        $profe->status=Profesor::INACTIVO;
+        $profe->update();
 
-        Session::flash('message_danger', 'Profesor '.$profe->getNameAttribute().' eliminado');
+        Session::flash('message_danger', 'El profesor '.$profe->getNameAttribute().' ha sido deshabilitado');
         return redirect()->route('admin.profesors.index');
     }
 }

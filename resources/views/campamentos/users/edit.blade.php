@@ -7,10 +7,12 @@
     <div class="row">
         <div class="col l8 m12 s12">
             <div class="card-panel">
-                <h5 class="header teal-text text-darken-2">Editar Usuario</h5>
+                <h5 class="header teal-text text-darken-2">Editar {{ $uri=='admin/users/{users}/edit' ? 'Usuario' : 'Trabajador'  }}</h5>
                 <div class="card-content ">
 
                     {!! Form::model($user,['route'=>['admin.users.update',$user->id], 'method'=>'PUT'])  !!}
+                    {!! Form::hidden('uri',$uri,['id'=>'uri']) !!}
+
                     <div class="col s12">
                         <div class="input-field col l6 m6 s12 ">
                             <i class="fa fa-user prefix"></i>

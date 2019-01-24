@@ -130,6 +130,10 @@ Route::group(['middleware' => ['auth','role:administrator|signup|planner|supervi
     Route::get('user/{id}/roles', ['as' => 'admin.users.roles','uses'=>'UsersController@roles' ]);
     Route::POST('user/setroles', ['as' => 'admin.users.setroles','uses'=>'UsersController@setRoles' ]);
 
+    //Trabajadores
+    Route::get('users/trabajadores', ['as' => 'admin.users.trabajadores','uses'=>'UsersController@trabajadores']);
+    Route::get('users/trabajadores/{users}/edit', ['as' => 'admin.trabajadores.edit','uses'=>'UsersController@edit']);
+
     //adicionar permisos a los roles
     Route::get('rol/{id}/permisos', ['as' => 'admin.roles.permisos','uses'=>'RolesController@permisos' ]);
     Route::POST('rol/setpermisos', ['as' => 'admin.roles.setpermisos','uses'=>'RolesController@setPermisos' ]);

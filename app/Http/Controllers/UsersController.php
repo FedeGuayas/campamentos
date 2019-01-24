@@ -2,22 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use App\Alumno;
-use App\Contable;
+
 use App\Escenario;
 use App\Inscripcion;
 use App\Role;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Route;
 use Session;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Http\Requests\ChangePasswordRequest;
 use App\Http\Requests\UserUpdateOnlineRequest;
-use App\Http\Requests;
 
 
 
@@ -39,11 +37,25 @@ class UsersController extends Controller
     public function index(Request $request)
     {
         if ($request){
-            $usuarios=User::all();
+            $usuarios=User::whereNull('escenario_id')->get();
 
         }
 
         return view('campamentos.users.index', compact('usuarios'));
+    }
+
+    /**
+     * Trabajadores
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function trabajadores(Request $request)
+    {
+        if ($request){
+            $trabajadores=User::has('escenario')->get();
+        }
+
+        return view('campamentos.users.trabajadores', compact('trabajadores'));
     }
 
     /**
@@ -103,11 +115,13 @@ class UsersController extends Controller
      */
     public function edit($id)
     {
+        $uri = Route::current()->getUri();
         $user=User::findOrFail($id);
         $escenarios_coll = Escenario::all();
         $escenarios= $escenarios_coll->pluck('escenario', 'id');
 //        $roles= [''=>'Seleccione roles'] + Role::lists('display_name', 'id')->all();
-        return view('campamentos.users.edit',compact('user','roles','escenarios'));
+
+        return view('campamentos.users.edit',compact('user','roles','escenarios','uri'));
     }
 
     /**
@@ -119,6 +133,7 @@ class UsersController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $uri=$request->uri;
         $user=User::findOrFail($id);
         $escenario=Escenario::where('id',$request->get('escenario_id'))->first();
         $user->first_name=strtoupper($request->get('first_name'));
@@ -140,7 +155,13 @@ class UsersController extends Controller
         $nombre=User::findOrFail($id)->getNameAttribute();
       
         Session::flash('message','Se actualizo el usuario '.$nombre);
-        return Redirect::to('admin/users');
+//        return Redirect::to('admin/users');
+        if ($uri == "admin/users/trabajadores/{users}/edit" || $user->has('escenario')){
+            return redirect()->route('admin.users.trabajadores');
+        }
+        if ($uri == "admin/users/{users}/edit" ){
+            return redirect()->route('admin.users.index');
+        }
     }
 
     /**
@@ -169,6 +190,7 @@ class UsersController extends Controller
         $user=User::findOrFail($id);
 //        $roles= [''=>'Seleccione roles'] + Role::lists('display_name', 'id')->all();
         $roles=Role::all();
+
         return view('campamentos.users.roles',compact('user','roles'));
     }
 
@@ -183,18 +205,19 @@ class UsersController extends Controller
         $user_id=$request->get('user_id');
         $user=User::findOrFail($user_id);
         $roles=$request->get('roles');
-        
-        if ($roles) {
-            // El usuario marcó checkbox
-            foreach ($roles as $rol){
-                $user->attachRole($rol);
-            }
 
-        } else {
-            // El usuario no marcó checkbox
-                $user->detachRole($roles);
+        if ($roles) {
+            $user->roles()->sync($roles);
+//           // El usuario marcó checkbox
+//            $user->roles()->sync($roles);
+//
+//        } else {
+//           // El usuario no marcó checkbox, se le mantendra solo el rol de acceso al frontent
+//            $role=Role::where('name', 'register')->first();
+//            $user->attachRole($role);
      }
-        return Redirect::to('admin/users');
+        $message='Roles del trabajador '.$user->getNameAttribute().' actualizados';
+        return redirect()->route('admin.users.trabajadores')->with('message',$message)->withInput();
     }
 
 

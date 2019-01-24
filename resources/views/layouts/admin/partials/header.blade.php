@@ -66,6 +66,7 @@
                 @role('administrator')
                 <li class="divider"></li>
                 <li><a href="{!! route('admin.users.index') !!}" class="waves-effect waves-teal">Usuarios</a></li>
+                <li><a href="{!! route('admin.users.trabajadores') !!}" class="waves-effect waves-teal">Trabajadores</a></li>
                 <li><a href="{!! route('admin.roles.index') !!}" class="waves-effect waves-teal">Roles</a></li>
                 <li><a href="{!! route('admin.permissions.index') !!}" class="waves-effect waves-teal">Permisos</a></li>
                 {{--<li><a href="{!! route('persons.import') !!}" class="waves-effect waves-teal">Imp Personas</a></li>--}}
@@ -103,7 +104,9 @@
                     {{--<li class="active"><a href="#!" class="waves-effect waves-light"><i class="fa fa-1x fa-home left"></i>Inicio</a></li>--}}
                     {{--<li><a href="#!" class="waves-effect waves-light"><i class="fa fa-envelope left"></i>Contacto</a></li>--}}
                     <li>
-                        <a href="{!! route('admin.inscripcions.reservas')!!}" class="waves-effect waves-light"><i class="fa fa-bell-o left"></i>Preinscripción<span class="badge red-text" data-badge-caption="">{{ Session::has('reservas') ?  Session::get('reservas') : ''}}</span>
+                        <a href="{!! route('admin.inscripcions.reservas')!!}" class="waves-effect waves-light"><i
+                                    class="fa fa-bell-o left"></i>Preinscripción<span class="badge red-text"
+                                                                                      data-badge-caption="">{{ Session::has('reservas') ?  Session::get('reservas') : ''}}</span>
                         </a>
                     </li>
 
@@ -267,8 +270,8 @@
                                         </li>
                                         {{--<li class="divider"></li>--}}
                                         {{--<li>--}}
-                                            {{--<a href="{{ route ('admin.reports.credenciales') }}"--}}
-                                               {{--class="waves-effect waves-teal">Credenciales</a>--}}
+                                        {{--<a href="{{ route ('admin.reports.credenciales') }}"--}}
+                                        {{--class="waves-effect waves-teal">Credenciales</a>--}}
                                         {{--</li>--}}
                                     </ul>
                                 </div>
@@ -300,7 +303,8 @@
                                             </li>
                                             <li class="divider"></li>
                                             <li>
-                                                <a href="{!! route('admin.profesors.index') !!}" class="waves-effect waves-teal">Profesores</a>
+                                                <a href="{!! route('admin.profesors.index') !!}"
+                                                   class="waves-effect waves-teal">Profesores</a>
                                             </li>
                                             <li class="divider"></li>
                                             <li>
@@ -318,6 +322,9 @@
                                         @role('administrator')
                                         <li>
                                             <a href="#!" class="waves-effect waves-teal">Usuarios</a>
+                                        </li>
+                                        <li>
+                                            <a href="#!" class="waves-effect waves-teal">Trabajadores</a>
                                         </li>
                                         <li class="divider"></li>
                                         <li>
@@ -338,10 +345,12 @@
                                 <div class="collapsible-body">
                                     <ul>
                                         <li>
-                                            <a href="{!! route('admin.facturas.excel') !!}" class="waves-effect waves-teal">Facturación</a>
+                                            <a href="{!! route('admin.facturas.excel') !!}"
+                                               class="waves-effect waves-teal">Facturación</a>
                                         </li>
                                         <li>
-                                            <a href="{!! route('admin.user.profile') !!}" class="waves-effect waves-teal">Perfil</a>
+                                            <a href="{!! route('admin.user.profile') !!}"
+                                               class="waves-effect waves-teal">Perfil</a>
                                         </li>
                                         <li class="divider"></li>
                                         <li>

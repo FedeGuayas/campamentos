@@ -6,6 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Profesor extends Model
 {
+    const ACTIVO='1';
+    const INACTIVO='0';
+
     public $timestamps = false;
     
     protected $fillable = [

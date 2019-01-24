@@ -80,7 +80,7 @@ class CalendarsController extends Controller
        
         $horarios=[] + Horario::select(DB::raw('CONCAT(start_time, " - ", end_time) AS horario'), 'id')->orderBy('start_time')->lists('horario','id')->all();
         $dias=[]+ Dia::orderBy('dia')->lists('dia','id')->all();
-        $profesores=[] + Profesor::select(DB::raw('CONCAT(nombres, " ", apellidos) AS nombre'), 'id')->orderBy('nombres')->lists('nombre','id')->all();
+        $profesores=[] + Profesor::where('status',Profesor::ACTIVO)->select(DB::raw('CONCAT(nombres, " ", apellidos) AS nombre'), 'id')->orderBy('nombres')->lists('nombre','id')->all();
         
         return view('campamentos.calendars.create',compact('program','horarios','dias','escenario','disciplina','modulo','profesores'));
         
@@ -133,7 +133,7 @@ class CalendarsController extends Controller
         $modulo=Modulo::findOrFail($modulo_id);
         $horarios=[] + Horario::select(DB::raw('CONCAT(start_time, " - ", end_time) AS horario'), 'id')->lists('horario','id')->all();
         $dias=[]+ Dia::lists('dia','id')->all();
-        $profesores=[] + Profesor::select(DB::raw('CONCAT(nombres, " ", apellidos) AS nombre'), 'id')->lists('nombre','id')->all();
+        $profesores=[] + Profesor::where('status',Profesor::ACTIVO)->select(DB::raw('CONCAT(nombres, " ", apellidos) AS nombre'), 'id')->lists('nombre','id')->all();
 
         return view('campamentos.calendars.edit',compact('calendar','horarios','dias','escenario','disciplina','modulo','profesores'));
     }
