@@ -1169,8 +1169,7 @@ function destroy(Request $request, $id)
  * @param  int $id
  * @return \Illuminate\Http\Response
  */
-public
-function costoUpdate(Request $request)
+public function costoUpdate(Request $request)
 {
 
     if ($request->ajax()) {
@@ -1232,7 +1231,7 @@ function costoUpdate(Request $request)
                 $mensaje_matricula = 'El usuario ya se encuentra inscrito en un módulo en el presente período. No tiene que pagar membresía';
                 $paga_matricula_river = false;
             } else { //paga matricula
-                $mat = $matricula->matricula;
+                $mat = $matricula;
                 $precio = $mat + $mes;
                 $mensaje_matricula = 'Al valor de la inscripión se le ha incrementado el costo de la membresía ( $ ' . $mat . '). Este valor es cobrado una sola vez en el año ';
                 $paga_matricula_river = true;
@@ -1324,7 +1323,7 @@ function costoUpdate(Request $request)
 
 
         if ($request->input('matricula') == 'true') {
-            $mat = $matricula->matricula;
+            $mat = $matricula;
         } else $mat = 0;
 
         $precio = $mat + $mes - $descuento;
