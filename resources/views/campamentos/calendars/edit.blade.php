@@ -72,6 +72,15 @@
                             {!! Form::select('profesor_id',$profesores,null, ['id'=>'profesor_id','placeholder' => 'Seleccione profesor...']) !!}
                             {!! Form::label('profesor_id', 'Profesor:') !!}
                         </div>
+                        <div class="row">
+                            <div class="col s12">
+                                <blockquote>
+                                    <h6>
+                                        En los cursos de River Plate la Edad inicial y final es el año de nacimiento Ej: 2010 - 2018
+                                    </h6>
+                                </blockquote>
+                            </div>
+                        </div>
 
                     </div>
 

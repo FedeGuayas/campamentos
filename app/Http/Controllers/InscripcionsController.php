@@ -826,8 +826,7 @@ public function store(Request $request)
  * @param  int $id
  * @return \Illuminate\Http\Response
  */
-public
-function show($id)
+public function show($id)
 {
     return ('Ahh ahh ahh no implementado Sorry');
 }
@@ -838,8 +837,7 @@ function show($id)
  * @param  int $id
  * @return \Illuminate\Http\Response
  */
-public
-function edit($id)
+public function edit($id)
 {
 
     $inscripcion = Inscripcion::where('id', $id)->with('factura', 'calendar', 'user', 'alumno', 'escenario')->first();
@@ -871,8 +869,7 @@ function edit($id)
  * @return mixed
  */
 
-public
-function searchCurso(Request $request)
+public function searchCurso(Request $request)
 {
 
 
@@ -912,8 +909,7 @@ function searchCurso(Request $request)
  * @param  int $id
  * @return \Illuminate\Http\Response
  */
-public
-function updateCurso(Request $request, $inscripcion_id, $curso)
+public function updateCurso(Request $request, $inscripcion_id, $curso)
 {
 
     if (Auth::user()->hasRole(['planner', 'administrator', 'supervisor'])) {
@@ -979,8 +975,7 @@ function updateCurso(Request $request, $inscripcion_id, $curso)
  * @param  int $id
  * @return \Illuminate\Http\Response
  */
-public
-function reInscribirGet($id)
+public function reInscribirGet($id)
 {
 
     //inscripcion actual
@@ -1023,8 +1018,7 @@ function reInscribirGet($id)
  * @param  int $id
  * @return \Illuminate\Http\Response
  */
-public
-function storeNewCurso(Request $request)
+public function storeNewCurso(Request $request)
 {
 
     if (Auth::user()->hasRole(['planner', 'administrator', 'signup'])) {
@@ -1101,8 +1095,7 @@ function storeNewCurso(Request $request)
  * @param  int $id
  * @return \Illuminate\Http\Response
  */
-public
-function destroy(Request $request, $id)
+public function destroy(Request $request, $id)
 {
     if (Auth::user()->hasRole(['planner', 'administrator', 'supervisor'])) {
 
@@ -1348,8 +1341,7 @@ public function costoUpdate(Request $request)
 /**
  * descuento 10% ins marzo abril mayo misma disc
  */
-public
-function descMarzoAbril()
+public function descMarzoAbril()
 {
 
 }

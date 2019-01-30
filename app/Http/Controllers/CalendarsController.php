@@ -320,7 +320,10 @@ class CalendarsController extends Controller
                     ->where('h.activated','1')
                     ->where('c.activated','1')
                     ->where('c.dia_id',$dia_id)
-                    ->where('c.init_age', $anio_nac)
+                    ->where(function ($query) use ($anio_nac) {
+                        $query->where('c.init_age', '<=', $anio_nac)
+                            ->where('c.end_age', '>=', $anio_nac);
+                    })
                     ->get()
                     ->toArray();
 
@@ -398,7 +401,10 @@ class CalendarsController extends Controller
                     ->where('h.activated','1')
                     ->where('c.activated','1')
                     ->where('c.dia_id',$dia_id)
-                    ->where('c.init_age', $anio_nac)
+                    ->where(function ($query) use ($anio_nac) {
+                        $query->where('c.init_age', '<=', $anio_nac)
+                            ->where('c.end_age', '>=', $anio_nac);
+                    })
                     ->get()
                     ->toArray();
 

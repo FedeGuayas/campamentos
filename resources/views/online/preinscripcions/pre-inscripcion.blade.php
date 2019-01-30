@@ -33,19 +33,28 @@
 
     <a href="#" class="back-to-top waves-effect waves-light btn btn-floating animated slideInUp">Subir</a>
 
-    <div class="no-pad">
-        <div class="container">
-            <h5 class="header center flow-text teal-text">Preinscripción Campamentos Deportivos</h5>
-        </div>
-    </div>
+    {{--<div class="no-pad">--}}
+        {{--<div class="container">--}}
+            {{--<h5 class="header center flow-text teal-text">Preinscripción Campamentos Deportivos</h5>--}}
+        {{--</div>--}}
+    {{--</div>--}}
+    <div class="container">
     <div class="row">
-        <div class="container">
-        <blockquote>
-            <hp>Si se encuentra registrado como representante de click en el lupa.
-            Si no está registrado de click en + </hp>
-        </blockquote>
-
-        </div>
+        <ul class="collapsible">
+            <li>
+                <div class="collapsible-header"><i class="material-icons">help_outline</i>Tips</div>
+                <div class="collapsible-body">
+                    <span>
+                    <blockquote>
+                        Si se encuentra registrado como representante de click en la lupa. <br>
+                        Si no está registrado de click en + <br>
+                        Para inscribirse en cursos de River elegir los módulos con estea definición. <br>
+                        Para inscribirse en cualquier curso de campamentos elegir módulos.
+                        </blockquote>
+                    </span></div>
+            </li>
+        </ul>
+    </div>
     </div>
 
     <div class="container">
@@ -53,6 +62,7 @@
             <div class="col m12">
 
                 <div class="card-panel">
+                    <h5 class="header teal-text text-darken-2">Preinscripción Campamentos Deportivos</h5>
                     <div class="card-content">
                         {!! Form::open(['route'=>'pre-inscripcions.store', 'method'=>'POST', 'class'=>'form_noEnter', 'id'=>'form_inscripcion'])  !!}
                         {!! Form::hidden('calendar_id',null,['id'=>'calendar_id']) !!}
@@ -266,6 +276,8 @@
         });
 
         $(document).ready(function () {
+
+            $('.collapsible').collapsible();
 
             // ventana modal de busqueda de representante
             $('#search-repre').modal({

@@ -76,7 +76,7 @@
                             <div class="col s12">
                                 <blockquote>
                                     <h6>
-                                        En los cursos de River Plate la Edad inicial es el año de nacimiento Ej: 2010 y la final cualquiera Ej:2222
+                                        En los cursos de River Plate la Edad inicial y final es el año de nacimiento Ej: 2010 - 2018
                                     </h6>
                                 </blockquote>
                             </div>
