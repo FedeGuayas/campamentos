@@ -7,6 +7,10 @@ use Carbon\Carbon;
 
 class Modulo extends Model
 {
+
+    const ES_RIVER='1';
+    const NO_RIVER='0';
+
     /**
      * The table associated with the model.
      *
@@ -29,14 +33,16 @@ class Modulo extends Model
      * @var array
      */
     protected $fillable = [
-        'modulo', 'inicio','fin','activated'
+        'modulo','modulo_river','inicio','fin','activated'
     ];
 
-    public function programs()
-    {
-        return $this->hasMany('App\Program');
+    /**
+     * Return true si es un modulo river
+     * @return bool
+     */
+    public function esRiver(){
+        return $this->modulo_river == Modulo::ES_RIVER;
     }
-
 
     //Buscar por mes
     public function scopeSearchMonthBetwen($query, $search)
@@ -45,8 +51,13 @@ class Modulo extends Model
         return $query;
     }
 
+    /**
+     * Relaciones
+     */
 
-
-
+    public function programs()
+    {
+        return $this->hasMany('App\Program');
+    }
 
 }

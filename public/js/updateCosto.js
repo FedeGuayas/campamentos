@@ -12,7 +12,14 @@ $(document).ready(function () {
         var dia_id = $("#dia_id").val();
         var horario_id = $("#horario_id").val();
         var valor = $(".valor");
-        
+        var matricula_river=$("#matricula_river");
+        matricula_river.val(false);
+
+        if (event.target.value == 'placeholder' ){
+            valor.val('0.00');
+            return false;
+        }
+
         //para 10% de marzo abril mayo
         var representante_id=$("#representante_id");
         var alumno_id=$("#alumno_id");
@@ -51,7 +58,12 @@ $(document).ready(function () {
                     valor.val($("#cursos_precio_session").val());
                 }else{
                     valor.addClass("teal-text");
-                    valor.val(response);
+                    valor.val(response.precio);
+                    if (response.modulo_river===true){
+                        $(".mensaje_membresia").removeClass('hide');
+                        $("#mensaje_membresia").html(response.mensaje_matricula);
+                        $("#matricula_river").val(response.paga_matricula_river);
+                    }
                 }
             },
             error: function (response) {
@@ -77,6 +89,8 @@ $(document).ready(function (event) {
         // var desc_mult = $("#multiple");
         // var desc_fam = $("#familiar");
         var matricula = $("#matricula");
+        var matricula_river=$("#matricula_river");
+        matricula_river.val(false);
 
         var datos = {
             nivel: nivel,
@@ -102,14 +116,14 @@ $(document).ready(function (event) {
                 if (matricula.is(':checked')) {
                    // console.log("Checkbox matricula  => Seleccionado");
                     valor.addClass("teal-text");
-                    valor.val(response);
+                    valor.val(response.precio);
                     // var mat=parseFloat(response.matricula[0].matricula);
 
                     // valor.val(mat);
                 } else {
                    // console.log("Checkbox matricula => Deseleccionado");
                     valor.addClass("teal-text");
-                    valor.val(response);
+                    valor.val(response.precio);
                 }
                 // dia.addClass("teal-text");
             },
@@ -135,6 +149,8 @@ $(document).ready(function (event) {
         var disciplina_id = $("#disciplina_id").val();
         var modulo_id = $("#modulo_id").val();
         var valor = $(".valor");
+        var matricula_river=$("#matricula_river");
+        matricula_river.val(false);
 
         var cortesia = $("#cortesia");
 
@@ -169,7 +185,7 @@ $(document).ready(function (event) {
                     $("#add-cursos").prop("disabled", true);
 
                     valor.addClass("teal-text");
-                    valor.val(response);
+                    valor.val(response.precio);
 
 
                     // valor.val(mat);
@@ -183,7 +199,7 @@ $(document).ready(function (event) {
                     $("#presidente").prop("disabled", false);
 
                     valor.addClass("teal-text");
-                    valor.val(response);
+                    valor.val(response.precio);
                 }
                 // dia.addClass("teal-text");
             },
@@ -209,6 +225,8 @@ $(document).ready(function (event) {
         var disciplina_id = $("#disciplina_id").val();
         var modulo_id = $("#modulo_id").val();
         var valor = $(".valor");
+        var matricula_river=$("#matricula_river");
+        matricula_river.val(false);
 
         var presidente = $("#presidente");
 
@@ -242,7 +260,7 @@ $(document).ready(function (event) {
                     $("#cortesia").prop("disabled", true);
 
                     valor.addClass("teal-text");
-                    valor.val(response);
+                    valor.val(response.precio);
 
 
                     // valor.val(mat);
@@ -256,7 +274,7 @@ $(document).ready(function (event) {
                     $("#cortesia").prop("disabled", false);
 
                     valor.addClass("teal-text");
-                    valor.val(response);
+                    valor.val(response.precio);
                 }
                 // dia.addClass("teal-text");
             },

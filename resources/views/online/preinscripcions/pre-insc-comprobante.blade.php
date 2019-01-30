@@ -74,7 +74,7 @@
 <table align="center" border="0" style=" width: 90%;">
     <tr>
         <td style="font-style: italic ">
-            <b>Ud debe presentar este comprobante para poder realizar el pago en la forma escogida y posterior retiro de la credencial en Federación Deportiva del Guayas.</b>
+            <b>Ud debe presentar esta imagen en Western Union u oficina de Fedeguayas para realizar el pago y confirmar la inscripción.</b>
         </td>
     </tr>
 

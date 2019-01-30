@@ -102,8 +102,8 @@
 
                             @endif
                                 @if( (($calendar->contador)==0 ) && Auth::user()->hasRole(['planner','administrator']))
-                                    <a href="{{ route('admin.calendars.delete',':CALENDAR') }}" id="eliminar" >
-                                        {!! Form::button('<i class="tiny fa fa-trash-o" ></i>',['class'=>'label waves-effect waves-light red darken-1','value'=>$calendar->id,'onclick'=>'eliminar(this)']) !!}
+                                    <a href="{{ route('admin.calendars.delete',$calendar->id) }}" >
+                                        {!! Form::button('<i class="tiny fa fa-trash-o" ></i>',['class'=>'label waves-effect waves-light red darken-1']) !!}
                                     </a>
                                 @endif
 

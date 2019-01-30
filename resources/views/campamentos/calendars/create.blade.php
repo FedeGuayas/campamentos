@@ -9,13 +9,13 @@
 @section('content')
     {{--Contenido--}}
     <div class="row">
-        <div class="col l8 m12 s12">
+        <div class="col m10 s12">
             <div class="card-panel">
-                {{--<h5 class="header teal-text text-darken-2">Calendario:</h5>--}}
+                <h5 class="header teal-text text-darken-2">Crear Curso:</h5>
                 <div class="card-content ">
                         <div class="panel panel-success">
                             <div class="panel-heading">
-                                <h3 class="panel-title ">Calendario</h3>
+                                <h3 class="panel-title ">Programa</h3>
                             </div>
                             <div class="panel-body">
                                 <table class="table table-striped table-bordered table-condensed table-hover highlight responsive-table">
@@ -72,7 +72,15 @@
                             {!! Form::select('profesor_id',$profesores,null, ['id'=>'profesor_id','placeholder' => 'Seleccione profesor...']) !!}
                             {!! Form::label('profesor_id', 'Profesor:') !!}
                         </div>
-
+                        <div class="row">
+                            <div class="col s12">
+                                <blockquote>
+                                    <h6>
+                                        En los cursos de River Plate la Edad inicial es el año de nacimiento Ej: 2010 y la final cualquiera Ej:2222
+                                    </h6>
+                                </blockquote>
+                            </div>
+                        </div>
                     </div>
 
                 </div>

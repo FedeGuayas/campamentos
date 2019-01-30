@@ -13,18 +13,29 @@
                     {!! Form::model($modulo,['route'=>['admin.modulos.update',$modulo->id], 'method'=>'PUT'])  !!}
                     <div class="col s12">
 
-                        <div class="input-field col s12 ">
-                            {!! Form::label('modulo','Modulo:') !!}
-                            {!! Form::text('modulo',null,['class'=>'validate','style'=>'text-transform:uppercase']) !!}
+
+                        <div class="row">
+                            <div class="input-field col s8 ">
+                                {!! Form::label('modulo','Modulo:') !!}
+                                {!! Form::text('modulo',null,['class'=>'validate','style'=>'text-transform:uppercase']) !!}
+                            </div>
+                            <div class="input-field col s4 ">
+                                {!! Form::checkbox('modulo_river',null,$modulo->esRiver() ? true : false,['id'=>'modulo_river']) !!}
+                                {!! Form::label('modulo_river','River?') !!}
+                            </div>
                         </div>
-                        <div class="input-field col s12 ">
-                            {!! Form::label('inicio','Inicio:') !!}
-                            {!! Form::date('inicio',null,['class'=>'datepicker']) !!}
+
+                        <div class="row">
+                            <div class="input-field col s6 ">
+                                {!! Form::label('inicio','Inicio:') !!}
+                                {!! Form::date('inicio',null,['class'=>'datepicker']) !!}
+                            </div>
+                            <div class="input-field col s6 ">
+                                {!! Form::label('fin','Fin:') !!}
+                                {!! Form::date('fin',null,['class'=>'datepicker']) !!}
+                            </div>
                         </div>
-                        <div class="input-field col s12 ">
-                            {!! Form::label('fin','Fin:') !!}
-                            {!! Form::date('fin',null,['class'=>'datepicker']) !!}
-                        </div>
+
 
                     </div>
                     {!! Form::button('Actualizar<i class="fa fa-play right"></i>', ['class'=>'btn waves-effect waves-light','type' => 'submit']) !!}

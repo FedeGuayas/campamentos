@@ -415,7 +415,7 @@ class ReportesController extends Controller
             ->orderBy('inscripcions.created_at')
             ->get();
 
-        $arrayExp[] = ['No. Reg.', 'Apellidos_Alumno', 'Nombres_Alumno', 'Cedula Alum.', 'Edad', 'Género', 'Representante', 'Cedula Rep', 'Telefono', 'Correo', 'Direccion', 'Modulo', 'Escenario', 'Disciplina', 'Nivel', 'Dias', 'Horario', 'Comprobante', 'Valor', 'Descuento', 'Estado', 'Fecha_Insc', 'Forma_Pago', 'Usuario', 'Pto Cobro', 'Profesor'];
+        $arrayExp[] = ['No. Reg.', 'Apellidos_Alumno', 'Nombres_Alumno', 'Cedula Alum.', 'Edad', 'Género', 'Representante', 'Cedula Rep', 'Telefono', 'Correo', 'Direccion', 'Modulo', 'Escenario', 'Disciplina', 'Nivel', 'Dias', 'Horario', 'Comprobante', 'Matricula', 'Valor', 'Descuento', 'Estado', 'Fecha_Insc', 'Forma_Pago', 'Usuario', 'Pto Cobro', 'Profesor'];
 
         foreach ($inscripciones->chunk(500) as $chunkInsc) {
             foreach ($chunkInsc as $insc) {
@@ -465,6 +465,7 @@ class ReportesController extends Controller
                     'dias' => $insc->calendar->dia->dia,
                     'horario' => $insc->calendar->horario->start_time . '-' . $insc->calendar->horario->end_time,
                     'comprobante' => $insc->factura->id,
+                    'matricula' => $insc->matricula,
                     'valor' => round(($insc->factura->total) / $cont_comp, 3),
                     'descuento' => $insc->factura->descuento,
                     'estado' => $insc->estado,
@@ -700,7 +701,7 @@ class ReportesController extends Controller
     public function getResumen(Request $request)
     {
 
-        if (Auth::user()->hasRole(['planner', 'administrator', 'admin-cortesia'])) {
+        if (Auth::user()->hasRole(['planner', 'administrator', 'admin-cortesia']) || Auth::user()->can('ver-recaudado')) {
 
             $modulos_coll = Modulo::where('activated', true);
             $modulos = $modulos_coll->pluck('modulo', 'id');

@@ -129,6 +129,10 @@
                         <td>{{$inscripcion->user->getNameAttribute()}}</td>
                     </tr>
                     <tr>
+                        <th align="left">MATRICULA:</th>
+                        <td>$ {{number_format($inscripcion->matricula,2,'.',' ')}}</td>
+                    </tr>
+                    <tr>
                         <th align="left">CANCELADO:</th>
                         <td>$ {{number_format($inscripcion->factura->total,2,'.',' ')}}</td>
                     </tr>

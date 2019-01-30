@@ -43,7 +43,7 @@ class Inscripcion extends Model
      * @var array
      */
     protected $fillable = [
-        'calendar_id','alumno_id','user_id','factura_id','matricula','mensualidad','escenario_id','inscripcion_type'
+        'calendar_id','alumno_id','user_id','factura_id','matricula','mensualidad','cancelado_mensual','escenario_id','inscripcion_type'
 
     ];
 

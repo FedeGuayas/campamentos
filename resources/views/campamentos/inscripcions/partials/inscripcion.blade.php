@@ -5,7 +5,7 @@
     {!! Form::hidden('descuento_empleado',null,['id'=>'descuento_empleado']) !!}{{-- Capturo si es empleado--}}
     {!! Form::hidden('descuento_estacion',null,['id'=>'descuento_estacion']) !!} {{-- Capturo la estacion actual--}}
     {!! Form::hidden('user_id',Auth::user()->id) !!}
-    {{--{!! Form::hidden('precio',null,['id'=>'precio']) !!}--}}
+    {!! Form::hidden('matricula_river',null,['id'=>'matricula_river']) !!}
     @include('alert.request')
     @include('alert.success')
     <div class="row">
@@ -114,7 +114,7 @@
         </div>
     </div>
 
-    <div class="row">
+    <div class="row selecciones">
         <div class="col l2">
             <div class="input-field">
                 {!! Form::checkbox('familiar',null,false,['id'=>'familiar']) !!}
@@ -154,15 +154,25 @@
             </div>
         @endif
 
-        <div class="col l2 m2 s2">
+    </div>
+    <div class="row">
+        <div class="col s3 left">
             <div class="input-field disabled">
                 <i class="fa fa-usd prefix" aria-hidden="true"></i>
                 {!! Form::label('valor','Valor:') !!}
                 {!! Form::number('valor',null,['placeholder'=>'0.00','style'=>'font-size: large','readonly', 'class'=>'valor' ]) !!}
             </div>
         </div>
-    </div>
+        <div  class="col s8 right mensaje_membresia hide">
+            <h6>
+                <blockquote>
+                    <p id="mensaje_membresia"></p>
+                </blockquote>
+            </h6>
 
+        </div>
+
+    </div>
 
 </div><!--/.card content-->
 <div class="card-action">

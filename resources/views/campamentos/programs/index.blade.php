@@ -23,7 +23,7 @@
 
     <div class="row">
         <div class="col l12 m12 s12">
-            <table id="program_table" class="table table-striped table-bordered table-condensed table-hover highlight responsive-table" cellspacing="0" width="100%" style="display: none"   data-order='[[ 0, "asc" ]]'>
+            <table id="program_table" class="table table-striped table-bordered table-condensed table-hover highlight responsive-table" cellspacing="0" width="100%" style="display: none"   data-order='[[ 0, "desc" ]]'>
                 <thead>
                 <tr>
                     <th>Id</th>
@@ -74,7 +74,7 @@
                             @endif
                         </td>
                         <td>
-                            @if ($program->imagen=='NULL')
+                            @if (!isset($program->imagen))
                                 NO
                             @else
                                 <img src="{{ asset('/img/camp/disciplinas/'.$program->imagen)}}" style='max-width: 50px;' class="responsive-img img-thumbnail materialboxed">
@@ -125,7 +125,7 @@
             var table =  $('#program_table').DataTable({
                 lengthMenu: [[10, 25, -1], [10, 25, "Todo"]],
                 processing: true,
-                stateSave: true,
+                stateSave: false,
                 "language":{
                     "decimal":        ",",
                     "emptyTable":     "No se encontraron datos en la tabla",

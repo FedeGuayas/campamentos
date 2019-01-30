@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Alumno;
 use App\Calendar;
+use App\Configuracione;
 use App\Descuento;
 use App\Events\NuevaInscripcion;
 use App\Factura;
@@ -15,6 +16,7 @@ use App\Persona;
 use App\Program;
 use App\Representante;
 use App\User;
+use App\UserModulo;
 use App\Worker;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -41,12 +43,13 @@ class PreInscripcionsController extends Controller
      */
     public function getPreinscripcion()
     {
+        $periodo=Configuracione::where('id',1)->first(); //2018,2019,...
         $modulos_coll = Modulo::where('activated', true)->get();
         //$modulos_coll = Modulo::all();
 
         //filtro los modulos para extraer los que dicen permanente
-        $mod = $modulos_coll->filter(function ($mod) {
-            if (strpos($mod->modulo, 'PERMANENTE') == false && strpos($mod->modulo, '2019') == true ) {
+        $mod = $modulos_coll->filter(function ($mod) use ($periodo) {
+            if (strpos($mod->modulo, 'PERMANENTE') == false && strpos($mod->modulo, $periodo->periodo) == true ) {
                 return true; // true, el elemento se incluye, si retorna false, no se incluye
             }
         });
@@ -165,6 +168,11 @@ class PreInscripcionsController extends Controller
 
             $modulo = Modulo::where('id', $id)->first();
 
+            $modulo_river = 'n'; //no es un modulo de river plate
+            if ($modulo->esRiver()){
+                $modulo_river = 's'; //si es un modulo de river plate
+            }
+
             $inicio = $modulo->inicio;
             $inicio = new Carbon($inicio);
             $mes = $inicio->month;
@@ -191,7 +199,7 @@ class PreInscripcionsController extends Controller
             return response()->json([
                 'escenarios' => $escenarios,
                 'estacion' => $estacion,
-
+                'river' =>$modulo_river
             ]);
         }
     }
@@ -270,6 +278,8 @@ class PreInscripcionsController extends Controller
             $modulo_id = $request->get('modulo');
             $dia_id = $request->get('dia_id');
 
+            $modulo=Modulo::where('id',$modulo_id)->first();
+
             $program = Program::
             where('escenario_id', $escenario_id)
                 ->where('disciplina_id', $disciplina_id)
@@ -280,6 +290,7 @@ class PreInscripcionsController extends Controller
                 $representante = Representante::where('persona_id', $request->input('representante_id'))->with('persona')->first();
                 if (count($representante) > 0) {
                     $edad = $representante->getEdad($representante->persona->fecha_nac);
+                    $anio_nac = Persona::getAnioNacimiento($representante->persona->fecha_nac);
                 } else {
                     $msg_error = "Para inscribir al adulto debe selecionar un representante";
                     return response(['msg_error' => $msg_error]);
@@ -288,10 +299,36 @@ class PreInscripcionsController extends Controller
                 $alumno = Alumno::where('id', $request->input('alumno_id'))->with('persona')->first();
                 if (count($alumno) > 0) {
                     $edad = $alumno->getEdad($alumno->persona->fecha_nac);
+                    $anio_nac = Persona::getAnioNacimiento($alumno->persona->fecha_nac);
                 } else {
                     $msg_error = "Debe selecionar un alumno";
                     return response(['msg_error' => $msg_error]);
                 }
+            }
+
+            // En los modulos de River plate se comprueba el año de nacimiento, no la edad
+            if ($modulo->esRiver()){
+
+                if ($request->input('alumno_id')=='null' || !$request->input('alumno_id')) {
+                    $anio_nac = Persona::getAnioNacimiento($representante->persona->fecha_nac);
+                }else{
+                    $anio_nac = Persona::getAnioNacimiento($alumno->persona->fecha_nac);
+                }
+
+                $horario=Calendar::
+                join('horarios as h','h.id','=','c.horario_id','as c')
+                    ->join('dias as d','d.id','=','c.dia_id')
+                    ->select('c.horario_id', 'h.start_time as start_time','h.end_time as end_time','c.init_age','c.end_age','c.activated',
+                        'h.activated','c.dia_id','c.program_id')
+                    ->where('program_id',$program->id)
+                    ->where('h.activated','1')
+                    ->where('c.activated','1')
+                    ->where('c.dia_id',$dia_id)
+                    ->where('c.init_age', $anio_nac)
+                    ->get()
+                    ->toArray();
+
+                return response(['horario'=>$horario,'edad'=>$edad,'river'=>true,'anio_nac'=>$anio_nac]);
             }
 
             $horario = Calendar::
@@ -309,7 +346,7 @@ class PreInscripcionsController extends Controller
                 ->get()
                 ->toArray();
 
-            return response(['horario' => $horario, 'edad' => $edad]);
+            return response(['horario'=>$horario,'edad'=>$edad,'river'=>false,'anio_nac'=>$anio_nac]);
         }
     }
 
@@ -330,6 +367,14 @@ class PreInscripcionsController extends Controller
             $dia_id = $request->get('dia_id');
             $horario_id = $request->get('horario_id');
 
+            $modulo=Modulo::where('id',$modulo_id)->first();
+
+            $river=false;
+            if ($modulo->esRiver()){
+                $river=true;
+                //modulo en que esta inscrito anteriormente en el presente año
+            }
+
             $program = Program::where('escenario_id', $escenario_id)
                 ->where('disciplina_id', $disciplina_id)
                 ->where('modulo_id', $modulo_id)->first();
@@ -338,14 +383,19 @@ class PreInscripcionsController extends Controller
             $nivel = Calendar::
             where('program_id', $program->id)
                 ->where('dia_id', $dia_id)
+                ->where('cupos','>','contador')
                 ->where('horario_id', $horario_id)->get()->toArray();
 
-            return response($nivel);
+            if (count($nivel)>0)
+            {
+                return response(['nivel'=>$nivel,'river'=>$river]);
+            }
+            return response()->json('error');
         }
     }
 
     /**
-     * Obtener el curso al seleccionar el nivel
+     * Obtener el curso al seleccionar el nivel y calcular el costo
      *
      * @param Request $request
      * @param $id
@@ -363,26 +413,65 @@ class PreInscripcionsController extends Controller
             $calendar_id = $request->get('calendar_id');//xk en el value del select de nivel estoy pasando el calendar_id
             $descuento_empleado = $request->get('descuento_empleado');
 
+            $modulo=Modulo::where('id',$modulo_id)->first();
+
             $program = Program::where('escenario_id', $escenario_id)
                 ->where('disciplina_id', $disciplina_id)
                 ->where('modulo_id', $modulo_id)->first();
 
-            $curso = Calendar::
-            join('horarios as h', 'h.id', '=', 'c.horario_id', 'as c')
-                ->join('dias as d', 'd.id', '=', 'c.dia_id')
-                ->select('c.id as cID', 'c.program_id', 'c.cupos', 'c.contador')
-                ->where('c.program_id', $program->id)
-                ->where('c.id', $calendar_id)
-                ->where('c.dia_id', $dia_id)
-//                ->where('cupos','>','contador')
-                ->where('c.horario_id', $horario_id)
-                ->get()->toArray();
+            $matricula=$program->matricula;
 
-            $mensualidad = Calendar::
-            select('mensualidad')
-                ->where('id', $calendar_id)->first();
+//            $curso = Calendar::
+//            join('horarios as h', 'h.id', '=', 'c.horario_id', 'as c')
+//                ->join('dias as d', 'd.id', '=', 'c.dia_id')
+//                ->select('c.id as cID', 'c.program_id', 'c.cupos', 'c.contador')
+//                ->where('c.program_id', $program->id)
+//                ->where('c.id', $calendar_id)
+//                ->where('c.dia_id', $dia_id)
+////                ->where('cupos','>','contador')
+//                ->where('c.horario_id', $horario_id)
+//                ->get()->toArray();
 
-            $mes = $mensualidad->mensualidad;
+            $curso=Calendar::where('id',$calendar_id)->first();
+
+//            $mensualidad = Calendar::
+//            select('mensualidad')
+//                ->where('id', $calendar_id)->first();
+
+            $mes = $curso->mensualidad;
+
+            $adulto = $request->get('adulto');
+            $alumno_id = $request->get('alumno');
+
+
+            /*************************************COSTO RIVER***********************************************************/
+            if ($modulo->esRiver()){ //modulo de river
+                if (($adulto == 'false' && !is_null($alumno_id)) ) { //inscripcion de menor
+                    $alumno = Alumno::where('id', $alumno_id)->with('persona')->first();  //alumno menor
+                }     else if ($adulto == 'true') { //insc de adulto
+                    $alumno = Representante::where('persona_id', $alumno_id)->with('persona')->first(); //alumno mayor
+                }
+
+                $periodo=Configuracione::where('id',1)->first();
+                $inscrito_anterior=UserModulo::where('persona_id',$alumno->persona->id)->where('anio',$periodo->periodo)->first();
+
+                if (isset($inscrito_anterior)){ //no paga matricula
+                    $precio = $mes;
+                    $mensaje_matricula= 'Ya se encuentra inscrito en un módulo en el presente período. No tiene que pagar membresía';
+                    $paga_matricula_river=false;
+                }else { //paga matricula
+                    $mat = $matricula;
+                    $precio = $mat + $mes;
+                    $mensaje_matricula= 'Al valor de la inscripión se le ha incrementado el costo de la membresía ( $ '.$mat.'). Este valor es cobrado una sola vez en el año ';
+                    $paga_matricula_river=true;
+                }
+
+                $precio=number_format($precio, 2, '.', ' ');
+                return response(['curso' => $curso,'precio'=>$precio,'modulo_river'=>true,'mensaje_matricula'=>$mensaje_matricula,'paga_matricula_river'=>$paga_matricula_river]);
+            }
+
+            /**************************************************************************************/
+
 
             $desc=0;
             $descuento = 0;
@@ -392,8 +481,8 @@ class PreInscripcionsController extends Controller
             }
 
             $precio = $mes - $descuento;
-
-            return response(["curso" => $curso, "precio" => number_format($precio, 2, '.', ' ')]);
+            $precio=number_format($precio, 2, '.', ' ');
+            return response(['curso' => $curso, 'precio'=>$precio]);
         }
     }
 
@@ -418,6 +507,7 @@ class PreInscripcionsController extends Controller
      */
     public function store(Request $request)
     {
+        $periodo=Configuracione::where('id',1)->first();
         try {
 
             DB::beginTransaction();
@@ -426,6 +516,9 @@ class PreInscripcionsController extends Controller
             $program = Program::findOrFail($program_id);
             $matricula = $program->matricula; //matricula del curso
             $calendar = Calendar::findOrFail($calendar_id);
+            $paga_matricula_river = $request->input('matricula_river');
+
+            $modulo=$program->modulo;
 
             if ($calendar->cupos <= $calendar->contador) {
                 Session::flash('message_danger', 'No hay disponibilidad para el curso');
@@ -443,32 +536,51 @@ class PreInscripcionsController extends Controller
             $factura->representante()->associate($representante);
             $factura->total = $valor; //costo de la inscripcion
 
-            if ($request->input('matricula') == 'on') {//pago matricula
-                $sub = $valor - $matricula;
-                $desc = $mensualidad - $sub;
-                if ($desc > 0) {//hay descuento
-                    $factura->descuento = $desc;
-                }
-            } else { //no pago matricula
-                $desc = $mensualidad - $valor;
-                if ($desc > 0) {//hay descuento
-                    $factura->descuento = $desc;
-                }
-            }
 
-            $factura->descuento = $desc;
+
+            if ($modulo->esRiver()){ //descuentos y matricula river
+
+                if ($paga_matricula_river=='true'){ //paga la membresia o matricula
+                    $sub = $valor - $matricula;
+                    $desc = $mensualidad - $sub;
+                    if ($desc > 0) {//hay descuento
+                        $factura->descuento = $desc;
+                    }else {
+                        $factura->descuento = 0;
+                    }
+                }else if ($paga_matricula_river=='false')  {
+                    $desc = $mensualidad - $valor;
+                    if ($desc > 0) {//hay descuento
+                        $factura->descuento = $desc;
+                    } else {
+                        $factura->descuento = 0;
+                    }
+                }
+
+            }else { //descuentos y matricula demas cursos
+
+                if ($request->input('matricula') == 'on') {//pago matricula
+                    $sub = $valor - $matricula;
+                    $desc = $mensualidad - $sub;
+                    if ($desc > 0) {//hay descuento
+                        $factura->descuento = $desc;
+                    }else {
+                        $factura->descuento = 0;
+                    }
+                } else { //no pago matricula
+                    $desc = $mensualidad - $valor;
+                    if ($desc > 0) {//hay descuento
+                        $factura->descuento = $desc;
+                    }else {
+                        $factura->descuento = 0;
+                    }
+                }
+
+            }
 
             $factura->save();
 
-            if ($request->input('valor') == 0 && $request->input('cortesia') == 'on') {
-                $descuentos = new Descuento();
-                $descuentos->factura()->associate($factura);
-                $descuentos->descripcion = 'CORTESIA';
-                $descuentos->valor = $factura->descuento;
-                $descuentos->save();
-            }
-
-            if ($request->input('descuento_empleado') == 'true' && $request->input('valor') > 0) {
+            if ($request->input('descuento_empleado') == 'true' && !$modulo->esRiver() && $request->input('valor') > 0) {
                 $descuentos = new Descuento();
                 $descuentos->factura()->associate($factura);
                 $descuentos->descripcion = 'DESCUENTO EMPLEADO';
@@ -477,7 +589,6 @@ class PreInscripcionsController extends Controller
             }
 
             //inscripcion
-//            $user = $request->user();//usuario logueado
             $user = User::where('email', 'western@mail.com')->first();
             $pto_cobro = '0';
 
@@ -488,15 +599,23 @@ class PreInscripcionsController extends Controller
             $inscripcion->escenario_id=$pto_cobro;
             $inscripcion->inscripcion_type=Inscripcion::INSCRIPCION_ONLINE;
 
+
             if ($request->input('adulto') == true) { //si es una inscripcion para adulto
                 $inscripcion->alumno_id = 0; //le voy a asignara al id del alumno 0 en la tabla de inscripcion
             } else {
                 $inscripcion->alumno_id = $request->input('alumno_id'); //sino el id del input del form
             }
 
-            $inscripcion->estado = 'Reservada'; //el estado de la reserva sera 'Reservada'
+            if ($modulo->esRiver() && $paga_matricula_river == 'true') { //descuentos y matricula river
+                $inscripcion->matricula = $matricula;
+            } else {
+                $inscripcion->matricula = 0;
+            }
 
+
+            $inscripcion->estado = 'Reservada'; //el estado de la reserva sera 'Reservada'
             $inscripcion->mensualidad = $mensualidad;
+            $inscripcion->cancelado_mensual = $valor;
 
             $inscripcion->save();
 

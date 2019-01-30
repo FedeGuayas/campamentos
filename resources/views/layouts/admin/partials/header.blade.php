@@ -16,20 +16,22 @@
             <!-- Dropdown Inscripciones -->
             <ul id="dropdownInsc" class="dropdown-content">
                 <li><a href="{!! route('admin.inscripcions.index') !!}"
-                       class="waves-effect waves-teal">Inscripciones</a></li>
+                       class="waves-effect waves-teal">Todas</a></li>
                 <li class="divider"></li>
                 @if (Entrust::can('create_inscripcion'))
                     <li><a href="{!! route('admin.inscripcions.create') !!}" class="waves-effect waves-teal">Nueva</a>
                     </li>
                     <li class="divider"></li>
                 @endif
+                <li><a href="{{route('admin.inscripcions.index.deletes')}}"
+                       class="waves-effect waves-teal">Eliminadas</a></li>
+            </ul>
+            <!-- Dropdown Clientes -->
+            <ul id="dropdownClientes" class="dropdown-content">
                 <li><a href="{!! route('admin.alumnos.index') !!}" class="waves-effect waves-teal">Alumnos</a></li>
                 <li class="divider"></li>
                 <li><a href="{!! route('admin.representantes.index') !!}"
                        class="waves-effect waves-teal">Representantes</a></li>
-                <li class="divider"></li>
-                <li><a href="{{route('admin.inscripcions.index.deletes')}}"
-                       class="waves-effect waves-teal">Eliminadas</a></li>
             </ul>
 
             <!-- Dropdown Programacion -->
@@ -66,7 +68,8 @@
                 @role('administrator')
                 <li class="divider"></li>
                 <li><a href="{!! route('admin.users.index') !!}" class="waves-effect waves-teal">Usuarios</a></li>
-                <li><a href="{!! route('admin.users.trabajadores') !!}" class="waves-effect waves-teal">Trabajadores</a></li>
+                <li><a href="{!! route('admin.users.trabajadores') !!}" class="waves-effect waves-teal">Trabajadores</a>
+                </li>
                 <li><a href="{!! route('admin.roles.index') !!}" class="waves-effect waves-teal">Roles</a></li>
                 <li><a href="{!! route('admin.permissions.index') !!}" class="waves-effect waves-teal">Permisos</a></li>
                 {{--<li><a href="{!! route('persons.import') !!}" class="waves-effect waves-teal">Imp Personas</a></li>--}}
@@ -118,6 +121,13 @@
                                     class="fa fa-pencil left"></i><i class="fa fa-sort-down right"></i>
                         </a>
                     </li>
+                    <!-- Dropdown Clientes -->
+                    <li>
+                        <a class="dropdown-button waves-effect waves-light" href="#!" data-beloworigin="true"
+                           data-hover="true" data-constrainwidth="false" data-activates="dropdownClientes">Clientes<i
+                                    class="fa fa-users left"></i><i class="fa fa-sort-down right"></i>
+                        </a>
+                    </li>
                     <!-- Dropdown Programacion -->
                     <li>
                         <a class="dropdown-button waves-effect waves-light" href="#!" data-beloworigin="true"
@@ -140,7 +150,7 @@
                                         class="fa fa-gears left"></i><i class="fa fa-sort-down right"></i>
                             </a>
                         </li>
-                @endif
+                    @endif
                 <!-- Dropdown Usuarios -->
                     <li>
                         <a class="dropdown-button waves-effect waves-light" href="#!" data-beloworigin="true"

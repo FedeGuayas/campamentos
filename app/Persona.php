@@ -53,6 +53,14 @@ class Persona extends Model
 //        return \Carbon\Carbon::parse($this->fecha_nac)->age;
     }
 
+     public static function getAnioNacimiento($fecha_nac)
+    {
+//        $date = explode('-', $fecha_nac);
+//        return $date[0];
+
+        return \Carbon\Carbon::parse($fecha_nac)->year;
+    }
+
 
     public function scopeSearchPersona($query, $search)
     {

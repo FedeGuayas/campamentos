@@ -49,13 +49,27 @@
                                 <input class="file-path validate" type="text">
                             </div>
                         </div>
+
                         {{--<div class="input-field  col l6 m6 s12">--}}
                             {{--{!! Form::label('cuposT','Cupos:') !!}--}}
                             {{--{!! Form::number('cuposT',null,['class'=>'validate' ,'placeholder'=>'0' ,'required']) !!}--}}
                         {{--</div>--}}
+
+                        <div class="row">
+                            <div class="col s12">
+                                <blockquote>
+                                    <h6>
+                                        La matrícula en los módulos de River Plate incluye el precio del uniforme
+                                    </h6>
+                                </blockquote>
+                            </div>
+                        </div>
                     </div>
 
                 </div>
+
+
+
                 {!! Form::button('Crear<i class="fa fa-play right"></i>', ['class'=>'btn waves-effect waves-light','type' => 'submit']) !!}
                 {!! Form::button('Cancelar<i class="fa fa-close right"></i>',['class'=>'btn waves-effect waves-light red darken-1','type' => 'reset']) !!}
                 <a href="{{ route('admin.programs.index') }}" class="tooltipped" data-position="bottom" data-delay="50" data-tooltip="Regresar">

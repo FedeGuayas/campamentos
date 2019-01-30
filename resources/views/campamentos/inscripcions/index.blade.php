@@ -8,7 +8,7 @@
         <div class="col l8 m8 s">
             @include('alert.success')
             @include('alert.request')
-            <h4>Inscripciones</h4>
+            <h4>Listado de Inscripciones</h4>
         </div>
     </div>
 

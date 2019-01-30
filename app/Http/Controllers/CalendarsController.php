@@ -8,6 +8,7 @@ use App\Cart;
 use App\Dia;
 use App\Disciplina;
 use App\Escenario;
+use App\Persona;
 use App\Profesor;
 use Carbon\Carbon;
 use Event;
@@ -173,9 +174,21 @@ class CalendarsController extends Controller
      */
     public function destroy($calendar)
     {
-        return response()->json([
-            'resp'=>$calendar,
-        ]);
+        if (Auth::user()->hasRole(['administrator'])) {
+
+            $curso = Calendar::findOrFail($calendar);
+            $insc=Inscripcion::where('calendar_id',$calendar)->first();
+
+            if ($insc){
+                Session::flash('message_danger', 'No es posible eliminar el curso porque tiene inscripciones');
+                return redirect()->back();
+            }
+            $curso->delete();
+            Session::flash('message', 'Curso eliminado');
+            return back();
+
+        } else return abort(403);
+
     }
 
     public function disable(Request $request, $id)
@@ -272,6 +285,8 @@ class CalendarsController extends Controller
             $modulo_id=$request->get('modulo');
             $dia_id=$request->get('dia_id');
 
+            $modulo=Modulo::where('id',$modulo_id)->first();
+
             $program=Program::where('escenario_id',$escenario_id)
                 ->where('disciplina_id',$disciplina_id)
                 ->where('modulo_id',$modulo_id)->first();
@@ -279,10 +294,37 @@ class CalendarsController extends Controller
             if ($request->input('alumno_id')=='null' || !$request->input('alumno_id')){
                 $representante=Representante::where('persona_id',$request->input('representante_id'))->with('persona')->first();
                 $edad=$representante->getEdad($representante->persona->fecha_nac); //edad del representante, insc de adulto
+                $anio_nac = Persona::getAnioNacimiento($representante->persona->fecha_nac);
 
             }else {
                 $alumno=Alumno::where('id',$request->input('alumno_id'))->with('persona')->first();
                 $edad=$alumno->getEdad($alumno->persona->fecha_nac); //edad del alumno inscrito
+                $anio_nac = Persona::getAnioNacimiento($alumno->persona->fecha_nac);
+            }
+
+            // En los modulos de River plate se comprueba el año de nacimiento, no la edad
+            if ($modulo->esRiver()){
+
+                if ($request->input('alumno_id')=='null' || !$request->input('alumno_id')) {
+                    $anio_nac = Persona::getAnioNacimiento($representante->persona->fecha_nac);
+                }else{
+                    $anio_nac = Persona::getAnioNacimiento($alumno->persona->fecha_nac);
+                }
+
+                $horario=Calendar::
+                join('horarios as h','h.id','=','c.horario_id','as c')
+                    ->join('dias as d','d.id','=','c.dia_id')
+                    ->select('c.horario_id', 'h.start_time as start_time','h.end_time as end_time','c.init_age','c.end_age','c.activated',
+                        'h.activated','c.dia_id','c.program_id')
+                    ->where('program_id',$program->id)
+                    ->where('h.activated','1')
+                    ->where('c.activated','1')
+                    ->where('c.dia_id',$dia_id)
+                    ->where('c.init_age', $anio_nac)
+                    ->get()
+                    ->toArray();
+
+                return response(['horario'=>$horario,'edad'=>$edad,'river'=>true,'anio_nac'=>$anio_nac]);
             }
 
             $horario=Calendar::
@@ -300,8 +342,7 @@ class CalendarsController extends Controller
                 ->where('c.activated','1')
                 ->get()
                 ->toArray();
-            
-            return response(['horario'=>$horario,'edad'=>$edad]);
+            return response(['horario'=>$horario,'edad'=>$edad,'river'=>false,'anio_nac'=>$anio_nac]);
         }
     }
 
@@ -322,17 +363,46 @@ class CalendarsController extends Controller
             $modulo_id=$request->get('modulo');
             $dia_id=$request->get('dia_id');
 
+            $modulo=Modulo::where('id',$modulo_id)->first();
+
             $program=Program::where('escenario_id',$escenario_id)
                 ->where('disciplina_id',$disciplina_id)
                 ->where('modulo_id',$modulo_id)->first();
 
+
             if ($request->input('alumno_id')=='null' || !$request->input('alumno_id')){
                 $representante=Representante::where('persona_id',$request->input('representante_id'))->with('persona')->first();
                 $edad=$representante->getEdad($representante->persona->fecha_nac);
+                $anio_nac = Persona::getAnioNacimiento($representante->persona->fecha_nac);
 
             }else {
                 $alumno=Alumno::where('id',$request->input('alumno_id'))->with('persona')->first();
                 $edad=$alumno->getEdad($alumno->persona->fecha_nac);
+                $anio_nac = Persona::getAnioNacimiento($alumno->persona->fecha_nac);
+            }
+
+            if ($modulo->esRiver()){
+
+                if ($request->input('alumno_id')=='null' || !$request->input('alumno_id')) {
+                    $anio_nac = Persona::getAnioNacimiento($representante->persona->fecha_nac);
+                }else{
+                    $anio_nac = Persona::getAnioNacimiento($alumno->persona->fecha_nac);
+                }
+
+                $horario=Calendar::
+                join('horarios as h','h.id','=','c.horario_id','as c')
+                    ->join('dias as d','d.id','=','c.dia_id')
+                    ->select('c.horario_id', 'h.start_time as start_time','h.end_time as end_time','c.init_age','c.end_age','c.activated',
+                        'h.activated','c.dia_id','c.program_id')
+                    ->where('program_id',$program->id)
+                    ->where('h.activated','1')
+                    ->where('c.activated','1')
+                    ->where('c.dia_id',$dia_id)
+                    ->where('c.init_age', $anio_nac)
+                    ->get()
+                    ->toArray();
+
+                return response(['horario'=>$horario,'edad'=>$edad,'river'=>true,'anio_nac'=>$anio_nac]);
             }
 
             $horario=Calendar::
@@ -350,8 +420,7 @@ class CalendarsController extends Controller
                 ->get()
                 ->toArray();
 
-
-            return response(['horario'=>$horario,'edad'=>$edad]);
+            return response(['horario'=>$horario,'edad'=>$edad,'river'=>false,'anio_nac'=>$anio_nac]);
         }
     }
 
@@ -371,6 +440,15 @@ class CalendarsController extends Controller
             $dia_id=$request->get('dia_id');
             $horario_id=$request->get('horario_id');
 
+            $modulo=Modulo::where('id',$modulo_id)->first();
+
+            $river=false;
+            if ($modulo->esRiver()){
+                $river=true;
+                //modulo en que esta inscrito anteriormente en el presente año
+
+            }
+
             $program=Program::where('escenario_id',$escenario_id)
                 ->where('disciplina_id',$disciplina_id)
                 ->where('modulo_id',$modulo_id)->first();
@@ -383,7 +461,7 @@ class CalendarsController extends Controller
 
             if (count($nivel)>0)
             {
-                return response($nivel);
+                return response(['nivel'=>$nivel,'river'=>$river]);
             }
             return response()->json('error');
         }
@@ -414,15 +492,6 @@ class CalendarsController extends Controller
             where('program_id',$program->id)
                 ->where('dia_id',$dia_id)
                 ->where('horario_id',$horario_id)->get()->toArray();
-
-            $nivezxcvzxvcl=Calendar::
-            join('horarios as h','h.id','=','c.horario_id','as c')
-                ->join('dias as d','d.id','=','c.dia_id')
-                ->select('c.id as cID','c.dia_id','c.horario_id','c.nivel')
-
-                ->where('c.dia_id',$dia_id)
-                ->where('c.horario_id',$horario_id)
-                ->get()->toArray();
             
             return response($nivel);
         }

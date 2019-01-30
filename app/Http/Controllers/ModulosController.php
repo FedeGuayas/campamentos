@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Escenario;
 use App\Modulo;
+use App\Program;
 use Illuminate\Http\Request;
 use Session;
 use App\Http\Requests;
@@ -45,10 +46,19 @@ class ModulosController extends Controller
      */
     public function store(Request $request)
     {
+        $river=$request->modulo_river;
+
+        if ( $river=='on' ){
+            $modulo_river = Modulo::ES_RIVER;
+        }else {
+            $modulo_river = Modulo::NO_RIVER;
+        }
+
         $modulo=new Modulo();
         $modulo->modulo=strtoupper($request->get('modulo'));
         $modulo->inicio=$request->get('inicio');
         $modulo->fin=$request->get('fin');
+        $modulo->modulo_river=$modulo_river;
 
         $modulo->save();
         Session::flash('message','Modulo creado correctamente');
@@ -87,10 +97,19 @@ class ModulosController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $river=$request->modulo_river;
+
+        if ( $river=='on' ){
+            $modulo_river = Modulo::ES_RIVER;
+        }else {
+            $modulo_river = Modulo::NO_RIVER;
+        }
+
         $modulo=Modulo::findOrFail($id);
         $modulo->modulo=strtoupper($request->get('modulo'));
         $modulo->inicio=$request->get('inicio');
         $modulo->fin=$request->get('fin');
+        $modulo->modulo_river=$modulo_river;
         $modulo->update();
 
         Session::flash('message','Modulo actualizado correctamente');
@@ -106,8 +125,13 @@ class ModulosController extends Controller
     public function destroy($id)
     {
         $modulo=Modulo::findOrFail($id);
+        $programs=Program::where('modulo_id',$id)->first();
+        if ($programs){
+            Session::flash('message_danger', 'No es posible eliminar el módulo "'.$modulo->modulo.'" porque tiene programas asignados');
+            return redirect()->back();
+        }
         $modulo->delete();
-        
+        Session::flash('message', 'Módulo eliminado');
         return redirect()->route('admin.modulos.index');
     }
    

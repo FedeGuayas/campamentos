@@ -2,15 +2,20 @@
  * Created by Hector  on 26/10/2016.
  */
 
-//V1 OK
 
-
-//cargar alumnos del representante
 $("#representante_id").change(function (event) {
     var alumno=$("#alumno_id");
     var disciplina=$("#disciplina_id");
     var descuento_empleado=$("#descuento_empleado");
     var repre_id=event.target.value;
+
+    if (event.target.value == 'placeholder' ){
+        alumno.find("option:gt(0)").remove();
+        alumno.removeClass("teal-text");
+        alumno.material_select();
+        return false;
+    }
+
     var route="pre-inscripcion/alumnos";
     var datos={ repre_id:repre_id};
     // var token = $("input[name=_token]").val();
@@ -41,7 +46,7 @@ $("#representante_id").change(function (event) {
     });
 });
 
-//al cambiar de alumno limpiar los camppos
+
 $("#alumno_id").change(function (event) {
     var modulo=$("#modulo_id");
     var escenario=$("#escenario_id");
@@ -51,7 +56,15 @@ $("#alumno_id").change(function (event) {
     var fpago=$("#fpago_id");
     var nivel=$("#nivel");
 
+    if (event.target.value == 'placeholder' ){
+        modulo.find("option:eq(0)").prop('selected', true);
+        modulo.removeClass("teal-text");
+        modulo.material_select();
+        return false;
+    }
+
     modulo.find("option:eq(0)").prop('selected', true);
+    modulo.addClass("teal-text");
     fpago.find("option:eq(0)").prop('selected', true);
     escenario.find("option:gt(0)").remove();
     disciplina.find("option:gt(0)").remove();
@@ -69,15 +82,16 @@ $("#alumno_id").change(function (event) {
 
 });
 
-//cargar escenarios al seleccionar el modulo
 $("#modulo_id").change( function (event) {
     var escenario=$("#escenario_id");
     var estacion=$("#estacion");
     var multiple=$(".multiple");
-    var desc_est=$("#descuento_estacion");
     var mod_id=event.target.value;
     var route="pre-inscripcion/escenarios";
     var datos={ mod_id:mod_id};
+
+    $(".mensaje_membresia").addClass('hide');
+    $("#mensaje_membresia").html('');
     $.ajax({
         url: route,
         type: "GET",
@@ -85,18 +99,25 @@ $("#modulo_id").change( function (event) {
         data: datos,
         success: function (response) {
            // console.log(response);
+            var river=response.river;
             escenario.find("option:gt(0)").remove();
             escenario.addClass("teal-text");
             $.each(response.escenarios, function(i, item) {
                 escenario.append('<option value="' + item.eID + '">' + item.escenario + '</option>');
             });
-            // estacion.removeClass('hidden');
-            // estacion.addClass("teal-text");
-            // estacion.fadeIn();
-            estacion.val('CAMPAMENTOS DE '+ response.estacion+'');
-            //mostrar u ocultar el checkbox de descunto del 10% insc multiple
-            //descuento de estacion (verano o invierno)
+            estacion.removeClass('hidden');
+            estacion.addClass("red-text");
+            estacion.fadeIn();
+
+            if ( river ==='s') {
+                estacion.val('RIVER PLATE');
+
+            } else {
+                estacion.val('CAMPAMENTOS DE ' + response.estacion + '');
+            }
+
             escenario.material_select();
+            $("#pagar").prop('disabled', true);
         },
         error: function (response) {
              //console.log(response);
@@ -105,9 +126,15 @@ $("#modulo_id").change( function (event) {
 
 });
 
-//cargar disciplinas al seleccionar el escenario
 $("#escenario_id").change(function (event) {
+    if (event.target.value == 'placeholder' ){
+        return false;
+    }
     var disciplina=$("#disciplina_id");
+    var dia = $("#dia_id");
+    var valor=$(".valor");
+    var horario = $("#horario_id");
+    var nivel=$("#nivel");
     var escenario_id=$("#escenario_id").val();
     var modulo_id=$("#modulo_id").val();
     var datos={
@@ -124,10 +151,18 @@ $("#escenario_id").change(function (event) {
             // console.log(response);
             disciplina.find("option:gt(0)").remove();
             disciplina.addClass("teal-text");
+            dia.find("option:gt(0)").remove();
+            horario.find("option:gt(0)").remove();
+            nivel.find("option:gt(0)").remove();
+            valor.removeClass("teal-text");
+            valor.val('0.00');
             $.each(response, function(i, item) {
                 disciplina.append('<option value="' + item.dID + '">' + item.disciplina + '</option>');
             });
             disciplina.material_select();
+            dia.material_select();
+            horario.material_select();
+            nivel.material_select();
         },
         error: function (response) {
              //console.log(response);
@@ -135,10 +170,15 @@ $("#escenario_id").change(function (event) {
     });
 });
 
-//cargar dias al seleccionar la disciplina
+
 $("#disciplina_id").change(function (event) {
+    if (event.target.value == 'placeholder' ){
+        return false;
+    }
     var dia=$("#dia_id");
     var horario=$("#horario_id");
+    var nivel=$("#nivel");
+    var valor=$(".valor");
     var escenario_id=$("#escenario_id").val();
     var disciplina_id=$("#disciplina_id").val();
     var modulo_id=$("#modulo_id").val();
@@ -155,15 +195,19 @@ $("#disciplina_id").change(function (event) {
         data: datos,
         success: function (response) {
            //console.log(response);
-            horario.find("option:gt(0)").remove();
-            horario.addClass("teal-text");
             dia.find("option:gt(0)").remove();
             dia.addClass("teal-text");
+            horario.find("option:gt(0)").remove();
+            horario.addClass("teal-text");
+            nivel.find("option:gt(0)").remove();
+            valor.removeClass("teal-text");
+            valor.val('0.00');
             $.each(response, function(i, item) {
                 dia.append('<option value="' + item.dia_id + '">' + item.dias + '</option>');
             });
             dia.material_select();
             horario.material_select();
+            nivel.material_select();
         },
         error: function (response) {
             // console.log(response);
@@ -171,10 +215,14 @@ $("#disciplina_id").change(function (event) {
     });
 });
 
-//cargar horarios al seleccionar el dia, los resultados devueltos estan en dependencia de la edad del alaumno o el representante
+
 $("#dia_id").change(function (event) {
+    if (event.target.value == 'placeholder' ){
+        return false;
+    }
     var horario=$("#horario_id");
-    var dia=$("#dia_id");
+    var nivel=$("#nivel");
+    var valor=$(".valor");
     var alumno_id=$("#alumno_id").val();
     var representante_id=$("#representante_id").val();
     var escenario_id=$("#escenario_id").val();
@@ -197,22 +245,42 @@ $("#dia_id").change(function (event) {
         data: datos,
         success: function (response) {
             //console.log(response);
-            if ( typeof response.msg_error !=='undefined'){
-                swal("Error!", response.msg_error, "error");
-            }else {
-                if (response.horario.length<=0){
-                    swal("Error!", "La edad del alumno es "+ response.edad +". No cumple con el rango de edad para los días seleccionado", "error");
-                    horario.find("option:gt(0)").remove();
-                    horario.addClass("teal-text");
-                }else{
-                    horario.find("option:gt(0)").remove();
-                    horario.addClass("teal-text");
-                    for (i = 0; i < response.horario.length; i++) {
-                        horario.append('<option value="' + response.horario[i].horario_id + '">' + response.horario[i].start_time + ' ' + response.horario[i].end_time + ' ( ' + response.horario[i].init_age + ' - ' + response.horario[i].end_age + ' años ) </option>');
-                    }
+            // if ( typeof response.msg_error !=='undefined'){
+            //     swal("Error!", response.msg_error, "error");
+            // }else {
+            //     if (response.horario.length<=0){
+            //         swal("Error!", "La edad del alumno es "+ response.edad +". No cumple con el rango de edad para los días seleccionado", "error");
+            //         horario.find("option:gt(0)").remove();
+            //         horario.addClass("teal-text");
+            //     }else{
+            //         horario.find("option:gt(0)").remove();
+            //         horario.addClass("teal-text");
+            //         for (i = 0; i < response.horario.length; i++) {
+            //             horario.append('<option value="' + response.horario[i].horario_id + '">' + response.horario[i].start_time + ' ' + response.horario[i].end_time + ' ( ' + response.horario[i].init_age + ' - ' + response.horario[i].end_age + ' años ) </option>');
+            //         }
+            //     }
+            //     horario.material_select();
+            // }
+            if (response.horario.length > 0 ) {
+                horario.find("option:gt(0)").remove();
+                horario.addClass("teal-text");
+                for (i = 0; i < response.horario.length; i++) {
+                    horario.append('<option value="' + response.horario[i].horario_id + '">' + response.horario[i].start_time + ' ' + response.horario[i].end_time + ' ( ' + response.horario[i].init_age + ' - ' + response.horario[i].end_age + ' años ) </option>');
                 }
-                horario.material_select();
+            } else if ( response.river === false ) {
+                swal("", 'La edad del alumno es ' + response.edad + ', nació en el año ' + response.anio_init +' . No cumple con el rango para el curso.', "error");
+                horario.find("option:gt(0)").remove();
+                nivel.find("option:gt(0)").remove();
+            } else if ( response.river === true ) {
+                swal("", 'El inscrito nació en el año ' + response.anio_nac +'. No cumple con el requisito para el curso.', "error");
+                horario.find("option:gt(0)").remove();
+                nivel.find("option:gt(0)").remove();
             }
+            valor.removeClass("teal-text");
+            valor.val('0.00');
+            horario.material_select();
+            nivel.material_select();
+
         },
         error: function (response) {
             // console.log(response);
@@ -220,9 +288,9 @@ $("#dia_id").change(function (event) {
     });
 });
 
-//cargar nivel al seleccionar el dia y el horario paso todos los parametros pa determinar el programa al k pertenecen
 $("#horario_id").change(function (event) {
     var nivel=$("#nivel");
+    var valor=$(".valor");
     var escenario_id=$("#escenario_id").val();
     var disciplina_id=$("#disciplina_id").val();
     var modulo_id=$("#modulo_id").val();
@@ -241,16 +309,28 @@ $("#horario_id").change(function (event) {
         data: datos,
         success: function (response) {
              //console.log(response);
-            nivel.find("option:gt(0)").remove();
-            nivel.addClass("teal-text");
-            $.each(response, function(i, item) {
-                // item.id=calendar_id
-                nivel.append('<option value="' + item.id + '">' + item.nivel + ' ( ' + item.init_age + ' - ' + item.end_age +  ')</option>');
-            });
+            if (response==='error') {
+                swal("", 'No hay cupos disponible para el horario.', "error");
+            }else {
+                nivel.find("option:gt(0)").remove();
+                nivel.addClass("teal-text");
+                if (response.river ===true){
+                    for (i = 0; i < response.nivel.length; i++) {
+                        nivel.append('<option value="' + response.nivel[i].id + '">' + response.nivel[i].nivel + ' ( ' + response.nivel[i].init_age +  ')</option>');
+                    }
+                }else {
+                    for (i = 0; i < response.nivel.length; i++) {
+                        nivel.append('<option value="' + response.nivel[i].id + '">' + response.nivel[i].nivel + ' ( ' + response.nivel[i].init_age + ' - ' + response.nivel[i].end_age + ')</option>');
+                    }
+                }
+
             nivel.material_select();
+            }
+            valor.removeClass("teal-text");
+            valor.val('0.00');
         },
         error: function (response) {
-             //console.log(response);
+            //console.log(response);
         }
     });
 });
@@ -260,13 +340,33 @@ $("#nivel").change(function (event) {
     var calendar_id=$("#calendar_id");
     var program_id=$("#program_id");
     var valor = $(".valor");
-    var precio = $("#precio");
+    // var precio = $("#precio");
     var escenario_id=$("#escenario_id").val();
     var disciplina_id=$("#disciplina_id").val();
     var modulo_id=$("#modulo_id").val();
     var dia_id=$("#dia_id").val();
     var horario_id=$("#horario_id").val();
     var desc_emp = $("#descuento_empleado").val();
+    var matricula_river=$("#matricula_river");
+    matricula_river.val(false);
+
+    if (event.target.value == 'placeholder' ){
+        valor.val('0.00');
+        $("#pagar").prop('disabled', true);
+        return false;
+    }
+
+    var representante_id=$("#representante_id");
+    var alumno_id=$("#alumno_id");
+    var adulto = $("#adulto");
+
+    var ad=false;
+    var alumno=alumno_id.val();
+    if  (adulto.is(':checked')){
+         ad=true;
+         alumno=representante_id.val();
+    }
+
     var datos={
         escenario:escenario_id,
         disciplina:disciplina_id,
@@ -274,6 +374,8 @@ $("#nivel").change(function (event) {
         dia_id:dia_id,
         horario_id:horario_id,
         descuento_empleado:desc_emp,
+        adulto:ad,
+        alumno:alumno,
         calendar_id:event.target.value //xk en el value del select de nivel estoy pasando el calendar_id
     };
     var route="pre-inscripcion/curso";
@@ -282,20 +384,23 @@ $("#nivel").change(function (event) {
         type: "GET",
         data: datos,
         success: function (response) {
-            //console.log(response);
-            if (parseFloat(response.curso[0].cupos) > parseFloat(response.curso[0].contador)){
+            console.log(response);
+
+            if (parseFloat(response.curso.cupos) > parseFloat(response.curso.contador)){
                 calendar_id.empty();
                 program_id.empty();
-                calendar_id.val(response.curso[0].cID);//curso
-                program_id.val(response.curso[0].program_id);//programa
+                calendar_id.val(response.curso.id);//curso
+                program_id.val(response.curso.program_id);//programa
+
+                if (response.modulo_river===true){
+                    $(".mensaje_membresia").removeClass('hide');
+                    $("#mensaje_membresia").html(response.mensaje_matricula);
+                    $("#matricula_river").val(response.paga_matricula_river);
+                }
+
                 valor.addClass("teal-text");
                 valor.val(response.precio);
 
-                // if ( $("#familiar").is(':checked') && $("#cursos_session").val()<2 ){
-                //     $("#pagar").prop('disabled',true);
-                // }else{
-                //     $("#pagar").prop('disabled',false);
-                // }
 
             }else{
                 swal("Error!", "No hay disponibilidad para ese Curso", "error");
@@ -307,6 +412,8 @@ $("#nivel").change(function (event) {
         },
         error: function (response) {
             // console.log(response);
+            valor.removeClass("teal-text");
+            valor.val('0.00');
         }
     });
 

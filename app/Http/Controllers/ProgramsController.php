@@ -211,6 +211,12 @@ class ProgramsController extends Controller
         if (Auth::user()->hasRole(['administrator'])) {
 
             $program = Program::findOrFail($id);
+            $curso=Calendar::where('program_id',$id)->first();
+
+            if ($curso){
+                Session::flash('message_danger', 'No es posible eliminar el programa porque tiene cursos asociados');
+                return redirect()->back();
+            }
             $program->delete();
             Session::flash('message', 'Programa eliminado');
             return back();
@@ -256,6 +262,11 @@ class ProgramsController extends Controller
 
             $modulo = Modulo::where('id', $id)->first();
 
+            $modulo_river = 'n'; //no es un modulo de river plate
+            if ($modulo->esRiver()){
+                $modulo_river = 's'; //si es un modulo de river plate
+            }
+
             $inicio = $modulo->inicio;
             $inicio = new Carbon($inicio);
             $mes = $inicio->month;
@@ -282,7 +293,7 @@ class ProgramsController extends Controller
             return response()->json([
                 'escenarios' => $escenarios,
                 'estacion' => $estacion,
-
+                'river' =>$modulo_river
             ]);
         }
     }

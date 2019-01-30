@@ -77,7 +77,7 @@
         </div>
         <div class="modal-footer">
             <div class="left">
-                <span class="left-align text-muted red-text">Seleccione un resultado de su busquedad para agregarlo como representante, a continuación cierre esta ventana</span>
+                <span class="left-align text-muted red-text"> Para seleccionar un representante, agregar y cerrar esta ventana</span>
             </div>
             <div class="right">
                 {!! Form::button('Cerrar',['class'=>'modal-action modal-close waves-effect waves-light btn']) !!}

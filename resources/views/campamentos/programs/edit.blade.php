@@ -41,7 +41,7 @@
                         </div>
 
                         <div class="file-field input-field  col l4 m6 s6">
-                            @if ($program->imagen=='NULL')
+                            @if (!isset($program->imagen))
                                 <i class="fa fa-2x fa-image prefix" aria-hidden="true"></i>
                                 {!! Form::text('imagen','Imagen',['class'=>'file-path validate']) !!}
                                 {!! Form::file('imagen') !!}
@@ -56,6 +56,16 @@
                         {{--{!! Form::label('cuposT','Cupos:') !!}--}}
                         {{--{!! Form::number('cuposT',null,['class'=>'validate' ,'placeholder'=>'0' ,'required']) !!}--}}
                         {{--</div>--}}
+
+                        <div class="row">
+                            <div class="col s12">
+                                <blockquote>
+                                    <h6>
+                                        La matrícula en los módulos de River Plate incluye el precio del uniforme
+                                    </h6>
+                                </blockquote>
+                            </div>
+                        </div>
 
                     </div>
 

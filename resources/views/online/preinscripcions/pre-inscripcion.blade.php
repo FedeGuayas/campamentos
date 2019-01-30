@@ -35,22 +35,30 @@
 
     <div class="no-pad">
         <div class="container">
-            <h5 class="header center flow-text teal-text">PREINSCRIPCIONES CAMPAMENTOS DEPORTIVOS</h5>
+            <h5 class="header center flow-text teal-text">Preinscripción Campamentos Deportivos</h5>
+        </div>
+    </div>
+    <div class="row">
+        <div class="container">
+        <blockquote>
+            <hp>Si se encuentra registrado como representante de click en el lupa.
+            Si no está registrado de click en + </hp>
+        </blockquote>
+
         </div>
     </div>
 
     <div class="container">
         <div class="row">
-            <div class="col s12">
+            <div class="col m12">
 
                 <div class="card-panel">
                     <div class="card-content">
                         {!! Form::open(['route'=>'pre-inscripcions.store', 'method'=>'POST', 'class'=>'form_noEnter', 'id'=>'form_inscripcion'])  !!}
                         {!! Form::hidden('calendar_id',null,['id'=>'calendar_id']) !!}
                         {!! Form::hidden('program_id',null,['id'=>'program_id']) !!}
-                        {!! Form::hidden('descuento_empleado',null,['id'=>'descuento_empleado']) !!} {{--Capturo si es empleado, true or false--}}
-                        {!! Form::hidden('descuento_estacion',null,['id'=>'descuento_estacion']) !!}  {{--Capturo la estacion actual VERANO o INVIERNO--}}
-                        {{--{!! Form::hidden('user_id',Auth::user()->id) !!}--}}
+                        {!! Form::hidden('descuento_empleado',null,['id'=>'descuento_empleado']) !!} {{--si es empleado--}}
+                        {!! Form::hidden('matricula_river',null,['id'=>'matricula_river']) !!}
 
                         @include('alert.request')
                         @include('alert.success')
@@ -149,23 +157,39 @@
                                 {!! Form::select('fpago_id',$fpagos,null, ['placeholder'=>'Seleccione forma de pago','id'=>'fpago_id']) !!}
                                 {!! Form::label('fpago_id', 'Forma de pago:*') !!}
                             </div>
-                            <div class="col m3 s12">
-                                <div class="input-field disabled pull-right">
+                            {{--<div class="col m3 s12">--}}
+                                {{--<div class="input-field disabled pull-right">--}}
+                                    {{--<i class="fa fa-usd prefix" aria-hidden="true"></i>--}}
+                                    {{--{!! Form::label('valor','Valor:') !!}--}}
+                                    {{--{!! Form::number('valor',null,['placeholder'=>'0.00','style'=>'font-size: large','readonly', 'class'=>'valor' ]) !!}--}}
+                                {{--</div>--}}
+                            {{--</div>--}}
+                        </div>
+
+                        <div class="row">
+                            <div class="col s3 left">
+                                <div class="input-field disabled">
                                     <i class="fa fa-usd prefix" aria-hidden="true"></i>
                                     {!! Form::label('valor','Valor:') !!}
                                     {!! Form::number('valor',null,['placeholder'=>'0.00','style'=>'font-size: large','readonly', 'class'=>'valor' ]) !!}
                                 </div>
                             </div>
+                            <div  class="col s8 right mensaje_membresia hide">
+                                <h6>
+                                    <blockquote>
+                                        <p id="mensaje_membresia"></p>
+                                    </blockquote>
+                                </h6>
+
+                            </div>
+
                         </div>
 
                         <div class="row">
                             <div class="col m3 s12">
                                 <ul class="collapsible" data-collapsible="accordion">
                                     <li>
-                                        <div class="collapsible-header"><i class="material-icons">assignment</i>Términos
-                                            y Condiciones
-
-                                        </div>
+                                        <div class="collapsible-header"><i class="material-icons">assignment</i>Términos</div>
                                         <div class="collapsible-body">
                                             <a href="#terminos-modal" class="waves-effect waves-light tooltipped  btn"
                                                data-position="top" data-delay="50" data-tooltip="Leer Términos"><i
@@ -184,7 +208,7 @@
                             <div class="col m4 s12">
                                 <div class="input-field">
                                     {!! Form::checkbox('terms',null,false,['id'=>'terms','class'=>'terms' , 'disabled']) !!}
-                                    {!! Form::label('terms','Aceptar Términos y Condiciones',['class'=>'terms']) !!}
+                                    {!! Form::label('terms','Aceptar Términos',['class'=>'terms']) !!}
                                 </div>
                             </div>
                             <div class="col m5 s12 pull-right">
@@ -193,6 +217,7 @@
                                 {!! Form::button('<i class="fa fa-play right" aria-hidden="true"></i> Guardar',['id'=>'pagar','disabled','class'=>'btn waves-effect waves-light darken-1 tooltipped','data-position'=>'top', 'data-delay'=>'50', 'data-tooltip'=>'Guardar','type'=>'submit']) !!}
                             </div>
                         </div>
+                        <p>Para guardar la preinscripción debe seleccionar la forma de pago y Aceptar los Términos</p>
                     </div><!--/.card content-->
 
                     {!! Form::close() !!}

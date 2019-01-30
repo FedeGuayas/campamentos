@@ -6,29 +6,38 @@
 
 
     <div class="row">
-        <div class="col l12">
+        <div class="col s12">
             <div class="card-panel">
                 <ul class="tabs">
-                    <li class="tab col s4"><a class="active" href="#inscripcion"><h5><i class="fa fa-pencil-square-o"
-                                                                                        aria-hidden="true"></i>
-                                Inscripción</h5></a></li>
+                    <li class="tab col s4">
+                        <a class="active" href="#inscripcion">
+                            <h5><i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                <span class="hide-on-med-and-down">Inscripción</span>
+                            </h5>
+                        </a>
+                    </li>
                     <li class="tab col s4">
                         <a href="#detalle" id="getCurso">
                             <h5><i class="fa fa-shopping-cart" aria-hidden="true"></i>
-                                Detalle
+                                <span class="hide-on-med-and-down">Detalle</span>
                                 <span class="label label-danger">{{Session::has('curso') ? Session::get('curso')->totalCursos : ''}}</span>
                             </h5>
                         </a>
                     </li>
-                    <li class="tab col s4 "><a href="#facturacion"><h5><i class="fa fa-money" aria-hidden="true"></i>
-                                Facturación</h5></a></li>
+                    <li class="tab col s4 ">
+                        <a href="#facturacion">
+                            <h5><i class="fa fa-money" aria-hidden="true"></i>
+                                <span class="hide-on-med-and-down">Facturación</span>
+                            </h5>
+                        </a>
+                    </li>
                 </ul>
             </div>
         </div>
     </div>
 
     <div class="row">
-        <div class="col  s12">
+        <div class="col s12">
             <div class="card-panel">
                 {{--<h5 class="header teal-text text-darken-2">Inscripción</h5>--}}
                 <div id="inscripcion">
@@ -69,7 +78,7 @@
                 in_duration: 300, // Transition in duration
                 out_duration: 200, // Transition out duration
                 starting_top: '4%', // Starting top style attribute
-                ending_top: '2%', // Ending top style attribute
+                ending_top: '2%' // Ending top style attribute
             });
 
         });
@@ -95,7 +104,7 @@
                 in_duration: 300, // Transition in duration
                 out_duration: 200, // Transition out duration
                 starting_top: '4%', // Starting top style attribute
-                ending_top: '2%', // Ending top style attribute
+                ending_top: '2%' // Ending top style attribute
             });
         });
 
