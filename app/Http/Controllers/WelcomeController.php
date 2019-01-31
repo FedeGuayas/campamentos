@@ -17,20 +17,43 @@ class WelcomeController extends Controller
     public function welcome(Request $request)
     {
         $fecha_actual = Carbon::today();
-        $year=$fecha_actual->year;
-        $month=$fecha_actual->month;
+        $year = $fecha_actual->year;
+        $month = $fecha_actual->month;
 
-        $cursos=Calendar::with('program','dia','horario')
+        $cursos = Calendar::with('program', 'dia', 'horario')
             ->join('programs', 'programs.id', '=', 'calendars.program_id')
             ->join('modulos', 'modulos.id', '=', 'programs.modulo_id')
-            ->where('inicio','>',$fecha_actual)
+            ->where('inicio', '>', $fecha_actual)
 //          ->take(5)
             ->get();
 
 //  dd($cursos);
-        return view('welcome',compact('cursos','year','month'));
+        return view('welcome', compact('cursos', 'year', 'month'));
     }
 
+
+    public function searchCurso(Request $request)
+    {
+        $termino = $request->termino;
+        $fecha_actual = Carbon::today();
+
+        $cursos = Calendar::with('program', 'dia', 'horario')
+            ->whereHas('program', function ($query) use ($termino, $fecha_actual) {
+                $query->where('activated', '=', '1')
+                    ->whereHas('disciplina', function ($query) use ($termino, $fecha_actual) {
+                        $query->where('disciplina', 'LIKE', "%$termino%");
+                    })
+                ->whereHas('modulo', function ($query) use ($fecha_actual) {
+                    $query ->where('inicio', '>', $fecha_actual)
+                        ->where('activated','=','1');
+                });
+            })
+            ->paginate(3);
+//            ->take(5)
+//            ->get();
+//dd($cursos);
+        return view('search-result', compact('termino','cursos'));
+    }
 
 
 }

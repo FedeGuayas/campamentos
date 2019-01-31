@@ -21,6 +21,14 @@
             <!-- Sweet Alert) -->
     {!! Html::style('plugins/sweetalert-master/dist/sweetalert.css') !!}
 
+    <style>
+        input[type="search"] {
+            height: 64px !important; /* or height of nav */
+        }
+
+
+    </style>
+
     @yield('style')
 </head>
 <body>

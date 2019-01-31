@@ -1,6 +1,7 @@
 <?php
 
 Route::get('/', 'WelcomeController@welcome');
+Route::get('/search-result',['as' => 'curso-search', 'uses'=>'WelcomeController@searchCurso']);
 
 //************** Preinscripcion Online ******************//
 //carga la vista de preinscripcion
