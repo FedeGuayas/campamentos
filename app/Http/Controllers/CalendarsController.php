@@ -566,7 +566,7 @@ class CalendarsController extends Controller
         
     /*****PRODUCTO venta del curso*****/
     /**
-     * Adicionar Cursos a la clase Multiple al dar en el boton de (+)
+     * Adicionar Cursos a la clase Multiple al dar en el boton de (+), multiple, familiar, primo, etc
      *
      * @param Request $request
      * @param $id
@@ -583,6 +583,11 @@ class CalendarsController extends Controller
         $representante=Representante::where('persona_id',$request->input('representante_id'))->with('persona')->first();
         
         $matricula=$request->input('matricula'); //true or false
+
+        $paga_matricula_river = $request->input('matricula_river'); //paga o no mebresia river true or false
+
+        $cancelado_mensual = $request->input('valor');
+
 
         $familiar=$request->input('familiar');//on or off,  10% familiares hermanos
         $primo=$request->input('primo');//on or off,  5% primos
@@ -608,6 +613,8 @@ class CalendarsController extends Controller
             'set_matricula'=>$matricula,
             'alumno'=>$alumno,
             'representante'=>$representante,
+            'paga_matricula_river' => $paga_matricula_river,
+            'cancelado_mensual' => $cancelado_mensual,
         ];
 
         //si hay un curso almacenado en la session lo tomo, sino le paso nulo
@@ -617,6 +624,7 @@ class CalendarsController extends Controller
         $multiples->addCursos($curso,$curso->id,$opciones);//Agrego este curso a la coleccion de cursos o carrito
         //pongo el curso en la session
         $request->session()->put('curso',$multiples);//idem a Session::put('curso',$multiples)
+//        return response()->json($request->session()->get('curso'));
 //        dd($request->session()->get('curso')); //idem a Session::get('curso')
         $message='Curso agregado a la colección';
         if ($request->ajax()){
@@ -648,32 +656,34 @@ class CalendarsController extends Controller
 
         $cursos=$cursos_coll->cursos; //objeto curso dentro del arreglo
         $precioTotal=$cursos_coll->totalPrecio; //suma de todas las mensualidades de los cursos en el carrito
-        $tipo_descuento=$cursos_coll->tipo_desc; //si es decuento familiar primo o multiple
+        $tipo_desc=$cursos_coll->tipo_desc; //si es decuento familiar primo o multiple
         $desc_emp=$cursos_coll->desc_empleado; //si es des por empleado
+        $matriculaTotal=$cursos_coll->totalMatricula; //suma de todas las matriculas de los cursos en el carrito
 
-        $matricula=0;
-        foreach ($cursos as $curso){
-            $matricula+=$curso['matricula']; //costo de la matricula en caso que aplique
-        }
+//        $matricula=0;
+//        foreach ($cursos as $curso){
+//            $matricula+=$curso['matricula']; //costo de la matricula en caso que aplique
+//        }
 
+        $descuento=0;
         if ($desc_emp=='true'){
             $desc=0.5; //50% empleado
             $descuento= $precioTotal*$desc; //mensualidadTotal*desc_empleado 
-            $tipo_descuento='empleado';
-        }else if ($tipo_descuento=='familiar' || $tipo_descuento=='multiple'){
+            $tipo_desc='empleado';
+        }else if ($tipo_desc=='familiar' || $tipo_desc=='multiple'){
             $desc=0.1; //10% desc hermanos y multiple
             $descuento=$precioTotal*$desc; //mensualidadTotal*desc
-        }else if ($tipo_descuento=='primo'){
+        }else if ($tipo_desc=='primo'){
             $desc=0.05; //5% desc primos
             $descuento=$precioTotal*$desc; //mensualidadTotal*desc
         }
 
-        $subTotal=$precioTotal + $matricula; //mensualidadTotal + matriculas
+        $subTotal=$precioTotal + $matriculaTotal; //mensualidadTotal + matriculaTotal
 
         $total=$subTotal-$descuento; //total aplicado los descuentos
 
 
-        return view('campamentos.inscripcions.partials.detalle',['cursos'=>$cursos,'descuento'=>$descuento,'total'=>$total,'tipo_desc'=>$tipo_descuento,'subTotal'=>$subTotal]);
+        return view('campamentos.inscripcions.partials.detalle',compact('cursos','descuento','total','tipo_desc','subTotal','precioTotal','matriculaTotal'));
     }
 
     /**

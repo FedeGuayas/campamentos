@@ -41,9 +41,9 @@
                                 class="btn-xs waves-effect waves-light dropdown-toggle">Eliminar <span
                                     class="caret"></span></button>
                         <ul class="dropdown-menu">
-                            <li><a href="{{route('inscripciones.restarUno',['id'=>$curso['curso']['id']])}}"><i
-                                            class="fa fa-trash-o red-text"></i> Quitar 1</a></li>
-                            <li class="divider"></li>
+                            {{--<li><a href="{{route('inscripciones.restarUno',['id'=>$curso['curso']['id']])}}"><i--}}
+                                            {{--class="fa fa-trash-o red-text"></i> Quitar 1</a></li>--}}
+                            {{--<li class="divider"></li>--}}
                             <li><a href="{{route('inscripciones.restarTodo',['id'=>$curso['curso']['id']])}}">Quitar
                                     todos</a></li>
                         </ul>
@@ -52,71 +52,55 @@
             </tr>
         @endforeach
         <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td><span class="text-danger"> $ {{ number_format($precioTotal,2,'.',' ')}}</span></td>
+            <td><span class="text-danger"> $ {{ number_format($matriculaTotal,2,'.',' ')}}</span></td>
+            <td><span class="text-danger"> $ {{ number_format($subTotal,2,'.',' ')}}</span></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
             <td></td><td></td><td></td><td></td><td></td>
             <td>DESCUENTO</td>
-            <td><span class="label label-warning"> $ {{ number_format($descuento,2,'.',' ')}}</span></td>
+            <td> <input type="text" id="descuento_factura" hidden  value="{{$descuento}}">
+                <span class="label label-success"> $ {{ number_format($descuento,2,'.',' ')}}</span></td>
             <td></td><td></td>
+        </tr>
+        <tr>
+            <td></td><td></td><td></td><td></td><td></td>
+            <td>Conceptos: </td>
+            <td>
+                @if($tipo_desc=='familiar')
+                    10% Inscripción Familiar
+                @endif
+                @if($tipo_desc=='multiple')
+                    10% Inscripción multiples meses
+                @endif
+                @if($tipo_desc=='empleado')
+                    50% Empleado
+                @endif
+            </td>
+            <td></td><td></td>
+        </tr>
+        <tr>
+            <td></td><td></td><td></td><td></td><td></td>
+            <td></td>
+            <td>
+            </td>
+            <td>Total:</td>
+            <td>
+                <input type="text" id="total_factura" hidden  value="{{$total}}">
+                <span class="text-primary"> ${{number_format($total,2,'.',' ')}}</span>
+            </td>
         </tr>
         </tbody>
 
     </table>
-
-    <div class="row">
-        <div class="col l8 pull-right">
-
-            <div class="row">
-                <div class="col l3">
-                    <h5>SubTotal: </h5>
-                </div>
-                <div class="col l9">
-                    <h5><span class="label label-success"> $ {{ number_format($subTotal,2,'.',' ')}}</span></h5>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col l3">
-                    <h5>Descuento:</h5>
-                </div>
-                <div class="col l9">
-                    <input type="text" id="descuento_factura" hidden  value="{{$descuento}}">
-                    <h5><span class="label label-warning"> $ {{ number_format($descuento,2,'.',' ')}}</span></h5>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col l3">
-                    <h5>Conceptos:</h5>
-                </div>
-                <div class="col l9">
-                    <h5>
-                        @if($tipo_desc=='familiar')
-                            10% Inscripción Familiar
-                        @endif
-                        @if($tipo_desc=='multiple')
-                            10% Inscripción multiples meses
-                        @endif
-                        @if($tipo_desc=='empleado')
-                            50% Empleado
-                        @endif
-                    </h5>
-
-                </div>
-
-            </div>
-
-            <div class="row">
-                <div class="col l3">
-                    <h5>Total: </h5>
-                </div>
-                <div class="col l9">
-                    <h5>
-                        <input type="text" id="total_factura" hidden  value="{{$total}}">
-                        <span class="label label-primary"> ${{number_format($total,2,'.',' ')}}</span>
-                    </h5>
-                </div>
-            </div>
-        </div>
-    </div>
 
 
 @else

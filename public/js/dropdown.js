@@ -111,7 +111,7 @@ $("#modulo_id").change(function (event) {
             estacion.val('RIVER PLATE');
             multiple.prop('disabled',true);
             multiple.prop('checked', false);
-            familiar.prop('disabled',true);
+            familiar.prop('disabled',false);
             familiar.prop('checked',false);
             primo.prop('disabled',true);
             primo.prop('checked',false);

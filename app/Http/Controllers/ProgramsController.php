@@ -36,7 +36,7 @@ class ProgramsController extends Controller
             ->join('disciplinas as d', 'd.id', '=', 'p.disciplina_id')
             ->join('modulos as m', 'm.id', '=', 'p.modulo_id')
             ->select('p.id', 'e.escenario', 'd.disciplina', 'm.modulo', 'matricula', 'p.activated', 'p.imagen')
-            ->where('p.activated',true)
+//            ->where('p.activated',true)
             ->where('m.activated',true)
             ->orderBy('e.escenario')->get();
 

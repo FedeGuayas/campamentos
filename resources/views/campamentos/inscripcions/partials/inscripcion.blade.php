@@ -114,25 +114,27 @@
         </div>
     </div>
 
-    <div class="row selecciones">
+
+    <div class="row">
         <div class="col l2">
             <div class="input-field">
                 {!! Form::checkbox('familiar',null,false,['id'=>'familiar']) !!}
                 {!! Form::label('familiar','Familiar (10%)') !!}
             </div>
         </div>
+        <div class="selecciones">
         <div class="col l2">
             <div class="input-field">
                 {!! Form::checkbox('primo',null,false,['id'=>'primo']) !!}
                 {!! Form::label('primo','Primos (5%)') !!}
             </div>
         </div>
-        <div class="col l2">
-            <div class="input-field">
-                {!! Form::checkbox('multiple',null,false,['id'=>'multiple','class'=>'multiple','disabled']) !!}
-                {!! Form::label('multiple','Multiple',['class'=>'multiple']) !!}
-            </div>
-        </div>
+        {{--<div class="col l2">--}}
+            {{--<div class="input-field">--}}
+                {{--{!! Form::checkbox('multiple',null,false,['id'=>'multiple','class'=>'multiple','disabled']) !!}--}}
+                {{--{!! Form::label('multiple','Multiple',['class'=>'multiple']) !!}--}}
+            {{--</div>--}}
+        {{--</div>--}}
         <div class="col l2">
             <div class="input-field">
                 {!! Form::checkbox('matricula',null,false,['id'=>'matricula']) !!}
@@ -153,7 +155,7 @@
                 </div>
             </div>
         @endif
-
+        </div>
     </div>
     <div class="row">
         <div class="col s3 left">

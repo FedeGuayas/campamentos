@@ -36,7 +36,7 @@
 </header>
 
 <div class="limpia_float content">
-    <table align="center" border="0" cellpadding="2" cellspacing="0" style=" width: 720px; font-size: 12px;">
+    <table align="center" border="0" cellpadding="2" cellspacing="0" style=" width: 720px; font-size: 11px;">
         <tr>
             <th align="left" style="text-decoration: underline; width: 350px;">DATOS DEL INSCRITO</th>
             <th align="left" style="text-decoration: underline;">DATOS DEL REPRESENTANTE</th>
@@ -71,7 +71,7 @@
 </div>
 <br>
 <div class="limpia_float">
-    <table align="center" border="0" cellpadding="2" cellspacing="0" style=" width: 720px;  font-size: 12px;">
+    <table align="center" border="0" cellpadding="2" cellspacing="0" style=" width: 720px;  font-size: 11px;">
         <tr>
             <th align="left" style="text-decoration: underline; width: 350px;">DATOS DEL CURSO</th>
             <th align="left" style="text-decoration: underline;">DATOS DE LA INSCRIPCION</th>

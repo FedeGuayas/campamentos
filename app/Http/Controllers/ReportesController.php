@@ -932,7 +932,7 @@ class ReportesController extends Controller
                 'nombrecomercial' => $insc->factura->representante->persona->getNombreAttribute(),
                 'RUC' => (int)$insc->factura->representante->persona->num_doc,
                 'Fecha' => (string)$insc->factura->created_at->format('d/m/Y'),
-                'Referencia' => 'INSCRIPCION CAMPAMENTOS' . '-' . $insc->calendar->program->disciplina->disciplina . '-' . $insc->calendar->program->escenario->escenario,
+                'Referencia' => 'INSCRIPCION CAMPAMENTOS' . '-' . $insc->calendar->program->disciplina->disciplina . '-' . $insc->calendar->program->escenario->escenario. '-'. $insc->factura->id,
                 'Comentario' => $insc->factura->id,
                 'CtaIngreso' => '6252499006133',
                 'Cantidad' => 1,

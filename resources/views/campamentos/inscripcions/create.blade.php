@@ -66,6 +66,13 @@
         var url_getParroquia = "{{route('getParroquia',':ID_Canton')}}";
 
         $(document).ready(function () {
+            var cursos_session=parseInt($("#cursos_session").val());
+
+            if (cursos_session > 1) {
+                $("#pagar").prop("disabled", false);
+            }else{
+                $("#pagar").prop("disabled", true);
+            }
 
             $("#modulo_id").material_select();
         });
@@ -537,8 +544,8 @@
 
     </script>
     {{--Script para select dinamico condicional dropdown --}}
-    <script src="{{ asset("js/updateCosto.js") }}" type="text/javascript"></script>
+    <script src="{{ asset("js/updateCosto.js?ver=2") }}" type="text/javascript"></script>
     {{--Script para select dinamico condicional dropdown --}}
-    <script src="{{ asset("js/dropdown.js") }}" type="text/javascript"></script>
+    <script src="{{ asset("js/dropdown.js?ver=2") }}" type="text/javascript"></script>
 
 @endsection

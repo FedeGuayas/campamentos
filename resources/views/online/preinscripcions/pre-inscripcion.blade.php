@@ -556,6 +556,6 @@
 
     </script>
 
-    <script src="{{ asset("js/pre-inscripcion.js") }}" type="text/javascript"></script>
+    <script src="{{ asset("js/pre-inscripcion.js?ver=2") }}" type="text/javascript"></script>
 
 @endsection

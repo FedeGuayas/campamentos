@@ -67,17 +67,16 @@ class InscripcionsController extends Controller
                 ->join('escenarios', 'escenarios.id', '=', 'programs.escenario_id')
                 ->join('disciplinas', 'disciplinas.id', '=', 'programs.disciplina_id')
                 ->join('horarios', 'horarios.id', '=', 'calendars.horario_id')
-                ->join('profesors', 'profesors.id', '=', 'calendars.profesor_id')
+                ->leftJoin('profesors', 'profesors.id', '=', 'calendars.profesor_id')
                 ->join('dias', 'dias.id', '=', 'calendars.dia_id')
                 ->join('facturas', 'facturas.id', '=', 'inscripcions.factura_id')
                 ->join('representantes', 'representantes.id', '=', 'facturas.representante_id')
                 ->join('personas', 'personas.id', '=', 'representantes.persona_id')
-                //    ->join('alumnos','alumnos.id','=','inscripcions.alumno_id')
-                //  ->join('personas','personas.id','=','alumnos.persona_id')
+//                    ->join('alumnos','alumnos.id','=','inscripcions.alumno_id')
+//                  ->join('personas','personas.id','=','alumnos.persona_id')
                 ->select('inscripcions.id', 'inscripcions.alumno_id', 'inscripcions.factura_id', 'inscripcions.calendar_id', 'inscripcions.user_id', 'inscripcions.created_at', 'programs.disciplina_id', 'programs.escenario_id', 'modulos.modulo', 'inscripcions.escenario_id as pto_cobro')
                 ->where('estado', 'Pagada')
                 ->limit(30);
-
 
             $action_buttons = '
                                 <a href="{{  route(\'admin.reports.pdf\',[$id] ) }}" target="_blank">
@@ -531,7 +530,7 @@ public function store(Request $request)
                 $factura->total = $valor; //costo de la inscripcion
 
 
-                if ($modulo->esRiver()) { //descuentos y matricula river
+                if ($modulo->esRiver()) { //calcular descuentos y matricula river
 
                     if ($paga_matricula_river == 'true') { //paga la membresia o matricula
                         $sub = $valor - $matricula;
@@ -589,7 +588,7 @@ public function store(Request $request)
                     $descuentos->save();
                 }
 
-                if ($request->input('descuento_empleado') == 'true' && !$modulo->esRiver() && $request->input('valor') > 0) {
+                if ($request->input('descuento_empleado') == 'true' && $request->input('valor') > 0) {
                     $descuentos = new Descuento();
                     $descuentos->factura()->associate($factura);
                     $descuentos->descripcion = 'DESCUENTO EMPLEADO';
@@ -694,10 +693,9 @@ public function store(Request $request)
 
         //si es inscripcion variada tiene que estar marcado o familiar o multiple
         if (Session::get('curso')->totalCursos > 0 && ($request->input('familiar') == false && $request->input('multiple') == false && $request->input('primo') == false)) {
-            Session::flash('message_danger', 'Debe seleccionar Familiar, Multiple o Primo , según corresponda');
+            Session::flash('message_danger', 'Esta guardando mas de una inscripción al mismo tiempo, debe seleccionar Familiar, Multiple o Primo , según corresponda');
             return redirect()->back();
         }
-
 
         $oldCurso = Session::get('curso');//obtengo la variable de la session
         $cart = new Multiples($oldCurso); //creo una instancia de la clase
@@ -705,6 +703,7 @@ public function store(Request $request)
         $cursos = $cart->cursos;  //arreglo con los cursos agrupados por curso Items
 
         $precioTotal = $cart->totalPrecio;//precio unitario de la compra de los cursos sin matricula
+        $matriculaTotal = $cart->totalMatricula;
         $tipo_descuento = $cart->tipo_desc; //tipo de desceunto aplicado
         $desc_emp = $cart->desc_empleado;//true o false
 
@@ -724,12 +723,7 @@ public function store(Request $request)
             $descuento = $precioTotal * $desc2; //descuento aplicado a la mensualidad total
         }
 
-        $matricula = 0;
-        foreach ($cursos as $curso) {
-            $matricula += $curso['matricula']; //costo de la matricula
-        }
-
-        $total = ($precioTotal + $matricula) - $descuento; //total con descuentos aplicados
+        $total = ($precioTotal + $matriculaTotal) - $descuento; //total con descuentos aplicados
 
         try {
             DB::beginTransaction();
@@ -739,6 +733,11 @@ public function store(Request $request)
                 $pto_cobro = 'N/A';
             } else  $pto_cobro = $user->escenario_id;
             $pago_id = $request->input('fpago_id');
+
+            if ($pago_id == '') {
+                Session::flash('message_danger', 'debe seleccionar una forma de pago');
+                return redirect()->back();
+            }
             $fpago = Pago::findOrFail($pago_id); //forma de pago
 
             $representante = $cart->representante;
@@ -782,10 +781,14 @@ public function store(Request $request)
                     return redirect()->back();
                 }
 
+                $modulo=$calendar->program->modulo;
+
                 foreach ($curso['alumno'] as $alumno) {//por cada alumno en cada curso hago una incripcion
+
                     $inscripcion = new Inscripcion();
                     $inscripcion->mensualidad = $calendar->mensualidad;
-                    $inscripcion->matricula = $curso['matricula'] / $curso['qty'];
+                    $inscripcion->matricula = $alumno['matricula_mensual'];
+                    $inscripcion->cancelado_mensual = $alumno['cancelado_mensual'];
                     $inscripcion->calendar()->associate($calendar);
                     $inscripcion->factura()->associate($factura);
                     $inscripcion->user()->associate($user);
@@ -797,8 +800,25 @@ public function store(Request $request)
 
                     if ($alumno->id == $representante->id) {//adulto por tanto el rep =alumno
                         $inscripcion->alumno_id = 0;
+                        $ins_adulto=true;
                     } else {
                         $inscripcion->alumno_id = $alumno->id;
+                        $ins_adulto=false;
+                    }
+
+                    if ($ins_adulto) { //si es una inscripcion para adulto
+                        $alumno_insc = $representante;
+                    } else {
+                        $inscripcion->alumno_id = $alumno->id;
+                        $alumno_insc = $alumno;
+                    }
+
+                    if ($modulo->esRiver()) {
+                        $nuevo_inscrito_river = new UserModulo();
+                        $nuevo_inscrito_river->persona_id = $alumno_insc->persona->id;
+                        $nuevo_inscrito_river->modulo_id = $modulo->id;
+                        $nuevo_inscrito_river->anio = $periodo->periodo;
+                        $nuevo_inscrito_river->save();
                     }
 
                     $inscripcion->save();
@@ -1103,6 +1123,24 @@ public function destroy(Request $request, $id)
 
             $inscripcion = Inscripcion::where('id', $id)->with('factura', 'calendar', 'user', 'alumno')->first();
 
+            $modulo=$inscripcion->calendar->program->modulo;
+
+            if ($modulo->esRiver()){
+                $periodo = Configuracione::where('id', 1)->first();
+                if ($inscripcion->alumno_id == 0) { //si es una inscripcion para adulto
+                    $alumno = Representante::where('persona_id',$inscripcion->factura->representante->persona_id)->with('persona')->first(); //adulto
+                } else {
+                    $alumno = Alumno::where('id', $inscripcion->alumno_id)->with('persona')->first();
+                }
+                $inscrito_river =  UserModulo::where('modulo_id',$modulo->id)
+                    ->where('persona_id',$alumno->persona_id)
+                    ->where('anio',$periodo->periodo)
+                    ->first() ;
+                if (isset($inscrito_river)){
+                    $inscrito_river->delete();
+                }
+            }
+
             $calendar_id = $inscripcion->calendar_id;
             $calendar = Calendar::findOrFail($calendar_id);
 
@@ -1174,12 +1212,6 @@ public function costoUpdate(Request $request)
 
         $modulo = Modulo::where('id', $modulo_id)->first();
 
-//            $matricula = Program::
-//            select('matricula')
-//                ->where('escenario_id', $escenario_id)
-//                ->where('disciplina_id', $disciplina_id)
-//                ->where('modulo_id', $modulo_id)->first();
-
         //Al seleccionar el nivel
         $dia_id = $request->get('dia_id');
         $horario_id = $request->get('horario_id');
@@ -1216,19 +1248,30 @@ public function costoUpdate(Request $request)
 
             }
 
+            $descuento = 0;
+            if ($request->input('descuento_empleado') == 'true') {
+                $desc = 0.5; //50%
+                $descuento = $mes * $desc;
+            } else if ($request->input('descuento_familiar') == 'true') {
+                $desc = 0.1; //10%
+                $descuento = $mes * $desc;
+            }
+
+
             $periodo = Configuracione::where('id', 1)->first();
             $inscrito_anterior = UserModulo::where('persona_id', $alumno->persona->id)->where('anio', $periodo->periodo)->first();
 
             if (isset($inscrito_anterior)) { //no paga matricula
-                $precio = $mes;
+                $precio = $mes - $descuento;
                 $mensaje_matricula = 'El usuario ya se encuentra inscrito en un módulo en el presente período. No tiene que pagar membresía';
                 $paga_matricula_river = false;
             } else { //paga matricula
                 $mat = $matricula;
-                $precio = $mat + $mes;
+                $precio = $mat + $mes - $descuento;
                 $mensaje_matricula = 'Al valor de la inscripión se le ha incrementado el costo de la membresía ( $ ' . $mat . '). Este valor es cobrado una sola vez en el año ';
                 $paga_matricula_river = true;
             }
+
 
             $precio = number_format($precio, 2, '.', ' ');
             return response(['precio' => $precio, 'modulo_river' => true, 'mensaje_matricula' => $mensaje_matricula, 'paga_matricula_river' => $paga_matricula_river]);
