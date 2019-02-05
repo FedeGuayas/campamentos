@@ -9,29 +9,76 @@
 
 
     {{--Banner imagen Parallax--}}
-    <div id="index-banner" class="parallax-container banner-content flex-center">
-        <div class="section no-pad-bot">
-            <div class="container flow-text">
-                <h2 class="header center teal-text text-lighten-2 animated fadeInDown">Campamentos Deportivos</h2>
+    {{--<div id="index-banner" class="parallax-container banner-content flex-center">--}}
+    {{--<div class="section no-pad-bot">--}}
+    {{--<div class="container flow-text">--}}
+    {{--<h2 class="header center teal-text text-lighten-2 animated fadeInDown">Campamentos Deportivos</h2>--}}
+    {{--<div class="row center">--}}
+    {{--<h5 class="header col s12 light wow fadeIn" data-wow-delay="0.5s">La mejor opción para ejercitar y--}}
+    {{--disfrutar en familia.</h5>--}}
+    {{--</div>--}}
+    {{--@if (Auth::guest())--}}
+    {{--<div class="row center">--}}
+    {{--<a href="{{url('/login')}}"--}}
+    {{--class="waves-effect waves-light btn btn-large teal lighten-1 animated flipInX"--}}
+    {{--data-wow-delay="1.5s"><i class="material-icons right">input</i>Entrar</a>--}}
+    {{--<a href="{{ url('/register') }}"--}}
+    {{--class="waves-effect waves-light btn btn-large teal lighten-1 animated flipInX"--}}
+    {{--data-wow-delay="1.5s"><i class="material-icons right">fingerprint</i>Registrarse</a>--}}
+    {{--</div>--}}
+    {{--@endif--}}
+    {{--</div>--}}
+    {{--</div>--}}
+    {{--<div class="parallax">--}}
+    {{--<img src="{{asset('img/camp/the-ball-cancha.jpg')}}" style=" opacity: 100; " alt="background img 1">--}}
+    {{--</div>--}}
+    {{--</div>--}}
+
+    <div class="container banner-content">
+        <div class="section no-pad-bot" id="slider">
+            <div class="slider fullscreen">
+                <ul class="slides">
+                    <li>
+                        <img src="{{asset('img/camp/the-ball-cancha.jpg')}}"> <!-- random image -->
+                        <div class="caption center-align z-depth-5 hoverable">
+                            <h2 class="">Sistema de Campamentos Deportivos</h2>
+                            <h3>Y</h3>
+                            <h2>Escuela de Futbol</h2>
+                            <h2 class="">Fedeguayas - River Plate</h2>
+                        </div>
+                    </li>
+                    <li>
+                        <img src="{{asset('img/camp/river.jpg')}}"> <!-- random image -->
+                        <div class="caption left-align">
+                        </div>
+                    </li>
+                    <li>
+                        <img src="{{asset('img/camp/nadador-min.jpg')}}"> <!-- random image -->
+                        <div class="caption right-align">
+                        </div>
+                    </li>
+                    <li>
+                        <img src="{{asset('img/camp/ciclismo.jpg')}}"> <!-- random image -->
+                        <div class="caption center-align">
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="buttons-wrapper">
                 <div class="row center">
-                    <h5 class="header col s12 light wow fadeIn" data-wow-delay="0.5s">La mejor opción para ejercitar y disfrutar en familia.</h5>
+                    <a href="{{route('online.preinscripcion')}}" class="waves-effect waves-light  hoverable mg-rg btn-large red accent-4 pulse" style="width: 50%;"><i
+                                class="material-icons">edit</i>
+                        Inscríbete Aquí!
+                    </a>
                 </div>
-                @if (Auth::guest())
-                    <div class="row center">
-                        <a href="{{url('/login')}}"
-                           class="waves-effect waves-light btn btn-large teal lighten-1 animated flipInX"
-                           data-wow-delay="1.5s"><i class="material-icons right">input</i>Entrar</a>
-                        <a href="{{ url('/register') }}"
-                           class="waves-effect waves-light btn btn-large teal lighten-1 animated flipInX"
-                           data-wow-delay="1.5s"><i class="material-icons right">fingerprint</i>Registrarse</a>
-                    </div>
-                @endif
+            </div>
+            <div class="foot-slider-contact">
+                <h6 class="waves-effect waves-light btn  indigo accent-4">Comunícate con nosotros! 042367856 - WhatsApp: 0998848174</h6>
             </div>
         </div>
-        <div class="parallax">
-            <img src="{{asset('img/camp/the-ball-cancha.jpg')}}" style=" opacity: 100; " alt="background img 1">
-        </div>
     </div>
+
+
 
     {{--Seccion de las disciplinas--}}
     <div class="container">
@@ -44,25 +91,7 @@
 
             <div class="row">
 
-                {{--<div class="carousel-fixed-item center">--}}
-                {{--<div class="control-center-up center-align">--}}
-                    {{--<a class="btn-floating waves-effect blue-grey waves-purple" href="#myCarousel"--}}
-                       {{--data-slide="prev"><i class="fa fa-chevron-left"></i><span class="sr-only">Anterior</span></a>--}}
-                    {{--<a class="btn-floating waves-effect blue-grey waves-purple"  href="#myCarousel"--}}
-                       {{--data-slide="next"><i class="fa fa-chevron-right"></i><span class="sr-only">Siguiente</span></a>--}}
-                {{--</div>--}}
-                {{--</div>--}}
-
-                        <!-- Left and right controls -->
-                {{--<a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">--}}
-                    {{--<span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>--}}
-                    {{--<span class="sr-only">Previous</span>--}}
-                {{--</a>--}}
-                {{--<a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">--}}
-                    {{--<span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>--}}
-                    {{--<span class="sr-only">Next</span>--}}
-                {{--</a>--}}
-{{--             @foreach($cursos->chunk(3) as $cursosChunck)--}}
+                {{--             @foreach($cursos->chunk(3) as $cursosChunck)--}}
                 @foreach($cursos as $curso)
                     @if(($curso->cupos - $curso->contador) >=1)
                         <div class="col s4 m4">
@@ -70,40 +99,41 @@
                                  data-wow-delay="0.3s">
                                 <div class="card-image waves-effect waves-block waves-light">
                                     @if($curso->program->imagen)
-                                    <img class="activator" src="{{ asset('/img/camp/disciplinas/'.$curso->program->imagen)}}" style="max-height: 300px;">
+                                        <img class="activator"
+                                             src="{{ asset('/img/camp/disciplinas/'.$curso->program->imagen)}}"
+                                             style="max-height: 300px;">
                                     @else
                                         <img class="activator" src="{{ asset('/img/camp/fdg-logo.png')}}">
                                     @endif
                                 </div>
                                 <div class="card-content">
-                                    <span class="card-title activator grey-text text-darken-4" >
+                                    <span class="card-title activator grey-text text-darken-4">
                                         Curso
                                         <i class="material-icons right">more_vert</i>
                                     </span>
                                     <p>
-                                        {{$curso->program->disciplina->disciplina}} / {{$curso->program->escenario->escenario}}
+                                        {{$curso->program->disciplina->disciplina}}
+                                        / {{$curso->program->escenario->escenario}}
                                     </p>
                                     <p style="font-size: 10px;">
-                                        {{$curso->dia->dia}} / {{$curso->horario->start_time.' - '.$curso->horario->end_time}} / {{ $curso->init_age.'-'.$curso->end_age}} años
+                                        {{$curso->dia->dia}}
+                                        / {{$curso->horario->start_time.' - '.$curso->horario->end_time}}
+                                        / {{ $curso->init_age.'-'.$curso->end_age}} años
                                     </p>
                                 </div>
                                 <div class="card-action">
                                     <div class="clearfix">
                                         <div class="pull-left price teal-text">
                                             $ {{number_format($curso->mensualidad,2,'.',' ')}}</div>
-                                        <a class="waves-effect waves-light btn-floating blue pull-right"> <i class="material-icons">check</i></a>
-                                        {{--@if (Auth::guest())--}}
-                                            {{--<a href="{{url('/login')}}"--}}
-                                               {{--class="waves-effect waves-light btn pull-right">Entrar</a>--}}
-                                        {{--@else--}}
-                                            {{--<a class="waves-effect waves-light btn pull-right">Pagar</a>--}}
-                                        {{--@endif--}}
+                                        <a class="waves-effect waves-light btn-floating blue pull-right"> <i
+                                                    class="material-icons">check</i></a>
                                     </div>
                                 </div>
                                 <div class="card-reveal">
                                     <span class="card-title grey-text text-darken-4">{{$curso->program->disciplina->disciplina}}
                                         <i class="material-icons right">close</i></span>
-                                    <table class="table highlight responsive-table" cellspacing="0" width="100%" style="width: 100%">
+                                    <table class="table highlight responsive-table" cellspacing="0" width="100%"
+                                           style="width: 100%">
                                         <tr>
                                             <th>Escenario</th>
                                             <td>{{$curso->program->escenario->escenario}}</td>
@@ -137,14 +167,14 @@
                                             <th>Edades</th>
                                             <td>{{ $curso->init_age.'-'.$curso->end_age}} años</td>
                                         </tr>
-                                            </table>
-                                        </div>
-                                    </div>
+                                    </table>
                                 </div>
-                            @endif
-                        @endforeach
+                            </div>
+                        </div>
+                    @endif
+                @endforeach
 
-                    {{--@endforeach--}}
+                {{--@endforeach--}}
 
 
                 {{--</div>--}}
@@ -188,73 +218,73 @@
 
     {{--Imagen Parllax--}}
     {{--<div class="parallax-container valign-wrapper">--}}
-        {{--<div class="section no-pad-bot">--}}
-            {{--<div class="container">--}}
-                {{--<div class="row center">--}}
-                    {{--<h5 class="header col s12 light">Nuestras canchas son de primer nivel</h5>--}}
-                {{--</div>--}}
-            {{--</div>--}}
-        {{--</div>--}}
-        {{--<div class="parallax"><img src="{{asset('img/camp/the-ball-cancha.jpg')}}"--}}
-                                   {{--alt="Unsplashed background img 2"></div>--}}
+    {{--<div class="section no-pad-bot">--}}
+    {{--<div class="container">--}}
+    {{--<div class="row center">--}}
+    {{--<h5 class="header col s12 light">Nuestras canchas son de primer nivel</h5>--}}
+    {{--</div>--}}
+    {{--</div>--}}
+    {{--</div>--}}
+    {{--<div class="parallax"><img src="{{asset('img/camp/the-ball-cancha.jpg')}}"--}}
+    {{--alt="Unsplashed background img 2"></div>--}}
     {{--</div>--}}
 
     {{--Seccion de los Beneficios--}}
     {{--<div class="container">--}}
-        {{--<div class="section" id="beneficios">--}}
-            {{--<div class="section-title">--}}
-                {{--<div class="divider-new wow bounce" data-wow-duration="0.5s">--}}
-                    {{--<h2 class="h2-responsive wow fadeInDown">Beneficios</h2>--}}
-                {{--</div>--}}
-            {{--</div>--}}
-
-            {{--<div class="slider">--}}
-                {{--<ul class="slides">--}}
-                    {{--<li>--}}
-                        {{--<img src="http://lorempixel.com/580/250/nature/1"> <!-- random image -->--}}
-                        {{--<div class="caption center-align">--}}
-                            {{--<h3>Texto llamativo!</h3>--}}
-                            {{--<h5 class="light grey-text text-lighten-3">Poner aki algun slogan.</h5>--}}
-                        {{--</div>--}}
-                    {{--</li>--}}
-                    {{--<li>--}}
-                        {{--<img src="http://lorempixel.com/580/250/nature/2"> <!-- random image -->--}}
-                        {{--<div class="caption left-align">--}}
-                            {{--<h3>Texto llamativo!</h3>--}}
-                            {{--<h5 class="light grey-text text-lighten-3">Poner aki algun slogan.</h5>--}}
-                        {{--</div>--}}
-                    {{--</li>--}}
-                    {{--<li>--}}
-                        {{--<img src="http://lorempixel.com/580/250/nature/3"> <!-- random image -->--}}
-                        {{--<div class="caption right-align">--}}
-                            {{--<h3>Texto llamativo!</h3>--}}
-                            {{--<h5 class="light grey-text text-lighten-3">Poner aki algun slogan.</h5>--}}
-                        {{--</div>--}}
-                    {{--</li>--}}
-                    {{--<li>--}}
-                        {{--<img src="http://lorempixel.com/580/250/nature/4"> <!-- random image -->--}}
-                        {{--<div class="caption center-align">--}}
-                            {{--<h3>Texto llamativo!</h3>--}}
-                            {{--<h5 class="light grey-text text-lighten-3">Poner aki algun slogan.</h5>--}}
-                        {{--</div>--}}
-                    {{--</li>--}}
-                {{--</ul>--}}
-            {{--</div>--}}
-
-        {{--</div>--}}
+    {{--<div class="section" id="beneficios">--}}
+    {{--<div class="section-title">--}}
+    {{--<div class="divider-new wow bounce" data-wow-duration="0.5s">--}}
+    {{--<h2 class="h2-responsive wow fadeInDown">Beneficios</h2>--}}
+    {{--</div>--}}
     {{--</div>--}}
 
-    <div class="parallax-container valign-wrapper">
-        <div class="section no-pad-bot">
-            <div class="container">
-                <div class="row center">
-                    <h5 class="header col s12 light">Todo lo que te propongas lo podras lograr</h5>
-                </div>
-            </div>
-        </div>
-        <div class="parallax"><img src="{{asset('img/camp/nadador-min.jpg')}}" alt="Unsplashed background img 3">
-        </div>
-    </div>
+    {{--<div class="slider">--}}
+    {{--<ul class="slides">--}}
+    {{--<li>--}}
+    {{--<img src="http://lorempixel.com/580/250/nature/1"> <!-- random image -->--}}
+    {{--<div class="caption center-align">--}}
+    {{--<h3>Texto llamativo!</h3>--}}
+    {{--<h5 class="light grey-text text-lighten-3">Poner aki algun slogan.</h5>--}}
+    {{--</div>--}}
+    {{--</li>--}}
+    {{--<li>--}}
+    {{--<img src="http://lorempixel.com/580/250/nature/2"> <!-- random image -->--}}
+    {{--<div class="caption left-align">--}}
+    {{--<h3>Texto llamativo!</h3>--}}
+    {{--<h5 class="light grey-text text-lighten-3">Poner aki algun slogan.</h5>--}}
+    {{--</div>--}}
+    {{--</li>--}}
+    {{--<li>--}}
+    {{--<img src="http://lorempixel.com/580/250/nature/3"> <!-- random image -->--}}
+    {{--<div class="caption right-align">--}}
+    {{--<h3>Texto llamativo!</h3>--}}
+    {{--<h5 class="light grey-text text-lighten-3">Poner aki algun slogan.</h5>--}}
+    {{--</div>--}}
+    {{--</li>--}}
+    {{--<li>--}}
+    {{--<img src="http://lorempixel.com/580/250/nature/4"> <!-- random image -->--}}
+    {{--<div class="caption center-align">--}}
+    {{--<h3>Texto llamativo!</h3>--}}
+    {{--<h5 class="light grey-text text-lighten-3">Poner aki algun slogan.</h5>--}}
+    {{--</div>--}}
+    {{--</li>--}}
+    {{--</ul>--}}
+    {{--</div>--}}
+
+    {{--</div>--}}
+    {{--</div>--}}
+
+    {{--<div class="parallax-container valign-wrapper">--}}
+    {{--<div class="section no-pad-bot">--}}
+    {{--<div class="container">--}}
+    {{--<div class="row center">--}}
+    {{--<h5 class="header col s12 light">Lo que te propongas lo podras lograr</h5>--}}
+    {{--</div>--}}
+    {{--</div>--}}
+    {{--</div>--}}
+    {{--<div class="parallax"><img src="{{asset('img/camp/nadador-min.jpg')}}" alt="Unsplashed background img 3">--}}
+    {{--</div>--}}
+    {{--</div>--}}
 
     @include('layouts.front.contact')
 
@@ -275,7 +305,7 @@
             };
 
             var var_map = new google.maps.Map(document.getElementById("map-container"),
-                    var_mapoptions);
+                var_mapoptions);
             var var_marker = new google.maps.Marker({
                 position: var_location,
                 map: var_map,
@@ -301,7 +331,7 @@
             }
         });
 
-//        $('.carousel.carousel-slider').carousel({fullWidth: false});
+        $('.carousel.carousel-slider').carousel({fullWidth: false});
 
     </script>
 

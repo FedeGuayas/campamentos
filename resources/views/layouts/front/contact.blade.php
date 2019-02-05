@@ -21,14 +21,13 @@
                     </li>
 
                     <li class="wow fadeInUp" data-wow-delay="0.3s"><a class="btn-floating" data-toggle="modal" data-target="#contact-form"><i class="material-icons medium">contact_phone</i></a>
-                        <p>+593 42 531 488</p>
-                        <p>+593 42 364 906</p>
-                        <p>+593 42 530 012</p>
+                        <p>042367856</p>
+                        <p>0998848174</p>
                     </li>
 
-                    <li class="wow fadeInUp" data-wow-delay="0.4s"><a class="btn-floating" data-toggle="modal" data-target="#contact-form"><i class="material-icons medium">contact_mail</i></a>
-                        <p>fdg@fedeguayas.com.ec</p>
-                    </li>
+                    {{--<li class="wow fadeInUp" data-wow-delay="0.4s"><a class="btn-floating" data-toggle="modal" data-target="#contact-form"><i class="material-icons medium">contact_mail</i></a>--}}
+                        {{--<p>fdg@fedeguayas.com.ec</p>--}}
+                    {{--</li>--}}
                 </ul>
             </div>
             <!--/Second column-->

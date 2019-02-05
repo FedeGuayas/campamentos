@@ -6,21 +6,21 @@
         {{--Nav--}}
         @include('layouts.front.navUp')
     </header>
-
-    <div class="container">
-        <div class="row">
-            <div class="col l12">
-                <h5 class="page-header">@yield('encabezado')</h5>
-            </div><!-- /.col l12 -->
-        </div>  <!-- /.row -->
-        <div class="row">
-            <main>
-                {{--Contenido--}}
-                @yield('content')
-            </main>
-        </div><!-- /.row -->
-    </div>
-
+    <main>
+        <div class="container">
+            <div class="row">
+                <div class="col l12">
+                    <h5 class="page-header">@yield('encabezado')</h5>
+                </div><!-- /.col l12 -->
+            </div>  <!-- /.row -->
+            <div class="row">
+                <main>
+                    {{--Contenido--}}
+                    @yield('content')
+                </main>
+            </div><!-- /.row -->
+        </div>
+    </main>
     <footer>
         {{--FOOTER--}}
         @include('layouts.front.footer')

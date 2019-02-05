@@ -15,8 +15,8 @@
     {!! Html::style('css/bootstrap.css') !!}
     {!! Html::style('css/bootstrap-social.css') !!}
     {!! Html::style('css/bootstrap-theme.css') !!}
-    {!! Html::style('landing/css/style.css') !!}
-    {!! Html::style('css/materialize.css') !!}
+    {!! Html::style('landing/css/style.css?ver=2.1') !!}
+    {!! Html::style('landing/css/materialize.min.css?ver=2.1') !!}
     {!! Html::style('landing/css/animate.css') !!}
             <!-- Sweet Alert) -->
     {!! Html::style('plugins/sweetalert-master/dist/sweetalert.css') !!}
@@ -34,17 +34,13 @@
 <body>
 
 @yield('body')
-{{--<script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>--}}
         <!--  Scripts-->
 {!! Html::script('js/jquery-3.1.0.min.js') !!}
         <!-- Bootstrap tooltips -->
 {!! Html::script('js/tether.min.js') !!}
         <!-- Bootstrap core JavaScript -->
 {!! Html::script('js/bootstrap.min.js') !!}
-        <!-- Materialize core JavaScript -->
-{{--{!! Html::script('js/materialize.js') !!}--}}
-
-{!! Html::script('landing/js/materialize.js') !!}
+{!! Html::script('landing/js/materialize.min.js?ver=2.1') !!}
 {!! Html::script('js/init.js') !!}
 {!! Html::script('js/wow.js') !!}
 
@@ -59,7 +55,9 @@
         $('select').material_select({}); //inicializar el select de materialize
 
 //        Boton dropdown
-         $(".dropdown-button").dropdown();
+         $(".dropdown-button").dropdown({
+
+         });
 
         {{--// SideNav init--}}
         $('.button-collapse').sideNav(
@@ -94,8 +92,7 @@
 
     //Inicicio del slider
     $(document).ready(function () {
-
-//        $('.slider').slider({full_width: true});
+        $('.slider').slider();
     });
 
 </script>

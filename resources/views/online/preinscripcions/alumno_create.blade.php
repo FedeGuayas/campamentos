@@ -1,6 +1,7 @@
-<div id="modal-alumno" class="modal" style="width: 70%;">
+<div id="modal-alumno" class="modal modal-fixed-footer" style="width: 70%;">
+    {!! Form::open(['class'=>'form_noEnter', 'id'=>'form_alumno']) !!}
     <div class="modal-content">
-        {!! Form::open(['class'=>'form_noEnter', 'id'=>'form_alumno']) !!}
+
         <div class="row">
             <div class="col m3 s12">
                 <h5 class="teal-text text-darken-2">Crear Alumno</h5>
@@ -8,21 +9,21 @@
         </div>
 
         <div class="row">
-            <div class="row">
-                <div class="input-field col m4 s12 ">
-                    <i class="fa fa-user prefix"></i>
-                    {!! Form::label('nombres_a','Nombres:*') !!}
-                    {!! Form::text('nombres_a',null,['class'=>'validate','required','style'=>'text-transform:uppercase']) !!}
-                </div>
-                <div class="input-field col m4 s12">
-                    {!! Form::label('apellidos_a','Apellidos:*') !!}
-                    {!! Form::text('apellidos_a',null,['class'=>'validate','required','style'=>'text-transform:uppercase']) !!}
-                </div>
-                <div class="input-field col m3 s12">
-                    {!! Form::select('genero_a', ['MASCULINO' => 'MASCULINO', 'FEMENINO' => 'FEMENINO'],null, ['id'=>'genero_a']) !!}
-                    {!! Form::label('genero_a','Género:') !!}
-                </div>
+
+            <div class="input-field col m4 s12 ">
+                <i class="fa fa-user prefix"></i>
+                {!! Form::label('nombres_a','Nombres:*') !!}
+                {!! Form::text('nombres_a',null,['class'=>'validate','required','style'=>'text-transform:uppercase']) !!}
             </div>
+            <div class="input-field col m4 s12">
+                {!! Form::label('apellidos_a','Apellidos:*') !!}
+                {!! Form::text('apellidos_a',null,['class'=>'validate','required','style'=>'text-transform:uppercase']) !!}
+            </div>
+            <div class="input-field col m3 s12">
+                {!! Form::select('genero_a', ['MASCULINO' => 'MASCULINO', 'FEMENINO' => 'FEMENINO'],null, ['id'=>'genero_a']) !!}
+                {!! Form::label('genero_a','Género:') !!}
+            </div>
+
         </div>
 
         <div class="row">
@@ -62,7 +63,6 @@
                 </div>
             </div>
         </div>
-
     </div>
 
     <div class="modal-footer">
@@ -75,5 +75,7 @@
             {!! Form::button('<i class="fa fa-close" aria-hidden="true"></i>',['class'=>'btn white-text red darken-1 modal-action modal-close waves-effect waves-light tooltipped', 'data-position'=>'top', 'delay'=>'50','data-tooltip'=>'Cerrar']) !!}
         </div>
     </div>
+
+    {!! Form::close() !!}
 
 </div>

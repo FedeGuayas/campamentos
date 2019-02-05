@@ -1,6 +1,7 @@
-<div id="modal-representante" class="modal" style="width: 70%;">
+<div id="modal-representante" class="modal modal-fixed-footer" style="width: 70%;">
+    {!! Form::open(['class'=>'form_noEnter', 'id'=>'form_representante']) !!}
     <div class="modal-content">
-        {!! Form::open(['class'=>'form_noEnter', 'id'=>'form_representante']) !!}
+
         {{--    {!! Form::open(['route'=>'admin.representantes.store', 'method'=>'POST','files'=>'true'])  !!}--}}
         <div class="row">
             <div class="col m3 s12">
@@ -18,11 +19,11 @@
                 {!! Form::label('apellidos','Apellidos: *') !!}
                 {!! Form::text('apellidos',null,['class'=>'validate','required','style'=>'text-transform:uppercase']) !!}
             </div>
-            <div class="input-field col m2 s12">
+            <div class="input-field col m3 s12">
                 {!! Form::select('genero', ['MASCULINO' => 'MASCULINO', 'FEMENINO' => 'FEMENINO'],null,['id'=>'genero']) !!}
                 {!! Form::label('genero','Género: *') !!}
             </div>
-            <div class="form-group col m2 s12">
+            <div class="form-group col m3 s12">
                 {!! Form::label('fecha_nac','Fecha de Nacimiento: *',['class'=>'label-control']) !!}
                 {{  Form::date('fecha_nac',null,[ 'class'=>'validate','required']) }}
             </div>
@@ -83,19 +84,23 @@
                     </div>
                 </div>
             </div>
-            <div class="col m6 s12">
-                <a href="#" class="btn white-text blue darken-1 waves-effect waves-light tooltipped"
-                   data-position="top" delay="50" data-tooltip="Guardar" id='representante_create'>
-                    <i class=" fa fa-save" aria-hidden="true"></i>
-                </a>
-                {!! Form::button('<i class="fa fa-paint-brush" aria-hidden="true"></i>',['class'=>'btn white-text orange darken-1 waves-effect waves-light tooltipped', 'data-position'=>'top', 'delay'=>'50', 'data-tooltip'=>'Limpiar','type' => 'reset']) !!}
-                {!! Form::button('<i class="fa fa-close" aria-hidden="true"></i>',['class'=>'btn white-text red darken-1 modal-action modal-close waves-effect waves-light tooltipped', 'data-position'=>'top', 'delay'=>'50','data-tooltip'=>'Cerrar']) !!}
-            </div>
         </div>
 
-        {!! Form::close() !!}
+
 
     </div>
+
+    <div class="modal-footer">
+        <div class="col m6 s12">
+            <a href="#" class="btn white-text blue darken-1 waves-effect waves-light tooltipped"
+               data-position="top" delay="50" data-tooltip="Guardar" id='representante_create'>
+                <i class=" fa fa-save" aria-hidden="true"></i>
+            </a>
+            {!! Form::button('<i class="fa fa-paint-brush" aria-hidden="true"></i>',['class'=>'btn white-text orange darken-1 waves-effect waves-light tooltipped', 'data-position'=>'top', 'delay'=>'50', 'data-tooltip'=>'Limpiar','type' => 'reset']) !!}
+            {!! Form::button('<i class="fa fa-close" aria-hidden="true"></i>',['class'=>'btn white-text red darken-1 modal-action modal-close waves-effect waves-light tooltipped', 'data-position'=>'top', 'delay'=>'50','data-tooltip'=>'Cerrar']) !!}
+        </div>
+    </div>
+    {!! Form::close() !!}
 </div>
 
 

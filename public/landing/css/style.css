@@ -405,6 +405,50 @@ a:hover.back-to-top {
 }
 
 
+.buttons-wrapper {
+  position: absolute;
+  /*height: calc(100vh);*/
+  display: inherit;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 997;
+  pointer-events: none;
+  margin-bottom: 200px;
+  bottom: 0;
+  left:0;
+  width:100%;
+  height: inherit;
+  overflow:hidden;
+}
+.buttons-wrapper a {
+  pointer-events: auto;
+}
+.mg-rg {
+  margin-right: 1rem;
+  margin-left: 1rem;
+  margin-top: 1rem;
 
+}
 
+.foot-slider-contact {
+  position: absolute;
+  /*height: inherit;*/
+  height: calc(10vh);
+  margin-bottom: 65px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 997;
+  bottom: 0;
+  pointer-events: none;
+  left:0;
+  width: 100%;
+  overflow:hidden
+}
+
+.nav-wrapper {
+  background: linear-gradient(to right, indigo , teal);
+}
 

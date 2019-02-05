@@ -1,4 +1,5 @@
-    <div id="terminos-modal" class="modal" style="width: 70%;">
+    <div id="terminos-modal" class="modal modal-fixed-footer" style="width: 70%;">
+        <div class="modal-content">
         <div class="modal-header">
             <p class="">TÉRMINOS DE USO Y POLÍTICAS DE PRIVACIDAD</p>
         </div>
@@ -57,7 +58,7 @@
             <p style="font-weight: 400;">&nbsp;</p>
 
         </div>
-
+        </div>
         <div class="modal-footer">
 
                 {!! Form::button('Cerrar',['class'=>'modal-action modal-close waves-effect waves-light btn']) !!}

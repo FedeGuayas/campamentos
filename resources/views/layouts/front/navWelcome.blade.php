@@ -1,24 +1,25 @@
 <div class="navbar-fixed">
-    <nav>
 
-        <!-- Dropdown Menu  Control-->
-        <ul id="dropdownMenu" class="dropdown-content">
-            {{--<li><a href="#!" class="waves-effect waves-teal">Perfil </a></li>--}}
-            @if(Entrust::hasRole(['administrator','planner','signup','supervisor','invited']) )
-                <li><a href="{{route('admin.index')}}" class="waves-effect waves-teal">Administración</a></li>
-            @endif
-            <div class="divider"></div>
-            <li><a href="{{ url('/logout') }}" class="waves-effect waves-teal"><i class="fa fa-sign-out"></i>Salir</a>
-            </li>
-        </ul>
+    <!-- Dropdown Menu  Control-->
+    <ul id="dropdownMenu" class="dropdown-content">
+        {{--<li><a href="#!" class="waves-effect waves-teal">Perfil </a></li>--}}
+        @if(Entrust::hasRole(['administrator','planner','signup','supervisor','invited']) )
+            <li><a href="{{route('admin.index')}}" class="waves-effect waves-teal">Administración</a></li>
+        @endif
+        <div class="divider"></div>
+        <li><a href="{{ url('/logout') }}" class="waves-effect waves-teal"><i class="fa fa-sign-out"></i>Salir</a>
+        </li>
+    </ul>
 
-        <!-- Dropdown Otros Menus Control... -->
+    <!-- Dropdown Otros Menus Control... -->
+
+
+    <nav >
 
         {{--<nav class="teal" role="navigation">--}}
 
         {{--Contenedor del menu de navegacion--}}
-        <div class="nav-wrapper teal darken-1">
-
+        <div class="nav-wrapper cyan">
             {{--Button hamburger activa la barra lateral en moviles para poner el menu de navegacion--}}
             <a href="#" data-activates="slide-out" class="button-collapse fixed"><i class="material-icons">menu</i></a>
 
@@ -32,20 +33,30 @@
             <ul class="right hide-on-med-and-down show-on-large">
                 <li>
                     {!! Form::open(['route'=>'curso-search', 'method'=>'GET', 'target'=>'_blank']) !!}
-                        <div class="input-field">
-                            <input id="termino" type="search" name="termino" required placeholder="Buscar cursos" autocomplete="off">
-                            <label class="label-icon" for="search"><i class="material-icons">search</i></label>
-                            <i class="material-icons">close</i>
-                        </div>
+                    <div class="input-field">
+                        <input id="termino" type="search" name="termino" required placeholder="Buscar cursos"
+                               autocomplete="off">
+                        <label class="label-icon" for="search"><i class="material-icons">search</i></label>
+                        <i class="material-icons">close</i>
+                    </div>
                     {!! Form::close() !!}
                 </li>
                 <li><a href="{{route('online.preinscripcion')}}" class="waves-effect waves-teal">Inscripción</a></li>
                 <li><a href="#disciplinas" class="waves-effect waves-teal">Disciplinas</a></li>
                 {{--<li><a href="#beneficios" class="waves-effect waves-teal">Beneficios</a></li>--}}
                 <li><a href="#contacto" class="waves-effect waves-teal">Contáctenos</a></li>
-                @if(Auth::guest())
-                    <li><a href="{{url('/login')}}">Login</a></li>
-            @endif
+                @if (Auth::guest())
+                    <li>
+                        <a href="{{url('/login')}}">
+                            Entrar
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ url('/register') }}">
+                            Registrarse
+                        </a>
+                    </li>
+                @endif
             @if (Auth::check())
                 <!-- Dropdown Menu Disparador -->
                     <li>
@@ -68,7 +79,16 @@
                 <li><a href="#contacto" class="waves-effect waves-teal">Contáctenos</a></li>
 
                 @if(Auth::guest())
-                    <li><a href="{{url('/login')}}">Login</a></li>
+                    <li>
+                        <a href="{{url('/login')}}">
+                            Entrar
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ url('/register') }}">
+                            Registrarse
+                        </a>
+                    </li>
                 @endif
 
                 <li class="no-padding">

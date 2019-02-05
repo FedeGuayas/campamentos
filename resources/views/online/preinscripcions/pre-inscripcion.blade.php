@@ -11,7 +11,7 @@
 @section('body')
 
     <div class="navbar-fixed">
-        <nav class="nav-extended teal">
+        <nav class="teal">
             <div class="nav-wrapper">
                 <a id="logo-container" href="{{url('/')}}">
                     <img src="{{asset('img/camp/fdg-footer.png')}}" alt="logo" class="responsive-img"
@@ -83,21 +83,19 @@
                             </div>
                             <div class="col m2 s6">
                                 <a href="#search-repre" type="button"
-                                   class="btn-floating red waves-effect waves-light tooltipped"
+                                   class="btn-floating red waves-effect waves-light tooltipped modal-trigger"
                                    data-position="top" data-delay="50" data-tooltip="Buscar Representante"><i
                                             class="fa fa-search"></i>
                                 </a>
                                 <a href="#modal-representante" type="button"
-                                   class="btn-floating blue waves-effect waves-light tooltipped modal-representante"
+                                   class="btn-floating blue waves-effect waves-light tooltipped modal-representante modal-trigger"
                                    data-position="top" data-delay="50" data-tooltip="Crear Representante"><i
                                             class="fa fa-plus"></i>
                                 </a>
                             </div>
                             <div class="col m3 s6 pull-left">
-                                <div class="input-field">
-                                    {!! Form::checkbox('adulto',null,false,['id'=>'adulto']) !!}
-                                    {!! Form::label('adulto','Inscripción para mayores',['class'=>'tooltipped','data-position'=>'top', 'data-delay'=>'50', 'data-tooltip'=>'Inscripción para mayores de 18 años']) !!}
-                                </div>
+                                {!! Form::checkbox('adulto',null,false,['id'=>'adulto']) !!}
+                                {!! Form::label('adulto','Inscripción para mayores',['class'=>'tooltipped','data-position'=>'top', 'data-delay'=>'50', 'data-tooltip'=>'Inscripción para mayores de 18 años']) !!}
                             </div>
                         </div>
 
@@ -109,7 +107,7 @@
                                 </div>
                                 <div class="col m3 s6">
                                     <a href="#modal-alumno" type="button"
-                                       class="btn-floating blue waves-effect waves-light tooltipped modal-alumno"
+                                       class="btn-floating blue waves-effect waves-light tooltipped modal-alumno modal-trigger"
                                        data-position="top" data-delay="50" data-tooltip="Crear Alumno">
                                         <i class="fa fa-plus"></i>
                                     </a>
@@ -201,14 +199,13 @@
                                     <li>
                                         <div class="collapsible-header"><i class="material-icons">assignment</i>Términos</div>
                                         <div class="collapsible-body">
-                                            <a href="#terminos-modal" class="waves-effect waves-light tooltipped  btn"
-                                               data-position="top" data-delay="50" data-tooltip="Leer Términos"><i
-                                                        class="fa fa-eye right"></i>
-                                                Leer
+                                            <a href="#terminos-modal" type="button" class="btn-floating waves-effect waves-light tooltipped   modal-trigger"
+                                               data-position="top" data-delay="50" data-tooltip="Leer Términos">
+                                                <i class="fa fa-eye right"></i>
                                             </a>
                                             <a href="{{route('pre-inscripcion.terms-download')}}"
-                                               onclick="preventDefault();">
-                                                {!! Form::button('<i class="tiny fa fa-download"></i>',['class'=>'btn right indigo waves-effect waves-light tooltipped ', 'data-position'=>'top', 'data-delay'=>'50', 'data-tooltip'=>'Descargar']) !!}
+                                               onclick="preventDefault();" type="button"  class="btn-floating waves-effect waves-light tooltipped   modal-trigger" data-position="top" data-delay="50" data-tooltip="Descargar"><i class="tiny fa fa-download"></i>
+                                                {!! Form::button('',['class'=>'waves-effect waves-light ']) !!}
                                             </a>
 
                                         </div>
@@ -216,10 +213,8 @@
                                 </ul>
                             </div>
                             <div class="col m4 s12">
-                                <div class="input-field">
-                                    {!! Form::checkbox('terms',null,false,['id'=>'terms','class'=>'terms' , 'disabled']) !!}
-                                    {!! Form::label('terms','Aceptar Términos',['class'=>'terms']) !!}
-                                </div>
+                                {!! Form::checkbox('terms',null,false,['id'=>'terms','class'=>'terms' , 'disabled']) !!}
+                                {!! Form::label('terms','Aceptar Términos',['class'=>'terms']) !!}
                             </div>
                             <div class="col m5 s12 pull-right">
                                 {!! Form::button('<i class="fa fa-close right" aria-hidden="true"></i> Cancelar',['class'=>'btn btn-xs waves-effect waves-light red darken-1 tooltipped','data-position'=>'top', 'data-delay'=>'10', 'data-tooltip'=>'Cancelar','type' => 'reset']) !!}
@@ -556,6 +551,6 @@
 
     </script>
 
-    <script src="{{ asset("js/pre-inscripcion.js?ver=2") }}" type="text/javascript"></script>
+    <script src="{{ asset("js/pre-inscripcion.js?ver=2.1") }}" type="text/javascript"></script>
 
 @endsection
