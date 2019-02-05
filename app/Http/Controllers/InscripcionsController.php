@@ -12,6 +12,7 @@ use App\Inscripcion;
 use App\Modulo;
 use App\Multiples;
 use App\Pago;
+use App\Persona;
 use App\Program;
 use App\Provincia;
 use App\Register;
@@ -848,7 +849,7 @@ public function store(Request $request)
  */
 public function show($id)
 {
-    return ('Ahh ahh ahh no implementado Sorry');
+    return ('No implementado');
 }
 
 /**
@@ -875,8 +876,28 @@ public function edit($id)
         $edad = $inscripcion->alumno->getEdad($inscripcion->alumno->persona->fecha_nac);
     }
 
-    $modulos_coll = Modulo::where('activated', true);
-    $modulos = $modulos_coll->pluck('modulo', 'id');
+    $modulo = $inscripcion->calendar->program->modulo;
+
+    if ($modulo->esRiver()) {
+
+        $modulos_coll = Modulo::where('activated', true)->where('modulo_river',Modulo::ES_RIVER);
+        $modulos = $modulos_coll->pluck('modulo', 'id');
+
+        if ($inscripcion->alumno_id == 0) { //si es una inscripcion para adulto
+            $alumno = Representante::where('id', $inscripcion->factura->representante_id)->with('persona')->first();
+            $anio_nac = Persona::getAnioNacimiento($alumno->persona->fecha_nac);
+            $edad=$anio_nac;
+        } else {
+            $alumno = $inscripcion->alumno;
+            $anio_nac = Persona::getAnioNacimiento($alumno->persona->fecha_nac);
+            $edad=$anio_nac;
+        }
+    }else {
+
+        $modulos_coll = Modulo::where('activated', true)->where('modulo_river',!Modulo::ES_RIVER);
+        $modulos = $modulos_coll->pluck('modulo', 'id');
+
+    }
 
     return view('campamentos.inscripcions.edit', compact('modulos', 'inscripcion', 'costo_actual', 'edad', 'curso_actual'));
 
@@ -891,7 +912,6 @@ public function edit($id)
 
 public function searchCurso(Request $request)
 {
-
 
     $modulo = $request->get('modulo_id');
     $escenario = $request->get('escenario_id');

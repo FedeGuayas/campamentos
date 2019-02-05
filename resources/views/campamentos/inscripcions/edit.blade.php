@@ -28,7 +28,7 @@
         $(function () {
             //prevenir que al dar enter se envie el formulario
             $(".form_noEnter").keypress(function (e) {
-                if (e.width == 13) {
+                if (e.width === 13) {
                     return false;
                 }
             });
@@ -52,8 +52,8 @@
                 horario_id:horario_id,
                 edad:edad,
                 costo:costo,
-                inscripcion_id:inscripcion_id,
-            }
+                inscripcion_id:inscripcion_id
+            };
             $.ajax({
                 url: route,
                 type: "GET",

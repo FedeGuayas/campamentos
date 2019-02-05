@@ -16,12 +16,14 @@
                     <div class="panel-body">
                         <table class="table table-striped table-bordered table-condensed table-hover highlight responsive-table">
                             <thead>
-                            <th>Escenario</th>
-                            <th>Disciplina</th>
-                            <th>Dias</th>
-                            <th>Horarios</th>
-                            <th>Costo</th>
-                            <th>Edad del Alumno</th>
+                            <tr>
+                                <th>Escenario</th>
+                                <th>Disciplina</th>
+                                <th>Dias</th>
+                                <th>Horarios</th>
+                                <th>Costo</th>
+                                <th>Edad/Año de nacimiento</th>
+                            </tr>
                             </thead>
                             <tr>
                                 <td>{{$curso_actual->program->escenario->escenario}}</td>
