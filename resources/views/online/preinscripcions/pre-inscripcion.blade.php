@@ -48,8 +48,9 @@
                     <blockquote>
                         Si se encuentra registrado como representante de click en la lupa. <br>
                         Si no está registrado de click en + <br>
-                        Para inscribirse en cursos de River elegir los módulos con estea definición. <br>
-                        Para inscribirse en cualquier curso de campamentos elegir módulos.
+                        Si es una persona mayor de 18 y se va a inscribir ud, seleccione Inscripción para mayores. <br>
+                        Para inscribirse en cursos de River elegir los módulos con esta definición. <br>
+                        Para inscribirse en cualquier curso de campamentos elegir módulos con esta definición.
                         </blockquote>
                     </span></div>
             </li>

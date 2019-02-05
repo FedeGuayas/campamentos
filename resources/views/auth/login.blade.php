@@ -48,7 +48,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="input-field center">
+                        <div class="center">
                             {!! Form::checkbox('remember',null,false,['id'=>'remember', 'class'=>'filled-in']) !!}
                             {!! Form::label('remember','Recordarme') !!}
                         </div>
