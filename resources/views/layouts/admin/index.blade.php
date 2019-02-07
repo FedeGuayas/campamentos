@@ -9,6 +9,8 @@
 
     <title>@yield('title',' Panel Administración')</title>
 
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
         <!-- Font Awesome -->
     {!! Html::style('css/font-awesome.min.css') !!}
 

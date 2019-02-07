@@ -8,13 +8,13 @@
 
         <div class="row">
             <!--First column-->
-            <div class="col m8">
+            <div class="col s12 m8">
                 <div id="map-container" class="z-depth-5 wow fadeInUp hoverable" style="height: 400px"></div>
             </div>
             <!--/First column-->
 
             <!--Second column-->
-            <div class="col m4">
+            <div class="col s12 m4">
                 <ul class="text-xs-center">
                     <li class="wow fadeInUp" data-wow-delay="0.2s"><a class="btn-floating"><i class="material-icons medium">location_on</i></a>
                         <p>Guayaquil, José Mascote 1103, Ecuador</p>

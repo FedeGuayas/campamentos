@@ -1,6 +1,6 @@
 @extends('layouts.admin.index')
 
-@section('title','Inscripciones')
+@section('title','Matriculas')
 
 @section('content')
 
@@ -8,47 +8,41 @@
         <div class="col l8 m8 s">
             @include('alert.success')
             @include('alert.request')
-            <h4>Listado de Inscripciones</h4>
+            <h4>Matrículas pagadas posterior a la inscripción</h4>
         </div>
     </div>
 
     <div class="row">
         <div class="col l12 m12 s12">
 
-            <table id="inscripcion_table"
+            <table id="matricula_table"
                    class="table table-striped table-bordered table-condensed table-hover highlight "
                    cellspacing="0" width="100%" style="display: none" data-order='[[ 0, "desc" ]]'>
                 <thead>
                 <tr>
                     <th>No.</th>
-                    <th>Alumno</th>
-                    <th>CI Al.</th>
-                    <th>Mes</th>
+                    <th>Inscripción No.</th>
+                    <th>Comprobante</th>
+                    <th>Modulo</th>
                     <th>Escenario</th>
                     <th>Disciplina</th>
                     <th>Dias</th>
-                    <th>Horarios</th>
                     <th>Representante</th>
                     <th>CI Rep.</th>
-                    {{--<th>Nivel</th>--}}
-                    <th>Comprobante</th>
                     <th>Opciones</th>
                 </tr>
                 </thead>
                 <tfoot>
                 <tr>
                     <th>No.</th>
-                    <th class="non_searchable">Alumno</th>
-                    <th class="non_searchable">CI Al.</th>
-                    <th>Mes</th>
+                    <th>Inscripción</th>
+                    <th>Comprobante</th>
+                    <th class="non_searchable">Modulo</th>
                     <th class="non_searchable">Escenario</th>
                     <th class="non_searchable">Disciplina</th>
                     <th class="non_searchable">Dias</th>
-                    <th class="non_searchable">Horarios</th>
-                    <th>Representante</th>
-                    <th>CI Rep.</th>
-                    {{--<th>Nivel</th>--}}
-                    <th>Comprobante</th>
+                    <th class="non_searchable">Representante</th>
+                    <th class="non_searchable">CI Rep.</th>
                     <th class="non_searchable">Opciones</th>
                 </tr>
                 </tfoot>
@@ -57,7 +51,7 @@
         </div><!--end div ./col-lg-12. etc-->
     </div><!--end div ./row-->
     <input type="hidden" name="_token" value="{{csrf_token()}}" id="token">
-    <div><input type="hidden" id="insc_delete"></div>
+    <div><input type="hidden" id="ins_delete"></div>
 
     <div id="loader_page">
         <div class="preloader-wrapper big active">
@@ -114,26 +108,25 @@
     <script>
         $(document).ready(function () {
 
-            var table = $('#inscripcion_table').on('processing.dt', function (e, settings, processing) {
+            var table = $('#matricula_table').on('processing.dt', function (e, settings, processing) {
                 $('#loader_page').css('display', processing ? 'block' : 'none');
             }).DataTable({
                 lengthMenu: [[5, 10, 15], [5, 10, 15]],
                 processing: false,
                 stateSave: false,
                 serverSide: true,
-                ajax: '{{route('admin.inscripcions')}}',
+                ajax: '{{route('admin.matriculas')}}',
                 columns: [
                     {data: 'id'},
-                    {data: 'alumno', orderable: false, searchable: false},
-                    {data: 'ci_alumno', orderable: false, searchable: false},
-                    {data: 'modulo', orderable: false},
-                    {data: 'escenario', orderable: false, searchable: false},
-                    {data: 'disciplina', orderable: false, searchable: false},
-                    {data: 'dia', orderable: false, searchable: false},
-                    {data: 'horario', orderable: false, searchable: false},
-                    {data: 'representante', orderable: false},
-                    {data: 'ci_representante', orderable: false},
+                    {data: 'inscripcion_id'},
                     {data: 'factura_id'},
+                    {data: 'modulo', name: 'modulo', orderable: false, searchable: false},
+                    {data: 'inscripcion.calendar.program.escenario.escenario', name: 'inscripcion.calendar.program.escenario.escenario', orderable: false, searchable: false},
+                    {data: 'inscripcion.calendar.program.disciplina.disciplina', name: 'inscripcion.calendar.program.disciplina.disciplina', orderable: false, searchable: false},
+                    {data: 'inscripcion.calendar.dia.dia', name: 'inscripcion.calendar.dia.dia', orderable: false, searchable: false},
+                    {data: 'representante', name: 'representante', orderable: false, searchable: false},
+                    {data: 'factura.representante.persona.num_doc', name: 'factura.representante.persona.num_doc', orderable: false, searchable: false},
+//                    {data: 'inscripcion.calendar.program.modulo.modulo', name: 'modulo'}
                     {data: 'actions', orderable: false, searchable: false}
                 ],
                 "language": {
@@ -161,18 +154,7 @@
                     }
                 },
                 "fnInitComplete": function () {
-                    $('#inscripcion_table').fadeIn();
-
-//                    table.columns().every(function () {
-//                        var column = this;
-//
-//                        var input = document.createElement("input");
-//                        $(input).appendTo($(column.footer()).empty())
-//                                .on('keyup change', function () {
-//                                    column.search($(this).val(), false, false, true).draw();
-//                                });
-//
-//                    });
+                    $('#matricula_table').fadeIn();
 
                     table.columns().every(function () {
                         var column = this;
@@ -185,14 +167,12 @@
                                 });
                         }
                     });
-//                    this.api().buttons().container()
-//                            .appendTo( $('#example_wrapper .col-sm-6:eq(0)'));
                 }
             });
 
-            $("select").val('5'); //seleccionar valor por defecto del select
-            $('select').addClass("browser-default"); //agregar una clase de materializecss de esta forma ya no se pierde el select de numero de registros.
-            $('select').material_select(); //inicializar el select de materialize
+            $("select").val('5');
+            $('select').addClass("browser-default");
+            $('select').material_select();
 
         });
 
@@ -204,7 +184,7 @@
 
             swal({
                     title: "Confirme para eliminar?",
-                    text: "Seguro que quiere eliminar la inscripción?. Esta acción no se podrá deshacer!",
+                    text: "Seguro que quiere eliminar la matricula?. Esta acción no se podrá deshacer!",
                     type: "warning",
                     showCancelButton: true,
                     confirmButtonColor: "#DD6B55",
@@ -239,27 +219,6 @@
                     }
                 });
         }
-
-        //        $("#btn_eliminar").on('click',function(event){
-        //            var id = $("#id").val();
-        //            var token = $("#token").val();
-        //            var route = $("#btn_eliminar").attr('href').replace(':ID', id);
-        //            var route = "inscripcion/delete/"+id+"";
-        //            $.ajax({
-        //                url: route,
-        //                type: "GET",
-        //                headers: {'X-CSRF-TOKEN': token},
-        //                contentType: 'application/x-www-form-urlencoded',
-        //                dataType:'json',
-        //                success: function (resp) {
-        //                    $("#modal-delete").modal('toggle');
-        //                  window.setTimeout(function(){location.reload()},1000) //recarga la pagina despues de 1seg
-        //                },
-        //                error: function (resp) {
-        //                        $("#modal-delete").modal('toggle');
-        //                }
-        //            });
-        //        });
 
 
     </script>

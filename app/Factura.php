@@ -59,4 +59,9 @@ class Factura extends Model
     {
         return $this->hasMany('App\Inscripcion');
     }
+
+    public function pago_matricula()
+    {
+        return $this->hasOne('App\PagoMatricula');
+    }
 }

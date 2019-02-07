@@ -50,5 +50,10 @@ class Escenario extends Model
     {
         return $this->hasMany('App\Inscripcion');
     }
+
+    public function pago_matriculas()
+    {
+        return $this->hasMany('App\PagoMatricula');
+    }
     
 }

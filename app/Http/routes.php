@@ -110,6 +110,10 @@ Route::group(['middleware' => ['auth','role:administrator|signup|planner|supervi
     //cambiar el curso de la inscripcion actual
     Route::get('inscripcions/{insc}/curso/{data?}',['as' => 'admin.inscripcions.curso.update', 'uses'=>'InscripcionsController@updateCurso']);
 
+    //Matricula
+    Route::get('inscripcions/{inscripcion}/matricula',['as' => 'admin.inscripcions.getMatricula', 'uses'=>'InscripcionsController@getMatricula']);
+    Route::post('inscripcions/matricula/pay',['as' => 'admin.inscripcions.postMatricula', 'uses'=>'InscripcionsController@postMatricula']);
+
     
     //******** Importar personas de archivo excel********//
     Route::get('/persons/import', ['as'=>'persons.import','uses'=>'ImportController@getPersonas']);
@@ -162,12 +166,13 @@ Route::group(['middleware' => ['auth','role:administrator|signup|planner|supervi
     //exportar reservas
     Route::post('/inscripcions/reserva/export', ['as'=>'admin.reserva.export','uses'=>'InscripcionsController@reservasExport']);
 
-    //obtener todos los alumnos, representantes, inscripciones, comprobantes para el datatables con ajax
+    //obtener todos los alumnos, representantes, inscripciones, comprobantes, matriculas para el datatables con ajax
     Route::get('/alumnos/get',['as' => 'admin.alumnos', 'uses'=>'AlumnosController@getAll']);
     Route::get('/representantes/get',['as' => 'admin.representantes', 'uses'=>'RepresentantesController@getAll']);
     Route::get('/inscripciones',['as' => 'admin.inscripcions', 'uses'=>'InscripcionsController@getAll']);
     Route::get('/facturas/get',['as' => 'admin.facturas', 'uses'=>'FacturasController@getAll']);
-    
+    Route::get('/matriculas',['as' => 'admin.matriculas', 'uses'=>'PagoMatriculaController@getAll']);
+
     //permite eliminar alumnos  representantes, inscripciones, comprobantes  con botones en datatable con ajax, paginando
     Route::get('alumnos/{alumno?}/delete',['as' => 'admin.alumnos.delete', 'uses'=>'AlumnosController@destroy']);
     Route::get('representante/{representante?}/delete',['as' => 'admin.representante.delete', 'uses'=>'RepresentantesController@destroy']);
@@ -204,6 +209,7 @@ Route::group(['middleware' => ['auth','role:administrator|signup|planner|supervi
     Route::resource('descuentos', 'DescuentosController');
     Route::resource('facturas', 'FacturasController');
     Route::resource('inscripcions', 'InscripcionsController');
+    Route::resource('pago_matriculas', 'PagoMatriculaController');
     Route::resource('profesors', 'ProfesorsController');
 
     //enabled, disabled modulos
@@ -248,6 +254,8 @@ Route::group(['middleware' => ['auth','role:administrator|signup|planner|supervi
     Route::get('/reports/resumen',['as' => 'admin.reports.resumen', 'uses'=>'ReportesController@getResumen']);
     Route::get('/reports/factura',['as' => 'admin.reports.factura', 'uses'=>'ReportesController@getFactura']);
     Route::get('/reports/factura/export',['as' => 'admin.reports.exportFactura', 'uses'=>'ReportesController@exportFactura']);
+    //comprobante de pago de matricula
+    Route::get('/reports/matricula/{id}/pdf',['as' => 'admin.reports.matricula.pdf', 'uses'=>'ReportesController@matriculaPDF']);
 
     //facturacion diaria usuario
     Route::get('/user/facturas/excel',['as' => 'admin.facturas.excel', 'uses'=>'UsersController@getFacturaExcel']);

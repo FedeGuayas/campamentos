@@ -39,26 +39,26 @@
             <div class="slider fullscreen">
                 <ul class="slides">
                     <li>
-                        <img src="{{asset('img/camp/the-ball-cancha.jpg')}}"> <!-- random image -->
+                        <img src="{{asset('img/camp/the-ball-cancha.jpg')}}" alt="cancha"> <!-- random image -->
                         <div class="caption center-align z-depth-5 hoverable">
-                            <h2 class="">Sistema de Campamentos Deportivos</h2>
-                            <h3>Y</h3>
+                            <h1 class="">Campamentos Deportivos</h1>
+                            <h2>Y</h2>
                             <h2>Escuela de Futbol</h2>
                             <h2 class="">Fedeguayas - River Plate</h2>
                         </div>
                     </li>
                     <li>
-                        <img src="{{asset('img/camp/river.jpg')}}"> <!-- random image -->
+                        <img src="{{asset('img/camp/river.jpg')}}" alt="river plate"> <!-- random image -->
                         <div class="caption left-align">
                         </div>
                     </li>
                     <li>
-                        <img src="{{asset('img/camp/nadador-min.jpg')}}"> <!-- random image -->
+                        <img src="{{asset('img/camp/nadador-min.jpg')}}" alt="nadador"> <!-- random image -->
                         <div class="caption right-align">
                         </div>
                     </li>
                     <li>
-                        <img src="{{asset('img/camp/ciclismo.jpg')}}"> <!-- random image -->
+                        <img src="{{asset('img/camp/ciclismo.jpg')}}" alt="ciclismo"> <!-- random image -->
                         <div class="caption center-align">
                         </div>
                     </li>
@@ -94,7 +94,7 @@
                 {{--             @foreach($cursos->chunk(3) as $cursosChunck)--}}
                 @foreach($cursos as $curso)
                     @if(($curso->cupos - $curso->contador) >=1)
-                        <div class="col s4 m4">
+                        <div class="col s12 m4">
                             <div class="card big hoverable z-depth-4 sticky-action  wow fadeInUp"
                                  data-wow-delay="0.3s">
                                 <div class="card-image waves-effect waves-block waves-light">

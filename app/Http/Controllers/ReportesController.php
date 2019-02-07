@@ -13,6 +13,7 @@ use App\Factura;
 use App\Horario;
 use App\Inscripcion;
 use App\Modulo;
+use App\PagoMatricula;
 use App\Persona;
 use App\Profesor;
 use App\Program;
@@ -235,6 +236,46 @@ class ReportesController extends Controller
 
         }
     }
+
+
+    /**
+     * Comprobantes de pago de matriculas en pdf
+     * @param $id
+     * @return mixed
+     */
+    public function matriculaPDF($id)
+    {
+
+        $matricula = PagoMatricula::with('inscripcion','inscripcion.calendar','inscripcion.calendar.dia','inscripcion.calendar.program','inscripcion.calendar.program.disciplina','inscripcion.calendar.program.escenario','inscripcion.calendar.program.modulo','factura','factura.representante','factura.representante.persona','user','escenario')
+            ->where('id',$id)
+            ->first();
+
+        $inscripcion = Inscripcion::with('factura', 'calendar', 'user', 'alumno')
+            ->where('id', $id)
+            ->withCount('factura')
+            ->first();
+
+        setlocale(LC_TIME, 'es');
+        $fecha_actual = Carbon::now();
+        $month = $fecha_actual->formatLocalized('%B');//mes en español
+        $day = $fecha_actual->format('d');
+        $year = $fecha_actual->format('Y');
+        $date = $fecha_actual->format('Y-m-d');
+
+        set_time_limit(0);
+        ini_set('memory_limit', '1G');
+
+        $tipo_insc='menor';
+        if ($inscripcion->alumno_id == 0 || $inscripcion->alumno_id == '' || $inscripcion->alumno_id == null) {//adulto
+            $tipo_insc='mayor';
+        }
+
+        $pdf = PDF::loadView('campamentos.reportes.matriculas.pago-matricula-pdf', compact('matricula','tipo_insc'));
+//        return $pdf->download('ComprobantePago.pdf');//descarga el pdf
+        return $pdf->stream('ComprobantePagoMatricula ' . $matricula->id . '.pdf');//imprime en pantalla
+    }
+
+
 
     /**
      * Mostrar el cuadre diario de las ventas de los usuarios
@@ -646,14 +687,17 @@ class ReportesController extends Controller
             ->join('dias as d', 'd.id', '=', 'c.dia_id')
             ->join('horarios as h', 'h.id', '=', 'c.horario_id')
             ->join('escenarios as e', 'e.id', '=', 'p.escenario_id')
+            ->join('inscripcions as i', 'i.calendar_id', '=', 'c.id')
             ->join('modulos as m', 'm.id', '=', 'p.modulo_id')
             ->join('disciplinas as dis', 'dis.id', '=', 'p.disciplina_id')
             ->join('profesors as pro', 'pro.id', '=', 'c.profesor_id')
-            ->select('program_id', 'profesor_id', 'dia_id', 'c.horario_id', 'cupos', 'contador', 'mensualidad', 'init_age', 'end_age', 'nivel', 'c.id', 'p.modulo_id', 'p.escenario_id', 'p.disciplina_id')
-            ->where('modulo_id', $modulo)
-            ->where('escenario_id', $escenario)
-            ->where('disciplina_id', $disciplina)
-            ->whereIn('horario_id', $horario_id)
+            ->select('c.program_id', 'c.profesor_id', 'c.dia_id', 'c.horario_id', 'c.cupos', 'c.contador', 'c.mensualidad', 'c.init_age', 'c.end_age', 'c.nivel', 'c.id', 'p.modulo_id', 'p.escenario_id', 'p.disciplina_id','i.estado')
+            ->where('p.modulo_id', $modulo)
+            ->where('i.estado','=','Pagada')
+            ->where('i.deleted_at',null)
+            ->where('p.escenario_id', $escenario)
+            ->where('p.disciplina_id', $disciplina)
+            ->whereIn('c.horario_id', $horario_id)
             ->where('p.activated', '1')
             ->get();
 
@@ -682,8 +726,9 @@ class ReportesController extends Controller
             ->join('horarios', 'horarios.id', '=', 'calendars.horario_id')
 //            ->join('profesors', 'profesors.id', '=', 'calendars.profesor_id')
             ->join('dias', 'dias.id', '=', 'calendars.dia_id')
-            ->select('inscripcions.id', 'inscripcions.alumno_id', 'inscripcions.factura_id', 'inscripcions.calendar_id', 'user_id', 'inscripcions.created_at', 'programs.disciplina_id', 'programs.escenario_id')
+            ->select('inscripcions.id', 'inscripcions.alumno_id', 'inscripcions.factura_id','inscripcions.estado', 'inscripcions.calendar_id', 'user_id', 'inscripcions.created_at', 'programs.disciplina_id', 'programs.escenario_id')
             ->where('calendar_id', $curso_id)
+            ->where('inscripcions.estado', '=','Pagada')
 //            ->orderBy('inscripcions.created_at')
             ->get();
 

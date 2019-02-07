@@ -13,6 +13,8 @@ class Inscripcion extends Model
     const INSCRIPCION_ONLINE='1';
     const INSCRIPCION_PRESENCIAL='0';
 
+    const PAGO_MATRICULA_POSTERIORMENTE='1';
+
     /**
      * The attributes that should be mutated to dates.
      *
@@ -80,5 +82,10 @@ class Inscripcion extends Model
     public function register()
     {
         return $this->hasOne('App\Register');
+    }
+
+    public function pago_matricula()
+    {
+        return $this->hasOne('App\PagoMatricula');
     }
 }

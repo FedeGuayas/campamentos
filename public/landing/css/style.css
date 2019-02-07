@@ -153,7 +153,7 @@ a.back-to-top {
 	text-indent: -9999px;
 	position: fixed;
 	z-index: 999;
-	right: 20px;
+	left: 20px;
 	bottom: 20px;
 	background: #26a69a url("../../img/camp/up-arrow.png") no-repeat center 43%;
 	-webkit-border-radius: 30px;
