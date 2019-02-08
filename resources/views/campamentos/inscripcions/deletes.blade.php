@@ -24,6 +24,7 @@
                     <th>Comprobante</th>
                     <th>Fecha inscripción</th>
                     <th>Fecha eliminación</th>
+                    <th>Eliminada Por</th>
                 </tr>
                 </thead>
                 <tfoot>
@@ -32,6 +33,7 @@
                     <th>Comprobante</th>
                     <th>Fecha inscripción</th>
                     <th>Fecha eliminación</th>
+                    <th>Eliminada Por</th>
                 </tr>
                 </tfoot>
 
@@ -56,7 +58,8 @@
                     {data: 'id' },
                     {data: 'factura_id'},
                     {data: 'created_at'},
-                    {data: 'deleted_at'}
+                    {data: 'deleted_at'},
+                    {data: 'eliminada_por'}
                 ],
                 "language": {
                     "decimal": "",

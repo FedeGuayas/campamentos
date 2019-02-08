@@ -19,6 +19,7 @@ use App\Program;
 use App\Provincia;
 use App\Register;
 use App\Representante;
+use App\User;
 use App\UserModulo;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -189,8 +190,19 @@ class InscripcionsController extends Controller
     {
         if ($request->ajax()) {
 
-            $inscripciones = Inscripcion::onlyTrashed()->get();
+            $inscripciones = Inscripcion::onlyTrashed()
+                 ->with( 'user')
+                ->get();
             return Datatables::of($inscripciones)
+                ->addColumn('eliminada_por', function ($inscripcion) {
+                    $usuario=User::where('id',$inscripcion->user_delete)->first();
+                    if (isset($usuario)){
+                        $user_delete=$usuario->getNameAttribute();
+                    }else {
+                        $user_delete='N/A';
+                    }
+                    return $user_delete;
+                })
                 ->make(true);
         }
         return view('campamentos.inscripcions.deletes');
@@ -244,8 +256,12 @@ class InscripcionsController extends Controller
                         if (($calendar->contador) > 0) {
                             $calendar->decrement('contador');
                         }
-                        $inscripcion_m->user_delete = Auth::user()->id;
-                        $inscripcion_m->delete();
+                        if($inscripcion_m->delete()) {
+                            $inscripcion_m = Inscripcion::where('id', $id)->withTrashed()->first();
+                            $inscripcion_m->user_delete = Auth::user()->id;
+                            $inscripcion_m->update();
+                        }
+
                     }
                     $descuento = Descuento::where('factura_id', $inscripcion->factura_id);
                     $descuento->delete();
@@ -265,8 +281,11 @@ class InscripcionsController extends Controller
                 $descuento->delete();
                 $factura = Factura::where('id', $inscripcion->factura_id);
                 $factura->delete();
-                $inscripcion->user_delete = Auth::user()->id;
-                $inscripcion->delete();
+                if($inscripcion->delete()) {
+                    $inscripcion_m = Inscripcion::where('id', $id)->withTrashed()->first();
+                    $inscripcion_m->user_delete = Auth::user()->id;
+                    $inscripcion->update();
+                }
 
                 DB::commit();
 
@@ -1263,8 +1282,11 @@ class InscripcionsController extends Controller
                             $message = 'Ooops! parece que el curso tiene 0 cupos, por lo que no puede ser eliminado, contacte al admin.';
                             return response()->json(['resp' => $message]);
                         }
-                        $inscripcion_m->user_delete = $request->user()->id;
-                        $inscripcion_m->delete();
+                        if($inscripcion_m->delete()) {
+                            $inscripcion_m = Inscripcion::where('id', $id)->withTrashed()->first();
+                            $inscripcion_m->user_delete = $request->user()->id;
+                            $inscripcion_m->update();
+                        }
                     }
                     $descuento = Descuento::where('factura_id', $inscripcion->factura_id);
                     $descuento->delete();
@@ -1285,8 +1307,11 @@ class InscripcionsController extends Controller
                     $descuento->delete();
                     $factura = Factura::where('id', $inscripcion->factura_id);
                     $factura->delete();
-                    $inscripcion->user_delete = $request->user()->id;
-                    $inscripcion->delete();
+                    if($inscripcion->delete()) {
+                        $inscripcion = Inscripcion::where('id', $id)->withTrashed()->first();
+                        $inscripcion->user_delete = $request->user()->id;
+                        $inscripcion->update();
+                    }
                     $message = 'Inscripción eliminada';
                     return response()->json(['resp' => $message]);
                 }
