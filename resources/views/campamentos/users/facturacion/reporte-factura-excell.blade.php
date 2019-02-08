@@ -96,17 +96,16 @@
                     @endforeach
                     <tr><th colspan="12" class="center-align teal lighten-4">Matriculas</th></tr>
                     @foreach ($matriculas as $mat )
-
                         <tr>
                             <td>
-                                @if ($mat->inscripcion->alumno_id == 0)
+                                @if ($mat->inscripcion['alumno_id'] == 0)
                                     {{$mat->factura->representante->persona->apellidos}}
                                 @else
                                     {{$mat->inscripcion->alumno->persona->apellidos}}
                                 @endif
                             </td>
                             <td>
-                                @if ($mat->inscripcion->alumno_id == 0)
+                                @if ($mat->inscripcion['alumno_id'] == 0)
                                     {{$mat->factura->representante->persona->nombres}}
                                 @else
                                     {{$mat->inscripcion->alumno->persona->nombres}}

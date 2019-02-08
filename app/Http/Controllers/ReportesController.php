@@ -295,16 +295,25 @@ class ReportesController extends Controller
             $usuario = $request->get('usuario');
 
             $cuadre = Factura::
-            join('inscripcions as i', 'i.factura_id', '=', 'facturas.id')
+                 join('inscripcions as i', 'i.factura_id', '=', 'facturas.id')
                 ->join('users as u', 'u.id', '=', 'i.user_id')
                 ->join('pagos as p', 'p.id', '=', 'facturas.pago_id')
-                ->select('total', 'factura_id', 'i.user_id as uid', 'u.first_name', 'u.last_name', 'u.escenario_id', 'i.created_at', 'i.id', 'i.estado', 'p.id as pagoID', 'p.forma')
+                ->select('total', 'i.factura_id', 'i.user_id as uid', 'u.first_name', 'u.last_name', 'u.escenario_id', 'i.created_at', 'i.id', 'i.estado', 'p.id as pagoID', 'p.forma')
                 ->where('i.estado', '=', 'Pagada')
                 ->where('facturas.created_at', 'like', '%' . $fecha . '%')
                 ->where('i.escenario_id', 'like', '%' . $escenario . '%')
-                ->groupBy('factura_id')//agrupo por facturas de la tabla inscripciones xk hay varias insccripciones con una misma factura
+                ->groupBy('i.factura_id')//agrupo por facturas de la tabla inscripciones xk hay varias insccripciones con una misma factura
                 ->get();
 
+            $matriculas=PagoMatricula::with('inscripcion','factura','user','escenario')
+                ->whereHas('factura', function($q) use($fecha) {
+                    $q->where('created_at', 'like', '%' . $fecha . '%');
+                })
+                ->where('pago_matriculas.escenario_id', 'like', '%' . $escenario . '%') //pto cobro
+                ->orderBy('created_at')
+                ->get();
+//dd($cuadre);
+//dd($matriculas);
             $group = [];
 
             //crear array agrupando por el nombre de usuario  y agregar los valores de las facturas
@@ -318,6 +327,18 @@ class ReportesController extends Controller
                     "fpago" => $forma,
                 ];
             }
+
+            foreach ($matriculas as $m) {
+                $user = $m->user->getNameAttribute();
+                $i = $m->factura->total;
+                $forma = $m->factura->pago->forma;
+                $group[$user][] = [
+                    "Nombre" => $user,
+                    "precio" => $i,
+                    "fpago" => $forma,
+                ];
+            }
+
             //sumar columnas para total por usuario y Total general
             $cuadreArray = [];
             $valorFinal = 0;
