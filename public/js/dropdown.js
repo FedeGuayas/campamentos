@@ -207,6 +207,8 @@ $("#disciplina_id").change(function (event) {
     if (event.target.value == 'placeholder' ){
         return false;
     }
+    var alumno_id = $("#alumno_id").val();
+    var representante_id = $("#representante_id").val();
     var dia = $("#dia_id");
     var horario = $("#horario_id");
     var nivel=$("#nivel");
@@ -217,7 +219,9 @@ $("#disciplina_id").change(function (event) {
     var datos = {
         escenario: escenario_id,
         disciplina: disciplina_id,
-        modulo: modulo_id
+        modulo: modulo_id,
+        alumno_id: alumno_id,
+        representante_id: representante_id
     };
     // var token = $("input[name=_token]").val();
     $.ajax({
@@ -227,7 +231,8 @@ $("#disciplina_id").change(function (event) {
         // contentType: 'application/x-www-form-urlencoded',
         data: datos,
         success: function (response) {
-            //console.log(response);
+            // console.log(response);
+            if (response.dias.length > 0 ) {
             dia.find("option:gt(0)").remove();
             dia.addClass("teal-text");
             horario.find("option:gt(0)").remove();
@@ -235,12 +240,15 @@ $("#disciplina_id").change(function (event) {
             valor.removeClass("teal-text");
             valor.val('0.00');
 
-            for (i = 0; i < response.length; i++) {
-                dia.append('<option value="' + response[i].dia_id + '">' + response[i].dias + '</option>');
+            for (i = 0; i < response.dias.length; i++) {
+                dia.append('<option value="' + response.dias[i].dia_id + '">' + response.dias[i].dias + '</option>');
             }
             dia.material_select();
             horario.material_select();
             nivel.material_select();
+            } else {
+                swal("", 'No se encontraron cursos. Debe verificar la edad o el año de nacimiento del alumno y los cupos disponibles.', "error");
+            }
         },
         error: function (response) {
             //console.log(response);

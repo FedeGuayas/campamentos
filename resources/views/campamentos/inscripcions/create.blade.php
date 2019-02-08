@@ -546,6 +546,6 @@
     {{--Script para select dinamico condicional dropdown --}}
     <script src="{{ asset("js/updateCosto.js?ver=2") }}" type="text/javascript"></script>
     {{--Script para select dinamico condicional dropdown --}}
-    <script src="{{ asset("js/dropdown.js?ver=2") }}" type="text/javascript"></script>
+    <script src="{{ asset("js/dropdown.js?ver=2.1") }}" type="text/javascript"></script>
 
 @endsection

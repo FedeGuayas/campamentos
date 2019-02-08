@@ -231,13 +231,61 @@ class CalendarsController extends Controller
                 ->where('disciplina_id',$disciplina_id)
                 ->where('modulo_id',$modulo_id)->first();
 
-            $dias=Calendar::
+            if ($request->input('alumno_id')=='null' || !$request->input('alumno_id')){
+                $representante=Representante::where('persona_id',$request->input('representante_id'))->with('persona')->first();
+                $edad=$representante->getEdad($representante->persona->fecha_nac); //edad del representante, insc de adulto
+                $anio_nac = Persona::getAnioNacimiento($representante->persona->fecha_nac);
+
+            }else {
+                $alumno=Alumno::where('id',$request->input('alumno_id'))->with('persona')->first();
+                $edad=$alumno->getEdad($alumno->persona->fecha_nac); //edad del alumno inscrito
+                $anio_nac = Persona::getAnioNacimiento($alumno->persona->fecha_nac);
+            }
+
+            $modulo=Modulo::where('id',$modulo_id)->first();
+            if ($modulo->esRiver()){
+                if ($request->input('alumno_id')=='null' || !$request->input('alumno_id')) {
+                    $anio_nac = Persona::getAnioNacimiento($representante->persona->fecha_nac);
+                }else{
+                    $anio_nac = Persona::getAnioNacimiento($alumno->persona->fecha_nac);
+                }
+                $dias=Calendar::
                 join('dias as d','d.id','=','c.dia_id','as c')
-                ->select('d.dia as dias', 'd.activated','c.dia_id','c.program_id','d.id as dID','c.activated')
+                    ->select('d.dia as dias','d.activated','c.id as cID','d.id as dID',
+                        'c.dia_id','c.horario_id','c.nivel','c.program_id')
+                    ->where('program_id',$program->id)
+                    ->where('d.activated','1')
+//                    ->where('cupos','>','contador')
+                    ->whereRaw('cupos > contador')
+                    ->where(function ($query) use ($anio_nac) {
+                        $query->where('c.init_age', '<=', $anio_nac)
+                            ->where('c.end_age', '>=', $anio_nac);
+                    })
+                    ->groupBy('dID')
+                    ->get()
+                    ->toArray();
+//                return response($dias);
+                return response(['dias'=>$dias,'edad'=>$edad,'river'=>true,'anio_nac'=>$anio_nac]);
+            }
+
+            $dias=Calendar::
+            join('dias as d','d.id','=','c.dia_id','as c')
+                ->select('d.dia as dias','d.activated','c.id as cID','d.id as dID',
+                    'c.dia_id','c.horario_id','c.nivel','c.program_id')
                 ->where('program_id',$program->id)
-                ->where('c.activated','1')
-                ->where('d.activated','1')->groupBy('dID')->get()->toArray();
-            return response($dias);
+                ->where('d.activated','1')
+                ->whereRaw('cupos > contador')
+//                ->where('cupos','>','contador')
+                ->where(function ($query) use ($edad) {
+                    $query->where('c.init_age', '<=', $edad)
+                        ->where('c.end_age', '>=', $edad);
+                })
+                ->groupBy('dID')
+                ->get()
+                ->toArray();
+//            return response($dias);
+            return response(['dias'=>$dias,'edad'=>$edad,'river'=>false,'anio_nac'=>$anio_nac]);
+
         }
     }
 
@@ -249,6 +297,7 @@ class CalendarsController extends Controller
      * @return mixed
      */
     public function updateDias(Request $request){
+
         if ($request->ajax()){
 
             $escenario_id=$request->get('escenario');
@@ -258,14 +307,14 @@ class CalendarsController extends Controller
             $program=Program::where('escenario_id',$escenario_id)
                 ->where('disciplina_id',$disciplina_id)
                 ->where('modulo_id',$modulo_id)->first();
-
             $dias=Calendar::
             join('dias as d','d.id','=','c.dia_id','as c')
-                ->select('d.dia as dias','d.activated','c.id as cID','d.id as dID',
-                    'c.dia_id','c.horario_id','c.nivel','c.program_id')
+                ->select('d.dia as dias', 'd.activated','c.dia_id','c.program_id','d.id as dID','c.activated')
                 ->where('program_id',$program->id)
+                ->where('c.activated','1')
                 ->where('d.activated','1')->groupBy('dID')->get()->toArray();
             return response($dias);
+
         }
     }
     
@@ -462,7 +511,7 @@ class CalendarsController extends Controller
             $nivel=Calendar::
                where('program_id',$program->id)
                 ->where('dia_id',$dia_id)
-                ->where('cupos','>','contador')
+                ->whereRaw('cupos > contador')
                 ->where('horario_id',$horario_id)->get()->toArray();
 
             if (count($nivel)>0)
@@ -556,7 +605,7 @@ class CalendarsController extends Controller
                 ->where('c.program_id',$program->id)
                 ->where('c.id',$calendar_id)
                 ->where('c.dia_id',$dia_id)
-                ->where('cupos','>','contador')
+                ->whereRaw('cupos > contador')
                 ->where('c.horario_id',$horario_id)
                 ->get()->toArray();
 
