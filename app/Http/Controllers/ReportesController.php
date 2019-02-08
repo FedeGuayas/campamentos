@@ -6,6 +6,7 @@ ini_set('max_execution_time', 300);
 
 use App\Alumno;
 use App\Calendar;
+use App\Configuracione;
 use App\Dia;
 use App\Disciplina;
 use App\Escenario;
@@ -1013,6 +1014,172 @@ class ReportesController extends Controller
         Excel::create('Facturacion_Masiva - ' . Carbon::now() . '', function ($excel) use ($arrayExp) {
 
             $excel->sheet('Facturacion', function ($sheet) use ($arrayExp) {
+
+//                $sheet->setBorder('A1:AG','thin', 'thin', 'thin', 'thin');
+//                $sheet->cells('A1:AG', function($cells){
+//                    $cells->setBackground('#F5F5F5');
+//                    $cells->setFontWeight('bold');
+//                    $cells->setAlignment('center');
+//
+//                });
+
+                $sheet->setColumnFormat(array(
+                    'A' => 'General',
+                    'B' => 'General',
+                    'C' => 'General',
+                    'D' => 'General',
+                    'E' => '0',
+                    'F' => '@',
+                    'I' => '@',
+                    'K' => '#,##0.00_-',
+                    'N' => '0',
+                    'O' => '0',
+                    'P' => '0',
+                    'U' => '0',
+                    'V' => '0',
+                    'AA' => '0',
+                    'AB' => '0',
+                    'AC' => '0',
+                    'AF' => '#,##0.00_-',
+                    'AD' => 'General',
+                    'AE' => 'General',
+
+                ));
+
+                $sheet->fromArray($arrayExp, null, 'A1', false, false);
+            });
+        })->export('xlsx');
+    }
+
+
+
+    /**
+     * Cargar vista para Generar Formato Facturación Masiva de Matriculas
+     * @param Request $request
+     * @return mixed
+     */
+    public function getFacturaMatricula(Request $request)
+    {
+        $periodo = Configuracione::where('id', 1)->first();
+
+        $escenarios_coll = Escenario::all();
+        $escenarioSelect = $escenarios_coll->pluck('escenario', 'id');
+//        $escenarioSelect = ['' => 'Pto de Cobro'] + Escenario::lists('escenario', 'id')->all();
+
+        $escenario = $request->get('escenario');
+
+        $start = trim($request->get('start'));
+        $end = trim($request->get('end'));
+
+        $start = new Carbon($start);
+        $start = $start->toDateString();
+        $end = new Carbon($end);
+        $end = $end->toDateString();
+
+
+        if ($escenario) {
+            $matriculas=PagoMatricula::with('inscripcion','factura','user','escenario')
+                ->whereBetween('created_at', [$start, $end])
+                ->where('escenario_id', $escenario)//pto cobro
+                ->where('anio',$periodo->periodo)
+                ->orderBy('created_at')
+                ->paginate(5);
+        } else {
+            $matriculas=PagoMatricula::with('inscripcion','factura','user','escenario')
+                ->whereBetween('created_at', [$start, $end])
+                ->where('anio',$periodo->periodo)
+                ->orderBy('created_at')
+                ->paginate(5);
+        }
+
+        return view('campamentos.reportes.reporte-factura-matricula', compact('matriculas', 'start', 'end', 'escenarioSelect', 'escenario'));
+    }
+
+
+    /**
+     * Exportar excel  Facturación masiva matricula
+     * @param Request $request
+     */
+
+    public function exportFacturaMatricula(Request $request)
+    {
+        $periodo = Configuracione::where('id', 1)->first();
+
+        $start = trim($request->get('start'));
+        $end = trim($request->get('end'));
+        $escenario = $request->get('escenario');
+
+        $start = new Carbon($start);
+        $start = $start->toDateString();
+        $end = new Carbon($end);
+        $end = $end->toDateString();
+
+        if ($escenario) {
+            $matriculas=PagoMatricula::with('inscripcion','factura','user','escenario')
+                ->whereBetween('created_at', [$start, $end])
+                ->where('escenario_id', $escenario)//pto cobro
+                ->where('anio',$periodo->periodo)
+                ->orderBy('created_at')
+                ->get();
+        } else {
+            $matriculas=PagoMatricula::with('inscripcion','factura','user','escenario')
+                ->whereBetween('created_at', [$start, $end])
+                ->where('anio',$periodo->periodo)
+                ->orderBy('created_at')
+                ->get();
+        }
+
+        $arrayExp[] = ['codigopadre', 'codigo', 'nombre', 'nombrecomercial', 'RUC', 'Fecha', 'Referencia', 'Comentario',
+            'CtaIngreso', 'Cantidad', 'Valor', 'Iva', 'DIRECCION', 'division', 'TipoCli', 'actividad', 'codvend', 'recaudador',
+            'formadepago', 'estado', 'diasplazo', 'precio', 'telefono', 'fax', 'celular', 'e_mail', 'pais', 'provincia', 'ciudad',
+            'CtaxCob', 'CtaxAnt', 'cupo', 'empresasri'
+        ];
+
+        foreach ($matriculas as $mat) {
+
+            $arrayExp[] = [
+                'codigopadre' => '',
+                'codigo' => '',
+                'nombre' => $mat->factura->representante->persona->getNombreAttribute(),
+                'nombrecomercial' => $mat->factura->representante->persona->getNombreAttribute(),
+                'RUC' => (int)$mat->factura->representante->persona->num_doc,
+                'Fecha' => (string)$mat->factura->created_at->format('d/m/Y'),
+                'Referencia' => 'INSCRIPCION CAMPAMENTOS (' . $mat->inscripcion->factura_id .')' . '-' . $mat->inscripcion->calendar->program->disciplina->disciplina . '-' . $mat->inscripcion->calendar->program->escenario->escenario. '-'. $mat->factura->id,
+                'Comentario' => $mat->factura->id,
+                'CtaIngreso' => '6252499006133',
+                'Cantidad' => 1,
+                'Valor' => (float)$mat->factura->total,
+                'Iva' => 'S',
+                'DIRECCION' => $mat->factura->representante->persona->direccion,
+                'division' => (int)$mat->escenario->codigo,
+                'TipoCli' => 1,
+                'actividad' => 1,
+                'codvend' => '',
+                'recaudador' => '',
+                'formadepago' => $mat->factura->pago->forma,
+                'estado' => 'A',
+                'diasplazo' => 1,
+                'precio' => 1,
+                'telefono' => (string)$mat->factura->representante->persona->telefono,
+                'fax' => '',
+                'celular' => '',
+                'e_mail' => $mat->factura->representante->persona->email,
+                'pais' => 1,
+                'provincia' => 1,
+                'ciudad' => 4,
+                'CtaxCob' => '1110101001',
+                'CtaxAnt' => '2120307999',
+                'cupo' => 500,
+                'empresasri' => 'PERSONAS NO OBLIGADAS A LLEVAR CONTABILIDAD, FACTURA',
+
+            ];
+        }
+
+        set_time_limit(0);
+        ini_set('memory_limit', '1G');
+        Excel::create('Facturacion_Matriculas - ' . Carbon::now() . '', function ($excel) use ($arrayExp) {
+
+            $excel->sheet('Fact. Matricula', function ($sheet) use ($arrayExp) {
 
 //                $sheet->setBorder('A1:AG','thin', 'thin', 'thin', 'thin');
 //                $sheet->cells('A1:AG', function($cells){

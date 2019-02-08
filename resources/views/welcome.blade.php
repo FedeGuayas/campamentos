@@ -125,8 +125,9 @@
                                     <div class="clearfix">
                                         <div class="pull-left price teal-text">
                                             $ {{number_format($curso->mensualidad,2,'.',' ')}}</div>
-                                        <a class="waves-effect waves-light btn-floating blue pull-right"> <i
-                                                    class="material-icons">check</i></a>
+                                        <a href="{{route('online.preinscripcion')}}"
+                                                class="waves-effect waves-light btn-floating blue pull-right pulse">
+                                            <i class="material-icons">check</i></a>
                                     </div>
                                 </div>
                                 <div class="card-reveal">

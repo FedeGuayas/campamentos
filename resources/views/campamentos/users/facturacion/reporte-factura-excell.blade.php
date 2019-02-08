@@ -6,9 +6,9 @@
 
     <div class="row">
         <div class="col l12 col m6 col s12">
-            <h3>
-                Generar Formato Facturación Masiva
-            </h3>
+            <h5>
+                Facturación usuario : {{$user->getNameAttribute()}}
+            </h5>
             @include('alert.success')
         </div>
     </div>
@@ -27,69 +27,68 @@
             <div class="table-responsive">
                 <table class="table table-striped table-bordered table-condensed table-hover" style="font-size: 10px;">
                     <thead>
-                    <th>Fecha Insc</th>
-                    <th>Representante</th>
-                    <th>RUC</th>
-                    <th>Dirección</th>
-                    <th>Teléfono</th>
-                    <th>Email</th>
-                    <th>Alumno</th>
-                    <th>Modulo</th>
-                    <th>Horario</th>
-                    <th>Escenario</th>
-                    <th>Valor</th>
-                    <th>Forma Pago</th>
-                    <th>Registro</th>
-                    <th>Pto Cobro</th>
-
+                    <tr>
+                        <th>Apellidos_A.</th>
+                        <th>Nombre_A.</th>
+                        <th>Modulo</th>
+                        <th>Escenario</th>
+                        <th>Comprobante</th>
+                        <th>Valor</th>
+                        <th>Descuento</th>
+                        <th>Estado</th>
+                        <th>Fecha_Cobro</th>
+                        <th>Forma_Pago</th>
+                        <th>Pto_Cobro</th>
+                        <th>Usuario</th>
+                    </tr>
                     </thead>
                     @foreach ($inscripciones as $insc )
                         <tr>
                             <td>
-                                {{$insc->created_at->format('d/m/Y')}}
-                            </td>
-                            <td>
-                                {{$insc->factura->representante->persona->getNombreAttribute()}}
-                            </td>
-                            <td>
-                                {{(int)$insc->factura->representante->persona->num_doc}}
-                            </td>
-                            <td>
-                                {{$insc->factura->representante->persona->direccion}}
-                            </td>
-                            <td>
-                                {{(string)$insc->factura->representante->persona->telefono}}
-                            </td>
-                            <td>
-                                {{$insc->factura->representante->persona->email}}
+                                @if ($insc->alumno_id == 0)
+                                    {{$insc->factura->representante->persona->apellidos}}
+                                @else
+                                    {{$insc->alumno->persona->apellidos}}
+                                @endif
                             </td>
                             <td>
                                 @if ($insc->alumno_id == 0)
-                                    {{$insc->factura->representante->persona->getNombreAttribute()}}
+                                    {{$insc->factura->representante->persona->nombres}}
                                 @else
-                                    {{$insc->alumno->persona->getNombreAttribute()}}
+                                    {{$insc->alumno->persona->nombres}}
                                 @endif
                             </td>
                             <td>
                                 {{$insc->calendar->program->modulo->modulo}}
                             </td>
                             <td>
-                                {{$insc->calendar->horario->start_time.' - '.$insc->calendar->horario->end_time}}
-                            </td>
-                            <td>
                                 {{$insc->calendar->program->escenario->escenario}}
                             </td>
                             <td>
-                                {{round(($insc->factura->total) , 3)}}
+                                {{ $insc->factura_id }}
+                            </td>
+                            <td>
+                                {{number_format($insc->factura->total,2,'.',' ')}}
+                            </td>
+                            <td>
+                                {{number_format($insc->factura->descuento,2,'.',' ')}}
+                            </td>
+                            <td>
+                                {{$insc->estado}}
+                            </td>
+                            <td>
+                                {{$insc->factura->created_at->format('d/m/Y')}}
                             </td>
                             <td>
                                 {{ $insc->factura->pago->forma }}
                             </td>
                             <td>
-                                {{ $insc->id }}
+                                @if ($insc->escenario)
+                                    {{ $insc->escenario->escenario }}
+                                @endif
                             </td>
                             <td>
-{{--                                {{ $insc->escenario->escenario }}--}}
+                                {{ $insc->user->getNameAttribute() }}
                             </td>
                         </tr>
                     @endforeach

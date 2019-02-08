@@ -125,31 +125,29 @@
         </tr>
     </table>
 </div>
-<br>
 
-<br><br><br><br><br><br><br>
-<div class="limpia_float">
-    {{--<div style="font-size: 12px">--}}
-    <table align="center" border="0" cellspacing="0"
-           style="width:90%; font-style: italic; text-align : justify; font-size: 11px">
+
+<hr>
+
+<div>
+    <table align="left" border="0" cellpadding="5" cellspacing="0"
+           style="position: absolute; width:60%; text-align : justify; font-size: 11px; margin-left: 30px;  top: 150px">
         <tr>
             <td>
-                <p>
-                    Las partes dejan constancia que el valor entregado como matricula por el Campamento Escuelas
-                    Deportivas Fedeguayas no será
-                    reembolsado bajo ninguna circunstancia y quedará como beneficio de la Federación Deportiva del
-                    Guayas, aun cuando el CLIENTE
-                    llegare a desistir de su participación en el campamento en mención, a excepción de que el
-                    desistimientos se produzca dentro de los
-                    3 primeros días contando a partir del inicio del módulo.
-                    <br>
-                    Los cambios de horario se podrán realizar dentro de la primera semana de inicio del módulo.
+
+                <p align="center">
+                    ___________________________
+                </p>
+
+                <p align="center" style="font-size: 10px;">
+                    FIRMA <br>
+                    Nombre: {{$matricula->factura->representante->persona->getNombreAttribute()}}<br>
+                    CI: {{$matricula->factura->representante->persona->num_doc}}
                 </p>
             </td>
         </tr>
     </table>
 </div>
-<hr>
 
 <footer>
     <table>

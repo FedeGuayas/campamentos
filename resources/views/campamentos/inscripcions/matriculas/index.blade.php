@@ -8,7 +8,7 @@
         <div class="col l8 m8 s">
             @include('alert.success')
             @include('alert.request')
-            <h4>Matrículas pagadas posterior a la inscripción</h4>
+            <h4>Matrículas pagadas</h4>
         </div>
     </div>
 

@@ -258,7 +258,7 @@ class UsersController extends Controller
             ->groupBy('factura_id')
             ->get();
 
-        return view('campamentos.users.facturacion.reporte-factura-excell',compact('inscripciones','start','end'));
+        return view('campamentos.users.facturacion.reporte-factura-excell',compact('inscripciones','start','end','user'));
     }
 
 
@@ -287,38 +287,39 @@ class UsersController extends Controller
             ->orderBy('created_at')
             ->get();
 
-        $arrayExp[] = ['Fecha Insc.','Representante','RUC','Dirección','Teléfono','Email','Alumno','Modulo','Horario','Escenario','Valor','Forma Pago',         'Registro','Pto Cobro'
+        $arrayExp[] = ['APELLIDOS ALUMNO.','NOMBRES ALUMNO','MODULO','ESCENARIO','COMPROBANTE','VALOR','DESCUENTO','ESTADO','FECHA COBRO','FORMA PAGO','PTO COBRO','USUARIO'
         ];
 
         foreach ($inscripciones as $insc) {
 
-            if (is_null($insc->escenario_id) || $insc->escenario_id == '0') {//online
+            if (is_null($insc->escenario_id) || $insc->escenario_id == '0' || $insc->escenario_id == '') {//online
                 $pto_cobro = 'N/A';
             } else $pto_cobro = $insc->escenario->escenario;
 
             if ($insc->alumno_id == 0) {
-                $alumno=$insc->factura->representante->persona->getNombreAttribute();
+                $alumno_nombre=$insc->factura->representante->persona->nombres;
+                $alumno_apellidos=$insc->factura->representante->persona->apellidos;
             } else{
-                $alumno=$insc->alumno->persona->getNombreAttribute();
+                $alumno_nombre=$insc->alumno->persona->nombres;
+                $alumno_apellidos=$insc->alumno->persona->apellidos;
             }
 
             $cont_comp = Inscripcion::where('factura_id', $insc->factura_id)->count();
 
             $arrayExp[] = [
-                'fecha'=>$insc->created_at->format('d/m/Y'),
-                'repre'=>$insc->factura->representante->persona->getNombreAttribute(),
-                'ruc'=> (int)$insc->factura->representante->persona->num_doc,
-                'direccion'=>$insc->factura->representante->persona->direccion,
-                'telefono'=> (string)$insc->factura->representante->persona->telefono,
-                'e_mail'=> $insc->factura->representante->persona->email,
-                'alumno'=>$alumno,
+                'alum_ap' => $alumno_apellidos,
+                'alum_nom' => $alumno_nombre,
                 'modulo'=>$insc->calendar->program->modulo->modulo,
-                'horario'=>$insc->calendar->horario->start_time.' - '.$insc->calendar->horario->end_time,
                 'escenario'=>$insc->calendar->program->escenario->escenario,
+                'comprobante'=>$insc->factura_id,
                 'valor'=> round(($insc->factura->total) / $cont_comp, 3),
+                'descuento'=>$insc->factura->descuento,
+                'estado'=>$insc->estado,
+                'fecha'=>$insc->factura->created_at->format('d/m/Y'),
                 'formadepago'=> $insc->factura->pago->forma,
-                'insc'=>$insc->id,
-                'ptocobro'=>$pto_cobro
+                'ptocobro'=>$pto_cobro,
+                'usuario'=> $insc->user->getNameAttribute(),
+
             ];
         }
 

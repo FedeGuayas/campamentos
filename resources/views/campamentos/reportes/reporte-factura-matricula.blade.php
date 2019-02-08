@@ -1,20 +1,20 @@
 @extends('layouts.admin.index')
 
-@section('title','Facturas')
+@section('title','Facturas Matriculas')
 
 @section('content')
 
     <div class="row">
         <div class="col l12 col m6 col s12">
             <h3>
-                Facturación Masiva
+                Facturación Masiva Matriculas
             </h3>
             @include('alert.success')
         </div>
     </div>
     {{--filtrar --}}
     <div class="row">
-        {!! Form::open (['route' => 'admin.reports.factura','method' => 'GET', 'class'=>'form_datepicker' ])!!}
+        {!! Form::open (['route' => 'admin.reports.factura.matriculas','method' => 'GET', 'class'=>'form_datepicker' ])!!}
         <div class="input-field col s2 ">
             {!! Form::label('start','Desde:') !!}
             {!! Form::date('start',$start,['class'=>'datepicker']) !!}
@@ -33,7 +33,7 @@
         {!!form::close()!!}
         {{--fin filtro--}}
         <div class="col s2">
-            {!! Form::open (['route' => 'admin.reports.exportFactura','method' => 'GET'])!!}
+            {!! Form::open (['route' => 'admin.reports.exportFactura.matriculas','method' => 'GET'])!!}
                 <div class="hidden">
                     {!! Form::date('start',$start,['class'=>'datepicker']) !!}
                     {!! Form::date('end',$end,['class'=>'datepicker']) !!}
@@ -61,47 +61,44 @@
             <th>Fecha</th>
             <th>Disciplina</th>
             <th>Esc. Deportivo</th>
-            <th>Cod-Escenario</th>
+            <th>Pto Cobro</th>
             <th>Valor</th>
             <th>Forma de Pago</th>
             </thead>
-            @foreach ($inscripciones as $insc )
+            @foreach ($matriculas as $mat )
                 <tr>
                     <td>
-                        {{ $insc->factura->representante->persona->getNombreAttribute() }}
+                        {{ $mat->factura->representante->persona->getNombreAttribute() }}
                     </td>
                     <td>
-                        {{ $insc->factura->representante->persona->num_doc}}
+                        {{ $mat->factura->representante->persona->num_doc}}
                     </td>
                     <td>
-                        {{ $insc->factura->representante->persona->direccion}}
+                        {{ $mat->factura->representante->persona->direccion}}
                     </td>
                     <td>
-                        {{ $insc->factura->representante->persona->telefono}}
+                        {{ $mat->factura->representante->persona->telefono}}
                     </td>
                     <td>
-                        {{ $insc->factura->representante->persona->email}}
+                        {{ $mat->factura->representante->persona->email}}
                     </td>
                     <td>
-                        {{ $insc->factura->created_at}}
+                        {{ $mat->factura->created_at}}
                     </td>
                     <td>
-                        {{ $insc->calendar->program->disciplina->disciplina}}
+                        {{ $mat->inscripcion->calendar->program->disciplina->disciplina}}
                     </td>
                     <td>
-                        {{ $insc->calendar->program->escenario->escenario}}
+                        {{ $mat->inscripcion->calendar->program->escenario->escenario}}
                     </td>
                     <td>
-                        @if(is_null($insc->user->escenario_id))
-                        @else
-                            {{ $insc->user->escenario->codigo}}
-                        @endif
+                        {{$mat->escenario->escenario .' / '. $mat->escenario->codigo}}
                     </td>
                     <td>
-                        {{ $insc->factura->total}}
+                        ${{ number_format($mat->factura->total,2,'.',' ')}}
                     </td>
                     <td>
-                        {{ $insc->factura->pago->forma}}
+                        {{ $mat->factura->pago->forma}}
                     </td>
                 </tr>
             @endforeach
@@ -109,7 +106,7 @@
 
 
     </div><!--end div ./row-->
-    {{ $inscripciones->appends(['start'=>$start,'end'=>$end,'escenario'=>$escenario])->links() }}
+    {{ $matriculas->appends(['start'=>$start,'end'=>$end,'escenario'=>$escenario])->links() }}
 @endsection
 
 @section('scripts')
