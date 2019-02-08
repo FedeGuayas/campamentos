@@ -485,12 +485,23 @@ class InscripcionsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
+        $user = $request->user();
+
+        $user_cortesia=false;
+        if ($user->hasRole('admin-cortesia')){
+            $user_cortesia=true;
+        }
         $modulos_coll = Modulo::where('activated', true);
         $modulos = $modulos_coll->pluck('modulo', 'id');
         $fpagos_coll = Pago::all();
-        $fpagos = $fpagos_coll->pluck('forma', 'id');
+        $fp = $fpagos_coll->reject(function ($fp) use($user_cortesia) {   //quitar forma de pago cortesia sino tiene los permisos el usuario
+            $filter_coll = (stripos($fp->forma, 'cortesia') !== false && $user_cortesia === false);
+            return $filter_coll;
+        });
+        $fpagos = $fp->pluck('forma', 'id');
+//        $fpagos = $fpagos_coll->pluck('forma', 'id');
         $provincias = Provincia::all();
         $list_provincias = $provincias->pluck('province', 'id');
         return view('campamentos.inscripcions.create', compact('modulos', 'fpagos', 'list_provincias'));
@@ -1060,7 +1071,7 @@ class InscripcionsController extends Controller
                 $factura->representante()->associate($representante);
                 $factura->total = $inscripcion->calendar->program->matricula; //costo de la inscripcion
                 $factura->descuento = 0;
-//                $factura->save();
+                $factura->save();
 
                 $mat_pagada = new PagoMatricula();
                 $mat_pagada->inscripcion()->associate($inscripcion);
@@ -1069,10 +1080,10 @@ class InscripcionsController extends Controller
                 $mat_pagada->factura()->associate($factura);
                 $mat_pagada->matricula = $inscripcion->calendar->program->matricula;
                 $mat_pagada->anio = $periodo->periodo;
-//                $mat_pagada->save();
+                $mat_pagada->save();
 
                 $inscripcion->post_matricula = Inscripcion::PAGO_MATRICULA_POSTERIORMENTE;
-//                $inscripcion->update();
+                $inscripcion->update();
             });
             return response()->json(['data' => $inscripcion], 200);
         } else {

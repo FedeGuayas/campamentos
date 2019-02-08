@@ -26,7 +26,7 @@
         <div class="col l12">
             <div class="table-responsive">
                 <table class="table table-striped table-bordered table-condensed table-hover" style="font-size: 10px;">
-                    <thead>
+                    <thead class="grey lighten-1">
                     <tr>
                         <th>Apellidos_A.</th>
                         <th>Nombre_A.</th>
@@ -42,7 +42,9 @@
                         <th>Usuario</th>
                     </tr>
                     </thead>
+                    <tr><th colspan="12" class="center-align blue lighten-4">Inscripciones</th></tr>
                     @foreach ($inscripciones as $insc )
+
                         <tr>
                             <td>
                                 @if ($insc->alumno_id == 0)
@@ -92,11 +94,65 @@
                             </td>
                         </tr>
                     @endforeach
+                    <tr><th colspan="12" class="center-align teal lighten-4">Matriculas</th></tr>
+                    @foreach ($matriculas as $mat )
+
+                        <tr>
+                            <td>
+                                @if ($mat->inscripcion->alumno_id == 0)
+                                    {{$mat->factura->representante->persona->apellidos}}
+                                @else
+                                    {{$mat->inscripcion->alumno->persona->apellidos}}
+                                @endif
+                            </td>
+                            <td>
+                                @if ($mat->inscripcion->alumno_id == 0)
+                                    {{$mat->factura->representante->persona->nombres}}
+                                @else
+                                    {{$mat->inscripcion->alumno->persona->nombres}}
+                                @endif
+                            </td>
+                            <td>
+                                {{$mat->inscripcion->calendar->program->modulo->modulo}}
+                            </td>
+                            <td>
+                                {{$mat->inscripcion->calendar->program->escenario->escenario}}
+                            </td>
+                            <td>
+                                {{ $mat->factura_id }}
+                            </td>
+                            <td>
+                                {{number_format($mat->factura->total,2,'.',' ')}}
+                            </td>
+                            <td>
+                                {{number_format($mat->factura->descuento,2,'.',' ')}}
+                            </td>
+                            <td>
+                                {{$mat->inscripcion->estado}}
+                            </td>
+                            <td>
+                                {{$mat->factura->created_at->format('d/m/Y')}}
+                            </td>
+                            <td>
+                                {{ $mat->factura->pago->forma }}
+                            </td>
+                            <td>
+                                @if ($mat->escenario)
+                                    {{ $mat->escenario->escenario }}
+                                @endif
+                            </td>
+                            <td>
+                                {{ $mat->user->getNameAttribute() }}
+                            </td>
+                        </tr>
+                    @endforeach
                 </table><!--end table-responsive-->
             </div><!-- end div ./table-responsive-->
         </div><!--end div ./col-lg-12. etc-->
     </div><!--end div ./row-->
-
+    <div class="center-align">
+        {{ $inscripciones->appends(['start'=>$start,'end'=>$end])->links() }}
+    </div>
 @endsection
 
 @section('scripts')

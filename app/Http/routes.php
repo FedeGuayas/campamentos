@@ -254,9 +254,6 @@ Route::group(['middleware' => ['auth','role:administrator|signup|planner|supervi
     Route::get('/reports/resumen',['as' => 'admin.reports.resumen', 'uses'=>'ReportesController@getResumen']);
     Route::get('/reports/factura',['as' => 'admin.reports.factura', 'uses'=>'ReportesController@getFactura']);
     Route::get('/reports/factura/export',['as' => 'admin.reports.exportFactura', 'uses'=>'ReportesController@exportFactura']);
-    // facturacion matriculas
-    Route::get('/reports/factura/matriculas',['as' => 'admin.reports.factura.matriculas', 'uses'=>'ReportesController@getFacturaMatricula']);
-    Route::get('/reports/factura/export/matriculas',['as' => 'admin.reports.exportFactura.matriculas', 'uses'=>'ReportesController@exportFacturaMatricula']);
     //comprobante de pago de matricula
     Route::get('/reports/matricula/{id}/pdf',['as' => 'admin.reports.matricula.pdf', 'uses'=>'ReportesController@matriculaPDF']);
 

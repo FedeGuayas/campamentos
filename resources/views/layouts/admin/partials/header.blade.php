@@ -84,10 +84,8 @@
                     </li>
                     <li class="divider"></li>
                     <li><a href="{{route('admin.pagos.cuadre')}}" class="waves-effect waves-teal">Cuadre Diario</a></li>
-                    <li><a href="{{route('admin.reports.factura')}}" class="waves-effect waves-teal">Facturación</a>
+                    <li><a href="{{route('admin.reports.factura')}}" class="waves-effect waves-teal">Fact. Masiva</a>
                     </li>
-                    <li><a href="{{route('admin.reports.factura.matriculas')}}" class="waves-effect waves-teal">Fact.
-                            Matricula</a></li>
                     <li class="divider"></li>
                     <li><a href="{{route('admin.reports.excel')}}" class="waves-effect waves-teal">Período Insc.</a>
                     </li>
@@ -257,8 +255,6 @@
                                                    class="waves-effect waves-teal">Cuadre Diario</a></li>
                                             <li><a href="{{route('admin.reports.factura')}}"
                                                    class="waves-effect waves-teal">Facturación</a></li>
-                                            <li><a href="{{route('admin.reports.factura.matriculas')}}"
-                                                   class="waves-effect waves-teal">Fact. Matricula</a></li>
                                             <li class="divider"></li>
                                             <li><a href="{{route('admin.reports.excel')}}"
                                                    class="waves-effect waves-teal">Período Insc.</a></li>

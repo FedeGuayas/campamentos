@@ -52,19 +52,22 @@
     <div class="row">
 
         <table class="table table-striped table-bordered table-condensed table-hover">
-            <thead>
-            <th>Representante</th>
-            <th>CI</th>
-            <th>Dirección</th>
-            <th>Telefono</th>
-            <th>Email</th>
-            <th>Fecha</th>
-            <th>Disciplina</th>
-            <th>Esc. Deportivo</th>
-            <th>Cod-Escenario</th>
-            <th>Valor</th>
-            <th>Forma de Pago</th>
+            <thead class="grey lighten-1">
+            <tr>
+                <th>Representante</th>
+                <th>CI</th>
+                <th>Dirección</th>
+                <th>Telefono</th>
+                <th>Email</th>
+                <th>Fecha</th>
+                <th>Disciplina</th>
+                <th>Esc. Deportivo</th>
+                <th>Pto-Cobro</th>
+                <th>Valor</th>
+                <th>Forma de Pago</th>
+            </tr>
             </thead>
+            <tr><th colspan="11" class="center-align blue lighten-4">Inscripciones</th></tr>
             @foreach ($inscripciones as $insc )
                 <tr>
                     <td>
@@ -92,9 +95,8 @@
                         {{ $insc->calendar->program->escenario->escenario}}
                     </td>
                     <td>
-                        @if(is_null($insc->user->escenario_id))
-                        @else
-                            {{ $insc->user->escenario->codigo}}
+                        @if (isset($insc->escenario))
+                            {{ $insc->escenario->codigo }}
                         @endif
                     </td>
                     <td>
@@ -105,8 +107,45 @@
                     </td>
                 </tr>
             @endforeach
+            <tr><th colspan="11" class="center-align teal lighten-4">Matriculas</th></tr>
+            @foreach ($matriculas as $mat )
+                <tr>
+                    <td>
+                        {{ $mat->factura->representante->persona->getNombreAttribute() }}
+                    </td>
+                    <td>
+                        {{ $mat->factura->representante->persona->num_doc}}
+                    </td>
+                    <td>
+                        {{ $mat->factura->representante->persona->direccion}}
+                    </td>
+                    <td>
+                        {{ $mat->factura->representante->persona->telefono}}
+                    </td>
+                    <td>
+                        {{ $mat->factura->representante->persona->email}}
+                    </td>
+                    <td>
+                        {{ $mat->factura->created_at}}
+                    </td>
+                    <td>
+                        {{ $mat->inscripcion->calendar->program->disciplina->disciplina}}
+                    </td>
+                    <td>
+                        {{ $mat->inscripcion->calendar->program->escenario->escenario}}
+                    </td>
+                    <td>
+                        {{ $mat->escenario->codigo }}
+                    </td>
+                    <td>
+                        {{ $mat->factura->total}}
+                    </td>
+                    <td>
+                        {{ $mat->factura->pago->forma}}
+                    </td>
+                </tr>
+            @endforeach
         </table><!--end table-responsive-->
-
 
     </div><!--end div ./row-->
     {{ $inscripciones->appends(['start'=>$start,'end'=>$end,'escenario'=>$escenario])->links() }}

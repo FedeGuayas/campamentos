@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 
 use App\Escenario;
 use App\Inscripcion;
+use App\PagoMatricula;
 use App\Role;
 use App\User;
 use Carbon\Carbon;
@@ -256,9 +257,19 @@ class UsersController extends Controller
             ->where('estado','Pagada')
             ->orderBy('created_at')
             ->groupBy('factura_id')
+            ->paginate(5);
+
+        $matriculas=PagoMatricula::with('inscripcion','factura','user','escenario')
+            ->whereHas('factura', function($q) use($start,$end) {
+                $q->whereBetween('created_at', [$start, $end]); //fecha de la factura
+            })
+//            ->whereBetween('created_at', [$start, $end])
+            ->orderBy('created_at')
+            ->where('user_id',$user->id)
+            ->limit(3)
             ->get();
 
-        return view('campamentos.users.facturacion.reporte-factura-excell',compact('inscripciones','start','end','user'));
+        return view('campamentos.users.facturacion.reporte-factura-excell',compact('inscripciones','matriculas','start','end','user'));
     }
 
 
@@ -287,12 +298,21 @@ class UsersController extends Controller
             ->orderBy('created_at')
             ->get();
 
-        $arrayExp[] = ['APELLIDOS ALUMNO.','NOMBRES ALUMNO','MODULO','ESCENARIO','COMPROBANTE','VALOR','DESCUENTO','ESTADO','FECHA COBRO','FORMA PAGO','PTO COBRO','USUARIO'
+        $matriculas=PagoMatricula::with('inscripcion','factura','user','escenario')
+            ->whereHas('factura', function($q) use($start,$end) {
+                $q->whereBetween('created_at', [$start, $end]); //fecha de la factura
+            })
+//            ->whereBetween('created_at', [$start, $end])
+            ->where('user_id',$user->id)
+            ->orderBy('created_at')
+            ->get();
+
+        $arrayExp[] = ['APELLIDOS ALUMNO.','NOMBRES ALUMNO','MODULO','ESCENARIO','COMPROBANTE','VALOR','DESCUENTO','CONCEPTO','FECHA COBRO','FORMA PAGO','PTO COBRO','USUARIO'
         ];
 
         foreach ($inscripciones as $insc) {
 
-            if (is_null($insc->escenario_id) || $insc->escenario_id == '0' || $insc->escenario_id == '') {//online
+            if (!isset($insc->escenario)) {//online
                 $pto_cobro = 'N/A';
             } else $pto_cobro = $insc->escenario->escenario;
 
@@ -314,11 +334,42 @@ class UsersController extends Controller
                 'comprobante'=>$insc->factura_id,
                 'valor'=> round(($insc->factura->total) / $cont_comp, 3),
                 'descuento'=>$insc->factura->descuento,
-                'estado'=>$insc->estado,
+                'concepto'=>'Inscripcion',
                 'fecha'=>$insc->factura->created_at->format('d/m/Y'),
                 'formadepago'=> $insc->factura->pago->forma,
                 'ptocobro'=>$pto_cobro,
                 'usuario'=> $insc->user->getNameAttribute(),
+
+            ];
+        }
+
+        foreach ($matriculas as $mat) {
+
+            if (!isset($mat->escenario)) {
+                $pto_cobro = 'N/A';
+            } else $pto_cobro = $mat->escenario->escenario;
+
+            if ($mat->inscripcion->alumno_id == 0) {
+                $alumno_nombre=$mat->factura->representante->persona->nombres;
+                $alumno_apellidos=$mat->factura->representante->persona->apellidos;
+            } else{
+                $alumno_nombre=$mat->inscripcion->alumno->persona->nombres;
+                $alumno_apellidos=$mat->inscripcion->alumno->persona->apellidos;
+            }
+
+            $arrayExp[] = [
+                'alum_ap' => $alumno_apellidos,
+                'alum_nom' => $alumno_nombre,
+                'modulo'=>$mat->inscripcion->calendar->program->modulo->modulo,
+                'escenario'=>$mat->inscripcion->calendar->program->escenario->escenario,
+                'comprobante'=>$mat->factura_id,
+                'valor'=> (float)$mat->factura->total,
+                'descuento'=>$mat->factura->descuento,
+                'concepto'=>'Matricula',
+                'fecha'=>$mat->factura->created_at->format('d/m/Y'),
+                'formadepago'=> $mat->factura->pago->forma,
+                'ptocobro'=>$pto_cobro,
+                'usuario'=> $mat->user->getNameAttribute(),
 
             ];
         }
@@ -335,13 +386,14 @@ class UsersController extends Controller
 //
 //                });
 
-//                $sheet->setColumnFormat(array(
+                $sheet->setColumnFormat(array(
 //                    'A'=>'General',
 //                    'B'=>'General',
 //                    'C'=>'General',
 //                    'D'=>'General',
 //                    'E' => '0',
-//                    'F' => '0',
+                    'F' => '#,##0.00_-',
+                    'G' => '#,##0.00_-',
 //                    'I'=>'@',
 //                    'K'=>'#,##0.00_-',
 //                    'N' => '0',
@@ -356,7 +408,7 @@ class UsersController extends Controller
 //                    'AD'=>'General',
 //                    'AE'=>'General',
 //
-//                ));
+                ));
 
                 $sheet->fromArray($arrayExp,null,'A1',false,false);
             });
