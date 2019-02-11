@@ -41,10 +41,10 @@
                     <li>
                         <img src="{{asset('img/camp/the-ball-cancha.jpg')}}" alt="cancha"> <!-- random image -->
                         <div class="caption center-align z-depth-5 hoverable">
-                            <h1 class="">Campamentos Deportivos</h1>
-                            <h2>Y</h2>
-                            <h2>Escuela de Futbol</h2>
-                            <h2 class="">Fedeguayas - River Plate</h2>
+                            <h1 class="h1-responsive">Campamentos Deportivos</h1>
+                            <h2 class="h2-responsive">Y</h2>
+                            <h2 class="h2-responsive">Escuela de Futbol</h2>
+                            <h2 class="h2-responsive">Fedeguayas - River Plate</h2>
                         </div>
                     </li>
                     <li>
@@ -72,8 +72,8 @@
                     </a>
                 </div>
             </div>
-            <div class="foot-slider-contact">
-                <h6 class="waves-effect waves-light btn  indigo accent-4">Comunícate con nosotros! 042367856 - WhatsApp: 0998848174</h6>
+            <div class="foot-slider-contact ">
+                <h6 class="flow-text card  teal lighten-4 indigo-text">Comunícate con nosotros! 042367856 - WhatsApp: 0998848174</h6>
             </div>
         </div>
     </div>

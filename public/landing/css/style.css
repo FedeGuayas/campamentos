@@ -435,7 +435,7 @@ a:hover.back-to-top {
   position: absolute;
   /*height: inherit;*/
   height: calc(10vh);
-  margin-bottom: 65px;
+  margin-bottom: 80px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -445,10 +445,11 @@ a:hover.back-to-top {
   pointer-events: none;
   left:0;
   width: 100%;
-  overflow:hidden
+  overflow:hidden;
 }
 
 .nav-wrapper {
   background: linear-gradient(to right, indigo , teal);
 }
+
 

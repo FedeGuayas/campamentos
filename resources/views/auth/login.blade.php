@@ -4,13 +4,18 @@
     <br><br><br>
     <div class="container">
         <div class="row">
-            <div class="col s12 m6 offset-l2">
+            <div class="col s12 m6 l6 offset-l3  offset-m3">
 
-
-                <div class="card">
+                <div class="card-panel hoverable z-depth-4 wow flipInX">
 
                     <div class="card-content">
-                        <h3 class="card-title teal-text">Login</h3>
+                        <div>
+                            <h3 class="card-title flow-text indigo-text left">Login</h3>
+                            <a href="{{url('/')}}"
+                               class="btn-floating waves-effect waves-light red right tooltipped"
+                               data-position="left" data-tooltip="Inicio"><i class="fa fa-home"></i>
+                            </a>
+                        </div>
                         <!--Header-->
                         {{-- Mensaje de activacion por email--}}
                         @if (session('status'))
@@ -48,13 +53,15 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="center">
-                            {!! Form::checkbox('remember',null,false,['id'=>'remember', 'class'=>'filled-in']) !!}
-                            {!! Form::label('remember','Recordarme') !!}
+                        <div class="row">
+                            <div class="right-align">
+                                {!! Form::checkbox('remember',null,false,['id'=>'remember', 'class'=>'']) !!}
+                                {!! Form::label('remember','Recordarme') !!}
+                            </div>
                         </div>
-                        <div class="clearfix">
+                        <div class="row">
                             <div class="input-field pull-right">
-                                {!! Form::button('Entrar<i class="fa fa-sign-in left"></i>', ['class'=>'btn ','type' => 'submit']) !!}
+                                {!! Form::button('Entrar<i class="fa fa-sign-in left"></i>', ['class'=>'btn blue darken-4','type' => 'submit']) !!}
 
                             </div>
                         </div>
@@ -64,9 +71,8 @@
 
                     <div class="card-action">
 
-                        <a  class="fa fa-external-link-square blue-text pull-left" href="{{ url('/password/reset') }}"> Olvido su contraseña?</a>
-                        <a  class="fa fa-external-link-square blue-text pull-right" href="{{ url('/register') }}"> Registrarme</a>
-
+                        <a  class="pull-left" href="{{ url('/password/reset') }}"> Olvido su contraseña?</a>
+                        <a  class="pull-right" href="{{ url('/register') }}"> Registrese</a>
                     </div>
 
 

@@ -1,8 +1,8 @@
 (function($){
   $(function(){
 
-    $('.button-collapse').sideNav();
     $('.parallax').parallax();
-    
+
+      // $('.side-nav').sideNav();
   }); // end of document ready
 })(jQuery); // end of jQuery name space

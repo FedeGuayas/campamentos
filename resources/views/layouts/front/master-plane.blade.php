@@ -73,6 +73,9 @@
 
 <script>
 
+    {{--//     Inicializar las animaciones--}}
+        new WOW().init();
+
     $(document).ready(function(){
 
         $('select').material_select({}); //inicializar el select de materialize
@@ -82,14 +85,10 @@
 
          });
 
-        {{--// SideNav init--}}
-        $('.button-collapse').sideNav(
-                {
-                    menuWidth: 240, // Default is 240
-                    edge: 'left', // Choose the horizontal origin
-                    closeOnClick: true // Closes side-nav on <a> clicks, useful for Angular/Meteor
-                }
-        );
+        $('.collapsible').collapsible({
+            accordion : false // A setting that changes the collapsible behavior to expandable instead of the default accordion style
+        });
+
 
         var $backToTop = $(".back-to-top");
         $backToTop.hide();
@@ -106,17 +105,24 @@
             $("html, body").animate({scrollTop: 0}, 500);
 
         });
-    });
 
-    {{--//     Inicializar las animaciones--}}
-            new WOW().init();
-
-
-
-    //Inicicio del slider
-    $(document).ready(function () {
         $('.slider').slider();
+
+//        // SideNav init
+        $('.button-collapse').sideNav(
+            {
+                menuWidth: 240, // Default is 240
+                edge: 'left', // Choose the horizontal origin
+                closeOnClick: true // Closes side-nav on <a> clicks, useful for Angular/Meteor
+            }
+        );
     });
+
+
+
+
+
+
 
 </script>
 

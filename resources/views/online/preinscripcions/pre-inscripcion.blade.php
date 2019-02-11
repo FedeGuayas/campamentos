@@ -13,8 +13,11 @@
     <div class="navbar-fixed">
         <nav class="teal">
             <div class="nav-wrapper">
-                <a id="logo-container" href="{{url('/')}}">
-                    <img src="{{asset('img/camp/fdg-footer.png')}}" alt="logo" class="responsive-img"
+                <a id="logo-container" href="{{url('/')}}" class="brand-logo hide-on-med-and-down">
+                    <img src="{{asset('img/camp/fdg-footer.png')}}" alt="logo" style="max-height: 65px; width: auto;">
+                </a>
+                <a id="logo-container" href="{{url('/')}}" class="hide-on-large-only">
+                    <img src="{{asset('img/camp/fdg-footer.png')}}" alt="logo" class="responsive-img brand-logo right"
                          style="height: 100%">
                 </a>
                 <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
@@ -22,14 +25,13 @@
                     <li><a href="{{url('/')}}">Inicio</a></li>
                     <li><a href="#help">Ayuda</a></li>
                 </ul>
-                <ul class="side-nav" id="mobile-demo">
-                    <li><a href="{{url('/')}}">Inicio</a></li>
-                    <li><a href="#help">Ayuda</a></li>
-                </ul>
-
             </div>
         </nav>
     </div>
+    <ul class="side-nav" id="mobile-demo">
+        <li><a href="{{url('/')}}">Inicio</a></li>
+        <li><a href="#help">Ayuda</a></li>
+    </ul>
 
     <a href="#" class="back-to-top waves-effect waves-light btn btn-floating animated slideInUp">Subir</a>
 

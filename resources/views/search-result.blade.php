@@ -22,7 +22,7 @@
     <div class="container">
 
         <div class="row center">
-            <h5 class="header teal-text"> Resultados de la busquedad para : {{$termino}}</h5>
+            <h5 class="header teal-text"> Resultados para : {{$termino}}</h5>
         </div>
 
         <div class="row">

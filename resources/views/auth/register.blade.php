@@ -4,17 +4,23 @@
     <br><br><br>
 <div class="container">
     <div class="row">
-        <div class="col m8 s12 offset-l1">
+        <div class="col s12 m8 l8 offset-l2 offset-m1">
 
-            <div class="card hoverable z-depth-5">
+            <div class="card-panel hoverable z-depth-4 wow flipInX">
                 <div class="card-content">
-                    <h3 class="card-title teal-text">Registro</h3>
+                    <div class="row">
+                        <h3 class="card-title flow-text indigo-text">Registro</h3>
+                        <a href="{{url('/')}}"
+                           class="btn-floating waves-effect waves-light red right tooltipped"
+                           data-position="left" data-tooltip="Inicio"><i class="fa fa-home"></i>
+                        </a>
+                    </div>
 
                     {!! Form::open(['url'=>'/register','method'=>'POST','role'=>'form']) !!}
                     <div class="row">
-                        <div class="col m5 s12 offset-l1">
+                        <div class="col s12 l6">
                             <div class="form-group{{ $errors->has('first_name') ? ' has-error' : '' }}">
-                                <div class="input-field inline">
+                                <div class="input-field ">
                                     <i class="material-icons prefix blue-text">face</i>
                                     {!! Form::text('first_name',null,['class'=>'validate', 'value'=>"{{ old('first_name')}}",'style'=>'text-transform:uppercase']) !!}
                                     {!! Form::label('first_name','Nombres') !!}
@@ -27,7 +33,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col m6 s12 ">
+                        <div class="col s12 l6">
                             <div class="form-group{{ $errors->has('last_name') ? ' has-error' : '' }}">
                                 <div class="input-field">
                                     {!! Form::text('last_name',null,['class'=>'validate', 'value'=>"{{ old('last_name')}}",'style'=>'text-transform:uppercase']) !!}
@@ -46,7 +52,7 @@
 
                     <div class="row">
                         <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
-                            <div class="input-field inline col m6 s12 offset-l1 ">
+                            <div class="input-field ">
                                 <i class="material-icons prefix blue-text">mail</i>
                                 {!! Form::email('email',null,['class'=>'validate', 'value'=>"{{ old('email')}}"]) !!}
                                 {!! Form::label('email','Correo') !!}
@@ -62,7 +68,7 @@
 
                     <div class="row">
                         <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
-                            <div class="input-field col m6 s12 offset-l1">
+                            <div class="input-field">
                                 <i class="material-icons prefix blue-text">lock_outline</i>
                                 {!! Form::password('password',['class'=>'validate']) !!}
                                 {!! Form::label('password','Contraseña') !!}
@@ -77,7 +83,7 @@
 
                     <div class="row">
                         <div class="form-group{{ $errors->has('password_confirmation') ? ' has-error' : '' }}">
-                            <div class="input-field col m6 s12 offset-l1">
+                            <div class="input-field">
                                 <i class="material-icons prefix blue-text">lock_open</i>
                                 {!! Form::password('password_confirmation',['class'=>'validate']) !!}
                                 {!! Form::label('password_confirmation','Confirmar contraseña') !!}
@@ -92,7 +98,7 @@
 
                     <div class="clearfix">
                         <div class="pull-right">
-                           {!! Form::button('Registrarme<i class="material-icons right">create</i>',['class'=>'btn', 'type'=>'submit']) !!}
+                           {!! Form::button('Registrarme<i class="material-icons right">create</i>',['class'=>'btn blue darken-4', 'type'=>'submit']) !!}
                         </div>
                     </div>
                     {!! Form::close() !!}
