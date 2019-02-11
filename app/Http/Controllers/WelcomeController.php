@@ -10,12 +10,19 @@ use App\Http\Requests;
 
 class WelcomeController extends Controller
 {
+    public function __construct()
+    {
+        Carbon::setlocale('es');
+    }
+
     /** Muestra los cursos en la pantalla de bienvenida
      * @param Request $request
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function welcome(Request $request)
     {
+        Carbon::setlocale('es');
+        setlocale(LC_TIME, 'es_ES.utf8');
         $fecha_actual = Carbon::today();
         $year = $fecha_actual->year;
         $month = $fecha_actual->month;

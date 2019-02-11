@@ -73,7 +73,7 @@
                 </div>
             </div>
             <div class="foot-slider-contact ">
-                <h6 class="flow-text card  teal lighten-4 indigo-text">Comunícate con nosotros! 042367856 - WhatsApp: 0998848174</h6>
+                <h6 class="flow-text card  teal lighten-4 dark-text">Comunícate con nosotros! 042367856 - WhatsApp: 0998848174</h6>
             </div>
         </div>
     </div>
@@ -108,7 +108,7 @@
                                 </div>
                                 <div class="card-content">
                                     <span class="card-title activator grey-text text-darken-4">
-                                        Curso
+                                        Saber más
                                         <i class="material-icons right">more_vert</i>
                                     </span>
                                     <p>
@@ -133,15 +133,20 @@
                                 <div class="card-reveal">
                                     <span class="card-title grey-text text-darken-4">{{$curso->program->disciplina->disciplina}}
                                         <i class="material-icons right">close</i></span>
-                                    <table class="table highlight responsive-table" cellspacing="0" width="100%"
+                                    <table class="table highlight " cellspacing="0"
                                            style="width: 100%">
+                                        <tbody>
                                         <tr>
                                             <th>Escenario</th>
                                             <td>{{$curso->program->escenario->escenario}}</td>
                                         </tr>
                                         <tr>
-                                            <th>Mes</th>
+                                            <th>Módulo</th>
                                             <td>{{$curso->program->modulo->modulo}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Inicia</th>
+                                           <td>{{$curso->program->modulo->inicio->toFormattedDateString() }}</td>
                                         </tr>
                                         <tr>
                                             <th>Matrícula</th>
@@ -168,6 +173,7 @@
                                             <th>Edades</th>
                                             <td>{{ $curso->init_age.'-'.$curso->end_age}} años</td>
                                         </tr>
+                                        </tbody>
                                     </table>
                                 </div>
                             </div>

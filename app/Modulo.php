@@ -17,6 +17,8 @@ class Modulo extends Model
      * @var string
      */
 
+    protected $dates=['inicio','fin'];
+
     protected $table = 'modulos';
 
     /**
