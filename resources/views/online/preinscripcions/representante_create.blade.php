@@ -46,12 +46,12 @@
         </div>
 
         <div class="row">
-            <div class="input-field col m3 s6">
+            <div class="input-field col m3 s12">
                 <i class="fa fa-phone prefix"></i>
                 {!! Form::text('telefono',null,['class'=>'validate','id'=>'telefono']) !!}
                 {!! Form::label('telefono','Teléfono1: *') !!}
             </div>
-            <div class="input-field  col m3 s6">
+            <div class="input-field  col m3 s12">
                 <i class="fa fa-phone prefix"></i>
                 {!! Form::text('phone',null,['class'=>'validate','id'=>'phone']) !!}
                 {!! Form::label('phone','Teléfono2:') !!}

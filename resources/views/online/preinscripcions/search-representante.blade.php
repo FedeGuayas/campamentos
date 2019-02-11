@@ -4,13 +4,13 @@
                 <div class="col s12 ">
                     <h5 class=" flow-text" > Buscar Representante</h5>
                     {!! Form::open(['class'=>'form_noEnter']) !!}
-                        <div class="col s4">
+                        <div class="col s10">
                             <div class="input-field ">
                                 {{--<i class="fa fa-search medium prefix"></i>--}}
                                 {!! Form::text('search',null,['id'=>'search', 'placeholder'=>'Nombres o CI del Representante...','class'=>'tooltipped','data-position'=>'top', 'data-delay'=>'50', 'data-tooltip'=>'Ingrese cédula o nombres a buscar']) !!}
                             </div>
                         </div>
-                        <div class="col s6">
+                        <div class="col s2">
                             <div class="input-field ">
                                 <a href="#" type="button" id="Buscar" class="btn-floating indigo waves-effect waves-light tooltipped"
                                    data-position="top" data-delay="50" data-tooltip="Buscar"><i class="fa fa-search"></i>
@@ -21,13 +21,13 @@
                     {!! Form::close() !!}
                 </div>
             </div>
-            <div class="card">
-                <div class="panel panel-info">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">Resultado</h3>
-                    </div>
+            {{--<div class="card">--}}
+                {{--<div class="panel panel-info">--}}
+                    {{--<div class="panel-heading">--}}
+                        <h5 class="teal-text">Resultado</h5>
+                    {{--</div>--}}
 
-                    <div class="panel-body center-align">
+                    {{--<div class="panel-body center-align" style="overflow: scroll">--}}
 
                         <div id="search-result"></div>
 
@@ -70,10 +70,10 @@
                             </div>
                         </div>
 
-                    </div>
+                    {{--</div>--}}
 
-                </div>
-            </div>
+                {{--</div>--}}
+            {{--</div>--}}
         </div>
         <div class="modal-footer">
             <div class="left">

@@ -1,4 +1,4 @@
-<table class="table table-striped table-bordered table-condensed table-hover highlight responsive-table" id="table_search">
+<table class="table table-striped table-bordered table-condensed table-hover highlight " id="table_search">
     <thead>
         <th hidden>Id</th>
         <th>Nombres y Apellidos</th>

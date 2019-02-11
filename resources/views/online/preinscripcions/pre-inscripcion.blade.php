@@ -79,12 +79,12 @@
                         <br>
 
                         <div class="row">
-                            <div class="input-field col m7 s12">
+                            <div class="input-field col m7 s10">
                                 {{--Este campo almacena el id de persona--}}
                                 {!! Form::select('representante_id',['placeholder'=>'Seleccione ...'],null,['id'=>'representante_id','required']) !!}
                                 {!! Form::label('representante_id', 'Representante:*') !!}
                             </div>
-                            <div class="col m2 s6">
+                            <div class="col m2 s2">
                                 <a href="#search-repre" type="button"
                                    class="btn-floating red waves-effect waves-light tooltipped modal-trigger"
                                    data-position="top" data-delay="50" data-tooltip="Buscar Representante"><i
@@ -96,7 +96,7 @@
                                             class="fa fa-plus"></i>
                                 </a>
                             </div>
-                            <div class="col m3 s6 pull-left">
+                            <div class="col m3 s12 pull-left">
                                 {!! Form::checkbox('adulto',null,false,['id'=>'adulto']) !!}
                                 {!! Form::label('adulto','Inscripción para mayores',['class'=>'tooltipped','data-position'=>'top', 'data-delay'=>'50', 'data-tooltip'=>'Inscripción para mayores de 18 años']) !!}
                             </div>
@@ -104,11 +104,11 @@
 
                         <div class="row">
                             <div class="alumno">
-                                <div class="input-field col m7 s12">
+                                <div class="input-field col m7 s10">
                                     {!! Form::select('alumno_id',['placeholder'=>'Seleccione ...'],null,['id'=>'alumno_id']) !!}
                                     {!! Form::label('alumno_id', 'Alumno:*') !!}
                                 </div>
-                                <div class="col m3 s6">
+                                <div class="col m3 s2">
                                     <a href="#modal-alumno" type="button"
                                        class="btn-floating blue waves-effect waves-light tooltipped modal-alumno modal-trigger"
                                        data-position="top" data-delay="50" data-tooltip="Crear Alumno">
@@ -116,7 +116,7 @@
                                     </a>
                                 </div>
                             </div>
-                            <div class="col l4 right">
+                            <div class="col s10 l4 right">
                                 {!! Form::text('estacion',null,['id'=>'estacion', 'class'=>'hidden']) !!}
                             </div>
                         </div>
@@ -178,14 +178,14 @@
                         </div>
 
                         <div class="row">
-                            <div class="col s3 left">
+                            <div class="col s12 m4 left">
                                 <div class="input-field disabled">
                                     <i class="fa fa-usd prefix" aria-hidden="true"></i>
                                     {!! Form::label('valor','Valor:') !!}
                                     {!! Form::number('valor',null,['placeholder'=>'0.00','style'=>'font-size: large','readonly', 'class'=>'valor' ]) !!}
                                 </div>
                             </div>
-                            <div  class="col s8 right mensaje_membresia hide">
+                            <div  class="col s12 m8 right mensaje_membresia hide">
                                 <h6>
                                     <blockquote>
                                         <p id="mensaje_membresia"></p>
