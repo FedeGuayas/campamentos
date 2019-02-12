@@ -1,5 +1,12 @@
 @extends('layouts.front.master-plane')
 @section('title','Registrarse')
+@section('style')
+    <style>
+        body {
+            background: linear-gradient(to bottom, indigo , teal);"
+        }
+    </style>
+@endsection
 @section('body')
     <br><br><br>
 <div class="container">
