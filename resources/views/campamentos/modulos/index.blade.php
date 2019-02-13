@@ -48,8 +48,8 @@
                         <tr>
                             <td>{{ $modulo->id }}</td>
                             <td>{{ $modulo->modulo }}</td>
-                            <td>{{ $modulo->inicio }}</td>
-                            <td>{{ $modulo->fin }}</td>
+                            <td>{{ $modulo->inicio->toDateString() }}</td>
+                            <td>{{ $modulo->fin->toDateString() }}</td>
                             <td>
                                 @if ($modulo->esRiver())
                                     <span class="text-danger">SI</span>

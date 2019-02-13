@@ -84,7 +84,7 @@
                                         {{$curso->program->disciplina->disciplina}}
 
                                         <i class="material-icons right">close</i></span>
-                                    <table class="table highlight responsive-table" cellspacing="0" width="100%"
+                                    <table class="table highlight" cellspacing="0" width="100%"
                                            style="width: 100%">
                                         <tr>
                                             <th>Escenario</th>

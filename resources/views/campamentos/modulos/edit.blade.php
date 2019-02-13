@@ -28,11 +28,11 @@
                         <div class="row">
                             <div class="input-field col s6 ">
                                 {!! Form::label('inicio','Inicio:') !!}
-                                {!! Form::date('inicio',null,['class'=>'datepicker']) !!}
+                                {!! Form::date('inicio',$modulo->inicio,['class'=>'datepicker']) !!}
                             </div>
                             <div class="input-field col s6 ">
                                 {!! Form::label('fin','Fin:') !!}
-                                {!! Form::date('fin',null,['class'=>'datepicker']) !!}
+                                {!! Form::date('fin',$modulo->fin,['class'=>'datepicker']) !!}
                             </div>
                         </div>
 
@@ -62,10 +62,10 @@
             function checkDate() {
 
                 if ($('.datepicker').val() == '') {
-                    $('.datepicker').addClass('invalid')
+                    $('.datepicker').addClass('invalid');
                     $flag=0;
                 } else {
-                    $('.datepicker').removeClass('invalid')
+                    $('.datepicker').removeClass('invalid');
                     $flag=1;
                 }
             }
@@ -76,7 +76,7 @@
 
             $('.form_datepicker').submit(function() {
                 checkDate();
-                if ($flag==0){
+                if ($flag===0){
                     return false;
                 }else{
                     return true;
@@ -86,8 +86,8 @@
 
             $('.datepicker').pickadate({
                 selectMonths: true, // Creates a dropdown to control month
-                selectYears: 50, // Creates a dropdown of 15 years to control year
-            format: 'yyyy/mm/dd'
+                selectYears: 5, // Creates a dropdown of 15 years to control year
+                format : 'yyyy-mm-dd'
             });
 
         });
