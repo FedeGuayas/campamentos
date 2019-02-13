@@ -12,7 +12,8 @@
         "doctrine/dbal": "^2.5",
         "yajra/laravel-datatables-oracle": "~6.0",
         "maatwebsite/excel": "~2.1.0",
-        "barryvdh/laravel-dompdf": "^0.7.0"
+        "barryvdh/laravel-dompdf": "^0.7.0",
+        "fx3costa/laravelchartjs": "^2.5"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

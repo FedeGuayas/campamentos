@@ -163,6 +163,7 @@ return [
         Maatwebsite\Excel\ExcelServiceProvider::class,
         Barryvdh\DomPDF\ServiceProvider::class,
         'App\Providers\ValidatorServiceProvider',
+        Fx3costa\LaravelChartJs\Providers\ChartjsServiceProvider::class
 
     ],
 

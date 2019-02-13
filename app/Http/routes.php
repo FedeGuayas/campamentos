@@ -60,9 +60,7 @@ Route::group(['middleware' => ['auth','role:administrator|signup|planner|supervi
 //Route::group(['prefix' => 'admin'], function () {
 
     //borrar
-    Route::get('index', ['as' => 'admin.index', function () {
-        return view('layouts.admin.index');
-    }]);
+    Route::get('dashboard', ['as' => 'admin.index', 'uses'=>'BackendController@getDashboard']);
 
     //*****SELECT DINAMICOS para crear inscripcion****//
 
