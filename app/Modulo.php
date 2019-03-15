@@ -19,6 +19,8 @@ class Modulo extends Model
 
     protected $dates=['inicio','fin'];
 
+    protected $dateFormat = 'Y-m-d';
+
     protected $table = 'modulos';
 
     /**

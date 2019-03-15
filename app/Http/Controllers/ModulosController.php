@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Escenario;
 use App\Modulo;
 use App\Program;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Session;
 use App\Http\Requests;
@@ -54,10 +55,15 @@ class ModulosController extends Controller
             $modulo_river = Modulo::NO_RIVER;
         }
 
+//        $inicio = Carbon::createFromFormat('Y-m-d', $request->get('inicio'));
+        $inicio = $request->get('inicio');
+        $fin = $request->get('fin');
+
+//dd($inicio);
         $modulo=new Modulo();
         $modulo->modulo=strtoupper($request->get('modulo'));
-        $modulo->inicio=$request->get('inicio');
-        $modulo->fin=$request->get('fin');
+        $modulo->inicio=$inicio;
+        $modulo->fin=$fin;
         $modulo->modulo_river=$modulo_river;
 
         $modulo->save();
