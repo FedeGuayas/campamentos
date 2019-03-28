@@ -171,10 +171,11 @@ Route::group(['middleware' => ['auth','role:administrator|signup|planner|supervi
     Route::get('/facturas/get',['as' => 'admin.facturas', 'uses'=>'FacturasController@getAll']);
     Route::get('/matriculas',['as' => 'admin.matriculas', 'uses'=>'PagoMatriculaController@getAll']);
 
-    //permite eliminar alumnos  representantes, inscripciones, comprobantes  con botones en datatable con ajax, paginando
+    //permite eliminar alumnos  representantes, inscripciones, comprobantes, matriculas  con botones en datatable con ajax, paginando
     Route::get('alumnos/{alumno?}/delete',['as' => 'admin.alumnos.delete', 'uses'=>'AlumnosController@destroy']);
     Route::get('representante/{representante?}/delete',['as' => 'admin.representante.delete', 'uses'=>'RepresentantesController@destroy']);
     Route::get('inscripcion/delete/{inscripcion?}/',['as' => 'admin.inscripcions.delete', 'uses'=>'InscripcionsController@destroy']);
+    Route::get('pago_matriculas/delete/{matricula}/',['as' => 'admin.matriculas.delete', 'uses'=>'PagoMatriculaController@destroy']);
     Route::get('facturas/delete/{comprobante?}/',['as' => 'admin.facturas.delete', 'uses'=>'FacturasController@destroy']);
 
     //eliminar curso

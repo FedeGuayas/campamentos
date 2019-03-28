@@ -16,9 +16,9 @@ class CreatePagoMatriculasTable extends Migration
             $table->increments('id');
             $table->integer('inscripcion_id')->unsigned(); //inscripcion de referencia para el pago de la matricula
             $table->integer('user_id')->unsigned(); //ususario que cobro la matricula
-            $table->integer('user_delete')->unsigned()->nullable(); //ususario que cobro la matricula
+            $table->integer('user_delete')->unsigned()->nullable(); //usuario que elimino la matricula
             $table->integer('escenario_id')->unsigned();//pto_cobro donde se cobro la matricula
-            $table->integer('factura_id')->unsigned(); //factura que se genear con este cobro
+            $table->integer('factura_id')->unsigned(); //factura que se genera con este cobro
             $table->double('matricula',5,2); //costo de la matricula
             $table->char('anio',4); //año del cobro
             $table->timestamps();

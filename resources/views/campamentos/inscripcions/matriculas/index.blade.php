@@ -180,7 +180,10 @@
 
             var id = btn.value;
             var token = $("#token").val();
-            var route = "inscripcion/delete/" + id + "";
+            var url = "{{route('admin.matriculas.delete',':ID')}}";
+            var route = url.replace(':ID', id);
+
+//            var route = "inscripcion/delete/" + id + "";
 
             swal({
                     title: "Confirme para eliminar?",
@@ -192,7 +195,7 @@
                     cancelButtonText: " NO!",
                     closeOnConfirm: false,
                     closeOnCancel: false,
-                    showLoaderOnConfirm: true,
+                    showLoaderOnConfirm: true
                 },
                 function (isConfirm) {
                     if (isConfirm) {
@@ -204,18 +207,22 @@
                                 contentType: 'application/x-www-form-urlencoded',
                                 dataType: 'json',
                                 success: function (response) {
-                                    swal("Confirmado!", response.resp, "success");
-                                    $('#inscripcion_table').DataTable().draw();
+                                    var estado = 'success';
+                                    if (response.estado === 'error'){
+                                       estado= 'error';
+                                    }
+                                    swal("", response.resp, estado);
+                                    $('#matricula_table').DataTable().draw();
                                 },
                                 error: function (resp) {
-                                    console.log('Error al eliminar con ajax');
+                                    console.log('Error al eliminar con ajax',resp);
                                 }
                             });
 //                        swal("Respuesta ajax");
                         }, 2000);
                     }//isConfirm
                     else {
-                        swal("Cancelado", "Canceló la eliminación de la inscripcióm :)", "error");
+                        swal("Cancelado", "Canceló la eliminación de la matricula :)", "error");
                     }
                 });
         }

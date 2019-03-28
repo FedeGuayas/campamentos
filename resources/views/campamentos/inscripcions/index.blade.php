@@ -212,7 +212,7 @@
                     cancelButtonText: " NO!",
                     closeOnConfirm: false,
                     closeOnCancel: false,
-                    showLoaderOnConfirm: true,
+                    showLoaderOnConfirm: true
                 },
                 function (isConfirm) {
                     if (isConfirm) {
@@ -224,7 +224,11 @@
                                 contentType: 'application/x-www-form-urlencoded',
                                 dataType: 'json',
                                 success: function (response) {
-                                    swal("Confirmado!", response.resp, "success");
+                                    var estado = 'success';
+                                    if (response.estado === 'error'){
+                                        estado= 'error';
+                                    }
+                                    swal("Confirmado!", response.resp, estado);
                                     $('#inscripcion_table').DataTable().draw();
                                 },
                                 error: function (resp) {

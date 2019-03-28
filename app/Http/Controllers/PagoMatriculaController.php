@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Factura;
 use App\Inscripcion;
 use App\PagoMatricula;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
+use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
 
 use Yajra\Datatables\Datatables;
@@ -22,6 +24,7 @@ class PagoMatriculaController extends Controller
         $this->middleware(['role:planner|administrator'], ['only' => ['update']]);
         $this->middleware(['role:administrator|supervisor|planner'], ['only' => ['destroy']]);
     }
+
     /**
      * Display a listing of the resource.
      *
@@ -58,7 +61,7 @@ class PagoMatriculaController extends Controller
                 ->where('estado', 'Pagada')
                 ->limit(30);
 
-            $matriculas = PagoMatricula::with('inscripcion','inscripcion.calendar','inscripcion.calendar.dia','inscripcion.calendar.program','inscripcion.calendar.program.disciplina','inscripcion.calendar.program.escenario','inscripcion.calendar.program.modulo','factura','factura.representante','factura.representante.persona','user','escenario')
+            $matriculas = PagoMatricula::with('inscripcion', 'inscripcion.calendar', 'inscripcion.calendar.dia', 'inscripcion.calendar.program', 'inscripcion.calendar.program.disciplina', 'inscripcion.calendar.program.escenario', 'inscripcion.calendar.program.modulo', 'factura', 'factura.representante', 'factura.representante.persona', 'user', 'escenario')
 //                ->join('inscripcions', 'inscripcions.id', '=', 'pago_matriculas.inscripcion_id')
 //                ->select('pago_matriculas.*', 'inscripcions.calendar_id')
             ;
@@ -67,6 +70,13 @@ class PagoMatriculaController extends Controller
                              <a href="{{  route(\'admin.reports.matricula.pdf\',[$id] ) }}" target="_blank">
                                 {!! Form::button(\'<i class="tiny fa fa-file-pdf-o"></i>\',[\'class\'=>\'label waves-effect waves-light orange accent-4\']) !!}
                                </a>
+                                <!--Si tiene permisos para eliminar inscripciones-->
+                                @if (Entrust::can(\'delete_inscripcion\')) 
+                                <!--Si el usuario pertenece al escenario donde se realizo la inscripcion o es el planificador o admin-->
+                                @if(Auth::user()->escenario_id==$escenario_id ||  Entrust::hasRole([\'planner\',\'administrator\']))
+                                    {!! Form::button(\'<i class="tiny fa fa-trash-o" ></i>\',[\'class\'=>\'label waves-effect waves-light red darken-1\',\'value\'=>$id,\'onclick\'=>\'eliminar(this)\']) !!}
+                                @endif
+                            @endif
                             ';
 
 
@@ -91,16 +101,11 @@ class PagoMatriculaController extends Controller
                 ->filterColumn('representante', function ($query, $keyword) {
                     $query->whereRaw("CONCAT(personas.nombres,'',personas.apellidos) like ?", ["%{$keyword}%"]);
                 })
-
                 ->make(true);
         }
 
 //        return view('campamentos.inscripcions.index');
     }
-
-
-
-
 
 
     /**
@@ -116,7 +121,7 @@ class PagoMatriculaController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -127,7 +132,7 @@ class PagoMatriculaController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -138,7 +143,7 @@ class PagoMatriculaController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -149,8 +154,8 @@ class PagoMatriculaController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \Illuminate\Http\Request $request
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -161,11 +166,55 @@ class PagoMatriculaController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
-        //
+
+
+        if (Auth::user()->hasRole(['planner', 'administrator', 'supervisor'])) {
+
+            if ($request->ajax()) {
+
+                $matricula = PagoMatricula::where('id', $id)->with('factura', 'inscripcion', 'user', 'escenario')->first();
+
+                $today=Carbon::today();
+                // agregar al dia de hoy el fin de la jornada hoy 18:00, hoy a las 6 pm
+                $hoy= Carbon::create($today->year,$today->month,$today->day,18,0,0);
+
+                // sumar a la fecha de creacion de la matricula 18 hrs para saber si se realizo en el dia de hoy hasta las 6 pm
+                $mat_creada=$matricula->created_at->addHours(18); // para comparar que sea creado en el dia actual hasta las 6 pm 18:00
+
+                // comparar si la fecha de hoy hasta las 6 pm es mayot o igual que la crecion de la matricula sumandole 18 hrs
+                $realizada_hoy=$mat_creada->gte($hoy);
+
+                // se realizo la matricula antes del dia de hoy (realizada_hoy=false), no se permite borrar por la facturacion si no es admin
+                if (!$realizada_hoy && !Auth::user()->hasRole(['administrator'])){
+                    return response()->json([
+                        'resp' => 'EL usuario solo podrá eliminar matriculas creadas el mismo día por temas de facturación. Solo el administrador podrá eliminar esta matricula previa aprobación de tesoreria que debe enviar un correo electrónico al departamento de sistemas detallando las sgtes columnas de la matricula a eliminar: No. , No. inscripcion y Comprobante',
+                        'estado'=>'error' ],200);
+                }
+
+                // elimino matricula y actualizo el usuario que la elimino
+                if($matricula->delete()) {
+                    $matricula = PagoMatricula::where('id', $id)->withTrashed()->first();
+                    $matricula->user_delete = $request->user()->id;
+                    $matricula->update();
+                }
+
+                $factura = Factura::where('id', $matricula->factura_id);
+                $factura->delete();
+
+                $message = 'Matricula eliminada';
+                return response()->json(['resp' => $message],200);
+            }
+
+        } else
+            if ($request->ajax()) {
+                return response()->json(['resp' => 'No tiene permisos para realizar esta acción','estado'=>'error']);
+            } else {
+                return abort(403);
+            }
     }
 }

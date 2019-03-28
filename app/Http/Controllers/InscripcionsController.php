@@ -1247,6 +1247,19 @@ class InscripcionsController extends Controller
 
                 $inscripcion = Inscripcion::where('id', $id)->with('factura', 'calendar', 'user', 'alumno')->first();
 
+                $today=Carbon::today();
+                $hoy= Carbon::create($today->year,$today->month,$today->day,18,0,0);
+
+                $insc_creada=$inscripcion->created_at->addHours(18);
+
+                $realizada_hoy=$insc_creada->gte($hoy);
+
+                if (!$realizada_hoy && !Auth::user()->hasRole(['administrator'])){
+                    return response()->json([
+                        'resp' => 'EL usuario solo podrá eliminar inscripciones creadas el mismo día por temas de facturación. Solo el administrador podrá eliminar esta inscripción previa aprobación de tesoreria que debe enviar un correo electrónico al departamento de sistemas detallando las sgtes columnas de la inscripción a eliminar: No. , CI Rep. y Comprobante',
+                        'estado'=>'error' ],200);
+                }
+
                 $modulo = $inscripcion->calendar->program->modulo;
 
                 if ($modulo->esRiver()) {
