@@ -89,6 +89,8 @@
                     <li class="divider"></li>
                     <li><a href="{{route('admin.reports.excel')}}" class="waves-effect waves-teal">Período Insc.</a>
                     </li>
+                    <li><a href="{{route('admin.reports.matricula')}}" class="waves-effect waves-teal">Matrículas</a>
+                    </li>
                     <li><a href="{{route('admin.reports.personalizado')}}"
                            class="waves-effect waves-teal">Personalizado</a>
                     </li>
@@ -258,6 +260,8 @@
                                             <li class="divider"></li>
                                             <li><a href="{{route('admin.reports.excel')}}"
                                                    class="waves-effect waves-teal">Período Insc.</a></li>
+                                            <li><a href="{{route('admin.reports.matricula')}}"
+                                                   class="waves-effect waves-teal">Matrículas</a></li>
                                             <li><a href="{{route('admin.reports.personalizado')}}"
                                                    class="waves-effect waves-teal">Personalizado</a>
                                             </li>

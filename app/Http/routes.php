@@ -242,6 +242,8 @@ Route::group(['middleware' => ['auth','role:administrator|signup|planner|supervi
     //Reportes
     Route::get('/reports/excel',['as' => 'admin.reports.excel', 'uses'=>'ReportesController@getExcel']);
     Route::get('/reports/excel/export',['as' => 'admin.reports.exportExcel', 'uses'=>'ReportesController@exportExcel']);
+    Route::get('/reports/matriculas',['as' => 'admin.reports.matricula', 'uses'=>'ReportesController@getMatriculas']);
+    Route::get('/reports/matriculas/export',['as' => 'admin.reports.exportMatricula', 'uses'=>'ReportesController@exportMatriculas']);
     Route::get('/reports/personalizado',['as' => 'admin.reports.personalizado', 'uses'=>'ReportesController@getPersonal']);
     Route::get('/reports/excel/export/custom',['as' => 'admin.reports.exportPersonalizado', 'uses'=>'ReportesController@exportPersonal']);
     Route::get('/reports/general{data?}',['as' => 'admin.reports.general', 'uses'=>'ReportesController@getGeneral']);

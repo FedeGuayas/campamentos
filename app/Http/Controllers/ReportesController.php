@@ -183,6 +183,109 @@ class ReportesController extends Controller
     }
 
     /**
+     * Vista para Generar Reporte por Periodo de pago de Matriculas
+     * @param Request $request
+     * @return mixed
+     */
+    public function getMatriculas(Request $request)
+    {
+        $start = $request->get('start');
+        $end = $request->get('end');
+
+        $start = new Carbon($start);
+        $start = $start->toDateString();
+        $end = new Carbon($end);
+        $end = $end->toDateString();
+
+        $matriculas = PagoMatricula::
+        with('factura','user', 'escenario', 'inscripcion')
+            ->whereHas('factura', function ($q) use ($start, $end) {
+                $q->whereBetween('created_at', [$start, $end]);
+            })
+            ->paginate(10);
+
+        return view('campamentos.reportes.matriculas.reporte-matricula', compact('matriculas', 'start', 'end'));
+    }
+
+    /**
+     * Exportar Generar Reporte por Periodo de pago de Matriculas
+     * @param Request $request
+     */
+    public function exportMatriculas(Request $request)
+    {
+        $start = $request->get('start');
+        $end = $request->get('end');
+
+        $start = new Carbon($start);
+        $start = $start->toDateString();
+        $end = new Carbon($end);
+        $end = $end->toDateString();
+
+        $inscripciones = Inscripcion::
+        with('factura', 'calendar', 'user', 'alumno', 'escenario')
+            ->whereHas('factura', function ($q) use ($start, $end) {
+                $q->whereBetween('created_at', [$start, $end]);
+            })
+            ->where('inscripcions.estado', 'Pagada')
+            ->whereNull('cart');
+
+        $matriculas = PagoMatricula::
+        with('factura','user', 'escenario', 'inscripcion')
+            ->whereHas('factura', function ($q) use ($start, $end) {
+                $q->whereBetween('created_at', [$start, $end]);
+            });
+
+
+        $arrayExp[] = ['Recibo', 'Inscripción', 'Representante', 'CI Repres.', 'Usuario', 'Pto Cobro', 'Comprobante', 'Valor', 'Fecha_Cobro', 'Forma_Pago'];
+
+        $count = $matriculas->count();
+        $off_ex = 100;
+        for ($j = 0; $j < $count / $off_ex; $j++) {
+
+            $matriculass = $matriculas->skip($j * $off_ex)->take($off_ex)->get();
+
+            foreach ($matriculass as $mat) {
+
+
+
+                $arrayExp[] = [
+                    'recibo' => $mat->id,
+                    'inscripcion'=>$mat->inscripcion_id,
+                    'representante' => $mat->factura->representante->persona->getNombreAttribute(),
+                    'ced_representante' => $mat->factura->representante->persona->num_doc,
+                    'usuario' => $mat->user->getNameAttribute(),
+                    'pto_cobro' => $mat->escenario->escenario,
+                    'comprobante' => $mat->factura_id,
+                    'valor' => $mat->matricula,
+                    'fecha_cob' => $mat->factura->created_at,
+                    'fpago' => $mat->factura->pago->forma
+                ];
+            }
+        }
+
+        set_time_limit(0);
+        ini_set('memory_limit', '1G');
+
+        Excel::create('Reporte_Matriculas- ' . Carbon::now() . '', function ($excel) use ($arrayExp) {
+
+            $excel->sheet('Matriculas', function ($sheet) use ($arrayExp) {
+
+                $sheet->setBorder('A1:J1', 'thin', 'thin', 'thin', 'thin');
+                $sheet->cells('A1:J1', function ($cells) {
+                    $cells->setBackground('#F5F5F5');
+                    $cells->setFontWeight('bold');
+                    $cells->setAlignment('center');
+
+                });
+
+                $sheet->fromArray($arrayExp, null, 'A1', false, false);
+
+            });
+        })->export('xlsx');
+
+    }
+
+    /**
      * Comprovantes de inscripcion en pdf
      * @param $id
      * @return mixed
