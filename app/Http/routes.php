@@ -206,6 +206,7 @@ Route::group(['middleware' => ['auth','role:administrator|signup|planner|supervi
     Route::resource('fpagos', 'PagosController');
     Route::resource('calendars', 'CalendarsController');
     Route::resource('descuentos', 'DescuentosController');
+    Route::resource('tipo_descuentos', 'TipoDescuentoController');
     Route::resource('facturas', 'FacturasController');
     Route::resource('inscripcions', 'InscripcionsController');
     Route::resource('pago_matriculas', 'PagoMatriculaController');

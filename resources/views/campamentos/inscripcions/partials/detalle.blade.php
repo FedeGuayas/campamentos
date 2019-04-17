@@ -74,16 +74,24 @@
         <tr>
             <td></td><td></td><td></td><td></td><td></td>
             <td>Conceptos: </td>
-            <td>
-                @if($tipo_desc=='familiar')
-                    10% Inscripción Familiar
-                @endif
-                @if($tipo_desc=='multiple')
-                    10% Inscripción multiples meses
-                @endif
-                @if($tipo_desc=='empleado')
+            <td colspan="5">
+{{--                {{ $tipo_desc->porciento.'%'. $tipo_desc->descripcion }}--}}
+{{--                {{$tipo_desc}}--}}
+                @if(  $desc_emp == 'true' && !isset($tipo_desc))
                     50% Empleado
                 @endif
+                @if( isset($tipo_desc))
+                    {{ $tipo_desc->porciento.'%'. $tipo_desc->descripcion }}
+                @endif
+                {{--@if($tipo_desc=='multiple')--}}
+                    {{--10% Inscripción multiples meses--}}
+                {{--@endif--}}
+                {{--@if($tipo_desc=='empleado')--}}
+                    {{--50% Empleado--}}
+                {{--@endif--}}
+                {{--@if($tipo_desc=='u_educativa')--}}
+                    {{--20% Unidad Educativa--}}
+                {{--@endif--}}
             </td>
             <td></td><td></td>
         </tr>

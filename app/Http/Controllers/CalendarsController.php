@@ -10,6 +10,7 @@ use App\Disciplina;
 use App\Escenario;
 use App\Persona;
 use App\Profesor;
+use App\TipoDescuento;
 use Carbon\Carbon;
 use Event;
 use App\Events\NuevaInscripcion;
@@ -221,6 +222,7 @@ class CalendarsController extends Controller
      * @return mixed
      */
     public function getDias(Request $request){
+
         if ($request->ajax()){
 
             $escenario_id=$request->get('escenario');
@@ -231,11 +233,11 @@ class CalendarsController extends Controller
                 ->where('disciplina_id',$disciplina_id)
                 ->where('modulo_id',$modulo_id)->first();
 
-            if ($request->input('alumno_id')=='null' || !$request->input('alumno_id')){
+            if ($request->input('alumno_id')=='' || !$request->input('alumno_id')=='placeholder' ) {
+
                 $representante=Representante::where('persona_id',$request->input('representante_id'))->with('persona')->first();
                 $edad=$representante->getEdad($representante->persona->fecha_nac); //edad del representante, insc de adulto
                 $anio_nac = Persona::getAnioNacimiento($representante->persona->fecha_nac);
-
             }else {
                 $alumno=Alumno::where('id',$request->input('alumno_id'))->with('persona')->first();
                 $edad=$alumno->getEdad($alumno->persona->fecha_nac); //edad del alumno inscrito
@@ -637,18 +639,20 @@ class CalendarsController extends Controller
 
         $cancelado_mensual = $request->input('valor');
 
-
-        $familiar=$request->input('familiar');//on or off,  10% familiares hermanos
-        $primo=$request->input('primo');//on or off,  5% primos
-        $multiple=$request->input('multiple');//on or off, 10% inscripcion en mismo curso 3 meses o mas
+        $descuento_id = $request->input('descuento_id');
+        $descuento_aplicado=TipoDescuento::where('id',$descuento_id)->first();
 
         $tipo_desc='';
-        if ($familiar=='on')
-            $tipo_desc='familiar';
-        if ($multiple=='on')
-            $tipo_desc='multiple';
-        if ($primo=='on')
-            $tipo_desc='primo';
+        if (isset($descuento_aplicado)) {
+            $tipo_desc=$descuento_aplicado;
+//            $descuento= $mensualidad * ($descuento_aplicado->multiplicador); //mensualidad * %descuento
+        }
+
+//        $familiar=$request->input('familiar');//on or off,  10% familiares hermanos
+//        $primo=$request->input('primo');//on or off,  5% primos
+//        $u_educativa=$request->input('u_educativa');//on or off, 20% inscripcion
+//        $multiple=$request->input('multiple');//on or off, 10% inscripcion en mismo curso 3 meses o mas
+
 
         if ($request->input('adulto')=='on'){
             $alumno=$representante;
@@ -714,25 +718,38 @@ class CalendarsController extends Controller
 //            $matricula+=$curso['matricula']; //costo de la matricula en caso que aplique
 //        }
 
-        $descuento=0;
-        if ($desc_emp=='true'){
-            $desc=0.5; //50% empleado
-            $descuento= $precioTotal*$desc; //mensualidadTotal*desc_empleado 
-            $tipo_desc='empleado';
-        }else if ($tipo_desc=='familiar' || $tipo_desc=='multiple'){
-            $desc=0.1; //10% desc hermanos y multiple
-            $descuento=$precioTotal*$desc; //mensualidadTotal*desc
-        }else if ($tipo_desc=='primo'){
-            $desc=0.05; //5% desc primos
-            $descuento=$precioTotal*$desc; //mensualidadTotal*desc
+
+        $descuento = 0;
+        if ( $desc_emp == 'true') {
+            $desc = 0.5; //50%
+            $descuento = $precioTotal * $desc;
         }
+        if (isset($tipo_desc)) {
+            $descuento= $precioTotal * ($tipo_desc->multiplicador); //mensualidad * %descuento
+        }
+
+//        $descuento=0;
+//        if ($desc_emp=='true'){
+//            $desc=0.5; //50% empleado
+//            $descuento= $precioTotal*$desc; //mensualidadTotal*desc_empleado
+//            $tipo_desc='empleado';
+//        }else if ($tipo_desc=='familiar' || $tipo_desc=='multiple'){
+//            $desc=0.1; //10% desc hermanos y multiple
+//            $descuento=$precioTotal*$desc; //mensualidadTotal*desc
+//        }else if ($tipo_desc=='primo'){
+//            $desc=0.05; //5% desc primos
+//            $descuento=$precioTotal*$desc; //mensualidadTotal*desc
+//        } else if ($tipo_desc=='u_educativa'){
+//            $desc=0.20; //20% unidad educativa
+//            $descuento=$precioTotal*$desc;
+//        }
 
         $subTotal=$precioTotal + $matriculaTotal; //mensualidadTotal + matriculaTotal
 
         $total=$subTotal-$descuento; //total aplicado los descuentos
 
 
-        return view('campamentos.inscripcions.partials.detalle',compact('cursos','descuento','total','tipo_desc','subTotal','precioTotal','matriculaTotal'));
+        return view('campamentos.inscripcions.partials.detalle',compact('cursos','descuento','total','tipo_desc','desc_emp','subTotal','precioTotal','matriculaTotal'));
     }
 
     /**

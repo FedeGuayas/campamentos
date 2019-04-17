@@ -36,12 +36,17 @@ class Multiples
                             }
             }
             desc_empleado: "true"
-            tipo_desc: "familiar"
+            tipo_desc: {
+                            nombre: "FAMILIAR",
+                            descripcion: "Descuento Familiar",
+                            porciento: "10%",
+                            multiplicador: 0.1
+                        }
             totalCursos: 1
             totalPrecio: 40
             totalMatricula: 10
             representante: {
-                            representante
+                            Representante
                             }
 
      **/
@@ -54,7 +59,7 @@ class Multiples
 
     public $totalMatricula = 0; //Matricula total (todos los cursos)
     
-    public $tipo_desc=null; 
+    public $tipo_desc=null; // TipoDescuento
     
     public $desc_empleado=null; // tiene prioridad sobre los demas descuentos de tipo_desc
 
@@ -85,9 +90,9 @@ class Multiples
         if ($this->cursos){
             //permitir inscripciones multiples para solo un representante y evitar que se cambie el representante
             if ($this->representante['id']!=$opciones[0]['representante']['id']){
-                return redirect()->back();
+                return redirect()->back()->with('message_danger', 'No puede cambiar de representante')->withInput();
             }
-            //si existe el alumno_id ya tiene una inscripcion almacenada en el arreglo $toredCurso,
+            //si existe el alumno_id ya tiene una inscripcion almacenada en el arreglo $storedCurso,
             if (array_key_exists($opciones[0]['alumno']['id'],$storedCurso['alumno'])){
                 //lo almaceno entonces en la coleccion ya existente
                 $storedCurso['alumno']=$storedCurso['alumno'][$opciones[0]['alumno']['id']];
@@ -121,7 +126,7 @@ class Multiples
             $storedCurso['alumno'][ $opciones[0]['alumno']['id'] ] ['matricula_mensual'] = 0;
         }
 
-        //si se aplicara o no descuento a empleados, esto quedo para pruebas xk no implemente los desceuntos dentro de esta clase
+        // descuentos
         if (($opciones[0]['desc_emp'])=='true'){
             $this->desc_empleado=$opciones[0]['desc_emp']; 
         }
@@ -130,23 +135,6 @@ class Multiples
             $this->tipo_desc=$opciones[0]['tipo_desc'];
         }
 
-        //descuento para familiares
-//        if ( $opciones[0]['tipo_desc']=='familiar' ){
-//            $desc=0.1;
-//            $this->tipo_desc=$opciones[0]['tipo_desc'];
-//        }
-
-        //descuento para primos 5%
-//        if ( $opciones[0]['tipo_desc']=='primo' ){
-//            $desc=0.05;
-//            $this->tipo_desc=$opciones[0]['tipo_desc'];
-//        }
-
-        //descuento para inscripciones multiples
-//        if ( $opciones[0]['tipo_desc']=='multiple') {
-//            $desc=0.1;
-//            $this->tipo_desc=$opciones[0]['tipo_desc'];
-//        }
 
 //        $storedCurso['cancelado_mensual']+=$opciones[0]['cancelado_mensual'];
         $storedCurso['precio']=($curso->mensualidad*$storedCurso['qty']); //itemCurso=curso->precio*cantidad

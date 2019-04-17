@@ -18,22 +18,23 @@
     <div class="row">
         {!! Form::open (['route' => 'admin.reports.general','method' => 'GET', 'class'=>'form_datepicker' ])!!}
 
-        <div class="input-field col s3 ">
-            {!! Form::select('modulo_id', $modulos,null, ['placeholder'=>'Seleccione *','id'=>'modulo_id','required']) !!}
+        <div class="input-field col s12 m6">
+            {!! Form::select('modulo_id', $modulos,null, ['placeholder'=>'Seleccione *','id'=>'modulo_id','class'=>'validate','required']) !!}
             {!! Form::label('modulo_id','Modulo:') !!}
             {{--{{Form::select('modulo',$moduloSelect,$modulo,['id'=>'modulo']) }}--}}
+
         </div>
-        <div class="input-field col s3 ">
+        <div class="input-field col s12 m6 ">
             {!! Form::select('escenario_id',['placeholder'=>'Seleccione ...'],null,['id'=>'escenario_id','required']) !!}
             {!! Form::label('escenario_id', 'Escenarios:*') !!}
             {{--            {{Form::select('escenario',$escenarioSelect,$escenario,['id'=>'escenario']) }}--}}
         </div>
-        <div class="input-field col s3 ">
+        <div class="input-field col s12 m6 ">
             {!! Form::select('disciplina_id', ['placeholder'=>'Seleccione ...'],null, ['id'=>'disciplina_id','required']) !!}
             {!! Form::label('disciplina_id', 'Disciplinas:*') !!}
             {{--            {{Form::select('disciplina',$disciplinaSelect,$disciplina,['id'=>'disciplina']) }}--}}
         </div>
-        <div class="input-field col s3 ">
+        <div class="input-field col s12 m6">
             {{--            {{Form::select('horario',$horarioSelect,$horario,['id'=>'horario']) }}--}}
             {!! Form::select('horario_id[]', ['placeholder'=>'Seleccione ...'],null, ['id'=>'horario_id','multiple']) !!}
             {!! Form::label('horario_id', 'Horario:') !!}
@@ -45,47 +46,47 @@
     </div>
 
 
-    <table class="table centered responsive-table">
+    <table class="table centered">
         <thead>
         </thead>
         <tbody>
         <tr>
 
             <td>
-                <table class="bordered striped highlight centered responsive-table" id="tabla_listado">
+                <table class="bordered striped highlight centered" id="tabla_listado">
                     <thead>
-                    <tr>
+                    <tr style="font-size: 8px">
                         <th>
                             @if (count($moduloSelect)>0)
-                                {{$moduloSelect->modulo}}
+                                Modulo: {{$moduloSelect->modulo}}
                             @else
                                 Modulo
                             @endif
                         </th>
                         <th>
                             @if (count($escenarioSelect)>0)
-                                {{$escenarioSelect->escenario}}
+                                Escenario: {{$escenarioSelect->escenario}}
                             @else
                                 Escenario
                             @endif
                         </th>
                         <th>
                             @if (count($disciplinaSelect)>0)
-                                {{$disciplinaSelect->disciplina}}
+                                Disciplina: {{$disciplinaSelect->disciplina}}
                             @else
                                 Disciplina
                             @endif
                         </th>
-                        <th>
-                            <div class="right">
-                                <p>
-                                    <input class="filled-in tooltipped" type="checkbox" id="azul" checked="checked" data-position="top" data-delay="50" data-tooltip="Menos de 1/3 inscritos"/>
+                        <th colspan="3">
+                            <div class="right" style="text-align: left">
+                                {{--<p>--}}
+                                    <input class="filled-in" type="checkbox" id="azul" checked="checked"/>
                                     <label style="color: #00b0ff" for="azul">< 1/3</label>
                                     <input class="filled-in" type="checkbox" id="rojo" checked="checked"/>
                                     <label style="color: red" for="rojo">agotado</label>
                                     <input class="filled-in" type="checkbox" id="verde" checked="checked"/>
                                     <label style="color: #00897b" for="verde">> 1/3</label>
-                                </p>
+                                {{--</p>--}}
                             </div>
                         </th>
                     </tr>
@@ -103,21 +104,21 @@
                     @foreach ($cursos as $curso)
                         <tr>
                             {{--<td>{{ $curso->id }}</td>--}}
-                            <td>{{ $curso->dia->dia}}</td>
-                            <td>{{ $curso->horario->start_time.'-'.$curso->horario->end_time}}</td>
+                            <td>{{ $curso->dia}}</td>
+                            <td>{{ $curso->start_time.'-'.$curso->end_time}}</td>
                             <td>{{ $curso->cupos}}</td>
-                            <td>{{ $curso->contador}}</td>
+                            <td>{{ $curso->total}}</td>
                             <td>
-                                @if( ($curso->cupos - $curso->contador) <=1)
+                                @if( ($curso->cupos - $curso->total) <=1)
                                     <span class="label label-danger">{{ $curso->cupos - $curso->contador }}</span>
 
-                                @elseif(($curso->cupos - $curso->contador) <= ($curso->cupos)/3)
-                                    <span class="label label-success">{{ $curso->cupos - $curso->contador }}</span>
+                                @elseif(($curso->cupos - $curso->total) <= ($curso->cupos)/3)
+                                    <span class="label label-success">{{ $curso->cupos - $curso->total }}</span>
 
-                                @elseif(($curso->cupos - $curso->contador) >= ($curso->cupos)/3)
-                                    <span class="label blue">{{ $curso->cupos - $curso->contador }}</span>
+                                @elseif(($curso->cupos - $curso->total) >= ($curso->cupos)/3)
+                                    <span class="label blue">{{ $curso->cupos - $curso->total }}</span>
                                 @else
-                                    {{ $curso->cupos - $curso->contador }}
+                                    {{ $curso->cupos - $curso->total }}
                                 @endif
                             </td>
 
@@ -147,7 +148,7 @@
 @section('scripts')
 
     {{--Script para select dinamico condicional dropdown --}}
-    <script src="{{ asset("js/dropdownReportes.js") }}" type="text/javascript"></script>
+    <script src="{{ asset("js/dropdownReportes.js?ver=2.1") }}" type="text/javascript"></script>
 
     <script>
         $(document).ready(function () {

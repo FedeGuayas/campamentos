@@ -9,6 +9,9 @@ class Factura extends Model
 {
     use SoftDeletes;
 
+    const FACTURAR_A_OTRO = '1';
+    const FACTURAR_A_REPRESENTANTE = '0';
+
     /**
      * The attributes that should be mutated to dates.
      *
@@ -37,8 +40,45 @@ class Factura extends Model
      * @var array
      */
     protected $fillable = [
-        'pago_id','representante_id','descuento','total'
+        'pago_id','representante_id','descuento','total','otro_factura','fact_nombres','fact_ci','fact_email','fact_phone','fact_direccion'
     ];
+
+
+    public function setFactNombresAttribute($value)
+    {
+        $this->attributes['fact_nombres']=mb_strtolower($value);
+    }
+
+    public function getFactNombresAttribute($value)
+    {
+        return  mb_strtoupper($value);
+    }
+
+    public function setFactEmailAttribute($value)
+    {
+        $this->attributes['fact_email']=mb_strtolower($value);
+    }
+
+    public function setFactDireccionAttribute($value)
+    {
+        $this->attributes['fact_direccion']=mb_strtolower($value);
+    }
+
+    public function getFactDireccionAttribute($value)
+    {
+        return  mb_strtoupper($value);
+    }
+
+
+    /**
+     * True if invoice another people that not parent
+     * @return bool
+     */
+    public function facturaOtro()
+    {
+        return $this->otro_factura === Factura::FACTURAR_A_OTRO;
+    }
+
 
     public function representante()
     {

@@ -17,7 +17,7 @@
                 color: #B0BEC5;
                 display: table;
                 font-weight: 100;
-                font-family: 'Lato';
+                /*font-family: 'Lato';*/
             }
 
             .container {
@@ -41,10 +41,10 @@
         <div class="container">
             <div class="content">
                 <div class="title"><h1>&iexcl;Regresaremos pronto!</h1></div>
-                <div style="color: #0c0c0c;">
+                <div style="color: #990000">
                     <p>Pedimos disculpas por los incovenientes causados pero estamos trabajando en actualizaciones.&iexcl;
                         Pronto estaremos en línea de nuevo!</p>
-                    <p>&mdash; GR-2016</p>
+                    <p>&mdash; Campamentos FDG</p>
                 </div>
 
             </div>

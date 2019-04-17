@@ -174,6 +174,22 @@ $(document).ready(function() {
         });
 
 
+    $('select[required]').css({
+        display: 'inline',
+        position: 'absolute',
+        float: 'left',
+        padding: 0,
+        margin: 0,
+        border: '1px solid rgba(255,255,255,0)',
+        height: 0,
+        width: 0,
+        top: '2em',
+        left: '3em',
+        opacity: 0
+    });
+
+
+
 });
 
 

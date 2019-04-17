@@ -65,6 +65,8 @@
                            class="waves-effect waves-teal">Transportes</a></li>
                     <li><a href="{!! route('admin.fpagos.index') !!}" class="waves-effect waves-teal">Formas Pago</a>
                     </li>
+                    <li><a href="{!! route('admin.tipo_descuentos.index') !!}" class="waves-effect waves-teal">Descuentos</a>
+                    </li>
                 @endif
                 @role('administrator')
                 <li class="divider"></li>
@@ -302,6 +304,9 @@
                                                    class="waves-effect waves-teal">Transportes</a></li>
                                             <li><a href="{!! route('admin.fpagos.index') !!}"
                                                    class="waves-effect waves-teal">Formas Pago</a>
+                                            </li>
+                                            <li><a href="{!! route('admin.tipo_descuentos.index') !!}"
+                                                   class="waves-effect waves-teal">Descuentos</a>
                                             </li>
                                         @endif
                                         @role('administrator')

@@ -286,7 +286,7 @@ class ReportesController extends Controller
     }
 
     /**
-     * Comprovantes de inscripcion en pdf
+     * Comprobantes de inscripcion en pdf
      * @param $id
      * @return mixed
      */
@@ -448,11 +448,13 @@ class ReportesController extends Controller
             $totalContado = 0;
             $totalTarjeta = 0;
             $totalWestern = 0;
+            $totalTransferB = 0;
             foreach ($group as $nombre => $fp) {
                 $valorUsuario = 0;
                 $valorContado = 0;
                 $valorTarjeta = 0;
                 $valorWestern = 0;
+                $valorTransferB = 0;
                 foreach ($group[$nombre] as $key => $value) { // agrupar los valores de las facturas por usuario
                     //acumulados
                     if (stristr($value['fpago'], 'contado')) {
@@ -467,6 +469,10 @@ class ReportesController extends Controller
                         $valorWestern += $value['precio'];
                         $totalWestern += $value['precio'];
                     }
+                    if (stristr($value['fpago'], 'transferencia')) {
+                        $valorTransferB += $value['precio'];
+                        $totalTransferB += $value['precio'];
+                    }
                     $valorUsuario += $value['precio']; //acumulado para el usuario actual
                     $valorFinal += $value['precio']; //acumulado total
                 }
@@ -475,7 +481,8 @@ class ReportesController extends Controller
                     "usuario" => $nombre,
                     "contado" => $valorContado,
                     "tarjeta" => $valorTarjeta,
-                    "western" => $valorWestern
+                    "western" => $valorWestern,
+                    "transferencia" => $valorTransferB
                 ];
             }
 
@@ -484,6 +491,7 @@ class ReportesController extends Controller
                 "totalContado" => $totalContado,
                 "totalTarjeta" => $totalTarjeta,
                 "totalGeneral" => $valorFinal,
+                "totalTransferB" => $totalTransferB
             ];
         }
 
@@ -807,24 +815,30 @@ class ReportesController extends Controller
         } else  $disciplinaSelect = null;
 
 
-        $cursos = Calendar::with('program', 'horario', 'dia', 'profesor')
-            ->join('programs as p', 'p.id', '=', 'c.program_id', 'as c')
-            ->join('dias as d', 'd.id', '=', 'c.dia_id')
-            ->join('horarios as h', 'h.id', '=', 'c.horario_id')
-            ->join('escenarios as e', 'e.id', '=', 'p.escenario_id')
-            ->join('inscripcions as i', 'i.calendar_id', '=', 'c.id')
+        $cursos =Inscripcion::with('calendar')
+            ->join('calendars as c', 'c.id', '=', 'inscripcions.calendar_id')
+            ->join('programs as p', 'p.id', '=', 'c.program_id')
             ->join('modulos as m', 'm.id', '=', 'p.modulo_id')
-            ->join('disciplinas as dis', 'dis.id', '=', 'p.disciplina_id')
-            ->join('profesors as pro', 'pro.id', '=', 'c.profesor_id')
-            ->select('c.program_id', 'c.profesor_id', 'c.dia_id', 'c.horario_id', 'c.cupos', 'c.contador', 'c.mensualidad', 'c.init_age', 'c.end_age', 'c.nivel', 'c.id', 'p.modulo_id', 'p.escenario_id', 'p.disciplina_id','i.estado')
+            ->join('escenarios as e', 'e.id', '=', 'p.escenario_id')
+            ->join('disciplinas as d', 'd.id', '=', 'p.disciplina_id')
+            ->join('horarios as h', 'h.id', '=', 'c.horario_id')
+            ->join('dias', 'dias.id', '=', 'c.dia_id')
+            ->select('c.program_id', 'c.dia_id', 'c.horario_id', 'c.cupos', 'c.contador', 'c.id', 'p.modulo_id', 'p.escenario_id', 'p.disciplina_id','inscripcions.estado','dias.dia','h.start_time','h.end_time','c.cupos', DB::raw('count(*) as total'))
+            ->where('inscripcions.estado', '=','Pagada')
             ->where('p.modulo_id', $modulo)
-            ->where('i.estado','=','Pagada')
-            ->where('i.deleted_at',null)
             ->where('p.escenario_id', $escenario)
             ->where('p.disciplina_id', $disciplina)
             ->whereIn('c.horario_id', $horario_id)
             ->where('p.activated', '1')
+            ->groupBy('c.id')
             ->get();
+
+//        $user_info = DB::table('usermetas')
+//            ->select('browser', DB::raw('count(*) as total'))
+//            ->groupBy('browser')
+//            ->get();
+//dd($cursos);
+
 
         return view('campamentos.reportes.listado.index', compact('cursos', 'escenarioSelect', 'disciplinaSelect', 'horarioSelect', 'moduloSelect', 'modulos', 'escenario', 'disciplina', 'modulo', 'horario'));
     }
@@ -1116,12 +1130,22 @@ class ReportesController extends Controller
 
         foreach ($inscripciones as $insc) {
 
+            $facturar_a_otro = false;
+            if ( $insc->factura->facturaOtro() ){ //otro_factura = '1'
+                $facturar_a_otro = true;
+                $fact_nombres = $insc->factura->fact_nombres;
+                $fact_ci = $insc->factura->fact_ci;
+                $fact_email = $insc->factura->fact_email;
+                $fact_phone =$insc->factura->fact_phone;
+                $fact_direccion = $insc->factura->fact_direccion;
+            }
+
             $arrayExp[] = [
                 'codigopadre' => '',
                 'codigo' => '',
-                'nombre' => $insc->factura->representante->persona->getNombreAttribute(),
-                'nombrecomercial' => $insc->factura->representante->persona->getNombreAttribute(),
-                'RUC' => (int)$insc->factura->representante->persona->num_doc,
+                'nombre' => $facturar_a_otro === false ? $insc->factura->representante->persona->getNombreAttribute() : $fact_nombres,
+                'nombrecomercial' => $facturar_a_otro === false ? $insc->factura->representante->persona->getNombreAttribute() : $fact_nombres,
+                'RUC' => $facturar_a_otro === false ? (int)$insc->factura->representante->persona->num_doc : (int)$fact_ci,
                 'Fecha' => (string)$insc->factura->created_at->format('d/m/Y'),
                 'Referencia' => 'INSCRIPCION CAMPAMENTOS' . '-' . $insc->calendar->program->disciplina->disciplina . '-' . $insc->calendar->program->escenario->escenario. '-'. $insc->factura->id,
                 'Comentario' => $insc->factura->id,
@@ -1129,7 +1153,7 @@ class ReportesController extends Controller
                 'Cantidad' => 1,
                 'Valor' => (float)$insc->factura->total,
                 'Iva' => 'S',
-                'DIRECCION' => $insc->factura->representante->persona->direccion,
+                'DIRECCION' => $facturar_a_otro === false ? $insc->factura->representante->persona->direccion : $fact_direccion,
                 'division' => (int)$insc->escenario->codigo,
                 'TipoCli' => 1,
                 'actividad' => 1,
@@ -1139,10 +1163,10 @@ class ReportesController extends Controller
                 'estado' => 'A',
                 'diasplazo' => 1,
                 'precio' => 1,
-                'telefono' => (string)$insc->factura->representante->persona->telefono,
+                'telefono' => $facturar_a_otro === false ? (string)$insc->factura->representante->persona->telefono : (string)$fact_phone,
                 'fax' => '',
                 'celular' => '',
-                'e_mail' => $insc->factura->representante->persona->email,
+                'e_mail' => $facturar_a_otro === false ? $insc->factura->representante->persona->email : $fact_email,
                 'pais' => 1,
                 'provincia' => 1,
                 'ciudad' => 4,
@@ -1156,12 +1180,22 @@ class ReportesController extends Controller
 
         foreach ($matriculas as $mat) {
 
+            $facturar_a_otro = false;
+            if ( $mat->factura->facturaOtro() ){ //otro_factura = '1'
+                $facturar_a_otro = true;
+                $fact_nombres = $mat->factura->fact_nombres;
+                $fact_ci = $mat->factura->fact_ci;
+                $fact_email = $mat->factura->fact_email;
+                $fact_phone =$mat->factura->fact_phone;
+                $fact_direccion = $mat->factura->fact_direccion;
+            }
+
             $arrayExp[] = [
                 'codigopadre' => '',
                 'codigo' => '',
-                'nombre' => $mat->factura->representante->persona->getNombreAttribute(),
-                'nombrecomercial' => $mat->factura->representante->persona->getNombreAttribute(),
-                'RUC' => (int)$mat->factura->representante->persona->num_doc,
+                'nombre' => $facturar_a_otro === false ? $mat->factura->representante->persona->getNombreAttribute() : $fact_nombres,
+                'nombrecomercial' => $facturar_a_otro === false ? $mat->factura->representante->persona->getNombreAttribute() : $fact_nombres,
+                'RUC' => $facturar_a_otro === false ? (int)$mat->factura->representante->persona->num_doc : (int)$fact_ci,
                 'Fecha' => (string)$mat->factura->created_at->format('d/m/Y'),
                 'Referencia' => 'INSCRIPCION CAMPAMENTOS (' . $mat->inscripcion->factura_id .')' . '-' . $mat->inscripcion->calendar->program->disciplina->disciplina . '-' . $mat->inscripcion->calendar->program->escenario->escenario. '-'. $mat->factura->id,
                 'Comentario' => $mat->factura->id,
@@ -1169,7 +1203,7 @@ class ReportesController extends Controller
                 'Cantidad' => 1,
                 'Valor' => (float)$mat->factura->total,
                 'Iva' => 'S',
-                'DIRECCION' => $mat->factura->representante->persona->direccion,
+                'DIRECCION' => $facturar_a_otro === false ? $mat->factura->representante->persona->direccion : $fact_direccion,
                 'division' => (int)$mat->escenario->codigo,
                 'TipoCli' => 1,
                 'actividad' => 1,
@@ -1179,10 +1213,10 @@ class ReportesController extends Controller
                 'estado' => 'A',
                 'diasplazo' => 1,
                 'precio' => 1,
-                'telefono' => (string)$mat->factura->representante->persona->telefono,
+                'telefono' => $facturar_a_otro === false ? (string)$mat->factura->representante->persona->telefono : (string)$fact_phone,
                 'fax' => '',
                 'celular' => '',
-                'e_mail' => $mat->factura->representante->persona->email,
+                'e_mail' => $facturar_a_otro === false ? $mat->factura->representante->persona->email : $fact_email,
                 'pais' => 1,
                 'provincia' => 1,
                 'ciudad' => 4,

@@ -40,13 +40,14 @@
         <div class="col s12">
             <div class="card-panel">
                 {{--<h5 class="header teal-text text-darken-2">Inscripción</h5>--}}
+                {!! Form::open(['route'=>'admin.inscripcions.store', 'method'=>'POST', 'class'=>'form_noEnter', 'id'=>'form_inscripcion'])  !!}
                 <div id="inscripcion">
-                    <br>
                     @include('campamentos.inscripcions.partials.inscripcion')
                 </div>
                 <div id="facturacion">
                     @include('campamentos.inscripcions.partials.facturacion')
                 </div>
+
                 <div id="detalle"></div>
                 <input type="text" id="cursos_session" hidden
                        value="{{Session::has('curso') ? Session::get('curso')->totalCursos : 0}}">
@@ -68,13 +69,12 @@
         $(document).ready(function () {
             var cursos_session=parseInt($("#cursos_session").val());
 
-            if (cursos_session > 1) {
+            if (cursos_session > 1 ) {
                 $("#pagar").prop("disabled", false);
             }else{
                 $("#pagar").prop("disabled", true);
             }
 
-            $("#modulo_id").material_select();
         });
 
         $(document).ready(function () {
@@ -85,7 +85,8 @@
                 in_duration: 300, // Transition in duration
                 out_duration: 200, // Transition out duration
                 starting_top: '4%', // Starting top style attribute
-                ending_top: '2%' // Ending top style attribute
+                ending_top: '2%', // Ending top style attribute
+                complete: function() { $('.fixed-action-btn').closeFAB(); }
             });
 
         });
@@ -99,6 +100,7 @@
                 out_duration: 200, // Transition out duration
 //                starting_top: '4%', // Starting top style attribute
 //                ending_top: '2%', // Ending top style attribute
+                complete: function() { $('.fixed-action-btn').closeFAB(); }
             });
 
         });
@@ -111,7 +113,8 @@
                 in_duration: 300, // Transition in duration
                 out_duration: 200, // Transition out duration
                 starting_top: '4%', // Starting top style attribute
-                ending_top: '2%' // Ending top style attribute
+                ending_top: '2%', // Ending top style attribute
+                complete: function() { $('.fixed-action-btn').closeFAB(); }
             });
         });
 
@@ -130,8 +133,27 @@
 
             //deshabilitar boton de enviar al dar submit
             $("#form_inscripcion").submit(function() {
-                $("#pagar").prop("disabled",true);
+
+                var fpago_id = $("#fpago_id").val();
+                var boton_pagar = $("#pagar");
+                var otro_factura = $("#otro_factura");
+
+                if ( fpago_id === '' ) {
+                    swal(" :(", 'Debe seleccionar la forma de pago', "warning");
+                    return false;
+                }
+                if ( otro_factura.prop("checked")) {
+                //agrego este otro formulario
+                $("#form_otra_facturacion").find(":input").appendTo("#form_inscripcion");
+
+                }
+
+
+
+                boton_pagar.prop("disabled",true);
+
             });
+
 
             //buscar representante
             $("#Buscar").on('click', function (event) {
@@ -140,8 +162,9 @@
                 var route = "{{route('admin.representantes.beforeSearch')}}";
                 var token = $("input[name=_token]").val();
                 var loader=$("#loader_page");
-                if (datos == "")
-                    alert("Error. Debe ingresar datos en el campo de busqueda!");
+                if (datos === "")
+                    swal("!!!", 'Debe ingresar datos en el campo de busqueda', "warning");
+//                    alert("Error. Debe ingresar datos en el campo de busqueda!");
                 else {
                     loader.addClass('active');
                     $.ajax({
@@ -259,7 +282,7 @@
                         var id = resp.alumno_id;
                         var name = resp.nombre;
                         $("#form_alumno").trigger("reset");//limpio el form
-                        $("#msj-succes").html(resp.message)
+                        $("#msj-succes").html(resp.message);
                         $("#mensaje-success").fadeIn();
                         alumno_id.append('<option value="' + id + '">' + name + '</option>');
                         alumno_id.addClass("teal-text");
@@ -316,31 +339,8 @@
 //                        alert(resp.message);
                         swal("", resp.message, "success");
                         var total_cursos = resp.totalCursos;
-
                         $("#getCurso>h5>span").html(total_cursos);
 
-                        //inscripcion de hermanos
-                        if ($("#familiar").is(':checked') && total_cursos < 2) {
-                            $("#form_inscripcion").trigger("reset");//limpio el form en la primera inscripcion
-                            $("#pagar").prop("disabled", true);
-                        } else $("#pagar").prop("disabled", false);
-
-                        //inscripciones multiples
-                        if ($("#multiple").is(':checked') && total_cursos < 3) {
-                            $("#pagar").prop("disabled", true);
-                        } else $("#pagar").prop("disabled", false);
-
-                        //incripcion primos
-                        if ($("#primo").is(':checked') && total_cursos < 2) {
-                            $("#form_inscripcion").trigger("reset");//limpio el form en la primera inscripcion
-                            $("#pagar").prop("disabled", true);
-                        } else $("#pagar").prop("disabled", false);
-
-                        //inscripcion padres hijos sin descuentos
-//                        if (($("#primo").not(':checked') && $("#multiple").not(':checked') && $("#familiar").not(':checked')) && total_cursos < 2) {
-//                            $("#form_inscripcion").trigger("reset");//limpio el form en la primera inscripcion
-//                            $("#pagar").prop("disabled", true);
-//                        } else $("#pagar").prop("disabled", false);
                     },
                     error: function (resp) {
                        // console.log(resp);
@@ -379,96 +379,61 @@
                 });
             });
 
-
+            // Inscripcion de adulto
             $(document).ready(function () {
-                // Adulto que se kiere inscribir
+
                 $("#adulto").on('change', function () {
-
-                    // si se activa
+                    var alumno_id = $("#alumno_id");
+                    var modulo_id = $("#modulo_id");
                     if ($(this).is(':checked')) {
-//                        console.log("Checkbox " + $(this).prop("id") + " (" + $(this).val() + ") => Seleccionado");
-                        $("div").remove(".alumno");
-//                   representante_id.append('<option value="' +$(this).val()+ '">' + name + '</option>');
-//                   representante_id.addClass("teal-text");
-//                                   $("#persona_id").val($(this).val());
-
+                        alumno_id.val("option:eq(0)").prop('selected', true);
+                        modulo_id.val("option:eq(0)").prop('selected', true);
+                        alumno_id.prop('disabled',true);
+                        $(".alumno a:first").addClass('disabled');
                     } else {
-//                        console.log("Checkbox " + $(this).prop("id") + " (" + $(this).val() + ") => Deseleccionado");
-//                        $("div").add(".alumno");
-//                   representante_id.find("option:gt(0)").remove();//elimino las opciones menos la primera
-//                   representante_id.removeClass("teal-text");
-//                   $("#persona_id").empty();
+                       alumno_id.prop('disabled',false);
+                       $(".alumno a:first").removeClass('disabled');
                     }
-//               representante_id.material_select();
+                    alumno_id.material_select();
+                    modulo_id.material_select();
                 });
+
+                $("#otro_factura").on('change', function () {
+                    var fact_nombres = $(".fact_nombres");
+                    var fact_ci = $(".fact_ci");
+                    var fact_email = $(".fact_email");
+                    var fact_phone = $(".fact_phone");
+                    var fact_direccion = $(".fact_direccion");
+
+                    if ($(this).is(':checked')) {
+                        fact_nombres.prop('readonly',false);
+                        fact_ci.prop('readonly',false);
+                        fact_email.prop('readonly',false);
+                        fact_phone.prop('readonly',false);
+                        fact_direccion.prop('readonly',false);
+                    } else {
+                        fact_nombres.prop('readonly',true).val('');
+                        fact_ci.prop('readonly',true).val('');
+                        fact_email.prop('readonly',true).val('');
+                        fact_phone.prop('readonly',true).val('');
+                        fact_direccion.prop('readonly',true).val('');
+                    }
+
+                });
+
+
+
             });
 
 
-            //inscripcion familiar hermanos 10%
-            $(document).ready(function () {
-                $("#familiar").on('click', function () {
-                    if ($(this).is(':checked')) {
-                        $("#primo").prop("disabled", true);
-                        $("#multiple").prop("disabled", true);
-                        $(".agregar").prop("disabled", false);
-//                        $("#pagar").prop('disabled', true);
-
-                    } else {
-                        $("#primo").prop("disabled", false);
-                        $("#multiple").prop("disabled", false);
-                        $(".agregar").prop("disabled", true);
-//                        $("#pagar").prop("disabled", false);
-                    }
-                });
-            });
-
-            //inscripcion familiar primos 5%
-            $(document).ready(function () {
-                $("#primo").on('click', function () {
-                    if ($(this).is(':checked')) {
-                        $("#familiar").prop("disabled", true);
-                        $("#multiple").prop("disabled", true);
-                        $(".agregar").prop("disabled", false);
-//                        $("#pagar").prop('disabled', true);
-
-                    } else {
-                        $("#familiar").prop("disabled", false);
-                        $("#multiple").prop("disabled", false);
-                        $(".agregar").prop("disabled", true);
-//                        $("#pagar").prop("disabled", false);
-                    }
-                });
-            });
 
 
-            //checkbox inscripcion multiple
-            $(document).ready(function () {
-                var select = $('select');
-                $("#multiple").on('change', function () {
-                    if ($(this).is(':checked')) {
-                        $("#familiar").prop("disabled", true);
-                        $("#primo").prop("disabled", true);
-                        $(".agregar").prop("disabled", false);
 
-//                        $("#pagar").prop('disabled', true);
-//                        $("#representante_id").prop('disabled', true);
-//                        $("#alumno_id").prop('disabled', true);
-//                        $("#representante_id").material_select();
-//                        $("#alumno_id").material_select();
 
-                    } else {
-                        $("#familiar").prop("disabled", false);
-                        $("#primo").prop("disabled", false);
-                        $(".agregar").prop("disabled", true);
-//                        $("#pagar").prop("disabled", false);
-//                        $("#representante_id").prop('disabled', false);
-//                        $("#alumno_id").prop('disabled', false);
-//                        $("#representante_id").material_select();
-//                        $("#alumno_id").material_select();
-                    }
-                });
-//                select.material_select();
-            });
+
+
+
+
 
 
 
@@ -544,8 +509,8 @@
 
     </script>
     {{--Script para select dinamico condicional dropdown --}}
-    <script src="{{ asset("js/updateCosto.js?ver=2") }}" type="text/javascript"></script>
+    <script src="{{ asset("js/updateCosto.js?ver=2.2") }}" type="text/javascript"></script>
     {{--Script para select dinamico condicional dropdown --}}
-    <script src="{{ asset("js/dropdown.js?ver=2.1") }}" type="text/javascript"></script>
+    <script src="{{ asset("js/dropdown.js?ver=2.2") }}" type="text/javascript"></script>
 
 @endsection

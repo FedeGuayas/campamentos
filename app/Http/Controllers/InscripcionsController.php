@@ -19,6 +19,7 @@ use App\Program;
 use App\Provincia;
 use App\Register;
 use App\Representante;
+use App\TipoDescuento;
 use App\User;
 use App\UserModulo;
 use Carbon\Carbon;
@@ -509,21 +510,35 @@ class InscripcionsController extends Controller
         $user = $request->user();
 
         $user_cortesia=false;
+        $desc_presi=false;
         if ($user->hasRole('admin-cortesia')){
             $user_cortesia=true;
+            $desc_presi=true;
         }
         $modulos_coll = Modulo::where('activated', true);
         $modulos = $modulos_coll->pluck('modulo', 'id');
+
         $fpagos_coll = Pago::all();
         $fp = $fpagos_coll->reject(function ($fp) use($user_cortesia) {   //quitar forma de pago cortesia sino tiene los permisos el usuario
             $filter_coll = (stripos($fp->forma, 'cortesia') !== false && $user_cortesia === false);
             return $filter_coll;
         });
         $fpagos = $fp->pluck('forma', 'id');
-//        $fpagos = $fpagos_coll->pluck('forma', 'id');
+
+        $descuentos_all = TipoDescuento::
+            select(DB::raw('concat (nombre," (",porciento,"%)") as descuento,id'))
+            ->get();
+
+        $descuento_filter = $descuentos_all->reject(function ($descuento_filter) use($user_cortesia,$desc_presi) { //filtrar descuento cortesia y presidente
+            $filter_desc = (stripos($descuento_filter->descuento, 'cortesia') !== false && $user_cortesia === false) ||
+                            (stripos($descuento_filter->descuento, 'presidente') !== false && $desc_presi === false) ;
+            return $filter_desc;
+        });
+        $descuentos = $descuento_filter->pluck('descuento', 'id');
+
         $provincias = Provincia::all();
         $list_provincias = $provincias->pluck('province', 'id');
-        return view('campamentos.inscripcions.create', compact('modulos', 'fpagos', 'list_provincias'));
+        return view('campamentos.inscripcions.create', compact('modulos', 'fpagos', 'list_provincias','descuentos'));
     }
 
     /**
@@ -536,6 +551,14 @@ class InscripcionsController extends Controller
     {
         $periodo = Configuracione::where('id', 1)->first();
 
+        // Otros datos para facturacion
+        $otro_factura = $request->input('otro_factura'); // on
+        $fact_nombres = $request->input('fact_nombres');
+        $fact_ci = $request->input('fact_ci');
+        $fact_email = $request->input('fact_email');
+        $fact_phone = $request->input('fact_phone');
+        $fact_direccion = $request->input('fact_direccion');
+
         if (Auth::user()->hasRole(['planner', 'administrator', 'signup'])) {
 
             if (!Session::has('curso')) {//si no hay curso en la session
@@ -543,100 +566,128 @@ class InscripcionsController extends Controller
                 try {
 
                     DB::beginTransaction();
+
+                    $representante_id = $request->input('representante_id'); // representante_id lo que trae es la persona_id
+                    $alumno_id = $request->input('alumno_id');
+                    $modulo_id = $request->input('modulo_id');
                     $calendar_id = $request->input('calendar_id'); //curso
                     $program_id = $request->input('program_id'); //programa
-                    $program = Program::findOrFail($program_id);
-                    $matricula = $program->matricula; //matricula del curso
-                    $calendar = Calendar::findOrFail($calendar_id);
+                    $descuento_empleado = $request->input('descuento_empleado');
                     $paga_matricula_river = $request->input('matricula_river'); //paga o no mebresia river true or false
+                    $adulto = $request->input('adulto'); // true or false
+                    $pago_id = $request->input('fpago_id'); // id forma de pago
+                    $descuento_id = $request->input('descuento_id'); //id tipo descuento
+                    $paga_matricula = $request->input('matricula'); // treu or false
+                    $valor = $request->input('valor'); //valor a pagar por el curso
 
-                    $modulo = $program->modulo;
+                    $user = $request->user();//usuario trabajador logueado
+
+                    $modulo = Modulo::findOrFail($modulo_id);
+                    $program = Program::findOrFail($program_id);
+                    $calendar = Calendar::findOrFail($calendar_id);
+                    $descuento_aplicado=TipoDescuento::where('id',$descuento_id)->first();
+                    $fpago = Pago::findOrFail($pago_id);
 
                     if ($calendar->cupos <= $calendar->contador) {
                         Session::flash('message_danger', 'No hay disponibilidad para el curso');
                         return redirect()->back();
                     }
 
+                    $matricula = $program->matricula; //matricula del curso
                     $mensualidad = $calendar->mensualidad;//mensualidad del curso
-                    $valor = $request->input('valor');
-                    $pago_id = $request->input('fpago_id');
+                    $representante = Representante::where('persona_id', $representante_id )->first();
 
-                    $fpago = Pago::findOrFail($pago_id);
-                    $representante = Representante::where('persona_id', $request->input('representante_id'))->first();
+
                     $factura = new Factura();
                     $factura->pago()->associate($fpago);
                     $factura->representante()->associate($representante);
                     $factura->total = $valor; //costo de la inscripcion
 
-
-                    if ($modulo->esRiver()) { //calcular descuentos y matricula river
-
-                        if ($paga_matricula_river == 'true') { //paga la membresia o matricula
-                            $sub = $valor - $matricula;
-                            $desc = $mensualidad - $sub;
-                            if ($desc > 0) {//hay descuento
-                                $factura->descuento = $desc;
-                            } else {
-                                $factura->descuento = 0;
-                            }
-                        } else if ($paga_matricula_river == 'false') {
-                            $desc = $mensualidad - $valor;
-                            if ($desc > 0) {//hay descuento
-                                $factura->descuento = $desc;
-                            } else {
-                                $factura->descuento = 0;
-                            }
-                        }
-
-                    } else { //descuentos y matricula demas cursos
-
-                        if ($request->input('matricula') == 'on') {//pago matricula
-                            $sub = $valor - $matricula;
-                            $desc = $mensualidad - $sub;
-                            if ($desc > 0) {//hay descuento
-                                $factura->descuento = $desc;
-                            } else {
-                                $factura->descuento = 0;
-                            }
-                        } else { //no pago matricula
-                            $desc = $mensualidad - $valor;
-                            if ($desc > 0) {//hay descuento
-                                $factura->descuento = $desc;
-                            } else {
-                                $factura->descuento = 0;
-                            }
-                        }
-
+                    $descuento = 0;
+                    if ( $descuento_empleado == 'true') {
+                        $desc = 0.5; //50%
+                        $descuento = $mensualidad * $desc;
                     }
+                    if (isset($descuento_aplicado)) {
+                        $descuento= $mensualidad * ($descuento_aplicado->multiplicador); //mensualidad * %descuento
+                    }
+
+                    $factura->descuento = $descuento;
+
+                    if ( $otro_factura=='on' ){
+                        $factura->otro_factura = Factura::FACTURAR_A_OTRO;
+                        $factura->fact_nombres = $fact_nombres;
+                        $factura->fact_ci = $fact_ci;
+                        $factura->fact_email = $fact_email;
+                        $factura->fact_phone = $fact_phone;
+                        $factura->fact_direccion = $fact_direccion;
+                    }
+
+
+//                    if ($modulo->esRiver()) { //calcular descuentos y matricula river
+
+//                        if ($paga_matricula_river == 'true') { //paga la membresia o matricula
+//                            $sub = $valor - $matricula;
+//                            $desc = $mensualidad - $sub;
+//                            if ($desc > 0) {//hay descuento
+//                                $factura->descuento = $desc;
+//                            } else {
+//                                $factura->descuento = 0;
+//                            }
+//                        } else if ($paga_matricula_river == 'false') {
+//                            $desc = $mensualidad - $valor;
+//                            if ($desc > 0) {//hay descuento
+//                                $factura->descuento = $desc;
+//                            } else {
+//                                $factura->descuento = 0;
+//                            }
+//                        }
+
+//                    } else { //descuentos y matricula demas cursos
+
+//                        if ($request->input('matricula') == 'on') {//pago matricula
+//                            $sub = $valor - $matricula;
+//                            $desc = $mensualidad - $sub;
+//                            if ($desc > 0) {//hay descuento
+//                                $factura->descuento = $desc;
+//                            } else {
+//                                $factura->descuento = 0;
+//                            }
+//                        } else { //no pago matricula
+//                            $desc = $mensualidad - $valor;
+//                            if ($desc > 0) {//hay descuento
+//                                $factura->descuento = $desc;
+//                            } else {
+//                                $factura->descuento = 0;
+//                            }
+//                        }
+
+//                    }
 
                     $factura->save();
 
-                    if ($request->input('valor') == 0 && $request->input('cortesia') == 'on') {
+                    if ($descuento_empleado == 'true'  && !isset($descuento_aplicado)){
                         $descuentos = new Descuento();
                         $descuentos->factura()->associate($factura);
-                        $descuentos->descripcion = 'CORTESIA';
+//                        $descuentos->tipo_descuento()->associate($descuento_aplicado);
+                        $descuentos->porciento = '50';
+                        $descuentos->descripcion = 'EMPLEADO';
                         $descuentos->valor = $factura->descuento;
                         $descuentos->save();
                     }
 
-                    if ($request->input('presidente') == 'on' && $request->input('valor') > 0) {
+                    if ( isset($descuento_aplicado)) {
                         $descuentos = new Descuento();
                         $descuentos->factura()->associate($factura);
-                        $descuentos->descripcion = 'PRESIDENTE ASO';
-                        $descuentos->valor = $factura->descuento;
-                        $descuentos->save();
-                    }
-
-                    if ($request->input('descuento_empleado') == 'true' && $request->input('valor') > 0) {
-                        $descuentos = new Descuento();
-                        $descuentos->factura()->associate($factura);
-                        $descuentos->descripcion = 'DESCUENTO EMPLEADO';
+                        $descuentos->tipo_descuento()->associate($descuento_aplicado);
+                        $descuentos->porciento = $descuento_aplicado->porciento;
+                        $descuentos->descripcion = $descuento_aplicado->nombre;
                         $descuentos->valor = $factura->descuento;
                         $descuentos->save();
                     }
 
                     //inscripcion
-                    $user = $request->user();//usuario logueado
+
                     if ($user) {
                         $pto_cobro = $user->escenario_id;
                     } else  $pto_cobro = '0';//online
@@ -647,29 +698,22 @@ class InscripcionsController extends Controller
                     $inscripcion->user()->associate($user);
                     $inscripcion->escenario_id = $pto_cobro;
 
-                    if ($request->input('adulto') == true) { //si es una inscripcion para adulto
+                    if ( $adulto == true) { //si es una inscripcion para adulto
                         $inscripcion->alumno_id = 0; //le voy a asignara al id del alumno 0 en la tabla de inscripcion
-                        $alumno = Representante::where('persona_id', $request->input('representante_id'))->with('persona')->first(); //adulto
+                        $alumno = Representante::where('persona_id', $representante_id)->with('persona')->first(); //adulto
                     } else {
-                        $inscripcion->alumno_id = $request->input('alumno_id'); //sino el id del input del form
-                        $alumno = Alumno::where('id', $request->input('alumno_id'))->with('persona')->first();
-                    }
-
-                    if ($modulo->esRiver()) {
-                        $nuevo_inscrito_river = new UserModulo();
-                        $nuevo_inscrito_river->persona_id = $alumno->persona->id;
-                        $nuevo_inscrito_river->modulo_id = $modulo->id;
-                        $nuevo_inscrito_river->anio = $periodo->periodo;
-                        $nuevo_inscrito_river->save();
+                        $inscripcion->alumno_id = $alumno_id; //sino el id del input del form
+                        $alumno = Alumno::where('id', $alumno_id )->with('persona')->first();
                     }
 
                     if ($modulo->esRiver() && $paga_matricula_river == 'true') { //descuentos y matricula river
                         $inscripcion->matricula = $matricula;
-                    } else {
-                        $inscripcion->matricula = 0;
                     }
+//                    else {
+//                        $inscripcion->matricula = 0;
+//                    }
 
-                    if ($request->input('matricula') == true) { //si va a pagar matricula
+                    if ( $paga_matricula == true) { //si va a pagar matricula
                         $inscripcion->matricula = $matricula; //le asigno el valor
                     }
 
@@ -682,17 +726,24 @@ class InscripcionsController extends Controller
 
                     $inscripcion->save();
 
-                    if ((stristr($inscripcion->calendar->program->disciplina->disciplina, 'II FESTIVAL DE NATACION'))) {
-
-                        $max_id = Register::max('id'); //ultimo registro
-                        $max_num = DB::table('registers')->max('num_registro');
-                        $num_reg = $max_num + 1;
-                        $registro = new Register();
-                        $registro->inscripcion()->associate($inscripcion);
-                        $registro->num_registro = $max_id ? $num_reg : 1;
-                        $registro->save();
-
+                    if ($modulo->esRiver()) {
+                        $nuevo_inscrito_river = new UserModulo();
+                        $nuevo_inscrito_river->persona_id = $alumno->persona->id;
+                        $nuevo_inscrito_river->modulo_id = $modulo->id;
+                        $nuevo_inscrito_river->anio = $periodo->periodo;
+                        $nuevo_inscrito_river->save();
                     }
+
+                    // Crea numero de registros aparte segun la disciplina
+//                    if ((stristr($inscripcion->calendar->program->disciplina->disciplina, 'II FESTIVAL DE NATACION'))) {
+//                        $max_id = Register::max('id'); //ultimo registro
+//                        $max_num = DB::table('registers')->max('num_registro');
+//                        $num_reg = $max_num + 1;
+//                        $registro = new Register();
+//                        $registro->inscripcion()->associate($inscripcion);
+//                        $registro->num_registro = $max_id ? $num_reg : 1;
+//                        $registro->save();
+//                    }
 
                     DB::commit();
 
@@ -700,7 +751,6 @@ class InscripcionsController extends Controller
                     Event::fire(new NuevaInscripcion($calendar));//al guardar correctamenta la inscripcion llamao al evento de aumentar contador
 
                     Session::flash('message', 'Inscripción satisfactoria');
-
 
                 } catch (\Exception $e) { //en caso de error viro al estado anterior
                     DB::rollback();
@@ -711,66 +761,80 @@ class InscripcionsController extends Controller
                 return redirect()->route('admin.inscripcions.index');
             }
 
-            //Existen cursos Multiples almacenados en la Session, asi k los almaceno todos
+            /*******Existen cursos Multiples almacenados en la Session, asi k los almaceno todos*******/
 
             //inscripcion familiar no puede tener menos de dos inscritos
-            if ($request->input('familiar') == 'on' && Session::get('curso')->totalCursos < 2) {
-                Session::flash('message_danger', 'No se permiten menos de 2 inscripciones para el grupo Familiar');
-                return redirect()->back();
-            }
+//            if ($request->input('familiar') == 'on' && Session::get('curso')->totalCursos < 2) {
+//                Session::flash('message_danger', 'No se permiten menos de 2 inscripciones para el grupo Familiar');
+//                return redirect()->back();
+//            }
 
-            if ($request->input('primo') == 'on' && Session::get('curso')->totalCursos < 2) {
-                Session::flash('message_danger', 'No se permiten menos de 2 inscripciones para el grupo Primos');
-                return redirect()->back();
-            }
+//            if ($request->input('primo') == 'on' && Session::get('curso')->totalCursos < 2) {
+//                Session::flash('message_danger', 'No se permiten menos de 2 inscripciones para el grupo Primos');
+//                return redirect()->back();
+//            }
 
             //inscripcion multiples no puede tener menos de 3 inscritos y no puede ser en invierno
-            if (($request->input('multiple') == 'on' && Session::get('curso')->totalCursos < 3)) {
-                Session::flash('message_danger', 'No se permiten menos de 3 inscripciones para el grupo Multiple o esta fuera de temporada');
-                return redirect()->back();
-            }
+//            if (($request->input('multiple') == 'on' && Session::get('curso')->totalCursos < 3)) {
+//                Session::flash('message_danger', 'No se permiten menos de 3 inscripciones para el grupo Multiple o esta fuera de temporada');
+//                return redirect()->back();
+//            }
 
             //si es inscripcion variada tiene que estar marcado o familiar o multiple
-            if (Session::get('curso')->totalCursos > 0 && ($request->input('familiar') == false && $request->input('multiple') == false && $request->input('primo') == false)) {
-                Session::flash('message_danger', 'Esta guardando mas de una inscripción al mismo tiempo, debe seleccionar Familiar, Multiple o Primo , según corresponda');
-                return redirect()->back();
-            }
+//            if (Session::get('curso')->totalCursos > 0 && ($request->input('familiar') == false && $request->input('multiple') == false && $request->input('primo') == false)) {
+//                Session::flash('message_danger', 'Esta guardando mas de una inscripción al mismo tiempo, debe seleccionar Familiar, Multiple o Primo , según corresponda');
+//                return redirect()->back();
+//            }
 
             $oldCurso = Session::get('curso');//obtengo la variable de la session
             $cart = new Multiples($oldCurso); //creo una instancia de la clase
 
             $cursos = $cart->cursos;  //arreglo con los cursos agrupados por curso Items
 
-            $precioTotal = $cart->totalPrecio;//precio unitario de la compra de los cursos sin matricula
+            $precioTotal = $cart->totalPrecio;//precio unitario de la compra de los cursos sin matricula (mensualidad total)
             $matriculaTotal = $cart->totalMatricula;
-            $tipo_descuento = $cart->tipo_desc; //tipo de desceunto aplicado
+            $tipo_descuento = $cart->tipo_desc; //tipo de descuento aplicado
             $desc_emp = $cart->desc_empleado;//true o false
 
+
+            $descuento_aplicado = TipoDescuento::where('id',$tipo_descuento->id)->first();
             $descuento = 0;
-            if ($tipo_descuento == 'familiar' || $tipo_descuento == 'multiple') {//si el descunto es familiar o multiple
-                $desc1 = 0.1;
-                $descuento = $precioTotal * $desc1; //descuento aplicado a la mensualidad total
+            if ( $desc_emp == 'true') {
+                $desc = 0.5; //50%
+                $descuento = $precioTotal * $desc;
+            }
+            if (isset($descuento_aplicado)) {
+                $descuento= $precioTotal * ($descuento_aplicado->multiplicador); //mensualidad * %descuento
             }
 
-            if ($tipo_descuento == 'primo') {//si el descunto es primo
-                $desc3 = 0.05;
-                $descuento = $precioTotal * $desc3; //descuento aplicado a la mensualidad total
-            }
 
-            if ($desc_emp == 'true') { //en caso de empleado
-                $desc2 = 0.5;
-                $descuento = $precioTotal * $desc2; //descuento aplicado a la mensualidad total
-            }
+
+//            $descuento = 0;
+//            if ($tipo_descuento == 'familiar' || $tipo_descuento == 'multiple') {//si el descunto es familiar o multiple
+//                $desc1 = 0.1;
+//                $descuento = $precioTotal * $desc1; //descuento aplicado a la mensualidad total
+//            }
+
+//            if ($tipo_descuento == 'primo') {//si el descunto es primo
+//                $desc3 = 0.05;
+//                $descuento = $precioTotal * $desc3; //descuento aplicado a la mensualidad total
+//            }
+
+//            if ($desc_emp == 'true') { //en caso de empleado
+//                $desc2 = 0.5;
+//                $descuento = $precioTotal * $desc2; //descuento aplicado a la mensualidad total
+//            }
 
             $total = ($precioTotal + $matriculaTotal) - $descuento; //total con descuentos aplicados
 
             try {
                 DB::beginTransaction();
 
-                $user = Auth::user(); //usuario autenticado
+                $user = $request->user();//usuario trabajador logueado
                 if (is_null($user->escenario_id)) {//online
                     $pto_cobro = 'N/A';
                 } else  $pto_cobro = $user->escenario_id;
+
                 $pago_id = $request->input('fpago_id');
 
                 if ($pago_id == '') {
@@ -787,32 +851,38 @@ class InscripcionsController extends Controller
                 $factura->total = $total;
                 $factura->descuento = $descuento;
 
+                if ( $otro_factura=='on' ){
+                    $factura->otro_factura = Factura::FACTURAR_A_OTRO;
+                    $factura->fact_nombres = $fact_nombres;
+                    $factura->fact_ci = $fact_ci;
+                    $factura->fact_email = $fact_email;
+                    $factura->fact_phone = $fact_phone;
+                    $factura->fact_direccion = $fact_direccion;
+                }
+
                 $factura->save(); //se guarda una sola factura
 
-                $descuentos = new Descuento();
-                $descuentos->factura()->associate($factura);
-                $descuentos->valor = $descuento;
-
-                if ($tipo_descuento == 'familiar') {
-                    $descuentos->descripcion = 'DESCUENTO FAMILIAR';
+                if ($desc_emp == 'true' && !isset($descuento_aplicado) ){
+                    $descuentos = new Descuento();
+                    $descuentos->factura()->associate($factura);
+//                        $descuentos->tipo_descuento()->associate($descuento_aplicado);
+                    $descuentos->porciento = '50%';
+                    $descuentos->descripcion = 'EMPLEADO';
+                    $descuentos->valor = $factura->descuento;
                     $descuentos->save();
                 }
 
-                if ($tipo_descuento == 'primo') {
-                    $descuentos->descripcion = 'DESCUENTO PRIMOS';
+                if (isset($descuento_aplicado)) {
+                    $descuentos = new Descuento();
+                    $descuentos->factura()->associate($factura);
+                    $descuentos->tipo_descuento()->associate($descuento_aplicado);
+                    $descuentos->porciento = $descuento_aplicado->porciento;
+                    $descuentos->descripcion = $descuento_aplicado->nombre;
+                    $descuentos->valor = $factura->descuento;
                     $descuentos->save();
                 }
 
-                if ($tipo_descuento == 'multiple') {
-                    $descuentos->descripcion = 'DESCUENTO MULTIPLE';
-                    $descuentos->save();
-                }
-                if ($desc_emp == 'true') {
-                    $descuentos->descripcion = 'DESCUENTO EMPLEADO';
-                    $descuentos->save();
-                }
-
-
+                // guardar una inscripcion por linea
                 foreach ($cursos as $curso) {//recorro los cursos dentro de la coleccion (carrito)
                     $calendar = $curso['curso']; //1 curso dentro del item (storedCurso) de cursos
                     if ($calendar->cupos < ($calendar->contador + $curso['qty'])) {//cupos no puede ser menor k la suma
@@ -833,28 +903,30 @@ class InscripcionsController extends Controller
                         $inscripcion->user()->associate($user);
                         $inscripcion->escenario()->associate($pto_cobro);
 
-                        if ($request->input('reservar') == 'on') {
-                            $inscripcion->estado = 'Reservada';
-                        }
+//                        if ($request->input('reservar') == 'on') {
+//                            $inscripcion->estado = 'Reservada';
+//                        }
 
                         if ($alumno->id == $representante->id) {//adulto por tanto el rep =alumno
                             $inscripcion->alumno_id = 0;
-                            $ins_adulto = true;
+                            $alumno_insc = $representante->persona->id;
+//                            $ins_adulto = true;
                         } else {
                             $inscripcion->alumno_id = $alumno->id;
-                            $ins_adulto = false;
+                            $alumno_insc = $alumno->persona_id;
+//                            $ins_adulto = false;
                         }
 
-                        if ($ins_adulto) { //si es una inscripcion para adulto
-                            $alumno_insc = $representante;
-                        } else {
-                            $inscripcion->alumno_id = $alumno->id;
-                            $alumno_insc = $alumno;
-                        }
+//                        if ($ins_adulto) { //si es una inscripcion para adulto
+//                            $alumno_insc = $representante;
+//                        } else {
+//                            $inscripcion->alumno_id = $alumno->id;
+//                            $alumno_insc = $alumno;
+//                        }
 
                         if ($modulo->esRiver()) {
                             $nuevo_inscrito_river = new UserModulo();
-                            $nuevo_inscrito_river->persona_id = $alumno_insc->persona->id;
+                            $nuevo_inscrito_river->persona_id = $alumno_insc;
                             $nuevo_inscrito_river->modulo_id = $modulo->id;
                             $nuevo_inscrito_river->anio = $periodo->periodo;
                             $nuevo_inscrito_river->save();
@@ -887,7 +959,7 @@ class InscripcionsController extends Controller
      */
     public function show($id)
     {
-        return ('No implementado');
+        return ('Forbidden');
     }
 
     /**
@@ -1085,11 +1157,22 @@ class InscripcionsController extends Controller
             DB::transaction(function () use ($inscripcion, $pago_id, $request, $periodo, $fpago) {
 
                 $representante = $inscripcion->factura->representante;
+
                 $factura = new Factura();
                 $factura->pago()->associate($fpago);
                 $factura->representante()->associate($representante);
                 $factura->total = $inscripcion->calendar->program->matricula; //costo de la inscripcion
                 $factura->descuento = 0;
+
+                if ( $inscripcion->factura->facturaOtro()) {
+                    $factura->otro_factura = Factura::FACTURAR_A_OTRO;
+                    $factura->fact_nombres = $inscripcion->factura->fact_nombres;
+                    $factura->fact_ci = $inscripcion->factura->fact_ci;
+                    $factura->fact_email = $inscripcion->factura->fact_email;
+                    $factura->fact_phone = $inscripcion->factura->fact_phone;
+                    $factura->fact_direccion = $inscripcion->factura->fact_direccion;
+                }
+
                 $factura->save();
 
                 $mat_pagada = new PagoMatricula();
@@ -1350,17 +1433,27 @@ class InscripcionsController extends Controller
 
         if ($request->ajax()) {
 
-            //costo de la matricula para el programa en determinado mes escenario y disciplina
+
             $escenario_id = $request->get('escenario');
             $disciplina_id = $request->get('disciplina');
             $modulo_id = $request->get('modulo');
-
-            $modulo = Modulo::where('id', $modulo_id)->first();
-
-            //Al seleccionar el nivel
+            $pago_matricula = $request->input('matricula');
             $dia_id = $request->get('dia_id');
             $horario_id = $request->get('horario_id');
-            $nivel = $request->get('nivel'); //me trae el id del calendario(curso)
+            $calendar_id = $request->get('calendar_id'); //me trae el id del calendario(curso)
+
+            $descuento_id = $request->input('descuento_id');
+            $descuento_aplicado=TipoDescuento::where('id',$descuento_id)->first();
+
+
+            $descuento_empleado = $request->input('descuento_empleado'); // true or false
+            $descuento_estacion = $request->input('descuento_estacion'); //VERANo , INVIENRNO
+
+
+            $adulto = $request->get('adulto');
+            $alumno_id = $request->get('alumno');
+
+            $modulo = Modulo::where('id', $modulo_id)->first();
 
             //programa
             $program = Program::where('escenario_id', $escenario_id)
@@ -1369,37 +1462,42 @@ class InscripcionsController extends Controller
 
             $matricula = $program->matricula;
 
+            $curso=Calendar::where('id',$calendar_id)->first();
+
+            if (isset($curso)){
+                $mensualidad=$curso->mensualidad;
+            }else {
+                return response(['message' => 'Error al buscar la mensualidad del curso','status'=>'error'],400);
+            }
+
             //costo de la mensualidad para el curso
-            $mensualidad = Calendar::
-            select('mensualidad')
-                ->where('program_id', $program->id)
-                ->where('dia_id', $dia_id)
-                ->where('id', $nivel)
-                ->where('horario_id', $horario_id)->first();
+//            $mensualidad = Calendar::
+//            select('mensualidad')
+//                ->where('program_id', $program->id)
+//                ->where('dia_id', $dia_id)
+//                ->where('id', $nivel)
+//                ->where('horario_id', $horario_id)->first();
 
-            $mes = $mensualidad->mensualidad;
+//            $mes = $mensualidad->mensualidad;
 
-            $adulto = $request->get('adulto');
-            $alumno_id = $request->get('alumno');
 
             /*************************************COSTO RIVER***********************************************************/
             if ($modulo->esRiver()) { //modulo de river
                 if (($adulto == 'false' && !is_null($alumno_id))) { //inscripcion de menor
                     $alumno = Alumno::where('id', $alumno_id)->with('persona')->first();  //alumno menor
-
-                    // $insc = $alumno->inscripcions()->select('id', 'calendar_id')->where('estado', 'Pagada')->with('calendar')->get();
                 } else if ($adulto == 'true') { //insc de adulto
                     $alumno = Representante::where('persona_id', $alumno_id)->with('persona')->first(); //alumno mayor
 
                 }
 
                 $descuento = 0;
-                if ($request->input('descuento_empleado') == 'true') {
+                if ( $descuento_empleado == 'true') {
                     $desc = 0.5; //50%
-                    $descuento = $mes * $desc;
-                } else if ($request->input('descuento_familiar') == 'true') {
-                    $desc = 0.1; //10%
-                    $descuento = $mes * $desc;
+                    $descuento = $mensualidad * $desc;
+                }
+
+                if (isset($descuento_aplicado)) {
+                    $descuento= $mensualidad * ($descuento_aplicado->multiplicador); //mensualidad * %descuento
                 }
 
 
@@ -1407,33 +1505,36 @@ class InscripcionsController extends Controller
                 $inscrito_anterior = UserModulo::where('persona_id', $alumno->persona->id)->where('anio', $periodo->periodo)->first();
 
                 if (isset($inscrito_anterior)) { //no paga matricula
-                    $precio = $mes - $descuento;
+                    $precio = $mensualidad - $descuento;
                     $mensaje_matricula = 'El usuario ya se encuentra inscrito en un módulo en el presente período. No tiene que pagar membresía';
                     $paga_matricula_river = false;
                 } else { //paga matricula
                     $mat = $matricula;
-                    $precio = $mat + $mes - $descuento;
+                    $precio = $mat + $mensualidad - $descuento;
                     $mensaje_matricula = 'Al valor de la inscripión se le ha incrementado el costo de la membresía ( $ ' . $mat . '). Este valor es cobrado una sola vez en el año ';
                     $paga_matricula_river = true;
                 }
 
-
                 $precio = number_format($precio, 2, '.', ' ');
-                return response(['precio' => $precio, 'modulo_river' => true, 'mensaje_matricula' => $mensaje_matricula, 'paga_matricula_river' => $paga_matricula_river]);
+                return response(['precio' => $precio, 'modulo_river' => true, 'mensaje_matricula' => $mensaje_matricula, 'paga_matricula_river' => $paga_matricula_river,'status'=>'success'],200);
             }
 
-            /**************************************************************************************/
+            /****************************************FIN COSTO RIVER**********************************************/
 
 
-            if ($request->input('descuento_empleado') == 'true') {
+            $descuento = 0;
+
+            if ( $descuento_empleado == 'true') {
                 $desc = 0.5; //50%
-                $descuento = $mes * $desc;
-            } else if ($request->input('descuento_familiar') == 'true' ||
-                (($request->input('descuento_multiple') == 'true') && ($request->input('descuento_estacion') == 'VERANO'))
-            ) {
-                $desc = 0.1; //10%
-                $descuento = $mes * $desc;
+                $descuento = $mensualidad * $desc;
             }
+
+            if (isset($descuento_aplicado)) {
+                $descuento= $mensualidad * ($descuento_aplicado->multiplicador); //mensualidad * %descuento
+            }
+
+
+
 
             /*Desceunto 10% insc en mayo de un alumno que se insc en marzo y abril en la misma disciplina*/
             /******************************************************************************************************************************************/
@@ -1500,27 +1601,17 @@ class InscripcionsController extends Controller
             //}
 
             /**************************************************************************************************************************************/
-            else $descuento = 0;
 
 
-            if ($request->input('matricula') == 'true') {
+
+            if ( $pago_matricula == 'true') {
                 $mat = $matricula;
             } else $mat = 0;
 
-            $precio = $mat + $mes - $descuento;
-
-            //precio de presidentes de asociacion 50%
-            if ($request->input('presidente') == 'true') {
-                $precio = $precio * 0.5;
-            }
-
-            //pase de cortesia costo 0
-            if ($request->input('cortesia') == 'true') {
-                $precio = 0;
-            }
+            $precio = $mat + $mensualidad - $descuento;
 
             $precio = number_format($precio, 2, '.', ' ');
-            return response(['precio' => $precio]);
+            return response(['precio' => $precio,'status'=>'success'],200);
 
         }
     }

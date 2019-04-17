@@ -38,12 +38,27 @@ class Descuento extends Model
      * @var array
      */
     protected $fillable = [
-        'descripcion','valor','factura_id'
+        'descripcion','valor','factura_id','tipo_descuento_id'
     ];
 
     public function factura()
     {
         return $this->belongsTo('App\Factura');
+    }
+
+    public function tipo_descuento()
+    {
+        return $this->belongsTo('App\TipoDescuento');
+    }
+
+    //como persona_id es unica pero puede ser null
+    public function setTipoDescuentoIdAttribute($value)
+    {
+        if (empty($value)) {
+            $this->attributes['tipo_descuento_id'] = NULL;
+        } else {
+            $this->attributes['tipo_descuento_id'] = $value;
+        }
     }
     
 }

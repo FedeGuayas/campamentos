@@ -19,6 +19,7 @@
                     <th>Contado</th>
                     <th>Tarjeta</th>
                     <th>Western</th>
+                    <th>Tranferencia</th>
                     <th>Total</th>
                     </thead>
                     @foreach ($cuadreArray as $c )
@@ -27,6 +28,7 @@
                             <td>{{ $c['contado'] }}</td>
                             <td>{{ $c['tarjeta'] }}</td>
                             <td>{{ $c['western'] }}</td>
+                            <td>{{ $c['transferencia'] }}</td>
                             <td>$ {{number_format($c['valor'],2,'.',' ')}}</td>
                         </tr>
                    @endforeach
@@ -35,6 +37,7 @@
                         <th>$ {{number_format($total['totalContado'],2,'.',' ')}}</th>
                         <th>$ {{number_format($total['totalTarjeta'],2,'.',' ')}}</th>
                         <th>$ {{number_format($total['totalWestern'],2,'.',' ')}}</th>
+                        <th>$ {{number_format($total['totalTransferB'],2,'.',' ')}}</th>
                         <th>$ {{number_format($total['totalGeneral'],2,'.',' ')}}</th>
                     </tr>
                 </table><!--end table-responsive-->
@@ -47,12 +50,14 @@
                         <th>Contado</th>
                         <th>Tarjeta</th>
                         <th>Western</th>
+                        <th>Tranferencia</th>
                         <th>Total</th>
                     </tbody>
                     <tfoot>
                         <th>$ {{number_format($total['totalContado'],2,'.',' ')}}</th>
                         <th>$ {{number_format($total['totalTarjeta'],2,'.',' ')}}</th>
                         <th>$ {{number_format($total['totalWestern'],2,'.',' ')}}</th>
+                        <th>$ {{number_format($total['totalTransferB'],2,'.',' ')}}</th>
                         <th style="color: red">$ {{number_format($total['totalGeneral'],2,'.',' ')}}</th>
                     </tfoot>
                 </table>

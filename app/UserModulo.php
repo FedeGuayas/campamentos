@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * Modelo para guardar los inscritos en modulos de RIVER
+ */
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
