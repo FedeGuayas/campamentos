@@ -286,7 +286,7 @@ class ReportesController extends Controller
     }
 
     /**
-     * Comprobantes de inscripcion en pdf
+     * Comprovantes de inscripcion en pdf
      * @param $id
      * @return mixed
      */
